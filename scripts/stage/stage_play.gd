@@ -23,6 +23,9 @@ var recovery_notice: String = ""
 var recovery_notice_time: float = 0
 var has_driven: bool = false
 var startup_focus_pause: bool = false
+var reverse_assist := RallyReverseAssist.new()
+var selecting_vehicle: bool = false
+var vehicle_selector: RallyVehicleSelector
 
 
 func _ready() -> void:
@@ -59,13 +62,23 @@ func _ready() -> void:
 	pause_menu.resume_requested.connect(_toggle_pause)
 	pause_menu.restart_requested.connect(_restart)
 	pause_menu.practice_requested.connect(_toggle_mode)
+	pause_menu.vehicle_requested.connect(func(): _open_vehicle_selection(true))
 	pause_menu.setting_changed.connect(_setting_changed)
-	pause_menu.defaults_requested.connect(func(): preferences.reset(); _apply_preferences(); _save_preferences())
+	pause_menu.defaults_requested.connect(_reset_preferences)
 	controls.transmission_requested.connect(func(): preferences.set_value("automatic",vehicle.drivetrain.automatic); _save_preferences())
 	_apply_preferences()
+	vehicle.drivetrain.config.drive_layout = preferences.values.drive_layout
 	feedback.build(self)
 	vehicle.reset_completed.connect(feedback.reset)
+	vehicle.reset_completed.connect(reverse_assist.reset)
+	vehicle_selector = RallyVehicleSelector.new()
+	add_child(vehicle_selector)
+	vehicle_selector.build()
+	vehicle_selector.confirmed.connect(_confirm_vehicle)
+	vehicle_selector.cancelled.connect(_cancel_vehicle_selection)
 	if get_tree().paused: pause_menu.show_menu(true)
+	# Physics tests and capture tools deliberately bypass the front-end, using defaults.
+	if DisplayServer.get_name()!="headless" and not "--test-defaults" in OS.get_cmdline_user_args(): _open_vehicle_selection()
 
 
 func _spawn_pose() -> Transform3D:
@@ -73,11 +86,15 @@ func _spawn_pose() -> Transform3D:
 
 
 func _driver_command(speed: float, dt: float) -> DriverCommand:
-	if respawn_wait or session.phase==RallyStageSession.Phase.FINISHED:
+	if selecting_vehicle or respawn_wait or session.phase==RallyStageSession.Phase.FINISHED:
 		var held := DriverCommand.new()
 		held.brake = 1
 		return held
 	var command := controls.sample(speed,dt)
+	var contacts := 0
+	for wheel: RallyWheelState in vehicle.wheels:
+		if wheel.grounded: contacts += 1
+	command = reverse_assist.apply(command,controls.last_raw,vehicle.drivetrain,speed,contacts>=2,dt,preferences.values.reverse_assist)
 	if command.throttle>0.01 or absf(command.steer)>0.01 or command.handbrake>0.01: has_driven = true
 	if session.phase==RallyStageSession.Phase.COUNTDOWN:
 		if command.throttle>0.01 and command.brake<0.05 and command.handbrake<0.05:
@@ -88,7 +105,7 @@ func _driver_command(speed: float, dt: float) -> DriverCommand:
 
 
 func _physics_process(dt: float) -> void:
-	if get_tree().paused: return
+	if get_tree().paused or selecting_vehicle: return
 	recorder.capture(vehicle)
 	if respawn_wait: return
 	presentation.tire_marks.update(vehicle,dt)
@@ -112,7 +129,7 @@ func _process(dt: float) -> void:
 	super._process(dt)
 	if not is_instance_valid(game_hud): return
 	readout.get_parent().get_parent().visible = telemetry_visible
-	game_hud.visible = not telemetry_visible
+	game_hud.visible = not telemetry_visible and not selecting_vehicle
 	checkpoint_visual.visible = telemetry_visible and session.next_gate < session.gates.size()
 	if checkpoint_visual.visible:
 		checkpoint_visual.transform = generator.route.pose_at(session.gates[session.next_gate],0.025)
@@ -122,6 +139,9 @@ func _process(dt: float) -> void:
 		game_hud_clock = 0
 		var data := RallyHUD.data_for(vehicle,session,get_tree().paused)
 		data["camera_mode"] = camera_mode
+		data["reverse_remaining"] = reverse_assist.remaining()
+		data["returning_forward"] = reverse_assist.returning_forward
+		data["reverse_assist"] = preferences.values.reverse_assist
 		if recovery_notice_time>0: data["warning"] = recovery_notice
 		game_hud.refresh(data)
 	presentation.update(dt)
@@ -142,7 +162,8 @@ func _reset() -> void:
 
 
 func _recover(seconds: float,reason: String) -> void:
-	if respawn_wait or session.phase == RallyStageSession.Phase.FINISHED: return
+	if selecting_vehicle or respawn_wait or session.phase == RallyStageSession.Phase.FINISHED: return
+	reverse_assist.reset()
 	controls.clear()
 	respawn_wait = true
 	var old_penalty := session.penalty
@@ -153,6 +174,8 @@ func _recover(seconds: float,reason: String) -> void:
 
 
 func _restart() -> void:
+	if selecting_vehicle: return
+	reverse_assist.reset()
 	get_tree().paused = false
 	controls.resume()
 	respawn_wait = true
@@ -168,6 +191,7 @@ func _restart() -> void:
 
 
 func _toggle_mode() -> void:
+	if selecting_vehicle: return
 	session.practice = not session.practice
 	_restart()
 
@@ -184,6 +208,7 @@ func _apply_preferences() -> void:
 
 
 func _setting_changed(key: String,value: Variant) -> void:
+	if key=="reverse_assist": reverse_assist.reset()
 	preferences.set_value(key,value)
 	_apply_preferences()
 	_save_preferences()
@@ -207,12 +232,19 @@ func _cycle_camera() -> void:
 
 
 func _toggle_pause() -> void:
+	if selecting_vehicle: return
+	reverse_assist.reset()
 	startup_focus_pause = false
 	super._toggle_pause()
 	if is_instance_valid(pause_menu): pause_menu.show_menu(get_tree().paused)
 
 
 func _safety_pause() -> void:
+	reverse_assist.reset()
+	if selecting_vehicle:
+		controls.suspend()
+		get_tree().paused = true
+		return
 	if not get_tree().paused: startup_focus_pause = not has_driven and session.next_gate==0
 	super._safety_pause()
 	if is_instance_valid(pause_menu): pause_menu.show_menu(true)
@@ -224,6 +256,8 @@ func _restore_launch_focus() -> void:
 
 
 func _export() -> void:
+	if selecting_vehicle: return
+	reverse_assist.reset()
 	super._export()
 	if is_instance_valid(pause_menu):
 		pause_menu.show_menu(true)
@@ -233,3 +267,39 @@ func _export() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo and event.physical_keycode==KEY_L:
 		_setting_changed("lens_flare",not preferences.values.lens_flare)
+
+
+func _reset_preferences() -> void:
+	var chosen := vehicle.drivetrain.config.drive_layout
+	preferences.reset()
+	preferences.set_value("drive_layout",chosen)
+	reverse_assist.reset()
+	_apply_preferences()
+	_save_preferences()
+
+
+func _open_vehicle_selection(can_cancel: bool = false) -> void:
+	selecting_vehicle = true
+	startup_focus_pause = false
+	reverse_assist.reset()
+	controls.suspend()
+	get_tree().paused = true
+	pause_menu.show_menu(false)
+	vehicle_selector.open(vehicle.drivetrain.config.drive_layout,can_cancel)
+
+
+func _confirm_vehicle(layout: String) -> void:
+	if layout not in ["FWD","AWD","RWD"]: return
+	vehicle.drivetrain.config.drive_layout = layout
+	preferences.set_value("drive_layout",layout)
+	_save_preferences()
+	selecting_vehicle = false
+	vehicle_selector.close()
+	_restart()
+
+
+func _cancel_vehicle_selection() -> void:
+	if not vehicle_selector.allow_cancel: return
+	selecting_vehicle = false
+	vehicle_selector.close()
+	pause_menu.show_menu(true)

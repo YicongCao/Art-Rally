@@ -23,6 +23,7 @@ var pending_shift: int = 0
 var keys: Dictionary = {}
 var buttons: Dictionary = {}
 var axes: Dictionary = {}
+var last_raw := DriverCommand.new()
 
 
 func _ready() -> void:
@@ -60,6 +61,7 @@ func clear() -> void:
 	axes.clear()
 	pending_shift = 0
 	filter.reset()
+	last_raw = DriverCommand.new()
 
 
 func _select_device(device: int) -> void:
@@ -148,4 +150,5 @@ func sample(speed: float, dt: float) -> DriverCommand:
 		raw.handbrake = float(buttons.get(JOY_BUTTON_A, false))
 	raw.shift = pending_shift
 	pending_shift = 0
+	last_raw = raw
 	return filter.step(raw, speed, dt, active_device == -1)

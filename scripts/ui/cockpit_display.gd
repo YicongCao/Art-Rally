@@ -8,6 +8,7 @@ var gear: String = "N"
 var brake: float = 0
 var throttle: float = 0
 var automatic: bool = true
+var drive_layout: String = "AWD"
 var font := SystemFont.new()
 
 
@@ -25,6 +26,7 @@ func refresh(car: RallyVehicle) -> void:
 	brake = car.command.brake
 	throttle = car.command.throttle
 	automatic = car.drivetrain.automatic
+	drive_layout = car.drivetrain.config.drive_layout
 	queue_redraw()
 
 
@@ -34,7 +36,7 @@ func _draw() -> void:
 	var amber := Color("ffc36e")
 	var white := Color("e7f1e6")
 	draw_rect(Rect2(18,18,732,5),amber)
-	text("ART RALLY / AWD",Vector2(24,55),24,white)
+	text("ART RALLY / "+drive_layout,Vector2(24,55),24,white)
 	text("AUTO" if automatic else "SEQ",Vector2(626,55),23,amber)
 	for i: int in range(24):
 		var color := Color("26372f")

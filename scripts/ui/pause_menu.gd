@@ -6,6 +6,7 @@ signal restart_requested
 signal practice_requested
 signal setting_changed(key: String,value: Variant)
 signal defaults_requested
+signal vehicle_requested
 var prefs: RallyGameSettings
 var widgets: Dictionary = {}
 var resume_button: Button
@@ -65,6 +66,7 @@ func build(settings: RallyGameSettings) -> void:
 	resume_button = button(buttons,"继续驾驶",func(): resume_requested.emit())
 	button(buttons,"重跑赛段",func(): restart_requested.emit())
 	button(buttons,"计时 / 练习",func(): practice_requested.emit())
+	button(column,"更换车辆（确认后重开赛段）",func(): vehicle_requested.emit())
 	var scroll := ScrollContainer.new()
 	scroll.custom_minimum_size = Vector2(475,clampf(get_viewport().get_visible_rect().size.y-310,180,335))
 	panel.custom_minimum_size.y = 0
@@ -94,7 +96,7 @@ func build(settings: RallyGameSettings) -> void:
 		row.add_child(value)
 		slider.value_changed.connect(_slider_changed.bind(entry[0],value))
 		widgets[entry[0]] = slider
-	for entry: Array in [["lens_flare","镜头光斑"],["camera_motion","驾驶舱轻微震动"],["automatic","自动换挡"],["keyboard_light","键盘轻辅助（更直接）"],["vibration","手柄震动"],["low_detail","低细节（减少草簇和散石）"]]:
+	for entry: Array in [["lens_flare","镜头光斑"],["camera_motion","驾驶舱轻微震动"],["automatic","自动换挡"],["reverse_assist","停稳刹车 3 秒自动挂倒挡"],["keyboard_light","键盘轻辅助（更直接）"],["vibration","手柄震动"],["low_detail","低细节（减少草簇和散石）"]]:
 		var toggle := CheckButton.new()
 		toggle.text = entry[1]
 		toggle.button_pressed = prefs.values[entry[0]]

@@ -50,7 +50,7 @@ static func data_for(car: RallyVehicle, session: RallyStageSession, paused: bool
 		if float(session.projection.get("s",0)) > session.gates[session.next_gate]+10: warning = "漏过 CP %02d · 返回金色气柱，或 R 恢复"%(gate+1)
 		elif car.linear_velocity.dot(session.route.tangent_at(session.progress)) < -2: warning = "逆行 · 请掉头"
 	return {"speed":car.linear_velocity.length()*3.6,"rpm":car.drivetrain.rpm(),"redline":car.drivetrain.config.redline_rpm,
-		"gear":"R" if car.drivetrain.gear<0 else ("N" if car.drivetrain.gear==0 else str(car.drivetrain.gear)),
+		"gear":"R" if car.drivetrain.gear<0 else ("N" if car.drivetrain.gear==0 else str(car.drivetrain.gear)),"drive_layout":car.drivetrain.config.drive_layout,
 		"automatic":car.drivetrain.automatic,"throttle":car.command.throttle,"brake":car.command.brake,"handbrake":car.command.handbrake,
 		"time":session.total_time(),"penalty":session.penalty,"progress":session.progress,"length":session.route.length-30,
 		"gates":session.next_gate,"total_gates":session.gates.size(),"note":session.current_note if session.note_remaining>0 else "",
@@ -83,7 +83,7 @@ func _draw() -> void:
 	panel(Rect2(24,22,260,74))
 	draw_colored_polygon(PackedVector2Array([Vector2(37,38),Vector2(51,38),Vector2(43,64),Vector2(29,64)]),AMBER)
 	text("ART / RALLY",Vector2(63,52),20,PAPER,title_font)
-	text("夕照松岭   /   16:00",Vector2(63,78),13,MUTED)
+	text("夕照松岭 / 16:00 · %s"%model.get("drive_layout","AWD"),Vector2(63,78),12,MUTED)
 	if int(model.phase)!=RallyStageSession.Phase.FINISHED:
 		panel(Rect2(24,105,260,42))
 		text("NEXT  CP %02d  /  %d m"%[model.gate_number,model.gate_distance],Vector2(40,132),13,AMBER,number_font)
@@ -100,6 +100,16 @@ func _draw() -> void:
 	_draw_note()
 	_draw_map()
 	if int(model.get("camera_mode",0))!=2: _draw_gauge()
+	var remaining := float(model.get("reverse_remaining",0))
+	if remaining>0:
+		panel(Rect2(440,536,400,68))
+		center_text("保持制动挂倒挡 · %.1f 秒"%remaining,Vector2(640,563),17,AMBER)
+		draw_rect(Rect2(460,579,360,7),Color("40574b"))
+		draw_rect(Rect2(460,579,360*clampf(remaining/3.0,0,1),7),AMBER)
+	elif model.get("returning_forward",false):
+		center_text("切回前进挡：正在制动至停稳",Vector2(640,578),17,AMBER)
+	elif model.gear=="R" and model.get("reverse_assist",false):
+		center_text("倒挡 · S/↓ 倒车 · W/↑ 前进",Vector2(640,578),17,AMBER)
 	if not str(model.warning).is_empty():
 		panel(Rect2(422,625,435,44),Color(0.15,0.08,0.05,0.94))
 		center_text(model.warning,Vector2(640,653),15,AMBER)
@@ -107,7 +117,7 @@ func _draw() -> void:
 		center_text("Esc 暂停/设置    C 视角    T 遥测",Vector2(640,697),12,PAPER)
 	if model.paused:
 		center_text("已暂停",Vector2(640,137),20,AMBER)
-	elif model.phase == RallyStageSession.Phase.COUNTDOWN:
+	elif model.phase == RallyStageSession.Phase.COUNTDOWN and remaining<=0:
 		panel(Rect2(579,270,122,112))
 		center_text(str(ceili(model.countdown)),Vector2(640,352),74,AMBER,number_font)
 		center_text("踩油即可发车",Vector2(640,410),17,PAPER)
