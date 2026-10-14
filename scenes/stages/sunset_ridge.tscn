@@ -1,0 +1,43 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/stage/stage_generator.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/stage/stage_play.gd" id="2"]
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMaterial"]
+sky_top_color = Color(0.16, 0.28, 0.4, 1)
+sky_horizon_color = Color(0.94, 0.66, 0.4, 1)
+ground_bottom_color = Color(0.12, 0.16, 0.2, 1)
+ground_horizon_color = Color(0.94, 0.66, 0.4, 1)
+
+[sub_resource type="Sky" id="Sky"]
+sky_material = SubResource("SkyMaterial")
+
+[sub_resource type="Environment" id="Environment"]
+background_mode = 2
+sky = SubResource("Sky")
+ambient_light_source = 3
+ambient_light_color = Color(0.75, 0.82, 0.92, 1)
+ambient_light_energy = 0.65
+tonemap_mode = 2
+
+[node name="SunsetRidge" type="Node3D"]
+script = ExtResource("2")
+
+[node name="Stage" type="Node3D" parent="."]
+script = ExtResource("1")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-28, -32, 0)
+light_color = Color(1, 0.79, 0.57, 1)
+light_energy = 1.4
+shadow_enabled = true
+directional_shadow_max_distance = 180.0
+
+[node name="Camera" type="Camera3D" parent="."]
+position = Vector3(25, 30, 48)
+rotation_degrees = Vector3(-28, 15, 0)
+current = true
+far = 1400.0

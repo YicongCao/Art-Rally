@@ -10,6 +10,10 @@ signal transmission_requested
 signal profile_requested
 signal export_requested
 signal contact_requested
+signal restart_requested
+signal mode_requested
+signal stage_requested
+signal lab_requested
 
 var filter := DriverInputFilter.new()
 var active_device: int = -1
@@ -70,6 +74,13 @@ func _unhandled_input(event: InputEvent) -> void:
 		if event.pressed and code in [KEY_ESCAPE, KEY_ENTER]:
 			pause_requested.emit()
 			return
+		if event.pressed and code in [KEY_F4, KEY_F5, KEY_F6, KEY_F7]:
+			match code:
+				KEY_F4: mode_requested.emit()
+				KEY_F5: restart_requested.emit()
+				KEY_F6: stage_requested.emit()
+				KEY_F7: lab_requested.emit()
+			return
 		if blocked:
 			return
 		if code not in [KEY_W, KEY_S, KEY_A, KEY_D, KEY_SPACE, KEY_Q, KEY_E, KEY_R, KEY_C, KEY_T, KEY_M, KEY_F2, KEY_F3, KEY_F8]:
@@ -100,6 +111,9 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event is InputEventJoypadButton:
 		if event.button_index == JOY_BUTTON_START and event.pressed:
 			pause_requested.emit()
+			return
+		if event.button_index == JOY_BUTTON_BACK and event.pressed:
+			restart_requested.emit()
 			return
 		if blocked:
 			return

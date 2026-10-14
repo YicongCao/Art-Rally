@@ -21,13 +21,13 @@ func _ready() -> void:
 	vehicle = RallyVehicle.new()
 	vehicle.config = vehicle.config.duplicate()
 	vehicle.name = "Vehicle"
-	vehicle.position = TestGround.SPAWN
+	vehicle.transform = _spawn_pose()
 	vehicle.process_mode = Node.PROCESS_MODE_PAUSABLE
 	add_child(vehicle)
 	vehicle.reset_completed.connect(func(): camera_snap = true)
 	controls = RallyInputController.new()
 	add_child(controls)
-	vehicle.command_source = controls.sample
+	vehicle.command_source = _driver_command
 	controls.pause_requested.connect(_toggle_pause)
 	controls.safety_pause_requested.connect(_safety_pause)
 	controls.reset_requested.connect(_reset)
@@ -38,6 +38,7 @@ func _ready() -> void:
 	controls.transmission_requested.connect(func(): vehicle.drivetrain.automatic = not vehicle.drivetrain.automatic)
 	controls.contact_requested.connect(func(): vehicle.config.contact_envelope = not vehicle.config.contact_envelope)
 	camera = $Camera
+	camera.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
 	_build_hud()
 	debug_visual = MeshInstance3D.new()
 	debug_visual.mesh = debug_mesh
@@ -46,6 +47,21 @@ func _ready() -> void:
 	material.vertex_color_use_as_albedo = true
 	debug_visual.material_override = material
 	add_child(debug_visual)
+	controls.stage_requested.connect(func(): _switch_scene("res://scenes/stages/sunset_ridge.tscn"))
+	controls.lab_requested.connect(func(): _switch_scene("res://scenes/dev/driving_lab.tscn"))
+
+
+func _spawn_pose() -> Transform3D:
+	return Transform3D(Basis.IDENTITY, TestGround.SPAWN)
+
+
+func _driver_command(speed: float, dt: float) -> DriverCommand:
+	return controls.sample(speed, dt)
+
+
+func _switch_scene(path: String) -> void:
+	get_tree().paused = false
+	get_tree().change_scene_to_file.call_deferred(path)
 
 
 func _build_hud() -> void:
@@ -152,7 +168,7 @@ func _safety_pause() -> void:
 
 func _reset() -> void:
 	controls.clear()
-	vehicle.request_reset(Transform3D(Basis.IDENTITY, TestGround.SPAWN))
+	vehicle.request_reset(_spawn_pose())
 	camera_snap = true
 
 

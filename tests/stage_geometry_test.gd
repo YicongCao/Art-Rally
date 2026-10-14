@@ -29,6 +29,14 @@ func _run() -> void:
 	again.build(generator.definition)
 	check(again.points == route.points, "Fixed definition regenerates identical road samples")
 	check(route.notes.size() > 10, "Route includes turns and explicit surface hazard notes")
+	var recoveries_valid := true
+	for s: int in range(14, int(route.length - 60), 100):
+		var pose := route.pose_at(s)
+		for offset: Vector3 in [Vector3(-0.8, 0, -1.3), Vector3(0.8, 0, -1.3), Vector3(-0.8, 0, 1.3), Vector3(0.8, 0, 1.3)]:
+			var mount := pose * offset
+			var hit := space.intersect_ray(PhysicsRayQueryParameters3D.create(mount, mount - pose.basis.y * 1.2, 1))
+			recoveries_valid = recoveries_valid and not hit.is_empty()
+	check(recoveries_valid, "Every checkpoint recovery pose has support under all four wheels")
 	print("STAGE GEOMETRY: length=", route.length, " samples=", route.points.size(), " chunks=", generator.chunk_bodies.size())
 	generator.queue_free()
 	await process_frame

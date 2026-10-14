@@ -63,8 +63,19 @@ case "$MODE" in
     "$ROOT/scripts/dev.sh" check
     python3 "$ROOT/scripts/frame_rate_check.py" "$ENGINE" "$ROOT"
     ;;
+  stage-check)
+    mkdir -p "$ROOT/logs"
+    run_logged "$ROOT/logs/stage_drive.log" --headless --path "$ROOT" --fixed-fps 120 --script res://tests/stage_drive.gd
+    grep -q '^TEST RESULT: .* 0 failures$' "$ROOT/logs/stage_drive.log"
+    ;;
+  lab)
+    exec "$ENGINE" --path "$ROOT" --scene res://scenes/dev/driving_lab.tscn "$@"
+    ;;
+  stage)
+    exec "$ENGINE" --path "$ROOT" --scene res://scenes/stages/sunset_ridge.tscn "$@"
+    ;;
   *)
-    echo "Usage: $0 {doctor|editor|run|check|regression} [Godot options]" >&2
+    echo "Usage: $0 {doctor|editor|run|lab|stage|check|regression|stage-check} [Godot options]" >&2
     exit 2
     ;;
 esac

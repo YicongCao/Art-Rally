@@ -99,6 +99,8 @@ func _build_notes() -> void:
 			notes.append({"s": distances[i], "code": direction + "_" + severity})
 			last_turn = distances[i]
 	for note: Dictionary in [{"s": 1150.0, "code": "MUD_NARROW"}, {"s": 1270.0, "code": "WATER"}, {"s": 1480.0, "code": "WATER"}, {"s": 1650.0, "code": "ASPHALT"}, {"s": 2100.0, "code": "GRAVEL"}, {"s": 2650.0, "code": "CREST_JUMP"}, {"s": length - 30.0, "code": "FINISH"}]:
+		# Keep a clear announcement window around hazards rather than overwriting them with a bend.
+		notes = notes.filter(func(turn: Dictionary) -> bool: return absf(float(turn.s) - float(note.s)) > 55)
 		notes.append(note)
 	notes.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return a.s < b.s)
 
