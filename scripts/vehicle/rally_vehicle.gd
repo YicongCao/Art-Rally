@@ -80,13 +80,13 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 	drivetrain.begin_tick(command, state.linear_velocity.length())
 	command.shift = 0
 	for i: int in range(4):
+		wheels[i].steer = -command.steer * config.max_steer_radians if i < 2 else 0.0
 		RallySuspension.sample(wheels[i], config.wheel_mount(i), state, config, get_rid())
 	RallySuspension.anti_roll(wheels[0], wheels[1], config.front_anti_roll)
 	RallySuspension.anti_roll(wheels[2], wheels[3], config.rear_anti_roll)
 	var brake_torques := PackedFloat64Array()
 	for i: int in range(4):
 		var wheel := wheels[i]
-		wheel.steer = -command.steer * config.max_steer_radians if i < 2 else 0.0
 		var heading := -state.transform.basis.z.rotated(state.transform.basis.y, wheel.steer)
 		wheel.forward = heading.slide(wheel.normal).normalized() if wheel.grounded else heading
 		wheel.right = wheel.forward.cross(wheel.normal).normalized()
@@ -109,9 +109,11 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 	for i: int in range(4):
 		var wheel := wheels[i]
 		var tire_force := forces[i]
+		wheel.water_force = Vector3.ZERO
 		if wheel.grounded:
-			var roll := -config.rolling_resistance * wheel.load * tanh(wheel.longitudinal_speed / 0.5)
-			var total := wheel.normal * wheel.load + wheel.forward * (tire_force.x + roll) + wheel.right * tire_force.y
+			var roll := -(config.rolling_resistance + wheel.surface.rolling_extra) * wheel.load * tanh(wheel.longitudinal_speed / 0.5)
+			wheel.water_force = wheel.surface.water_resistance(wheel.forward * wheel.longitudinal_speed + wheel.right * wheel.lateral_speed, wheel.load, state.step, config.body_mass / 4)
+			var total := wheel.normal * wheel.load + wheel.forward * (tire_force.x + roll) + wheel.right * tire_force.y + wheel.water_force
 			state.apply_force(total, wheel.point - state.transform.origin)
 		wheel.longitudinal_force = tire_force.x
 		wheel.lateral_force = tire_force.y

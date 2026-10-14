@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="RallySurfaceProfile" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/surfaces/surface_profile.gd" id="1"]
+[resource]
+script = ExtResource("1")
+surface_id = 2
+label = "Mud"
+color = Color(0.28, 0.18, 0.10, 1)
+friction_scale = 0.48
+longitudinal_scale = 0.48
+lateral_scale = 0.45
+sliding_scale = 1.08
+rolling_extra = 0.060
+wet_grip = 0.72

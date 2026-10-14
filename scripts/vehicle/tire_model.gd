@@ -16,7 +16,10 @@ static func curve(slip: float, stiffness: float, sliding_ratio: float = 0.78) ->
 static func solve(wheel: RallyWheelState, drive: float, brake: float, dt: float, config: RallyVehicleConfig, tire: RallyTireConfig) -> Vector2:
 	var radius := config.wheel_radius
 	var inertia := config.wheel_inertia
-	var limit := capacity(wheel.load, tire)
+	var limit := capacity(wheel.load, tire) * wheel.surface.grip(wheel.longitudinal_speed)
+	var longitudinal_stiffness := tire.longitudinal_stiffness * wheel.surface.longitudinal_scale
+	var lateral_stiffness := tire.lateral_stiffness * wheel.surface.lateral_scale
+	var sliding := clampf(tire.sliding_ratio * wheel.surface.sliding_scale, 0.1, 1.0)
 	if not wheel.grounded or limit <= 0:
 		wheel.omega = move_toward(wheel.omega + drive * dt / inertia, 0, brake * dt / inertia)
 		wheel.longitudinal_force = 0
@@ -33,8 +36,8 @@ static func solve(wheel: RallyWheelState, drive: float, brake: float, dt: float,
 	var moving := smoothstep(0.5, 3.0, absf(wheel.longitudinal_speed))
 	var gain := lerpf(1.0, 1.0 - exp(-maxf(absf(wheel.longitudinal_speed), 1.0) * dt / tire.relaxation_length), moving)
 	wheel.relaxed_angle = lerpf(wheel.relaxed_angle, wheel.slip_angle, gain)
-	var lateral := -curve(wheel.relaxed_angle, tire.lateral_stiffness, tire.sliding_ratio) * limit
-	lateral /= 1.0 + limit * tire.lateral_stiffness * dt / (denominator * effective_mass)
+	var lateral := -curve(wheel.relaxed_angle, lateral_stiffness, sliding) * limit
+	lateral /= 1.0 + limit * lateral_stiffness * dt / (denominator * effective_mass)
 	# Implicit wheel/contact coupling avoids a stiff explicit tire spring at walking speed.
 	var low := -limit
 	var high := limit
@@ -44,7 +47,7 @@ static func solve(wheel: RallyWheelState, drive: float, brake: float, dt: float,
 		var omega := move_toward(wheel.omega + (drive - trial * radius) * dt / inertia, 0, brake * dt / inertia)
 		var slip := (omega * radius - wheel.longitudinal_speed - trial * dt / effective_mass) / denominator
 		var relaxed := lerpf(wheel.relaxed_slip, slip, gain)
-		force = Vector2(curve(relaxed, tire.longitudinal_stiffness, tire.sliding_ratio) * limit, lateral).limit_length(limit)
+		force = Vector2(curve(relaxed, longitudinal_stiffness, sliding) * limit, lateral).limit_length(limit)
 		if trial > force.x:
 			high = trial
 		else:

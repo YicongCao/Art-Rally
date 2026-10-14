@@ -13,9 +13,12 @@ static func sample(wheel: RallyWheelState, mount: Vector3, state: PhysicsDirectB
 	wheel.compression = 0.0
 	wheel.length = config.suspension_rest
 	if not wheel.grounded:
+		wheel.surface = RallySurfaceSample.new()
 		return
 	wheel.point = hit.position
 	wheel.normal = hit.normal
+	var heading := -state.transform.basis.z.rotated(up, wheel.steer)
+	wheel.surface = RallySurfaceQuery.footprint(hit.collider, wheel.point, heading, heading.cross(up))
 	wheel.length = clampf(origin.distance_to(wheel.point) - config.wheel_radius, 0, config.suspension_rest)
 	wheel.compression = config.suspension_rest - wheel.length
 	var velocity := state.linear_velocity + state.angular_velocity.cross(wheel.point - state.transform.origin - state.center_of_mass)

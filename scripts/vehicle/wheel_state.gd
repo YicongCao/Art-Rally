@@ -20,6 +20,8 @@ var longitudinal_force: float = 0.0
 var lateral_force: float = 0.0
 var relaxed_slip: float = 0.0
 var relaxed_angle: float = 0.0
+var surface := RallySurfaceSample.new()
+var water_force := Vector3.ZERO
 
 
 func reset() -> void:
@@ -34,3 +36,5 @@ func reset() -> void:
 	lateral_force = 0.0
 	relaxed_slip = 0.0
 	relaxed_angle = 0.0
+	surface = RallySurfaceSample.new()
+	water_force = Vector3.ZERO
