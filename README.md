@@ -1,6 +1,27 @@
 # Art Rally
 
+## 简介
+
 低多边形画面、驾驶物理优先的拉力游戏。M1–M5 已完成代码实现：约 3.05 km 的“夕照松岭”现已应用确认过的 16:00 场景风格，配备 HUD/仪表、三视角、合成驾驶音效、尘泥水反馈与暂停设置。当前动力基线为 200 PS；真实手柄、听感和整段人工试玩仍需验收，打包属于 M6。
+
+<table>
+  <tr>
+    <td width="33%" align="center">
+      <a href="docs/previews/readme-gravel.jpg"><img src="docs/previews/readme-gravel.jpg" alt="砂石赛段实机画面：夕照山林、拉力赛车与驾驶 HUD" width="100%"></a><br>
+      <sub><b>夕照砂石 · 跟车视角</b></sub>
+    </td>
+    <td width="33%" align="center">
+      <a href="docs/previews/readme-water.jpg"><img src="docs/previews/readme-water.jpg" alt="泥地水洼实机画面：车辆涉水、飞溅与检查点" width="100%"></a><br>
+      <sub><b>泥地涉水 · 多路面反馈</b></sub>
+    </td>
+    <td width="33%" align="center">
+      <a href="docs/previews/readme-cockpit.jpg"><img src="docs/previews/readme-cockpit.jpg" alt="驾驶舱实机画面：赛车方向盘、数字仪表与柏油弯道" width="100%"></a><br>
+      <sub><b>柏油弯道 · 赛车驾驶舱</b></sub>
+    </td>
+  </tr>
+</table>
+
+以上为当前版本的游戏实机截图，点击图片查看大图。
 
 ## 开发环境
 
@@ -35,6 +56,8 @@ macOS 首次安装：`brew install --cask godot`。Homebrew 跟随新版发布�
 编辑器中按 **F5** 运行主赛段。进入游戏窗口后 F5 为重跑、F6 切到赛段、F7 切到原测试场；注意与编辑器快捷键的焦点区别。原测试场保留直道、25 m 定圆、蛇形、减速带和跳跃，并在远端 320–520 m 区域增加砂石、泥地、草土和水洼对比区。
 
 `check` 验证环境、输入、轮胎、车辆动态、多路面、水阻、道路几何、赛段会话及恢复；长距离完整物理试跑独立为 `stage-check`，避免每次改动都等待完整跑段。日志存入忽略版本控制的 `logs/`。真实手柄连接与新增驾驶体验需人工验收。
+
+简介区的三张实机截图可用 `godot --path . --max-fps 60 --script tests/readme_capture.gd -- --test-defaults` 批量更新，需要真实图形窗口；工具使用默认设置，不修改玩家的本机设置。
 
 ## 输入预设
 
