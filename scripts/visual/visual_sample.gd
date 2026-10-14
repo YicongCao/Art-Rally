@@ -17,6 +17,7 @@ var saved_sun_energy: float
 var camera_history_valid: bool = false
 var chase_position := Vector3.ZERO
 var effects := RallySampleEffects.new()
+var atmosphere := RallySampleAtmosphere.new()
 
 
 func _ready() -> void:
@@ -29,6 +30,7 @@ func _ready() -> void:
 	saved_sun_energy = $Sun.light_energy
 	saved_sun_rotation = $Sun.rotation_degrees
 	controls.restart_requested.connect(_reset)
+	atmosphere.build(landscape, $Sun)
 	_setup_light()
 	scenery.build(landscape)
 	car_style.build(vehicle)
@@ -56,11 +58,12 @@ func _setup_light() -> void:
 	var sky := Sky.new()
 	var material := ShaderMaterial.new()
 	material.shader = preload("res://assets/shaders/sample_sky.gdshader")
+	material.set_shader_parameter("sun_direction", atmosphere.sun_direction)
 	sky.sky_material = material
 	styled_environment.sky = sky
 	styled_environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	styled_environment.ambient_light_color = Color("aec4cd")
-	styled_environment.ambient_light_energy = 0.48
+	styled_environment.ambient_light_color = Color("b4c8db")
+	styled_environment.ambient_light_energy = 0.42
 	styled_environment.reflected_light_source = Environment.REFLECTION_SOURCE_SKY
 	styled_environment.tonemap_mode = Environment.TONE_MAPPER_ACES
 	styled_environment.fog_enabled = true
@@ -72,9 +75,7 @@ func _setup_light() -> void:
 	styled_environment.ssao_radius = 1.0
 	styled_environment.ssao_intensity = 1.0
 	$WorldEnvironment.environment = styled_environment
-	$Sun.rotation_degrees = Vector3(-34,-65,0)
-	$Sun.light_color = Color("ffe3b4")
-	$Sun.light_energy = 0.95
+	atmosphere.apply_sun($Sun)
 	$Sun.directional_shadow_max_distance = 170
 	camera.far = 2800
 	camera.fov = 62
@@ -119,7 +120,7 @@ func _process(dt: float) -> void:
 	car_style.brake_material.emission_energy_multiplier = 1.5 if vehicle.command.brake > 0.1 else 0.15
 	effects.update(vehicle,landscape.style_enabled)
 	var p := landscape.route.project(vehicle.position,projection_hint,35)
-	readout.text = "PINE RIDGE / VISUAL STUDY 01\n%03d km/h   %s   %03d / 200 m" % [vehicle.linear_velocity.length()*3.6,_gear_name(),clampf(float(p.s)-RallySampleLandscape.START,0,200)]
+	readout.text = "PINE RIDGE / 16:00 STUDY 02\n%03d km/h   %s   %03d / 200 m" % [vehicle.linear_velocity.length()*3.6,_gear_name(),clampf(float(p.s)-RallySampleLandscape.START,0,200)]
 	if get_tree().paused: readout.text += "\nPAUSED - ENTER / START TO RESUME"
 	elif sample_complete: readout.text += "\nSAMPLE COMPLETE - R TO RESTART"
 	readout.get_parent().get_parent().visible = show_hud
@@ -155,9 +156,12 @@ func set_style(enabled: bool) -> void:
 	landscape.set_style(enabled)
 	car_style.set_style(enabled)
 	$WorldEnvironment.environment = styled_environment if enabled else gray_environment
-	$Sun.light_color = Color("ffe3b4") if enabled else saved_sun_color
-	$Sun.light_energy = 0.95 if enabled else saved_sun_energy
-	$Sun.rotation_degrees = Vector3(-34,-65,0) if enabled else saved_sun_rotation
+	if enabled:
+		atmosphere.apply_sun($Sun)
+	else:
+		$Sun.light_color = saved_sun_color
+		$Sun.light_energy = saved_sun_energy
+		$Sun.rotation_degrees = saved_sun_rotation
 
 
 func _exit_tree() -> void:
