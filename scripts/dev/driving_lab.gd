@@ -31,7 +31,7 @@ func _ready() -> void:
 	controls.pause_requested.connect(_toggle_pause)
 	controls.safety_pause_requested.connect(_safety_pause)
 	controls.reset_requested.connect(_reset)
-	controls.camera_requested.connect(func(): camera_mode = (camera_mode + 1) % 2; camera_snap = true)
+	controls.camera_requested.connect(_cycle_camera)
 	controls.telemetry_requested.connect(func(): telemetry_visible = not telemetry_visible)
 	controls.profile_requested.connect(_toggle_profile)
 	controls.export_requested.connect(_export)
@@ -53,6 +53,11 @@ func _ready() -> void:
 
 func _spawn_pose() -> Transform3D:
 	return Transform3D(Basis.IDENTITY, TestGround.SPAWN)
+
+
+func _cycle_camera() -> void:
+	camera_mode = (camera_mode+1)%2
+	camera_snap = true
 
 
 func _driver_command(speed: float, dt: float) -> DriverCommand:

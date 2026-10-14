@@ -9,6 +9,7 @@ var environment: Environment
 var scene: Node3D
 var previous_msaa: int = 0
 var elapsed: float = 0
+var camera_rig := RallyCameraRig.new()
 
 
 func build(owner_scene: Node3D) -> void:
@@ -17,6 +18,8 @@ func build(owner_scene: Node3D) -> void:
 	scenery.build(scene.generator)
 	atmosphere.build_at(scenery.dressing,scenery.route,scenery.center,scene.get_node("Sun"),1.8)
 	car_style.build(scene.vehicle)
+	camera_rig.build(scene.camera)
+	scene.vehicle.reset_completed.connect(camera_rig.reset)
 	flare.build(scene.camera)
 	environment = Environment.new()
 	environment.background_mode = Environment.BG_SKY
@@ -48,6 +51,7 @@ func build(owner_scene: Node3D) -> void:
 
 func update(dt: float) -> void:
 	if not scene.get_tree().paused: elapsed += dt
+	camera_rig.update(scene.camera,scene.vehicle,scene.camera_mode,scene.preferences.values.camera_motion,scene.get_tree().paused,dt)
 	for i: int in range(scenery.foliage.animated_arms.size()):
 		scenery.foliage.animated_arms[i].rotation.z = sin(elapsed*2.4+i)*0.2
 	car_style.brake_material.emission_energy_multiplier = 1.5 if scene.vehicle.command.brake>0.1 else 0.15

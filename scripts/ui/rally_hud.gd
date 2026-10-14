@@ -88,7 +88,7 @@ func _draw() -> void:
 	draw_rect(Rect2(988,94,244*clampf(model.progress/model.length,0,1),3),AMBER)
 	_draw_note()
 	_draw_map()
-	_draw_gauge()
+	if int(model.get("camera_mode",0))!=2: _draw_gauge()
 	if not str(model.warning).is_empty():
 		panel(Rect2(422,625,435,44),Color(0.15,0.08,0.05,0.94))
 		center_text(model.warning,Vector2(640,653),18,AMBER)

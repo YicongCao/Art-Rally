@@ -66,7 +66,9 @@ func build(settings: RallyGameSettings) -> void:
 	button(buttons,"重跑赛段",func(): restart_requested.emit())
 	button(buttons,"计时 / 练习",func(): practice_requested.emit())
 	var scroll := ScrollContainer.new()
-	scroll.custom_minimum_size = Vector2(475,335)
+	scroll.custom_minimum_size = Vector2(475,clampf(get_viewport().get_visible_rect().size.y-310,180,335))
+	panel.custom_minimum_size.y = 0
+	root.resized.connect(func(): scroll.custom_minimum_size.y = clampf(get_viewport().get_visible_rect().size.y-310,180,335))
 	column.add_child(scroll)
 	var list := VBoxContainer.new()
 	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL

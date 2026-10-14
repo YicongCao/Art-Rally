@@ -102,7 +102,9 @@ func _process(dt: float) -> void:
 	game_hud_clock += dt
 	if game_hud_clock >= 0.05:
 		game_hud_clock = 0
-		game_hud.refresh(RallyHUD.data_for(vehicle,session,get_tree().paused))
+		var data := RallyHUD.data_for(vehicle,session,get_tree().paused)
+		data["camera_mode"] = camera_mode
+		game_hud.refresh(data)
 	presentation.update(dt)
 	feedback.update(vehicle,preferences,controls,get_tree().paused,dt)
 
@@ -164,6 +166,11 @@ func _save_preferences() -> void:
 func _toggle_profile() -> void:
 	light_assist = not light_assist
 	preferences.apply_input(controls,light_assist)
+
+
+func _cycle_camera() -> void:
+	camera_mode = (camera_mode+1)%3
+	camera_snap = true
 
 
 func _toggle_pause() -> void:
