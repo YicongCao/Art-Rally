@@ -16,6 +16,7 @@ var saved_sun_rotation: Vector3
 var saved_sun_energy: float
 var camera_history_valid: bool = false
 var chase_position := Vector3.ZERO
+var effects := RallySampleEffects.new()
 
 
 func _ready() -> void:
@@ -31,10 +32,17 @@ func _ready() -> void:
 	_setup_light()
 	scenery.build(landscape)
 	car_style.build(vehicle)
+	effects.build(self)
 	vehicle.reset_completed.connect(func(): camera_history_valid = false)
+	controls.camera_requested.connect(func(): camera_history_valid = false)
 	sample_label = readout
 	notice.text = "WASD drive | SPACE handbrake | R restart | C camera\nG visual A/B | 1/2/3 viewpoints | TAB clean view | F7 lab\n200 m sample only - full stage remains unchanged"
 	for label: Label in [readout, details, notice]: label.add_theme_font_size_override("font_size",14)
+	var font := SystemFont.new()
+	font.font_names = PackedStringArray(["Avenir Next","DejaVu Sans"])
+	readout.add_theme_font_override("font",font)
+	readout.add_theme_font_size_override("font_size",18)
+	notice.add_theme_font_size_override("font_size",12)
 
 
 func _spawn_pose() -> Transform3D:
@@ -109,6 +117,7 @@ func _process(dt: float) -> void:
 	for i: int in range(scenery.animated_arms.size()):
 		scenery.animated_arms[i].rotation.z = sin(animation_time*2.4+i)*0.2
 	car_style.brake_material.emission_energy_multiplier = 1.5 if vehicle.command.brake > 0.1 else 0.15
+	effects.update(vehicle,landscape.style_enabled)
 	var p := landscape.route.project(vehicle.position,projection_hint,35)
 	readout.text = "PINE RIDGE / VISUAL STUDY 01\n%03d km/h   %s   %03d / 200 m" % [vehicle.linear_velocity.length()*3.6,_gear_name(),clampf(float(p.s)-RallySampleLandscape.START,0,200)]
 	if get_tree().paused: readout.text += "\nPAUSED - ENTER / START TO RESUME"

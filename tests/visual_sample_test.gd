@@ -2,6 +2,7 @@ extends "res://tests/test_suite.gd"
 
 
 func _run() -> void:
+	var before_msaa := root.msaa_3d
 	var scene: Node3D = load("res://scenes/dev/visual_sample.tscn").instantiate()
 	root.add_child(scene)
 	await ticks(240)
@@ -33,6 +34,18 @@ func _run() -> void:
 	scene.set_style(true)
 	check(scene.car_style.body.visible and not scene.vehicle.get_node("Body").visible, "Styled body is opt-in and does not replace baseline asset")
 	check(scene.vehicle.config.resource_path.is_empty() and not load("res://resources/vehicles/baseline.tres").contact_envelope, "Sample uses local vehicle resource without mutating shared configuration")
+	scene.effects.update(scene.vehicle,true)
+	check(not scene.effects.emitters[0].emitting,"Stationary contact does not create cosmetic dust")
+	var wheel: RallyWheelState = scene.vehicle.wheels[2]
+	wheel.longitudinal_speed = 15
+	scene.effects.update(scene.vehicle,true)
+	check(scene.effects.emitters[0].emitting,"Dust emission reads actual contacting gravel wheel state")
+	wheel.grounded = false
+	scene.effects.update(scene.vehicle,true)
+	check(not scene.effects.emitters[0].emitting,"Airborne wheel cannot emit ground dust")
+	scene.effects.update(scene.vehicle,false)
+	check(not scene.effects.emitters[0].visible,"A/B switch removes particle presentation too")
 	scene.queue_free()
 	await process_frame
+	check(root.msaa_3d == before_msaa, "Leaving sample restores viewport settings for baseline scenes")
 	finish()

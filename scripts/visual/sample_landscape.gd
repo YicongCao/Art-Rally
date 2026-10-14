@@ -130,24 +130,34 @@ func _build_terrain() -> void:
 
 
 func _build_mountains() -> void:
+	var floor_mesh := PlaneMesh.new()
+	floor_mesh.size = Vector2(6000,6000)
+	var floor_material := StandardMaterial3D.new()
+	floor_material.albedo_color = Color("657969")
+	floor_material.roughness = 1
+	floor_material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	floor_mesh.material = floor_material
+	var floor_visual := MeshInstance3D.new()
+	floor_visual.name = "DistantValleyFloor"
+	floor_visual.mesh = floor_mesh
+	floor_visual.position = center+Vector3.DOWN*35
+	dressing.add_child(floor_visual)
 	for ring: int in range(3):
 		var tool := SurfaceTool.new()
 		tool.begin(Mesh.PRIMITIVE_TRIANGLES)
-		var radius := 580.0+ring*380.0
-		for i: int in range(96):
-			var a := TAU*i/96.0
-			var b := TAU*(i+1)/96.0
-			var height_a := 90+55*sin(a*5+ring)+35*sin(a*9+2)+ring*22
-			var height_b := 90+55*sin(b*5+ring)+35*sin(b*9+2)+ring*22
-			var near_a := center+Vector3(cos(a)*radius,-40,sin(a)*radius)
-			var near_b := center+Vector3(cos(b)*radius,-40,sin(b)*radius)
-			var peak_a := center+Vector3(cos(a)*(radius+160),height_a,sin(a)*(radius+160))
-			var peak_b := center+Vector3(cos(b)*(radius+160),height_b,sin(b)*(radius+160))
-			var far_a := center+Vector3(cos(a)*(radius+380),-40,sin(a)*(radius+380))
-			var far_b := center+Vector3(cos(b)*(radius+380),-40,sin(b)*(radius+380))
-			for vertex: Vector3 in [near_a,peak_b,near_b,near_a,peak_a,peak_b,peak_a,far_a,far_b,peak_a,far_b,peak_b]:
-				tool.set_color(Color("67796d").lerp(Color("9cbbc5"),ring*0.32).darkened(0.08*sin(a*13)).srgb_to_linear())
-				tool.add_vertex(vertex)
+		for i: int in range(144):
+			for band: int in range(4):
+				var a := _mountain_point(ring,i,band)
+				var b := _mountain_point(ring,i+1,band)
+				var c := _mountain_point(ring,i,band+1)
+				var d := _mountain_point(ring,i+1,band+1)
+				for vertex: Vector3 in [a,c,b,b,c,d]:
+					var stone := smoothstep(30,140,vertex.y-center.y)
+					var base := Color("52684f").lerp(Color("a0a79e"),stone)
+					var color := base.lerp(Color("88acbd"),ring*0.26).darkened(0.09*sin(i*0.8+band))
+					tool.set_color(color.srgb_to_linear())
+					tool.set_smooth_group(-1)
+					tool.add_vertex(vertex)
 		tool.generate_normals()
 		var mountain := MeshInstance3D.new()
 		mountain.name = "MountainLayer%d" % ring
@@ -158,6 +168,15 @@ func _build_mountains() -> void:
 		material.cull_mode = BaseMaterial3D.CULL_DISABLED
 		mountain.material_override = material
 		dressing.add_child(mountain)
+
+
+func _mountain_point(ring: int, index: int, band: int) -> Vector3:
+	var angle := TAU*index/144.0
+	var radius := 520.0+ring*390.0+band*95.0+sin(angle*9+band*0.9)*22
+	var profile: float = [-40,38,150,72,-40][band]
+	var crags := 0.7+0.3*sin(angle*5+ring)+0.22*sin(angle*11+1)+0.12*sin(angle*23+band)
+	var height := profile*crags+maxf(profile,0)*ring*0.3
+	return center+Vector3(cos(angle)*radius,height,sin(angle)*radius)
 
 
 func set_style(enabled: bool) -> void:
