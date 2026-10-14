@@ -18,6 +18,7 @@ var result_safety_reset: bool = false
 var presentation := RallyStagePresentation.new()
 var preferences := RallyGameSettings.new()
 var pause_menu: RallyPauseMenu
+var feedback := RallyVehicleFeedback.new()
 
 
 func _ready() -> void:
@@ -57,6 +58,8 @@ func _ready() -> void:
 	pause_menu.defaults_requested.connect(func(): preferences.reset(); _apply_preferences(); _save_preferences())
 	controls.transmission_requested.connect(func(): preferences.set_value("automatic",vehicle.drivetrain.automatic); _save_preferences())
 	_apply_preferences()
+	feedback.build(self)
+	vehicle.reset_completed.connect(feedback.reset)
 	if get_tree().paused: pause_menu.show_menu(true)
 
 
@@ -101,9 +104,11 @@ func _process(dt: float) -> void:
 		game_hud_clock = 0
 		game_hud.refresh(RallyHUD.data_for(vehicle,session,get_tree().paused))
 	presentation.update(dt)
+	feedback.update(vehicle,preferences,controls,get_tree().paused,dt)
 
 
 func _exit_tree() -> void:
+	feedback.dispose()
 	presentation.dispose()
 
 
