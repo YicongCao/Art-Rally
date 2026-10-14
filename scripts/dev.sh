@@ -82,8 +82,13 @@ case "$MODE" in
     run_logged "$ROOT/logs/preview_drive.log" --headless --path "$ROOT" --fixed-fps 120 --script res://tests/preview_drive.gd
     grep -q '^TEST RESULT: .* 0 failures$' "$ROOT/logs/preview_drive.log"
     ;;
+  preview-render-check)
+    mkdir -p "$ROOT/logs"
+    run_logged "$ROOT/logs/flare_render_check.log" --path "$ROOT" --max-fps 60 --script res://tests/flare_render_check.gd
+    grep -q '^TEST RESULT: .* 0 failures$' "$ROOT/logs/flare_render_check.log"
+    ;;
   *)
-    echo "Usage: $0 {doctor|editor|run|lab|stage|preview|check|regression|stage-check|preview-check} [Godot options]" >&2
+    echo "Usage: $0 {doctor|editor|run|lab|stage|preview|check|regression|stage-check|preview-check|preview-render-check} [Godot options]" >&2
     exit 2
     ;;
 esac

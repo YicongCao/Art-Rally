@@ -17,6 +17,8 @@ func _run() -> void:
 	scene.jump_to(station)
 	scene.show_hud = "--hud" in OS.get_cmdline_user_args()
 	scene.set_style(not gray)
+	scene.sun_view = "--sun" in OS.get_cmdline_user_args()
+	scene.flare.enabled = not "--no-flare" in OS.get_cmdline_user_args()
 	for i: int in range(180):
 		paused = false
 		await physics_frame
@@ -35,10 +37,13 @@ func _run() -> void:
 		scene.camera.look_at(pose.origin + Vector3.UP*0.4 - pose.basis.z*8)
 	for i: int in range(10): await process_frame
 	await RenderingServer.frame_post_draw
+	print("SUN: uv=",scene.flare.screen_sun," strength=",scene.flare.current_strength)
 	DirAccess.make_dir_recursive_absolute("res://logs")
 	var suffix := "_angle" if angle else ""
 	if gray: suffix += "_gray"
 	if "--moving" in OS.get_cmdline_user_args(): suffix += "_moving"
+	if "--sun" in OS.get_cmdline_user_args(): suffix += "_sun"
+	if "--no-flare" in OS.get_cmdline_user_args(): suffix += "_no_flare"
 	var path := "res://logs/visual_sample_%d%s.png" % [station,suffix]
 	root.get_texture().get_image().save_png(path)
 	print("Saved ", path)

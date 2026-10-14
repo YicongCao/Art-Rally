@@ -18,6 +18,8 @@ var camera_history_valid: bool = false
 var chase_position := Vector3.ZERO
 var effects := RallySampleEffects.new()
 var atmosphere := RallySampleAtmosphere.new()
+var flare := RallySampleFlare.new()
+var sun_view: bool = false
 
 
 func _ready() -> void:
@@ -35,10 +37,11 @@ func _ready() -> void:
 	scenery.build(landscape)
 	car_style.build(vehicle)
 	effects.build(self)
+	flare.build(camera)
 	vehicle.reset_completed.connect(func(): camera_history_valid = false)
 	controls.camera_requested.connect(func(): camera_history_valid = false)
 	sample_label = readout
-	notice.text = "WASD drive | SPACE handbrake | R restart | C camera\nG visual A/B | 1/2/3 viewpoints | TAB clean view | F7 lab\n200 m sample only - full stage remains unchanged"
+	notice.text = "WASD drive | SPACE handbrake | R restart | C camera\nG visual A/B | 1/2/3 views | V sun view | L lens flare\nTAB clean view | F7 lab | 200 m sample only"
 	for label: Label in [readout, details, notice]: label.add_theme_font_size_override("font_size",14)
 	var font := SystemFont.new()
 	font.font_names = PackedStringArray(["Avenir Next","DejaVu Sans"])
@@ -114,6 +117,10 @@ func _process(dt: float) -> void:
 		camera_history_valid = true
 		camera.position = chase_position
 		camera.look_at(pose.origin+forward*7+Vector3.UP*0.8)
+	if sun_view:
+		var horizontal := Vector3(atmosphere.sun_direction.x,0,atmosphere.sun_direction.z).normalized().rotated(Vector3.UP,deg_to_rad(20))
+		camera.look_at(camera.global_position+(horizontal*cos(deg_to_rad(9))+Vector3.UP*sin(deg_to_rad(9)))*100)
+	flare.update(camera,atmosphere.sun_direction,landscape.style_enabled,dt)
 	if not get_tree().paused: animation_time += dt
 	for i: int in range(scenery.animated_arms.size()):
 		scenery.animated_arms[i].rotation.z = sin(animation_time*2.4+i)*0.2
@@ -141,6 +148,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		KEY_1: jump_to(433)
 		KEY_2: jump_to(515)
 		KEY_3: jump_to(590)
+		KEY_V: sun_view = not sun_view
+		KEY_L: flare.enabled = not flare.enabled
 
 
 func jump_to(s: float) -> void:
