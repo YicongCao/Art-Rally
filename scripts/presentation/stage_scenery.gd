@@ -10,6 +10,7 @@ var terrain_noise := FastNoiseLite.new()
 var lookup: Dictionary = {}
 var obstacles: Array[StaticBody3D] = []
 var spectator_zones: Array[Vector3] = []
+var spectator_regions: Array[Dictionary] = []
 var grass_batches: Array[MultiMeshInstance3D] = []
 var all_batches: Array[MultiMeshInstance3D] = []
 var gravel_batches: int = 0
@@ -38,7 +39,9 @@ func build(stage: RallyStageGenerator) -> void:
 	foliage.build_range(self,12,route.length-35,0.58)
 	for station: float in foliage.spectator_stations:
 		spectator_zones.append(ground_at(station+5,8))
+		spectator_regions.append({"a":ground_at(station-1,8),"b":ground_at(station+13,8)})
 	_build_obstacles()
+	_build_guardrails()
 	_build_gravel()
 	for node: Node in dressing.get_children():
 		if node is MultiMeshInstance3D:
@@ -96,6 +99,9 @@ func ground_at(s: float,lateral: float) -> Vector3:
 func allows_decoration(point: Vector3, kind: String, scale_factor: float) -> bool:
 	var p := nearest(point)
 	var radius := 2.8*scale_factor if kind in ["pine","umbrella"] else (1.4*scale_factor if kind == "rock" else 0.25)
+	if kind in ["pine","umbrella","rock"]:
+		for station: float in foliage.spectator_stations:
+			if point.distance_to(ground_at(station+5,8)) < 8+radius: return false
 	return float(p.distance) > route.width_at(p.s)*0.5+radius+0.15
 
 
@@ -155,17 +161,25 @@ func _build_mountains() -> void:
 
 func _build_obstacles() -> void:
 	for placement: Dictionary in foliage.placements:
-		if placement.kind not in ["pine","umbrella"] or absf(placement.lateral) > 14: continue
+		var tree: bool = placement.kind in ["pine","umbrella"]
+		var rock: bool = placement.kind=="rock" and placement.scale>0.8 and absf(placement.lateral)<11
+		if (not tree and not rock) or absf(placement.lateral) > 14: continue
 		var body := StaticBody3D.new()
 		body.position = placement.point
 		body.collision_layer = 4
 		body.collision_mask = 2
 		var collision := CollisionShape3D.new()
-		var cylinder := CylinderShape3D.new()
-		cylinder.radius = 0.20*float(placement.scale)
-		cylinder.height = 4*float(placement.scale)
-		collision.position.y = cylinder.height*0.5
-		collision.shape = cylinder
+		if tree:
+			var cylinder := CylinderShape3D.new()
+			cylinder.radius = 0.20*float(placement.scale)
+			cylinder.height = 4*float(placement.scale)
+			collision.position.y = cylinder.height*0.5
+			collision.shape = cylinder
+		else:
+			var sphere := SphereShape3D.new()
+			sphere.radius = 0.6*float(placement.scale)
+			collision.position.y = 0.4*float(placement.scale)
+			collision.shape = sphere
 		body.add_child(collision)
 		add_child(body)
 		obstacles.append(body)
@@ -202,9 +216,28 @@ func _build_gravel() -> void:
 		gravel_batches += 1
 
 
+func _build_guardrails() -> void:
+	for s: int in range(1680,2080,4):
+		var angle := route.tangent_at(s).signed_angle_to(route.tangent_at(s+8),Vector3.UP)
+		if absf(angle)<0.025: continue
+		var lateral := signf(angle)*(route.width_at(s)*0.5+1.1)
+		var a := ground_at(s,lateral)+Vector3.UP*0.62
+		var b := ground_at(s+4,lateral)+Vector3.UP*0.62
+		var rotation := Basis.looking_at((b-a).normalized()).get_euler()*180/PI
+		var rail := GrayboxGeometry.box(dressing,"Guardrail",Vector3(0.12,0.18,a.distance_to(b)+0.1),(a+b)*0.5,Color("929b8d"),true,rotation) as StaticBody3D
+		rail.collision_layer = 4
+		obstacles.append(rail)
+		GrayboxGeometry.box(dressing,"RailPost",Vector3(0.11,0.70,0.11),a-Vector3.UP*0.3,Color("5e6b60"))
+
+
 func spectator_intrusion(point: Vector3) -> bool:
-	for zone: Vector3 in spectator_zones:
-		if absf(point.y-zone.y)<4 and Vector2(point.x-zone.x,point.z-zone.z).length()<3.5: return true
+	for region: Dictionary in spectator_regions:
+		var a: Vector3 = region.a
+		var b: Vector3 = region.b
+		var delta := Vector2(b.x-a.x,b.z-a.z)
+		var t := clampf(Vector2(point.x-a.x,point.z-a.z).dot(delta)/maxf(delta.length_squared(),0.01),0,1)
+		var at := a.lerp(b,t)
+		if absf(point.y-at.y)<4 and Vector2(point.x-at.x,point.z-at.z).length()<2.3: return true
 	return false
 
 

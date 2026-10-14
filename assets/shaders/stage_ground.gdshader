@@ -38,6 +38,7 @@ void fragment() {
 	vec3 earth = mix(vec3(0.19, 0.14, 0.075), vec3(0.29, 0.24, 0.14), noise(world.xz * 0.31));
 	vec3 color = mix(grass, earth, smoothstep(0.44, 0.8, noise(world.xz * 0.11)) * 0.7);
 	float road_bump = 0.0;
+	float stone_speckle = 1.0;
 	if (road_mesh) {
 		float half_width = 2.8 - 0.25*smoothstep(1130.0,1170.0,UV.y)*(1.0-smoothstep(1620.0,1660.0,UV.y));
 		float on_road = 1.0 - smoothstep(half_width-0.15, half_width+0.1, abs(UV.x));
@@ -55,6 +56,7 @@ void fragment() {
 		color = mix(color, earth * 1.09, shoulder);
 		float mud = step(1150.0,UV.y)*(1.0-step(1650.0,UV.y));
 		float asphalt = step(1650.0,UV.y)*(1.0-step(2100.0,UV.y));
+		stone_speckle = mix(1.0,mix(0.15,0.07,asphalt),max(mud,asphalt)*on_road);
 		vec3 mud_color = mix(vec3(0.075,0.044,0.021),vec3(0.17,0.10,0.045),noise(world.xz*0.4));
 		mud_color *= 1.0-tracks*0.25;
 		vec3 tarmac = vec3(0.042,0.047,0.051)*(0.9+grit*0.2);
@@ -65,7 +67,7 @@ void fragment() {
 		color = mix(color, gravel, on_road);
 	}
 	color *= 0.92 + grit * 0.14;
-	color += vec3(fleck * 0.035);
+	color += vec3(fleck * 0.035 * stone_speckle);
 	ALBEDO = color;
 	ROUGHNESS = road_mesh && UV.y>=1150.0 && UV.y<1650.0 ? 0.45 : 0.96;
 	vec2 bumps = vec2(dFdx(road_bump),dFdy(road_bump));

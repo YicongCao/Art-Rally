@@ -19,6 +19,7 @@ func _run() -> void:
 		supported = supported and not hit.is_empty() and absf(hit.position.y-p.y)<0.08
 	check(supported,"Scenery does not intrude into driveable road center")
 	check(scenery.spectator_intrusion(scenery.spectator_zones[0]),"Spectator safety volume is active")
+	check(scenery.spectator_intrusion(scenery.ground_at(80,7.5)) and scenery.spectator_intrusion(scenery.ground_at(90.2,7.5)),"Safety capsule protects both ends of spectator row")
 	check(not scenery.spectator_intrusion(generator.route.position_at(85)),"Spectator protection leaves normal road unobstructed")
 	scenery.set_quality(true)
 	check(not scenery.grass_batches[0].visible,"Low setting hides small detail without deleting collision")
