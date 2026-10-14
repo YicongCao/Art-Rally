@@ -11,8 +11,8 @@
       <sub><b>夕照砂石 · 跟车视角</b></sub>
     </td>
     <td width="33%" align="center">
-      <a href="docs/previews/readme-water.jpg"><img src="docs/previews/readme-water.jpg" alt="泥地水洼实机画面：车辆涉水、飞溅与检查点" width="100%"></a><br>
-      <sub><b>泥地涉水 · 多路面反馈</b></sub>
+      <a href="docs/previews/readme-debug.jpg"><img src="docs/previews/readme-debug.jpg" alt="实时调试实机画面：四轮状态、发动机扭矩曲线、车身 G-G 图与转速车速历史" width="100%"></a><br>
+      <sub><b>实时调试 · 四轮与动力可视化</b></sub>
     </td>
     <td width="33%" align="center">
       <a href="docs/previews/readme-cockpit.jpg"><img src="docs/previews/readme-cockpit.jpg" alt="驾驶舱实机画面：赛车方向盘、数字仪表与柏油弯道" width="100%"></a><br>
@@ -90,6 +90,7 @@ macOS 首次安装：`brew install --cask godot`。Homebrew 跟随新版发布�
 | 恢复车辆（计时赛段 +5s） | R | Y / 顶部面键 |
 | 跟车 / 引擎盖 / 简化驾驶舱 | C | X / 左侧面键 |
 | 切换遥测 | T | 未预设 |
+| 显示 / 隐藏实时可视化调试 | F9 | 未预设 |
 | 自动/手动换挡 | M | 未预设 |
 | 单射线/轮胎包络 | F3 | 未预设 |
 | 计时/练习（重开赛段） | F4 | 未预设 |
@@ -102,6 +103,10 @@ macOS 首次安装：`brew install --cask godot`。Homebrew 跟随新版发布�
 Esc 打开暂停/设置，Enter 或手柄 Start 明确恢复；失焦和活动手柄断开也会暂停。菜单支持键盘方向键/手柄导航，可调整音量、光斑、驾驶舱轻微震动、画面细节、自动挡、键盘辅助、踏板平滑和手柄死区；少量制动平衡/弹簧调校保存在本机，随时可恢复默认。配置位置为 `user://driving_settings.cfg`，不会修改 Git 中的基线车辆资源。
 
 F8 暂停并导出最近最多 120 秒遥测至 `user://telemetry/`。T 在正式 HUD 和四轮开发遥测之间切换。主 HUD 显示转速弧、速度、挡位、踏板条、路面、路线图、计时和路书；驾驶舱模式使用舱内数字仪表，避免叠加两套大仪表。
+
+**F9** 切换实时可视化调试面板（赛段、测试场和样板均可用）：四个轮胎独立展示接地/驱动状态、法向载荷、悬架行程、纵向滑移、侧偏角、轮速、材质、水深、水阻和摩擦圆；发动机面板显示资源中的满油门扭矩曲线、当前净输出工作点、功率、离合传递扭矩，以及踏板到实际油门的截断；另有车身横纵向 G-G 图、姿态、载荷分配和最近 6 秒的转速/车速曲线。绿色摩擦圆向量横轴为 Fy、纵轴为 Fx，载荷条中线为单轮静态载荷。历史以 20 Hz 采样，暂停冻结，复位/开关清空，不改变驾驶物理或抢走手柄输入；T 与 F9 的面板互斥。图表轴超出范围时只裁剪标记，数值仍显示原值。
+
+读数定义、验证和截图更新命令见 [实时可视化调试说明](docs/DEBUG_PANEL.zh-CN.md)。
 
 ## 赛段规则
 

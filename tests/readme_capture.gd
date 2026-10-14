@@ -14,17 +14,20 @@ func _run() -> void:
 	root.add_child(scene)
 	scene.preferences.set_value("volume", 0)
 	scene._apply_preferences()
-	await capture(493, 0, 520, "readme-gravel.jpg")
-	await capture(1250, 0, 1281, "readme-water.jpg")
-	await capture(1740, 2, 1770, "readme-cockpit.jpg")
+	if not "--debug-only" in OS.get_cmdline_user_args():
+		await capture(493, 0, 520, "readme-gravel.jpg")
+	await capture(1250, 0, 1281, "readme-debug.jpg", true)
+	if not "--debug-only" in OS.get_cmdline_user_args():
+		await capture(1740, 2, 1770, "readme-cockpit.jpg")
 	scene.queue_free()
 	paused = false
 	for i: int in range(10): await process_frame
 	finish()
 
 
-func capture(station: float, mode: int, target: float, filename: String) -> void:
+func capture(station: float, mode: int, target: float, filename: String, debug: bool = false) -> void:
 	var route: RallyStageRoute = scene.generator.route
+	scene.debug_panel.set_enabled(false)
 	scene.set_physics_process(true)
 	scene.vehicle.freeze = false
 	scene.vehicle.command_source = scene._driver_command
@@ -48,6 +51,18 @@ func capture(station: float, mode: int, target: float, filename: String) -> void
 		scene.controls.resume()
 		scene.pause_menu.show_menu(false)
 		await physics_frame
+	if debug:
+		var key := InputEventKey.new()
+		key.physical_keycode = KEY_F9
+		key.keycode = KEY_F9
+		key.pressed = true
+		Input.parse_input_event(key)
+		for i: int in range(3): await process_frame
+		var release: InputEventKey = key.duplicate()
+		release.pressed = false
+		Input.parse_input_event(release)
+		check(scene.debug_panel.visible, "Real F9 input opens visual debugging")
+		if not scene.debug_panel.visible: return
 	hint = route.index_at(station)
 	scene.vehicle.command_source = driver
 	var current := station
@@ -66,10 +81,20 @@ func capture(station: float, mode: int, target: float, filename: String) -> void
 		scene.pause_menu.show_menu(false)
 		await process_frame
 	await RenderingServer.frame_post_draw
+	if debug:
+		check(scene.debug_panel.model.wheels.size() == 4 and scene.debug_panel.history.size() > 20, "Debug screenshot contains live four-wheel data and populated histories")
+		check(not scene.game_hud.visible and scene.debug_visual.visible, "Visual debugger replaces HUD and enables world-space force arrows")
 	var image := root.get_texture().get_image()
 	check(image.get_size() == Vector2i(1280, 720), filename + " has the expected 16:9 frame")
 	check(image.save_jpg("res://docs/previews/" + filename, 0.9) == OK, filename + " saves successfully")
 	print("README CAPTURE: ", filename, " station=", current, " speed_kmh=", scene.vehicle.linear_velocity.length() * 3.6)
+	if debug:
+		root.size = Vector2i(960, 540)
+		for i: int in range(8): await process_frame
+		await RenderingServer.frame_post_draw
+		root.get_texture().get_image().save_png("res://logs/debug_panel_960.png")
+		check(scene.debug_panel.size == root.get_visible_rect().size, "Real smaller-window debug layout follows viewport anchors")
+		root.size = Vector2i(1280, 720)
 
 
 func driver(speed: float, _dt: float) -> DriverCommand:
