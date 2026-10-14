@@ -14,6 +14,7 @@ var stage_hud: Label
 var checkpoint_visual: MeshInstance3D
 var respawn_wait: bool = false
 var result_safety_reset: bool = false
+var presentation := RallyStagePresentation.new()
 
 
 func _ready() -> void:
@@ -56,6 +57,7 @@ func _ready() -> void:
 	mesh.material = material
 	checkpoint_visual.mesh = mesh
 	add_child(checkpoint_visual)
+	presentation.build(self)
 
 
 func _spawn_pose() -> Transform3D:
@@ -82,6 +84,8 @@ func _physics_process(dt: float) -> void:
 		return
 	if vehicle.position.y < generator.route.position_at(session.progress).y - 12 or float(session.projection.get("distance", 0)) > 35:
 		_reset()
+	elif presentation.scenery.spectator_intrusion(vehicle.position):
+		_reset()
 
 
 func _process(dt: float) -> void:
@@ -105,6 +109,11 @@ func _process(dt: float) -> void:
 	if checkpoint_visual.visible:
 		checkpoint_visual.transform = generator.route.pose_at(session.gates[session.next_gate], 0.025)
 	readout.text = "ART RALLY / SUNSET RIDGE\n%03d km/h    GEAR %s    %s" % [vehicle.linear_velocity.length() * 3.6, _gear_name(), RallySurfaceQuery.PROFILES[vehicle.wheels[0].surface.surface_id].label]
+	presentation.update(dt)
+
+
+func _exit_tree() -> void:
+	presentation.dispose()
 
 
 func _format_time(seconds: float) -> String:

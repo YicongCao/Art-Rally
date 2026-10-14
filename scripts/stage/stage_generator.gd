@@ -5,6 +5,8 @@ extends Node3D
 var route := RallyStageRoute.new()
 var chunk_bodies: Array[StaticBody3D] = []
 var decoration_positions := PackedVector3Array()
+var road_visuals: Array[MeshInstance3D] = []
+var water_visuals: Array[MeshInstance3D] = []
 
 
 func _ready() -> void:
@@ -83,11 +85,9 @@ func _build_chunk(start: int, end: int) -> void:
 		for col: int in range(8):
 			var color := RallySurfaceQuery.PROFILES[definition.surface_id(route.distances[i])].color if col in [3, 4] else Color("59633a")
 			if col in [2, 5]: color = Color("73664b")
-			var a := vertex_at(i, col)
-			var b := vertex_at(i + 1, col)
-			var c := vertex_at(i, col + 1)
-			var d := vertex_at(i + 1, col + 1)
-			for vertex: Vector3 in [a, b, c, c, b, d]:
+			for corner: Vector2i in [Vector2i(i,col),Vector2i(i+1,col),Vector2i(i,col+1),Vector2i(i,col+1),Vector2i(i+1,col),Vector2i(i+1,col+1)]:
+				var vertex := vertex_at(corner.x,corner.y)
+				tool.set_uv(Vector2((vertex-route.points[corner.x]).dot(route.rights[corner.x]),route.distances[corner.x]))
 				tool.set_color(color)
 				tool.add_vertex(vertex)
 	tool.generate_normals()
@@ -99,6 +99,7 @@ func _build_chunk(start: int, end: int) -> void:
 	var visual := MeshInstance3D.new()
 	visual.mesh = mesh
 	add_child(visual)
+	road_visuals.append(visual)
 	var body := StaticBody3D.new()
 	body.collision_layer = 1
 	body.collision_mask = 2
@@ -122,7 +123,10 @@ func _build_water(start: int, end: int) -> void:
 		var b := route.points[i + 1] - route.rights[i + 1] * 2.65 + Vector3.UP * 0.025
 		var c := route.points[i] + route.rights[i] * 2.65 + Vector3.UP * 0.025
 		var d := route.points[i + 1] + route.rights[i + 1] * 2.65 + Vector3.UP * 0.025
-		for vertex: Vector3 in [a, b, c, c, b, d]: tool.add_vertex(vertex)
+		for index: int in range(6):
+			var row := i+1 if index in [1,4,5] else i
+			tool.set_uv(Vector2(-2.65 if index in [0,1,4] else 2.65,route.distances[row]))
+			tool.add_vertex([a,b,c,c,b,d][index])
 		vertices += 6
 	if vertices == 0: return
 	tool.generate_normals()
@@ -135,6 +139,7 @@ func _build_water(start: int, end: int) -> void:
 	var visual := MeshInstance3D.new()
 	visual.mesh = mesh
 	add_child(visual)
+	water_visuals.append(visual)
 
 
 func _build_markers() -> void:

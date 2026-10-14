@@ -12,7 +12,11 @@ var far_clouds: Array[MeshInstance3D] = []
 
 
 func build(land: RallySampleLandscape, sun: DirectionalLight3D) -> void:
-	var forward := land.route.tangent_at(land.START + 40)
+	build_at(land.dressing,land.route,land.center,sun)
+
+
+func build_at(parent: Node3D, route: RallyStageRoute, center: Vector3, sun: DirectionalLight3D, extent: float = 1.0) -> void:
+	var forward := route.tangent_at(470)
 	forward.y = 0
 	forward = forward.normalized()
 	var horizontal := forward.rotated(Vector3.UP, -deg_to_rad(14.0))
@@ -20,7 +24,7 @@ func build(land: RallySampleLandscape, sun: DirectionalLight3D) -> void:
 	sun_direction = horizontal * cos(elevation) + Vector3.UP * sin(elevation)
 	apply_sun(sun)
 	cloud_root.name = "WorldSpaceClouds"
-	land.dressing.add_child(cloud_root)
+	parent.add_child(cloud_root)
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 160043
 	for layer: int in range(2):
@@ -28,16 +32,16 @@ func build(land: RallySampleLandscape, sun: DirectionalLight3D) -> void:
 			var count := 16.0 if layer == 0 else 22.0
 			var angle := TAU * i / count + layer * 0.13
 			var distance := rng.randf_range(540, 850) if layer == 0 else rng.randf_range(1250, 1700)
-			var at := land.center + Vector3(cos(angle) * distance, rng.randf_range(190, 290) if layer == 0 else rng.randf_range(350, 460), sin(angle) * distance)
+			var at := center + Vector3(cos(angle) * distance, rng.randf_range(190, 290) if layer == 0 else rng.randf_range(350, 460), sin(angle) * distance)*extent
 			# Leave a small opening around the actual light source for occasional flare.
-			if (at - land.center).normalized().dot(sun_direction) > 0.97: continue
+			if (at - center).normalized().dot(sun_direction) > 0.97: continue
 			var cloud := MeshInstance3D.new()
 			cloud.name = "Cloud_%d_%d" % [layer, i]
 			cloud.mesh = cloud_mesh(200 + i * 17 + layer, sun_direction, layer)
 			cloud.position = at
 			cloud.rotation.y = rng.randf_range(-PI, PI)
 			var scale_factor := rng.randf_range(0.8, 1.3) * (1.0 if layer == 0 else 1.6)
-			cloud.scale = Vector3.ONE * scale_factor
+			cloud.scale = Vector3.ONE * scale_factor * extent
 			cloud.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 			cloud_root.add_child(cloud)
 			if layer == 0: near_clouds.append(cloud)

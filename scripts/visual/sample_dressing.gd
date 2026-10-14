@@ -1,7 +1,10 @@
 class_name RallySampleDressing
 extends RefCounted
 
-var land: RallySampleLandscape
+var land: Node3D
+var range_start: float = 430
+var range_end: float = 630
+var spectator_stations: Array[float] = [503.0]
 var rng := RandomNumberGenerator.new()
 var batches: Dictionary = {}
 var meshes: Dictionary = {}
@@ -10,7 +13,14 @@ var animated_arms: Array[Node3D] = []
 
 
 func build(landscape: RallySampleLandscape) -> void:
+	build_range(landscape,430,630)
+
+
+func build_range(landscape: Node3D, start: float, end: float, density: float = 1.0) -> void:
 	land = landscape
+	range_start = start
+	range_end = end
+	var multiplier := (end-start)/200.0*density
 	rng.seed = 84903
 	for variant: int in range(3):
 		meshes["pine%d"%variant] = RallySampleMeshes.pine(variant*39+1,false)
@@ -18,39 +28,40 @@ func build(landscape: RallySampleLandscape) -> void:
 		meshes["rock%d"%variant] = RallySampleMeshes.rock(variant+30)
 		meshes["shrub%d"%variant] = RallySampleMeshes.shrub(variant+50)
 		meshes["grass%d"%variant] = RallySampleMeshes.grass(variant+70)
-	for i: int in range(240):
-		var s := rng.randf_range(land.START,land.END)
+	for i: int in range(int(240*multiplier)):
+		var s := rng.randf_range(range_start,range_end)
 		var side := -1.0 if rng.randf() < 0.5 else 1.0
 		var lateral := side*rng.randf_range(7.0,95.0)
 		# Open up a sightline on the valley side; cluster trees instead of wallpaper spacing.
 		if side < 0 and s > 470 and s < 540 and absf(lateral) < 35: continue
 		var kind := "umbrella" if rng.randf() < 0.55 else "pine"
 		place(kind, s,lateral,rng.randf_range(0.72,1.45))
-	for i: int in range(600):
-		var s := rng.randf_range(land.START,land.END)
+	for i: int in range(int(600*multiplier)):
+		var s := rng.randf_range(range_start,range_end)
 		var lateral := rng.randf_range(3.8,30)*(-1 if i%2 else 1)
 		place("shrub",s,lateral,rng.randf_range(0.5,1.5))
-	for i: int in range(150):
-		var s := rng.randf_range(land.START,land.END)
+	for i: int in range(int(150*multiplier)):
+		var s := rng.randf_range(range_start,range_end)
 		var lateral := rng.randf_range(4.1,6.4)*(-1 if i%2 else 1)
 		place("rock",s,lateral,rng.randf_range(0.18,0.65))
-	for i: int in range(60):
-		place("rock",rng.randf_range(land.START,land.END),rng.randf_range(8,24)*(-1 if i%2 else 1),rng.randf_range(0.7,2.7))
-	for i: int in range(3600):
-		var s := rng.randf_range(land.START,land.END)
+	for i: int in range(int(60*multiplier)):
+		place("rock",rng.randf_range(range_start,range_end),rng.randf_range(8,24)*(-1 if i%2 else 1),rng.randf_range(0.7,2.7))
+	for i: int in range(int(3600*multiplier)):
+		var s := rng.randf_range(range_start,range_end)
 		var lateral := rng.randf_range(3.0,16)*(-1 if i%2 else 1)
 		place("grass",s,lateral,rng.randf_range(0.65,1.4))
 	_flush()
-	_spectators()
-	_road_signs()
+	for station: float in spectator_stations: _spectators(station)
+	if end-start < 250: _road_signs()
 
 
 func place(kind: String, s: float, lateral: float, scale_factor: float) -> void:
 	var key := kind+str(rng.randi_range(0,2))
-	var chunk := int((s-land.START)/40)
+	var chunk := int((s-range_start)/40)
 	var batch_key := "%s_%d" % [key,chunk]
 	if not batches.has(batch_key): batches[batch_key] = {"mesh":key,"transforms":[],"colors":[]}
-	var point := land.ground_at(s,lateral)
+	var point: Vector3 = land.ground_at(s,lateral)
+	if land.has_method("allows_decoration") and not land.allows_decoration(point,kind,scale_factor): return
 	var basis := Basis(Vector3.UP,rng.randf()*TAU).scaled(Vector3(scale_factor,scale_factor*rng.randf_range(0.85,1.15),scale_factor))
 	batches[batch_key].transforms.append(Transform3D(basis,point))
 	batches[batch_key].colors.append(Color.WHITE.darkened(rng.randf_range(0,0.15)))
@@ -77,13 +88,13 @@ func _flush() -> void:
 		land.dressing.add_child(instance)
 
 
-func _spectators() -> void:
+func _spectators(station: float) -> void:
 	var people := Node3D.new()
 	people.name = "Spectators"
 	land.dressing.add_child(people)
 	for i: int in range(7):
-		var s := 503.0+i*1.7
-		var at := land.ground_at(s,7.5+(i%2)*1.0)
+		var s := station+i*1.7
+		var at: Vector3 = land.ground_at(s,7.5+(i%2)*1.0)
 		var builder := RallySampleMeshes.new()
 		var shirt: Color = [Color("d2763f"),Color("3a6068"),Color("dfd7b3"),Color("9b4b3f")][i%4]
 		builder.cone(0.19,0.23,0.57,Vector3(0,1.02,0),shirt,6)
@@ -111,7 +122,7 @@ func _spectators() -> void:
 	var fence := RallySampleMeshes.new()
 	var previous := Vector3.ZERO
 	for i: int in range(9):
-		var at := land.ground_at(499+i*2.2,5.8)
+		var at: Vector3 = land.ground_at(station-4+i*2.2,5.8)
 		fence.cone(0.045,0.03,0.95,at+Vector3.UP*0.475,Color("94744c"),6)
 		if i > 0: fence.beam(previous,at+Vector3.UP*0.8,0.018,Color("e6c78c"))
 		previous = at+Vector3.UP*0.8

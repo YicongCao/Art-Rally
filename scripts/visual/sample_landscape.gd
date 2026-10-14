@@ -6,7 +6,6 @@ const END := 630.0
 const BUFFER_START := 400.0
 const BUFFER_END := 700.0
 var dressing := Node3D.new()
-var road_visuals: Array[MeshInstance3D] = []
 var styled_material: ShaderMaterial
 var original_material: StandardMaterial3D
 var terrain_noise := FastNoiseLite.new()
