@@ -20,6 +20,7 @@ var effects := RallySampleEffects.new()
 var atmosphere := RallySampleAtmosphere.new()
 var flare := RallySampleFlare.new()
 var sun_view: bool = false
+var gravel := RallySampleGravel.new()
 
 
 func _ready() -> void:
@@ -35,6 +36,7 @@ func _ready() -> void:
 	atmosphere.build(landscape, $Sun)
 	_setup_light()
 	scenery.build(landscape)
+	gravel.build(landscape)
 	car_style.build(vehicle)
 	effects.build(self)
 	flare.build(camera)
@@ -116,7 +118,7 @@ func _process(dt: float) -> void:
 		chase_position = chase_position.lerp(desired,1.0-exp(-9.0*dt)) if camera_history_valid else desired
 		camera_history_valid = true
 		camera.position = chase_position
-		camera.look_at(pose.origin+forward*7+Vector3.UP*0.8)
+		camera.look_at(pose.origin+forward*9+Vector3.UP*1.3)
 	if sun_view:
 		var horizontal := Vector3(atmosphere.sun_direction.x,0,atmosphere.sun_direction.z).normalized().rotated(Vector3.UP,deg_to_rad(20))
 		camera.look_at(camera.global_position+(horizontal*cos(deg_to_rad(9))+Vector3.UP*sin(deg_to_rad(9)))*100)

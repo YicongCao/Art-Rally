@@ -35,6 +35,7 @@ func _run() -> void:
 		var pose: Transform3D = scene.vehicle.global_transform
 		scene.camera.position = pose * Vector3(5.4,3.0,7.2)
 		scene.camera.look_at(pose.origin + Vector3.UP*0.4 - pose.basis.z*8)
+		scene.flare.update(scene.camera,scene.atmosphere.sun_direction,scene.landscape.style_enabled,1.0)
 	for i: int in range(10): await process_frame
 	await RenderingServer.frame_post_draw
 	print("SUN: uv=",scene.flare.screen_sun," strength=",scene.flare.current_strength)
