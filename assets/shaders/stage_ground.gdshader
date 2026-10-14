@@ -69,7 +69,9 @@ void fragment() {
 	color *= 0.92 + grit * 0.14;
 	color += vec3(fleck * 0.035 * stone_speckle);
 	ALBEDO = color;
-	ROUGHNESS = road_mesh && UV.y>=1150.0 && UV.y<1650.0 ? 0.45 : 0.96;
+	bool muddy_lane = road_mesh && UV.y>=1150.0 && UV.y<1650.0 && abs(UV.x)<2.55;
+	ROUGHNESS = muddy_lane ? 0.76 : 0.96;
+	SPECULAR = muddy_lane ? 0.12 : 0.08;
 	vec2 bumps = vec2(dFdx(road_bump),dFdy(road_bump));
 	NORMAL_MAP = vec3(vec2(0.5)+clamp(-bumps*0.55,vec2(-0.20),vec2(0.20)) + vec2(grit-0.5)*0.08,1.0);
 	NORMAL_MAP_DEPTH = 0.4;

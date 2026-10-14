@@ -143,6 +143,7 @@ func _toggle_mode() -> void:
 
 
 func _apply_preferences() -> void:
+	light_assist = preferences.values.keyboard_light
 	preferences.apply_input(controls,light_assist)
 	vehicle.drivetrain.automatic = preferences.values.automatic
 	vehicle.config.front_brake_bias = preferences.values.brake_bias
@@ -165,7 +166,9 @@ func _save_preferences() -> void:
 
 func _toggle_profile() -> void:
 	light_assist = not light_assist
+	preferences.set_value("keyboard_light",light_assist)
 	preferences.apply_input(controls,light_assist)
+	_save_preferences()
 
 
 func _cycle_camera() -> void:
@@ -187,7 +190,7 @@ func _export() -> void:
 	super._export()
 	if is_instance_valid(pause_menu):
 		pause_menu.show_menu(true)
-		pause_menu.message.text = "遥测已导出至 user://telemetry/，继续驾驶前请确认"
+		pause_menu.message.text = "遥测导出失败，请检查本机存储" if notice.text=="Export failed" else "遥测已导出至 user://telemetry/，继续驾驶前请确认"
 
 
 func _unhandled_input(event: InputEvent) -> void:

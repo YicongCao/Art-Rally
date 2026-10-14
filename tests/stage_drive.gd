@@ -6,14 +6,18 @@ var max_lateral: float = 0
 var samples := 0
 var peak_cost: int = 0
 var costs := PackedInt64Array()
+var keyboard: bool = false
+var keyboard_filter := DriverInputFilter.new()
 
 
 func _run() -> void:
+	keyboard = "--keyboard" in OS.get_cmdline_user_args()
 	scene = load("res://scenes/stages/sunset_ridge.tscn").instantiate()
 	root.add_child(scene)
 	scene.vehicle.command_source = drive
 	scene.set_process(false)
-	var trace := FileAccess.open("res://logs/stage_drive.csv", FileAccess.WRITE)
+	var suffix := "_keyboard" if keyboard else ""
+	var trace := FileAccess.open("res://logs/stage_drive%s.csv"%suffix, FileAccess.WRITE)
 	trace.store_line("tick,s,lateral,speed,gate,phase")
 	for i: int in range(120 * 650):
 		await ticks(1)
@@ -29,7 +33,8 @@ func _run() -> void:
 	check(max_lateral < 2.8, "Automated shakedown remains within road width")
 	costs.sort()
 	var report := {"finished": scene.session.phase == RallyStageSession.Phase.FINISHED, "elapsed": scene.session.elapsed, "max_lateral_m": max_lateral, "gates": scene.session.next_gate, "progress_m": scene.session.progress, "peak_vehicle_callback_ms": peak_cost / 1000.0, "p95_vehicle_callback_ms": costs[int(costs.size() * 0.95)] / 1000.0}
-	var output := FileAccess.open("res://logs/stage_drive_metrics.json", FileAccess.WRITE)
+	report["input_mode"] = "binary_keyboard" if keyboard else "analog_commands"
+	var output := FileAccess.open("res://logs/stage_drive%s_metrics.json"%suffix, FileAccess.WRITE)
 	output.store_string(JSON.stringify(report, "\t"))
 	print("STAGE DRIVE: ", report)
 	scene.queue_free()
@@ -37,7 +42,7 @@ func _run() -> void:
 	finish()
 
 
-func drive(speed: float, _dt: float) -> DriverCommand:
+func drive(speed: float, dt: float) -> DriverCommand:
 	var command := DriverCommand.new()
 	if not scene.session.accepts_input():
 		command.brake = 1
@@ -63,4 +68,12 @@ func drive(speed: float, _dt: float) -> DriverCommand:
 		wanted = minf(wanted, sqrt(turn_speed * turn_speed + 2.0 * 2.0 * ahead))
 	command.throttle = clampf(0.25 + (wanted - speed) * 0.22, 0, 1)
 	command.brake = clampf((speed - wanted - 0.3) * 0.22, 0, 0.7)
+	if keyboard:
+		var raw := DriverCommand.new()
+		wanted = minf(wanted,10)
+		var error := command.steer-keyboard_filter.steering
+		raw.steer = signf(error) if absf(error)>0.015 else 0
+		raw.throttle = 1 if speed<wanted else 0
+		raw.brake = 1 if speed>wanted+0.7 else 0
+		return keyboard_filter.step(raw,speed,dt,true)
 	return command

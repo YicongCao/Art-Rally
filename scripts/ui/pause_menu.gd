@@ -94,7 +94,7 @@ func build(settings: RallyGameSettings) -> void:
 		row.add_child(value)
 		slider.value_changed.connect(_slider_changed.bind(entry[0],value))
 		widgets[entry[0]] = slider
-	for entry: Array in [["lens_flare","镜头光斑"],["camera_motion","驾驶舱轻微震动"],["automatic","自动换挡"],["vibration","手柄震动"],["low_detail","低细节（减少草簇和散石）"]]:
+	for entry: Array in [["lens_flare","镜头光斑"],["camera_motion","驾驶舱轻微震动"],["automatic","自动换挡"],["keyboard_light","键盘轻辅助（更直接）"],["vibration","手柄震动"],["low_detail","低细节（减少草簇和散石）"]]:
 		var toggle := CheckButton.new()
 		toggle.text = entry[1]
 		toggle.button_pressed = prefs.values[entry[0]]

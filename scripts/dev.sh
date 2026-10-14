@@ -65,7 +65,7 @@ case "$MODE" in
     ;;
   stage-check)
     mkdir -p "$ROOT/logs"
-    run_logged "$ROOT/logs/stage_drive.log" --headless --path "$ROOT" --fixed-fps 120 --script res://tests/stage_drive.gd
+    run_logged "$ROOT/logs/stage_drive.log" --headless --path "$ROOT" --fixed-fps 120 --script res://tests/stage_drive.gd -- "$@"
     grep -q '^TEST RESULT: .* 0 failures$' "$ROOT/logs/stage_drive.log"
     ;;
   lab)
@@ -87,8 +87,13 @@ case "$MODE" in
     run_logged "$ROOT/logs/flare_render_check.log" --path "$ROOT" --max-fps 60 --script res://tests/flare_render_check.gd
     grep -q '^TEST RESULT: .* 0 failures$' "$ROOT/logs/flare_render_check.log"
     ;;
+  m5-render-check)
+    mkdir -p "$ROOT/logs"
+    run_logged "$ROOT/logs/m5_render_check.log" --path "$ROOT" --max-fps 60 --script res://tests/m5_render_check.gd -- --test-defaults
+    grep -q '^TEST RESULT: .* 0 failures$' "$ROOT/logs/m5_render_check.log"
+    ;;
   *)
-    echo "Usage: $0 {doctor|editor|run|lab|stage|preview|check|regression|stage-check|preview-check|preview-render-check} [Godot options]" >&2
+    echo "Usage: $0 {doctor|editor|run|lab|stage|preview|check|regression|stage-check|preview-check|preview-render-check|m5-render-check} [Godot options]" >&2
     exit 2
     ;;
 esac

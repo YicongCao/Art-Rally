@@ -1,7 +1,7 @@
 class_name RallyGameSettings
 extends RefCounted
 
-const DEFAULTS := {"volume":0.65,"lens_flare":true,"camera_motion":false,"low_detail":false,"automatic":true,"vibration":true,"steering_response":1.0,"return_rate":5.0,"throttle_rise":0.30,"brake_rise":0.12,"stick_deadzone":0.12,"brake_bias":0.62,"spring_scale":1.0}
+const DEFAULTS := {"volume":0.65,"lens_flare":true,"camera_motion":false,"low_detail":false,"automatic":true,"vibration":true,"keyboard_light":false,"steering_response":1.0,"return_rate":5.0,"throttle_rise":0.30,"brake_rise":0.12,"stick_deadzone":0.12,"brake_bias":0.62,"spring_scale":1.0}
 const RANGES := {"volume":Vector2(0,1),"steering_response":Vector2(0.6,1.6),"return_rate":Vector2(2,8),"throttle_rise":Vector2(0.1,0.5),"brake_rise":Vector2(0.05,0.25),"stick_deadzone":Vector2(0.05,0.3),"brake_bias":Vector2(0.52,0.70),"spring_scale":Vector2(0.85,1.15)}
 var values: Dictionary = DEFAULTS.duplicate()
 var path: String = "user://driving_settings.cfg"
