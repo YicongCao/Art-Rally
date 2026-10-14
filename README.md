@@ -22,9 +22,11 @@ macOS 首次安装：`brew install --cask godot`。Homebrew 跟随新版发布�
 ./scripts/dev.sh run     # 启动夕照松岭赛段（默认入口）
 ./scripts/dev.sh stage   # 明确启动赛段
 ./scripts/dev.sh lab     # 保留原驾驶测试场，附多路面测试区
+./scripts/dev.sh preview # 独立 200 米 M5 视觉样板，等待确认，不改变默认赛段
 ./scripts/dev.sh check   # 导入、全脚本解析、模型和场景测试
 ./scripts/dev.sh regression # 加做 30/60/120 FPS 输入回放对比（需 Python 3）
 ./scripts/dev.sh stage-check # 完整物理试跑，依次通过全部检查点
+./scripts/dev.sh preview-check # 验证样板及视觉开关的驾驶一致性
 ```
 
 编辑器中按 **F5** 运行主赛段。进入游戏窗口后 F5 为重跑、F6 切到赛段、F7 切到原测试场；注意与编辑器快捷键的焦点区别。原测试场保留直道、25 m 定圆、蛇形、减速带和跳跃，并在远端 320–520 m 区域增加砂石、泥地、草土和水洼对比区。
@@ -91,5 +93,7 @@ docs/PROJECT_PLAN.zh-CN.md 完整策划案
 测试指标、提交分节和模型限制见 [M1 + M2 验收记录](docs/M1_M2_VALIDATION.zh-CN.md)。
 
 新增赛段的运行与验证见 [M3 + M4 验收记录](docs/M3_M4_VALIDATION.zh-CN.md)。
+
+M5 目前只完成独立样板，等待风格确认；实机截图、G 对比/1–3 观察点与范围说明见 [200 米视觉样板](docs/M5_VISUAL_SAMPLE.zh-CN.md)。完整赛段尚未应用新美术。
 
 执行顺序与验收标准见 [开发计划](docs/DEVELOPMENT_PLAN.zh-CN.md)。手柄优先标定，键盘通过输入平滑与车速相关转向辅助降低难度，两者共享相同车辆物理。
