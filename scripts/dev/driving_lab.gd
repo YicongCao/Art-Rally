@@ -14,6 +14,7 @@ var camera_mode: int = 0
 var camera_snap: bool = true
 var telemetry_visible: bool = true
 var light_assist: bool = false
+var debug_panel: RallyDebugPanel
 
 
 func _ready() -> void:
@@ -32,7 +33,8 @@ func _ready() -> void:
 	controls.safety_pause_requested.connect(_safety_pause)
 	controls.reset_requested.connect(_reset)
 	controls.camera_requested.connect(_cycle_camera)
-	controls.telemetry_requested.connect(func(): telemetry_visible = not telemetry_visible)
+	controls.telemetry_requested.connect(_toggle_telemetry)
+	controls.debug_requested.connect(_toggle_debug)
 	controls.profile_requested.connect(_toggle_profile)
 	controls.export_requested.connect(_export)
 	controls.transmission_requested.connect(func(): vehicle.drivetrain.automatic = not vehicle.drivetrain.automatic)
@@ -40,6 +42,12 @@ func _ready() -> void:
 	camera = $Camera
 	camera.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
 	_build_hud()
+	var debug_layer := CanvasLayer.new()
+	debug_layer.layer = 10
+	add_child(debug_layer)
+	debug_panel = RallyDebugPanel.new()
+	debug_layer.add_child(debug_panel)
+	debug_panel.bind_vehicle(vehicle)
 	debug_visual = MeshInstance3D.new()
 	debug_visual.mesh = debug_mesh
 	var material := StandardMaterial3D.new()
@@ -93,7 +101,7 @@ func _build_hud() -> void:
 	details.add_theme_font_size_override("font_size", 15)
 	column.add_child(details)
 	notice = Label.new()
-	notice.text = "W/S throttle/brake | A/D steer | SPACE handbrake\nQ/E shift (1 > N > R at rest) | R reset | C camera | T telemetry\nF2 keyboard assist | F8 export | ESC pause | gamepad START resume"
+	notice.text = "W/S throttle/brake | A/D steer | SPACE handbrake\nQ/E shift (1 > N > R at rest) | R reset | C camera | T telemetry\nF9 visual debug | F2 keyboard assist | F8 export | ESC pause"
 	notice.add_theme_font_size_override("font_size", 15)
 	column.add_child(notice)
 
@@ -125,7 +133,8 @@ func _process(dt: float) -> void:
 	hud_clock = 0
 	readout.text = "ART RALLY / DRIVING LAB\n%03d km/h    GEAR %s    %s" % [vehicle.linear_velocity.length() * 3.6, _gear_name(), "PAUSED - ENTER TO RESUME" if get_tree().paused else RallySurfaceQuery.PROFILES[vehicle.wheels[0].surface.surface_id].label]
 	details.visible = telemetry_visible
-	debug_visual.visible = telemetry_visible
+	readout.get_parent().get_parent().visible = not debug_panel.visible
+	debug_visual.visible = telemetry_visible or debug_panel.visible
 	if telemetry_visible:
 		details.text = "%s | %s assist | physics %.2f ms\nSTEER %+.2f   GAS %.2f   BRAKE %.2f\n" % ["Keyboard" if controls.active_device < 0 else "Gamepad %d" % controls.active_device, "Light" if light_assist else "Standard", vehicle.physics_usec / 1000.0, vehicle.command.steer, vehicle.command.throttle, vehicle.command.brake]
 		details.text += "%d RPM | %s | clutch %.2f\n" % [vehicle.drivetrain.rpm(), "AUTO (M)" if vehicle.drivetrain.automatic else "MANUAL (M)", vehicle.drivetrain.clutch]
@@ -133,7 +142,17 @@ func _process(dt: float) -> void:
 		for i: int in range(4):
 			var wheel := vehicle.wheels[i]
 			details.text += "%s %4d N  slip %+.2f  %s  water %d mm\n" % [["FL", "FR", "RL", "RR"][i], wheel.load, wheel.slip, RallySurfaceQuery.PROFILES[wheel.surface.surface_id].label, wheel.surface.water_depth * 1000]
-		_draw_forces()
+	if debug_visual.visible: _draw_forces()
+
+
+func _toggle_debug() -> void:
+	debug_panel.set_enabled(not debug_panel.visible)
+	if debug_panel.visible: telemetry_visible = false
+
+
+func _toggle_telemetry() -> void:
+	telemetry_visible = not telemetry_visible
+	if telemetry_visible: debug_panel.set_enabled(false)
 
 
 func _draw_forces() -> void:

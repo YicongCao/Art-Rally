@@ -7,6 +7,7 @@ signal focus_returned
 signal reset_requested
 signal camera_requested
 signal telemetry_requested
+signal debug_requested
 signal transmission_requested
 signal profile_requested
 signal export_requested
@@ -77,6 +78,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		var code: int = event.physical_keycode
 		if event.pressed and code in [KEY_ESCAPE, KEY_ENTER]:
 			pause_requested.emit()
+			return
+		# Presentation shortcuts must not switch away from a connected gamepad or clear its axes.
+		if code == KEY_F9:
+			if event.pressed: debug_requested.emit()
 			return
 		if event.pressed and code in [KEY_F4, KEY_F5, KEY_F6, KEY_F7]:
 			match code:

@@ -115,7 +115,7 @@ func _draw() -> void:
 		panel(Rect2(422,625,435,44),Color(0.15,0.08,0.05,0.94))
 		center_text(model.warning,Vector2(640,653),15,AMBER)
 	elif int(model.get("camera_mode",0))!=2:
-		center_text("Esc 暂停/设置    C 视角    T 遥测",Vector2(640,697),12,PAPER)
+		center_text("Esc 暂停/设置    C 视角    F9 调试    T 遥测",Vector2(640,697),12,PAPER)
 	if model.paused:
 		center_text("已暂停",Vector2(640,137),20,AMBER)
 	elif model.phase == RallyStageSession.Phase.COUNTDOWN and remaining<=0:

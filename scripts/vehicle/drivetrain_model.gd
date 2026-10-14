@@ -12,6 +12,8 @@ var clutch_torque: float = 0
 var auto_shift_cut: bool = false
 var wheelspin: float = 0
 var rolling_rpm: float = 0
+var output_torque: float = 0
+var effective_throttle: float = 0
 
 
 func rpm() -> float:
@@ -33,6 +35,8 @@ func reset() -> void:
 	auto_shift_cut = false
 	wheelspin = 0
 	rolling_rpm = 0
+	output_torque = 0
+	effective_throttle = 0
 
 
 func road_rpm(speed: float, target: int, wheel_radius: float = 0.34) -> float:
@@ -124,10 +128,11 @@ func step(command: DriverCommand, wheels: Array[RallyWheelState], dt: float) -> 
 	if config.drive_layout=="RWD" and handbrake: clutch = 0
 	var capacity := config.clutch_capacity * clutch
 	clutch_torque = clampf((engine_omega - engaged_speed) * config.clutch_coupling, -capacity, capacity)
-	var throttle := command.throttle if shift_remaining <= 0 and rpm() < config.redline_rpm and not auto_shift_cut else 0.0
+	effective_throttle = command.throttle if shift_remaining <= 0 and rpm() < config.redline_rpm and not auto_shift_cut else 0.0
 	var idle_governor := clampf((config.idle_rpm - rpm()) * 0.5, 0, 130)
 	var drag := 20.0 + engine_omega * 0.045
 	# The published torque curve is net shaft torque; retain closed-throttle engine braking.
-	var engine_torque := (config.torque_at(rpm()) + drag) * throttle + idle_governor - drag - clutch_torque
+	output_torque = (config.torque_at(rpm()) + drag) * effective_throttle + idle_governor - drag
+	var engine_torque := output_torque - clutch_torque
 	engine_omega = maxf(0, engine_omega + engine_torque / config.engine_inertia * dt)
 	return distribute(clutch_torque * gearing, omega, handbrake, config)

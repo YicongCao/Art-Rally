@@ -130,8 +130,8 @@ func _process(dt: float) -> void:
 	super._process(dt)
 	if not is_instance_valid(game_hud): return
 	readout.get_parent().get_parent().visible = telemetry_visible
-	game_hud.visible = not telemetry_visible and not selecting_vehicle
-	checkpoint_visual.visible = telemetry_visible and session.next_gate < session.gates.size()
+	game_hud.visible = not telemetry_visible and not debug_panel.visible and not selecting_vehicle
+	checkpoint_visual.visible = (telemetry_visible or debug_panel.visible) and session.next_gate < session.gates.size()
 	if checkpoint_visual.visible:
 		checkpoint_visual.transform = generator.route.pose_at(session.gates[session.next_gate],0.025)
 	game_hud_clock += dt
@@ -280,6 +280,7 @@ func _reset_preferences() -> void:
 
 
 func _open_vehicle_selection(can_cancel: bool = false) -> void:
+	debug_panel.set_enabled(false)
 	selecting_vehicle = true
 	startup_focus_pause = false
 	reverse_assist.reset()
@@ -287,6 +288,11 @@ func _open_vehicle_selection(can_cancel: bool = false) -> void:
 	get_tree().paused = true
 	pause_menu.show_menu(false)
 	vehicle_selector.open(vehicle.drivetrain.config.drive_layout,can_cancel)
+
+
+func _toggle_debug() -> void:
+	if selecting_vehicle: return
+	super._toggle_debug()
 
 
 func _confirm_vehicle(layout: String) -> void:

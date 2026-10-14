@@ -132,7 +132,7 @@ func _process(dt: float) -> void:
 	readout.text = "PINE RIDGE / 16:00 STUDY 02\n%03d km/h   %s   %03d / 200 m" % [vehicle.linear_velocity.length()*3.6,_gear_name(),clampf(float(p.s)-RallySampleLandscape.START,0,200)]
 	if get_tree().paused: readout.text += "\nPAUSED - ENTER / START TO RESUME"
 	elif sample_complete: readout.text += "\nSAMPLE COMPLETE - R TO RESTART"
-	readout.get_parent().get_parent().visible = show_hud
+	readout.get_parent().get_parent().visible = show_hud and not debug_panel.visible
 
 
 func _reset() -> void:
