@@ -29,6 +29,18 @@ func _run() -> void:
 		csv.close()
 		DirAccess.remove_absolute(path)
 		DirAccess.remove_absolute(path.replace(".csv", ".json"))
+	var recorder := VehicleTelemetryRecorder.new()
+	for i: int in range(VehicleTelemetryRecorder.MAX_FRAMES + 8):
+		scene.vehicle.simulation_tick = i
+		recorder.capture(scene.vehicle)
+	check(recorder.frames.size() == VehicleTelemetryRecorder.MAX_FRAMES, "Telemetry retention is bounded")
+	path = recorder.export_csv(scene.vehicle)
+	var ring_csv := FileAccess.open(path, FileAccess.READ)
+	ring_csv.get_csv_line()
+	check(int(ring_csv.get_csv_line()[0]) == 8, "Wrapped telemetry exports oldest retained frame first")
+	ring_csv.close()
+	DirAccess.remove_absolute(path)
+	DirAccess.remove_absolute(path.replace(".csv", ".json"))
 	scene.queue_free()
 	await process_frame
 	finish()

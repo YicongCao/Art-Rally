@@ -14,6 +14,7 @@ var reset_pending: bool = false
 var reset_pose := Transform3D(Basis.IDENTITY, Vector3(0, 0.8, 12))
 var physics_usec: int = 0
 var simulation_tick: int = 0
+var last_shift_requested: int = 0
 
 
 func _ready() -> void:
@@ -75,6 +76,7 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 	if command_source.is_valid():
 		command = command_source.call(state.linear_velocity.length(), state.step)
 	command.sanitize()
+	last_shift_requested = command.shift
 	drivetrain.begin_tick(command, state.linear_velocity.length())
 	command.shift = 0
 	for i: int in range(4):

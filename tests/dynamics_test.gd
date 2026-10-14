@@ -15,9 +15,13 @@ func _run() -> void:
 	await fresh()
 	car.command.throttle = 1
 	var steps := 0
+	var physics_costs := PackedInt64Array()
 	while car.linear_velocity.length() < 80.0 / 3.6 and steps < 2400:
 		await ticks(1)
 		steps += 1
+		physics_costs.append(car.physics_usec)
+	physics_costs.sort()
+	metrics["vehicle_callback_p95_ms"] = physics_costs[int(physics_costs.size() * 0.95)] / 1000.0
 	metrics["zero_to_80_seconds"] = steps / 120.0
 	check(car.linear_velocity.length() >= 80.0 / 3.6 and car.drivetrain.gear >= 2, "Full-throttle run reaches 80 km/h and shifts automatically")
 	var initial := car.position
