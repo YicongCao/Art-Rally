@@ -22,6 +22,17 @@ func _run() -> void:
 	var data := RallyHUD.data_for(car,session,false)
 	check(is_equal_approx(data.speed,72) and data.gear=="3" and is_equal_approx(data.rpm,4000),"Dashboard reads actual speed gear and engine RPM")
 	check(data.note=="RIGHT_TIGHT" and data.note_distance==70,"Pacenote card uses actual route distance")
+	car.drivetrain.wheelspin = 2
+	car.command.throttle = 1
+	car.drivetrain.auto_shift_cut = true
+	data = RallyHUD.data_for(car,session,false)
+	check(data.wheelspin and data.shift_sync,"Dashboard reports actual driven-wheel spin and safe downshift synchronization")
+	car.drivetrain.wheelspin = 0
+	car.drivetrain.auto_shift_cut = false
+	var cockpit := RallyCockpitDisplay.new()
+	cockpit.refresh(car)
+	check(cockpit.drive_status=="","Cockpit clears synchronization warning when grip returns")
+	cockpit.free()
 	check(RallyHUD.time_text(data.time)=="02:08.456","Timer includes penalty without losing milliseconds")
 	car.drivetrain.gear = -1
 	check(RallyHUD.data_for(car,session,true).gear=="R","Dashboard renders reverse and pause state")

@@ -52,6 +52,7 @@ static func data_for(car: RallyVehicle, session: RallyStageSession, paused: bool
 	return {"speed":car.linear_velocity.length()*3.6,"rpm":car.drivetrain.rpm(),"redline":car.drivetrain.config.redline_rpm,
 		"gear":"R" if car.drivetrain.gear<0 else ("N" if car.drivetrain.gear==0 else str(car.drivetrain.gear)),"drive_layout":car.drivetrain.config.drive_layout,
 		"automatic":car.drivetrain.automatic,"throttle":car.command.throttle,"brake":car.command.brake,"handbrake":car.command.handbrake,
+		"shift_sync":car.drivetrain.auto_shift_cut,"wheelspin":car.drivetrain.wheelspin > car.drivetrain.config.max_upshift_slip and car.command.throttle > 0.2 and car.drivetrain.gear > 0,
 		"time":session.total_time(),"penalty":session.penalty,"progress":session.progress,"length":session.route.length-30,
 		"gates":session.next_gate,"total_gates":session.gates.size(),"note":session.current_note if session.note_remaining>0 else "",
 		"note_distance":maxf(0,session.note_s-session.progress),"phase":int(session.phase),"countdown":session.countdown,
@@ -187,6 +188,8 @@ func _draw_gauge() -> void:
 	var surface: String = ["柏油","砂石","泥地","草土"][int(model.surface)]
 	text(surface,Vector2(1012,455),13,PAPER)
 	if model.handbrake>0.1: center_text("手刹",Vector2(1125,480),12,RED)
+	elif model.get("shift_sync",false): center_text("同步降挡",Vector2(1125,480),12,AMBER)
+	elif model.get("wheelspin",false): center_text("驱动轮空转",Vector2(1125,480),12,AMBER)
 	draw_rect(Rect2(1020,672,93,4),Color("40574b"))
 	draw_rect(Rect2(1020,672,93*model.throttle,4),Color("86bd9a"))
 	draw_rect(Rect2(1134,672,93,4),Color("40574b"))

@@ -8,6 +8,7 @@ var allow_cancel: bool = false
 var cards: Dictionary = {}
 var start_button: Button
 var cancel_button: Button
+var power_ps: float = 200
 
 
 func build() -> void:
@@ -73,7 +74,7 @@ func build() -> void:
 		row.add_child(card)
 		cards[entry[0]] = card
 	var info := Label.new()
-	info.text = "共用车身、重心与动力参数，仅改变驱动轴。\n停稳持续刹车 3 秒 → 倒挡；S/↓ 倒车，W/↑ 前进。"
+	info.text = "%.0f PS / 约 %.0f kW · 共用车身、重心与动力，仅改变驱动轴。\n停稳持续刹车 3 秒 → 倒挡；S/↓ 倒车，W/↑ 前进。" % [power_ps, power_ps * 0.73549875]
 	info.add_theme_font_size_override("font_size",14)
 	column.add_child(info)
 	start_button = Button.new()

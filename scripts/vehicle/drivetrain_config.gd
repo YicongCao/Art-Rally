@@ -2,11 +2,17 @@ class_name RallyDrivetrainConfig
 extends Resource
 
 @export_enum("FWD", "AWD", "RWD") var drive_layout: String = "AWD"
+@export var rated_power_ps: float = 200.0
+@export var torque_rpms := PackedFloat64Array([950, 1800, 3000, 4500, 5500, 6500, 7600])
+@export var torque_values := PackedFloat64Array([90, 200, 250, 260, 250, 216, 155])
 
 @export var idle_rpm: float = 950
 @export var redline_rpm: float = 7600
 @export var upshift_rpm: float = 6800
 @export var downshift_rpm: float = 2600
+@export var downshift_target_rpm: float = 4200
+@export var upshift_road_fraction: float = 0.88
+@export var max_upshift_slip: float = 0.35
 @export var engine_inertia: float = 0.32
 @export var clutch_capacity: float = 650
 @export var clutch_coupling: float = 12
@@ -20,9 +26,11 @@ extends Resource
 
 
 func torque_at(rpm: float) -> float:
-	var speeds := PackedFloat64Array([950, 2000, 3500, 5000, 6500, 7600])
-	var torques := PackedFloat64Array([125, 240, 370, 430, 338, 240])
-	for i: int in range(speeds.size() - 1):
-		if rpm <= speeds[i + 1]:
-			return lerpf(torques[i], torques[i + 1], clampf((rpm - speeds[i]) / (speeds[i + 1] - speeds[i]), 0, 1))
-	return torques[-1]
+	var value: float = torque_values[-1]
+	for i: int in range(torque_rpms.size() - 1):
+		if rpm <= torque_rpms[i + 1]:
+			value = lerpf(torque_values[i], torque_values[i + 1], clampf((rpm - torque_rpms[i]) / (torque_rpms[i + 1] - torque_rpms[i]), 0, 1))
+			break
+	# PS is metric horsepower; cap interpolated power as well as the curve's control points.
+	var power_limit_torque := rated_power_ps * 735.49875 / (maxf(rpm, 1.0) * TAU / 60)
+	return maxf(0, minf(value, power_limit_torque))

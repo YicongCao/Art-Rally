@@ -9,6 +9,7 @@ var brake: float = 0
 var throttle: float = 0
 var automatic: bool = true
 var drive_layout: String = "AWD"
+var drive_status: String = ""
 var font := SystemFont.new()
 
 
@@ -27,6 +28,7 @@ func refresh(car: RallyVehicle) -> void:
 	throttle = car.command.throttle
 	automatic = car.drivetrain.automatic
 	drive_layout = car.drivetrain.config.drive_layout
+	drive_status = "SYNC DOWN" if car.drivetrain.auto_shift_cut else ("WHEELSPIN" if car.drivetrain.wheelspin > car.drivetrain.config.max_upshift_slip and throttle > 0.2 and car.drivetrain.gear > 0 else "")
 	queue_redraw()
 
 
@@ -48,6 +50,7 @@ func _draw() -> void:
 	text("KM/H",Vector2(400,252),23,white)
 	text("%04d"%rpm,Vector2(533,170),46,amber)
 	text("RPM",Vector2(620,203),23,white)
+	text(drive_status,Vector2(185,278),17,amber)
 	text("THR",Vector2(522,248),17,white)
 	draw_rect(Rect2(571,234,150,10),Color("29352e"))
 	draw_rect(Rect2(571,234,150*throttle,10),Color("8cd6ac"))

@@ -73,6 +73,7 @@ func _ready() -> void:
 	vehicle.reset_completed.connect(reverse_assist.reset)
 	vehicle_selector = RallyVehicleSelector.new()
 	add_child(vehicle_selector)
+	vehicle_selector.power_ps = vehicle.drivetrain.config.rated_power_ps
 	vehicle_selector.build()
 	vehicle_selector.confirmed.connect(_confirm_vehicle)
 	vehicle_selector.cancelled.connect(_cancel_vehicle_selection)
