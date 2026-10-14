@@ -42,6 +42,19 @@ func _run() -> void:
 	session.previous = route.pose_at(1050).origin
 	session.step(route.pose_at(1049).origin, 10, 0.1)
 	check(note_cursor > 0 and session.next_note == note_cursor, "Reversing never replays consumed pacenotes")
+	session.current_note = "WATER"
+	session.note_remaining = 5
+	session.note_s = 1270
+	session.next_gate = 14
+	session.projection_hint = route.index_at(1250)
+	session.previous = route.pose_at(1250).origin
+	session.step(route.pose_at(1251).origin, 40, 0.01)
+	check(session.current_note == "WATER", "Active hazard note is not immediately overwritten by a future turn")
+	session.restart()
+	session.phase = RallyStageSession.Phase.ARMED
+	session.previous = route.pose_at(8).origin
+	session.step(route.pose_at(100).origin, 50, 0.01)
+	check(session.next_gate == 0, "Long teleport across a gate is not credited as physical crossing")
 	finish()
 
 

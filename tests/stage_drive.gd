@@ -5,12 +5,14 @@ var hint: int = 0
 var max_lateral: float = 0
 var samples := 0
 var peak_cost: int = 0
+var costs := PackedInt64Array()
 
 
 func _run() -> void:
 	scene = load("res://scenes/stages/sunset_ridge.tscn").instantiate()
 	root.add_child(scene)
 	scene.vehicle.command_source = drive
+	scene.set_process(false)
 	var trace := FileAccess.open("res://logs/stage_drive.csv", FileAccess.WRITE)
 	trace.store_line("tick,s,lateral,speed,gate,phase")
 	for i: int in range(120 * 650):
@@ -18,13 +20,15 @@ func _run() -> void:
 		if i % 120 == 0:
 			trace.store_line("%d,%.3f,%.3f,%.3f,%d,%d" % [i, scene.session.progress, scene.session.projection.get("lateral", 0), scene.vehicle.linear_velocity.length(), scene.session.next_gate, scene.session.phase])
 		peak_cost = maxi(peak_cost, scene.vehicle.physics_usec)
+		costs.append(scene.vehicle.physics_usec)
 		if scene.session.phase == RallyStageSession.Phase.FINISHED: break
 		if scene.session.reset_count > 0 or not scene.vehicle.position.is_finite(): break
 	trace.close()
 	check(scene.session.phase == RallyStageSession.Phase.FINISHED, "Physical controller drives every checkpoint from start to finish")
 	check(scene.session.reset_count == 0, "End-to-end stage needs no recovery or teleportation")
 	check(max_lateral < 2.8, "Automated shakedown remains within road width")
-	var report := {"finished": scene.session.phase == RallyStageSession.Phase.FINISHED, "elapsed": scene.session.elapsed, "max_lateral_m": max_lateral, "gates": scene.session.next_gate, "progress_m": scene.session.progress, "peak_vehicle_callback_ms": peak_cost / 1000.0}
+	costs.sort()
+	var report := {"finished": scene.session.phase == RallyStageSession.Phase.FINISHED, "elapsed": scene.session.elapsed, "max_lateral_m": max_lateral, "gates": scene.session.next_gate, "progress_m": scene.session.progress, "peak_vehicle_callback_ms": peak_cost / 1000.0, "p95_vehicle_callback_ms": costs[int(costs.size() * 0.95)] / 1000.0}
 	var output := FileAccess.open("res://logs/stage_drive_metrics.json", FileAccess.WRITE)
 	output.store_string(JSON.stringify(report, "\t"))
 	print("STAGE DRIVE: ", report)

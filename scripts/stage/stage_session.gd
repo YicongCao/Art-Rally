@@ -78,12 +78,13 @@ func step(position: Vector3, speed: float, dt: float) -> void:
 	note_remaining = maxf(0, note_remaining - dt)
 	if next_gate > 0 and phase != Phase.FINISHED:
 		var lookahead := clampf(speed * 4, 35, 130)
-		while next_note < route.notes.size() and float(route.notes[next_note].s) <= progress + lookahead:
+		while next_note < route.notes.size() and float(route.notes[next_note].s) < progress - 8:
+			next_note += 1
+		if next_note < route.notes.size() and float(route.notes[next_note].s) <= progress + lookahead and (note_remaining <= 2 or progress > note_s):
 			var note: Dictionary = route.notes[next_note]
-			if float(note.s) >= progress - 8:
-				current_note = note.code
-				note_s = note.s
-				note_remaining = 5
+			current_note = note.code
+			note_s = note.s
+			note_remaining = 5
 			next_note += 1
 	previous = position
 

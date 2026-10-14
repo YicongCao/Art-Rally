@@ -13,6 +13,7 @@ var session := RallyStageSession.new()
 var stage_hud: Label
 var checkpoint_visual: MeshInstance3D
 var respawn_wait: bool = false
+var result_safety_reset: bool = false
 
 
 func _ready() -> void:
@@ -74,6 +75,11 @@ func _physics_process(dt: float) -> void:
 	recorder.capture(vehicle)
 	if respawn_wait: return
 	session.step(vehicle.position, vehicle.linear_velocity.length(), dt)
+	if session.phase == RallyStageSession.Phase.FINISHED:
+		if vehicle.position.y < generator.route.position_at(generator.route.length).y - 12 and not result_safety_reset:
+			result_safety_reset = true
+			vehicle.request_reset(generator.route.pose_at(session.gates[-1] + 8))
+		return
 	if vehicle.position.y < generator.route.position_at(session.progress).y - 12 or float(session.projection.get("distance", 0)) > 35:
 		_reset()
 
@@ -118,6 +124,7 @@ func _restart() -> void:
 	controls.resume()
 	respawn_wait = true
 	vehicle.request_reset(session.restart())
+	result_safety_reset = false
 	recorder = VehicleTelemetryRecorder.new()
 	camera_snap = true
 

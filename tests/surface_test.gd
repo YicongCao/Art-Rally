@@ -47,6 +47,34 @@ func _run() -> void:
 	var drag := sample.water_resistance(Vector3(2, 0, -20), 3000, 1.0 / 120, 312.5)
 	check(drag.dot(Vector3(2, 0, -20)) < 0 and sample.grip(30) < sample.friction_scale, "Water drag dissipates energy and wet grip decreases")
 	check(sample.water_resistance(Vector3.FORWARD, 0, 0.01, 312.5) == Vector3.ZERO, "Airborne wheel cannot receive water resistance")
+	field.water.clear()
+	field.base_id = 3
+	await fresh()
+	car.command.throttle = 0.8
+	await ticks(480)
+	check(car.linear_velocity.length() > 2 and car.wheels[0].surface.surface_id == 3, "Grass and soil remain driveable rather than an invisible barrier")
+	field.base_id = 0
+	await fresh()
+	car.command.throttle = 1
+	await ticks(480)
+	car.command.throttle = 0
+	field.patches = [{"bounds": AABB(Vector3(-100, -2, -1200), Vector3(100, 4, 1400)), "id": 2}]
+	await ticks(1)
+	check(car.wheels[0].surface.surface_id == 2 and car.wheels[1].surface.surface_id == 0, "Physical left and right tire contacts retain split-surface identity")
+	car.command.brake = 0.7
+	await ticks(48)
+	check(car.angular_velocity.y < -0.01 and car.position.is_finite(), "Split-surface braking yaws toward high-grip side")
+	field.patches.clear()
+	await fresh()
+	field.patches = [{"bounds": AABB(Vector3(-100, -2, -1200), Vector3(200, 4, 1180)), "id": 1}]
+	car.command.throttle = 0.8
+	var crossed := false
+	var bounded := true
+	for i: int in range(900):
+		await ticks(1)
+		crossed = crossed or car.wheels[0].surface.surface_id == 1
+		bounded = bounded and car.position.is_finite() and car.position.y > 0.4 and car.position.y < 1.1
+	check(crossed and bounded, "Material transition is continuous without geometry-induced launch")
 	DirAccess.make_dir_recursive_absolute("res://logs")
 	var output := FileAccess.open("res://logs/surface_metrics.json", FileAccess.WRITE)
 	output.store_string(JSON.stringify(metrics, "\t"))

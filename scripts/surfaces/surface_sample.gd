@@ -30,6 +30,16 @@ func grip(speed: float) -> float:
 	return friction_scale * lerpf(1, wet_grip, wet) * (1.0 - speed_loss)
 
 
+static func average(samples: Array[RallySurfaceSample]) -> RallySurfaceSample:
+	var result := RallySurfaceSample.new()
+	result.surface_id = samples[0].surface_id
+	for field: String in ["friction_scale", "longitudinal_scale", "lateral_scale", "sliding_scale", "rolling_extra", "wet_grip", "water_depth"]:
+		var sum := 0.0
+		for sample: RallySurfaceSample in samples: sum += float(sample.get(field))
+		result.set(field, sum / samples.size())
+	return result
+
+
 func water_resistance(velocity: Vector3, load: float, dt: float, effective_mass: float) -> Vector3:
 	if water_depth <= 0 or load <= 0: return Vector3.ZERO
 	# Empirical wheel-width water drag, bounded so a step cannot reverse velocity.

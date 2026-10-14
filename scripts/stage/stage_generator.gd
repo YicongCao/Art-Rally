@@ -20,12 +20,47 @@ func build() -> void:
 	for start: int in range(0, route.points.size() - 1, 20):
 		_build_chunk(start, mini(start + 20, route.points.size() - 1))
 	_build_markers()
+	_build_culvert()
+	_build_runout()
+
+
+func _build_culvert() -> void:
+	var pose := route.pose_at(1420, 0)
+	for side: float in [-1, 1]:
+		GrayboxGeometry.box(self, "CulvertWing", Vector3(1.0, 0.5, 3.0), pose * Vector3(side * 4.3, -0.35, 0), Color("686d64"), false, pose.basis.get_euler() * 180 / PI)
+		GrayboxGeometry.box(self, "DrainOpening", Vector3(0.04, 0.35, 1.1), pose * Vector3(side * 4.85, -0.35, 0), Color("25302a"), false, pose.basis.get_euler() * 180 / PI)
+
+
+func _build_runout() -> void:
+	# A long braking apron lies beyond the timed finish; the result remains frozen there.
+	var pose := route.pose_at(route.length, 0)
+	var forward := -pose.basis.z
+	var center := pose.origin + forward * 70 - pose.basis.y * 0.5
+	var body := GrayboxGeometry.box(self, "FinishApron", Vector3(16, 1, 145), center, RallySurfaceQuery.PROFILES[1].color, true, pose.basis.get_euler() * 180 / PI)
+	body.set_meta("surface_id", 1)
 
 
 func surface_at(point: Vector3, hint: int = -1) -> RallySurfaceSample:
-	var p := route.project(to_local(point), hint)
-	var id := definition.surface_id(p.s) if absf(p.lateral) <= route.width_at(p.s) * 0.5 else 3
-	return RallySurfaceSample.from_profile(RallySurfaceQuery.PROFILES[id], definition.water_depth(p.s, p.lateral) if id != 3 else 0.0)
+	var p := route.project(to_local(point), hint, 14)
+	return _surface_at_coordinates(p.s, p.lateral)
+
+
+func surface_footprint(point: Vector3, forward: Vector3, right: Vector3, hint: int) -> RallySurfaceSample:
+	var p := route.project(to_local(point), hint, 14)
+	var local_basis := global_basis.inverse()
+	var tangent := route.tangents[p.index]
+	var across := route.rights[p.index]
+	var samples: Array[RallySurfaceSample] = [_surface_at_coordinates(p.s, p.lateral)]
+	# One road projection per wheel; patch offsets are tiny relative to the road curvature.
+	for offset: Vector3 in [forward * 0.12, -forward * 0.12, right * 0.09, -right * 0.09]:
+		var local := local_basis * offset
+		samples.append(_surface_at_coordinates(p.s + local.dot(tangent), p.lateral + local.dot(across)))
+	return RallySurfaceSample.average(samples)
+
+
+func _surface_at_coordinates(s: float, lateral: float) -> RallySurfaceSample:
+	var id := definition.surface_id(s) if absf(lateral) <= route.width_at(s) * 0.5 else 3
+	return RallySurfaceSample.from_profile(RallySurfaceQuery.PROFILES[id], definition.water_depth(s, lateral) if id != 3 else 0.0)
 
 
 func vertex_at(index: int, column: int) -> Vector3:
