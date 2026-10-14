@@ -18,7 +18,7 @@ static func sample(wheel: RallyWheelState, mount: Vector3, state: PhysicsDirectB
 	wheel.normal = hit.normal
 	wheel.length = clampf(origin.distance_to(wheel.point) - config.wheel_radius, 0, config.suspension_rest)
 	wheel.compression = config.suspension_rest - wheel.length
-	var velocity := state.linear_velocity + state.angular_velocity.cross(wheel.point - state.center_of_mass)
+	var velocity := state.linear_velocity + state.angular_velocity.cross(wheel.point - state.transform.origin - state.center_of_mass)
 	var compress_speed := -velocity.dot(up)
 	var damping := config.compression_damping if compress_speed > 0 else config.rebound_damping
 	var bump := maxf(0, config.suspension_min - wheel.length)

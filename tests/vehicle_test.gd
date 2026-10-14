@@ -27,6 +27,30 @@ func _run() -> void:
 	check(airborne, "Airborne wheels produce no support force")
 	await ticks(480)
 	check(vehicle.position.is_finite() and absf(vehicle.position.y - 0.69) < 0.05, "Drop and landing recover stable ride height")
+	vehicle.command.throttle = 0.7
+	await ticks(600)
+	var speed := vehicle.linear_velocity.length()
+	print("METRIC acceleration_speed_mps=", speed, " lateral_drift_m=", vehicle.position.x)
+	check(speed > 8 and absf(vehicle.position.x) < 0.5, "Wheel torque accelerates car without asymmetric yaw")
+	vehicle.command.throttle = 0
+	vehicle.command.brake = 1
+	await ticks(600)
+	check(vehicle.linear_velocity.length() < 0.15, "Tire braking stops the car")
+	start = vehicle.position
+	await ticks(1200)
+	check(vehicle.position.distance_to(start) < 0.1, "Brake hold remains stable for ten seconds")
+	vehicle.request_reset(Transform3D(Basis.IDENTITY, Vector3(0, 0.8, 0)))
+	await ticks(240)
+	vehicle.drivetrain.gear = -1
+	vehicle.command.throttle = 0.4
+	await ticks(240)
+	check(vehicle.linear_velocity.z > 1, "Reverse gear drives backwards through wheel forces")
+	vehicle.request_reset(Transform3D(Basis.IDENTITY, Vector3(0, 0.8, 0)))
+	await ticks(240)
+	vehicle.command.throttle = 0.3
+	vehicle.command.steer = 0.25
+	await ticks(480)
+	check(vehicle.position.x > 1 and absf(vehicle.rotation.y) > 0.1, "Steering generates a right-hand turn from contact forces")
 	world.queue_free()
 	await process_frame
 	finish()

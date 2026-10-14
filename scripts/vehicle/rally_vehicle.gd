@@ -2,6 +2,8 @@ class_name RallyVehicle
 extends RigidBody3D
 
 @export var config: RallyVehicleConfig = preload("res://resources/vehicles/baseline.tres")
+@export var tire: RallyTireConfig = preload("res://resources/vehicles/asphalt_tire.tres")
+var drivetrain := SimpleDrivetrain.new()
 var wheels: Array[RallyWheelState] = []
 var command := DriverCommand.new()
 var command_source: Callable
@@ -63,16 +65,42 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 		state.angular_velocity = Vector3.ZERO
 		for wheel: RallyWheelState in wheels: wheel.reset()
 		command = DriverCommand.new()
+		drivetrain.reset()
 		reset_pending = false
 		reset_physics_interpolation()
 	if command_source.is_valid():
 		command = command_source.call(state.linear_velocity.length(), state.step)
 	command.sanitize()
+	var torques := drivetrain.step(command, state.linear_velocity.length())
 	for i: int in range(4):
 		var wheel := wheels[i]
 		RallySuspension.sample(wheel, config.wheel_mount(i), state, config, get_rid())
+		wheel.steer = -command.steer * config.max_steer_radians if i < 2 else 0.0
+		var heading := -state.transform.basis.z.rotated(state.transform.basis.y, wheel.steer)
+		wheel.forward = heading.slide(wheel.normal).normalized() if wheel.grounded else heading
+		wheel.right = wheel.forward.cross(wheel.normal).normalized()
+		var velocity := state.linear_velocity + state.angular_velocity.cross(wheel.point - state.transform.origin - state.center_of_mass)
+		wheel.longitudinal_speed = velocity.dot(wheel.forward)
+		wheel.lateral_speed = velocity.dot(wheel.right)
+		var brake_share := config.front_brake_bias if i < 2 else 1.0 - config.front_brake_bias
+		var brake_torque := command.brake * config.total_brake_torque * brake_share * 0.5
+		if i >= 2: brake_torque += command.handbrake * config.handbrake_torque
+		var tire_force := Vector2.ZERO
+		for substep: int in range(4):
+			var solved := RallyTireModel.solve(wheel, torques[i], brake_torque, state.step / 4, config, tire)
+			tire_force += solved * 0.25
+			wheel.longitudinal_speed += solved.x * state.step / config.body_mass
+			wheel.lateral_speed += solved.y * state.step / config.body_mass
 		if wheel.grounded:
-			state.apply_force(wheel.normal * wheel.load, wheel.point - state.transform.origin)
+			var roll := -config.rolling_resistance * wheel.load * tanh(wheel.longitudinal_speed / 0.5)
+			var total := wheel.normal * wheel.load + wheel.forward * (tire_force.x + roll) + wheel.right * tire_force.y
+			state.apply_force(total, wheel.point - state.transform.origin)
+		wheel.longitudinal_force = tire_force.x
+		wheel.lateral_force = tire_force.y
+		wheel.spin = fmod(wheel.spin + wheel.omega * state.step, TAU)
 		wheel_visuals[i].position = config.wheel_mount(i) - Vector3.UP * wheel.length
+		wheel_visuals[i].rotation = Vector3(0, wheel.steer, 0)
+		wheel_visuals[i].get_child(0).rotation.x = -wheel.spin
+	state.apply_central_force(-0.5 * 1.225 * config.drag_coefficient_area * state.linear_velocity.length() * state.linear_velocity)
 	simulation_tick += 1
 	physics_usec = Time.get_ticks_usec() - start
