@@ -18,6 +18,7 @@ var last_shift_requested: int = 0
 
 
 func _ready() -> void:
+	drivetrain.config = drivetrain.config.duplicate()
 	mass = config.body_mass
 	inertia = config.body_inertia
 	center_of_mass_mode = RigidBody3D.CENTER_OF_MASS_MODE_CUSTOM

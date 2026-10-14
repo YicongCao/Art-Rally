@@ -52,6 +52,13 @@ func request_shift(target: int, speed: float) -> bool:
 
 
 static func distribute(total: float, omega: PackedFloat64Array, handbrake: bool, settings: RallyDrivetrainConfig) -> PackedFloat64Array:
+	var front_lock := clampf((omega[1]-omega[0])*settings.diff_lock_gain,-settings.axle_lock_limit,settings.axle_lock_limit)
+	var rear_lock := clampf((omega[3]-omega[2])*settings.diff_lock_gain,-settings.axle_lock_limit,settings.axle_lock_limit)
+	if settings.drive_layout=="FWD":
+		return PackedFloat64Array([total*0.5+front_lock,total*0.5-front_lock,0,0])
+	if settings.drive_layout=="RWD":
+		var rear_drive := 0.0 if handbrake else total
+		return PackedFloat64Array([0,0,rear_drive*0.5+rear_lock,rear_drive*0.5-rear_lock])
 	var front := (omega[0] + omega[1]) * 0.5
 	var rear := (omega[2] + omega[3]) * 0.5
 	var central := 0.0 if handbrake else clampf((rear - front) * settings.diff_lock_gain, -settings.center_lock_limit, settings.center_lock_limit)
@@ -68,11 +75,14 @@ func step(command: DriverCommand, wheels: Array[RallyWheelState], dt: float) -> 
 	var omega := PackedFloat64Array([wheels[0].omega, wheels[1].omega, wheels[2].omega, wheels[3].omega])
 	var handbrake := command.handbrake > 0.1
 	var shaft_speed := (omega[0] + omega[1]) * 0.5 if handbrake else (omega[0] + omega[1] + omega[2] + omega[3]) * 0.25
+	if config.drive_layout=="FWD": shaft_speed = (omega[0]+omega[1])*0.5
+	elif config.drive_layout=="RWD": shaft_speed = (omega[2]+omega[3])*0.5
 	var gearing := ratio()
 	var engaged_speed := shaft_speed * gearing
 	var launch := smoothstep(1400, 2600, rpm())
 	var running := smoothstep(700, 1500, absf(engaged_speed) * 60 / TAU)
 	clutch = maxf(launch, running) if gear != 0 and shift_remaining <= 0 else 0.0
+	if config.drive_layout=="RWD" and handbrake: clutch = 0
 	var capacity := config.clutch_capacity * clutch
 	clutch_torque = clampf((engine_omega - engaged_speed) * config.clutch_coupling, -capacity, capacity)
 	var throttle := command.throttle if shift_remaining <= 0 and rpm() < config.redline_rpm else 0.0

@@ -1,6 +1,8 @@
 class_name RallyDrivetrainConfig
 extends Resource
 
+@export_enum("FWD", "AWD", "RWD") var drive_layout: String = "AWD"
+
 @export var idle_rpm: float = 950
 @export var redline_rpm: float = 7600
 @export var upshift_rpm: float = 6800
