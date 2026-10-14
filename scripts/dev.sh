@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+EXPECTED="$(tr -d '\r\n' < "$ROOT/.godot-version")"
+
+if [[ -n "${GODOT_BIN:-}" ]]; then
+  ENGINE="$GODOT_BIN"
+elif command -v godot >/dev/null 2>&1; then
+  ENGINE="$(command -v godot)"
+elif [[ -x /Applications/Godot.app/Contents/MacOS/Godot ]]; then
+  ENGINE=/Applications/Godot.app/Contents/MacOS/Godot
+else
+  echo "Godot not found. On macOS: brew install --cask godot" >&2
+  echo "For a versioned/custom installation, set GODOT_BIN to its executable." >&2
+  exit 1
+fi
+
+ACTUAL="$("$ENGINE" --version)"
+if [[ "$ACTUAL" != "$EXPECTED".* ]]; then
+  echo "Expected Godot $EXPECTED, found $ACTUAL. Use GODOT_BIN or explicitly update the version lock." >&2
+  exit 1
+fi
+
+run_logged() {
+  local log="$1"
+  shift
+  "$ENGINE" "$@" 2>&1 | tee "$log"
+  # Godot may exit successfully despite a resource or GDScript load error.
+  if grep -Eq 'SCRIPT ERROR:|(^|[[:space:]])ERROR:|Parse Error:' "$log"; then
+    echo "Godot reported an error. See $log" >&2
+    return 1
+  fi
+}
+
+MODE="${1:-editor}"
+if [[ $# -gt 0 ]]; then shift; fi
+case "$MODE" in
+  doctor)
+    printf 'Engine: %s\nVersion: %s\nProject: %s\nArchitecture: %s\n' "$ENGINE" "$ACTUAL" "$ROOT" "$(uname -m)"
+    ;;
+  editor)
+    exec "$ENGINE" --path "$ROOT" --editor "$@"
+    ;;
+  run)
+    exec "$ENGINE" --path "$ROOT" "$@"
+    ;;
+  check)
+    mkdir -p "$ROOT/logs"
+    run_logged "$ROOT/logs/import.log" --headless --path "$ROOT" --editor --import
+    run_logged "$ROOT/logs/smoke.log" --headless --path "$ROOT" --script res://tests/smoke_test.gd
+    grep -q '^SMOKE TEST PASSED$' "$ROOT/logs/smoke.log"
+    ;;
+  *)
+    echo "Usage: $0 {doctor|editor|run|check} [Godot options]" >&2
+    exit 2
+    ;;
+esac

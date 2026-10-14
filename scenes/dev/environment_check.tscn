@@ -1,0 +1,105 @@
+[gd_scene load_steps=12 format=3]
+
+[ext_resource type="Script" path="res://scripts/dev/environment_check.gd" id="1_script"]
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMaterial"]
+sky_top_color = Color(0.16, 0.28, 0.4, 1)
+sky_horizon_color = Color(0.94, 0.66, 0.4, 1)
+ground_bottom_color = Color(0.12, 0.16, 0.2, 1)
+ground_horizon_color = Color(0.94, 0.66, 0.4, 1)
+
+[sub_resource type="Sky" id="Sky"]
+sky_material = SubResource("SkyMaterial")
+
+[sub_resource type="Environment" id="Environment"]
+background_mode = 2
+sky = SubResource("Sky")
+ambient_light_source = 3
+ambient_light_color = Color(0.75, 0.82, 0.92, 1)
+ambient_light_energy = 0.55
+tonemap_mode = 2
+
+[sub_resource type="StandardMaterial3D" id="GroundMaterial"]
+albedo_color = Color(0.27, 0.33, 0.28, 1)
+roughness = 1.0
+
+[sub_resource type="BoxMesh" id="GroundMesh"]
+material = SubResource("GroundMaterial")
+size = Vector3(30, 1, 30)
+
+[sub_resource type="BoxShape3D" id="GroundShape"]
+size = Vector3(30, 1, 30)
+
+[sub_resource type="StandardMaterial3D" id="ProbeMaterial"]
+albedo_color = Color(0.97, 0.36, 0.12, 1)
+roughness = 0.7
+
+[sub_resource type="BoxMesh" id="ProbeMesh"]
+material = SubResource("ProbeMaterial")
+
+[sub_resource type="BoxShape3D" id="ProbeShape"]
+
+[sub_resource type="PhysicsMaterial" id="ContactMaterial"]
+friction = 0.8
+bounce = 0.0
+
+[node name="EnvironmentCheck" type="Node3D"]
+script = ExtResource("1_script")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-28, -32, 0)
+light_color = Color(1, 0.79, 0.57, 1)
+light_energy = 1.4
+shadow_enabled = true
+
+[node name="Ground" type="StaticBody3D" parent="."]
+position = Vector3(0, -0.5, 0)
+collision_layer = 1
+collision_mask = 2
+physics_material_override = SubResource("ContactMaterial")
+
+[node name="Mesh" type="MeshInstance3D" parent="Ground"]
+mesh = SubResource("GroundMesh")
+
+[node name="Collision" type="CollisionShape3D" parent="Ground"]
+shape = SubResource("GroundShape")
+
+[node name="Probe" type="RigidBody3D" parent="."]
+position = Vector3(0, 4, 0)
+mass = 10.0
+collision_layer = 2
+collision_mask = 5
+physics_material_override = SubResource("ContactMaterial")
+
+[node name="Mesh" type="MeshInstance3D" parent="Probe"]
+mesh = SubResource("ProbeMesh")
+
+[node name="Collision" type="CollisionShape3D" parent="Probe"]
+shape = SubResource("ProbeShape")
+
+[node name="Camera" type="Camera3D" parent="."]
+position = Vector3(10, 8, 12)
+rotation_degrees = Vector3(-25, 40, 0)
+current = true
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="Panel" type="PanelContainer" parent="HUD"]
+offset_left = 24.0
+offset_top = 24.0
+offset_right = 520.0
+offset_bottom = 210.0
+mouse_filter = 2
+
+[node name="Padding" type="MarginContainer" parent="HUD/Panel"]
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 14
+
+[node name="Status" type="Label" parent="HUD/Panel/Padding"]
+theme_override_font_sizes/font_size = 19
+text = "ART RALLY / DEVELOPMENT ENVIRONMENT\nStarting runtime checks..."
