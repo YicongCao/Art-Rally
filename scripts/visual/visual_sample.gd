@@ -7,6 +7,15 @@ var sample_label: Label
 var show_hud: bool = true
 var sample_complete: bool = false
 var projection_hint: int = -1
+var scenery := RallySampleDressing.new()
+var car_style := RallySampleCar.new()
+var animation_time: float = 0
+var saved_msaa: int = 0
+var saved_sun_color: Color
+var saved_sun_rotation: Vector3
+var saved_sun_energy: float
+var camera_history_valid: bool = false
+var chase_position := Vector3.ZERO
 
 
 func _ready() -> void:
@@ -14,8 +23,15 @@ func _ready() -> void:
 	super._ready()
 	vehicle.config.contact_envelope = true
 	telemetry_visible = false
+	saved_msaa = get_viewport().msaa_3d
+	saved_sun_color = $Sun.light_color
+	saved_sun_energy = $Sun.light_energy
+	saved_sun_rotation = $Sun.rotation_degrees
 	controls.restart_requested.connect(_reset)
 	_setup_light()
+	scenery.build(landscape)
+	car_style.build(vehicle)
+	vehicle.reset_completed.connect(func(): camera_history_valid = false)
 	sample_label = readout
 	notice.text = "WASD drive | SPACE handbrake | R restart | C camera\nG visual A/B | 1/2/3 viewpoints | TAB clean view | F7 lab\n200 m sample only - full stage remains unchanged"
 	for label: Label in [readout, details, notice]: label.add_theme_font_size_override("font_size",14)
@@ -38,20 +54,23 @@ func _setup_light() -> void:
 	styled_environment.ambient_light_color = Color("aec4cd")
 	styled_environment.ambient_light_energy = 0.48
 	styled_environment.reflected_light_source = Environment.REFLECTION_SOURCE_SKY
-	styled_environment.tonemap_mode = Environment.TONE_MAPPER_FILMIC
+	styled_environment.tonemap_mode = Environment.TONE_MAPPER_ACES
 	styled_environment.fog_enabled = true
 	styled_environment.fog_light_color = Color("a5bbc3")
 	styled_environment.fog_light_energy = 0.7
-	styled_environment.fog_density = 0.00075
+	styled_environment.fog_density = 0.0005
+	styled_environment.fog_sky_affect = 0.12
 	styled_environment.ssao_enabled = true
 	styled_environment.ssao_radius = 1.0
 	styled_environment.ssao_intensity = 1.0
 	$WorldEnvironment.environment = styled_environment
 	$Sun.rotation_degrees = Vector3(-34,-65,0)
 	$Sun.light_color = Color("ffe3b4")
-	$Sun.light_energy = 1.15
+	$Sun.light_energy = 0.95
 	$Sun.directional_shadow_max_distance = 170
 	camera.far = 2800
+	camera.fov = 62
+	get_viewport().msaa_3d = Viewport.MSAA_4X
 
 
 func _physics_process(_dt: float) -> void:
@@ -61,7 +80,7 @@ func _physics_process(_dt: float) -> void:
 	projection_hint = p.index
 	if float(p.s) >= RallySampleLandscape.END:
 		sample_complete = true
-	if float(p.distance) > 18 or float(p.height) < -12 or float(p.s) < RallySampleLandscape.BUFFER_START+3:
+	if float(p.distance) > 18 or float(p.height) < -12 or float(p.s) < RallySampleLandscape.BUFFER_START+3 or float(p.s) > RallySampleLandscape.BUFFER_END-8:
 		_reset()
 
 
@@ -76,6 +95,20 @@ func _driver_command(speed: float, dt: float) -> DriverCommand:
 func _process(dt: float) -> void:
 	super._process(dt)
 	if not is_instance_valid(sample_label): return
+	if camera_mode == 0:
+		var pose := vehicle.get_global_transform_interpolated()
+		var forward := -pose.basis.z
+		forward.y = 0
+		forward = forward.normalized()
+		var desired := pose.origin-forward*6.6+Vector3.UP*2.55
+		chase_position = chase_position.lerp(desired,1.0-exp(-9.0*dt)) if camera_history_valid else desired
+		camera_history_valid = true
+		camera.position = chase_position
+		camera.look_at(pose.origin+forward*7+Vector3.UP*0.8)
+	if not get_tree().paused: animation_time += dt
+	for i: int in range(scenery.animated_arms.size()):
+		scenery.animated_arms[i].rotation.z = sin(animation_time*2.4+i)*0.2
+	car_style.brake_material.emission_energy_multiplier = 1.5 if vehicle.command.brake > 0.1 else 0.15
 	var p := landscape.route.project(vehicle.position,projection_hint,35)
 	readout.text = "PINE RIDGE / VISUAL STUDY 01\n%03d km/h   %s   %03d / 200 m" % [vehicle.linear_velocity.length()*3.6,_gear_name(),clampf(float(p.s)-RallySampleLandscape.START,0,200)]
 	if get_tree().paused: readout.text += "\nPAUSED - ENTER / START TO RESUME"
@@ -93,8 +126,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	if not event is InputEventKey or not event.pressed or event.echo: return
 	match event.physical_keycode:
 		KEY_G:
-			landscape.set_style(not landscape.style_enabled)
-			$WorldEnvironment.environment = styled_environment if landscape.style_enabled else gray_environment
+			set_style(not landscape.style_enabled)
 		KEY_TAB: show_hud = not show_hud
 		KEY_1: jump_to(433)
 		KEY_2: jump_to(515)
@@ -107,3 +139,17 @@ func jump_to(s: float) -> void:
 	projection_hint = landscape.route.index_at(s)
 	vehicle.request_reset(landscape.route.pose_at(s))
 	camera_snap = true
+	camera_history_valid = false
+
+
+func set_style(enabled: bool) -> void:
+	landscape.set_style(enabled)
+	car_style.set_style(enabled)
+	$WorldEnvironment.environment = styled_environment if enabled else gray_environment
+	$Sun.light_color = Color("ffe3b4") if enabled else saved_sun_color
+	$Sun.light_energy = 0.95 if enabled else saved_sun_energy
+	$Sun.rotation_degrees = Vector3(-34,-65,0) if enabled else saved_sun_rotation
+
+
+func _exit_tree() -> void:
+	get_viewport().msaa_3d = saved_msaa

@@ -146,7 +146,7 @@ func _build_mountains() -> void:
 			var far_a := center+Vector3(cos(a)*(radius+380),-40,sin(a)*(radius+380))
 			var far_b := center+Vector3(cos(b)*(radius+380),-40,sin(b)*(radius+380))
 			for vertex: Vector3 in [near_a,peak_b,near_b,near_a,peak_a,peak_b,peak_a,far_a,far_b,peak_a,far_b,peak_b]:
-				tool.set_color(Color("67796d").lerp(Color("9cbbc5"),ring*0.32).darkened(0.08*sin(a*13)))
+				tool.set_color(Color("67796d").lerp(Color("9cbbc5"),ring*0.32).darkened(0.08*sin(a*13)).srgb_to_linear())
 				tool.add_vertex(vertex)
 		tool.generate_normals()
 		var mountain := MeshInstance3D.new()

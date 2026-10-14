@@ -74,8 +74,11 @@ case "$MODE" in
   stage)
     exec "$ENGINE" --path "$ROOT" --scene res://scenes/stages/sunset_ridge.tscn "$@"
     ;;
+  preview)
+    exec "$ENGINE" --path "$ROOT" --scene res://scenes/dev/visual_sample.tscn "$@"
+    ;;
   *)
-    echo "Usage: $0 {doctor|editor|run|lab|stage|check|regression|stage-check} [Godot options]" >&2
+    echo "Usage: $0 {doctor|editor|run|lab|stage|preview|check|regression|stage-check} [Godot options]" >&2
     exit 2
     ;;
 esac
