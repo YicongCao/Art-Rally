@@ -1,0 +1,36 @@
+extends "res://tests/test_suite.gd"
+
+
+func _run() -> void:
+	var settings := RallyGameSettings.new()
+	settings.path = "user://m5_test_%d.cfg"%Time.get_ticks_usec()
+	settings.set_value("volume",4.0)
+	settings.set_value("return_rate",NAN)
+	settings.set_value("lens_flare","invalid")
+	check(settings.values.volume==1.0 and settings.values.return_rate==5.0 and settings.values.lens_flare,"Settings clamp invalid values and restore safe defaults")
+	settings.set_value("volume",0.25)
+	settings.set_value("lens_flare",false)
+	check(settings.save_file()==OK,"Settings save to local config")
+	var loaded := RallyGameSettings.new()
+	loaded.path = settings.path
+	loaded.load_file()
+	check(loaded.values.volume==0.25 and not loaded.values.lens_flare,"Settings round-trip without modifying project resources")
+	DirAccess.remove_absolute(settings.path)
+	var controls := RallyInputController.new()
+	root.add_child(controls)
+	settings.reset()
+	settings.apply_input(controls,false)
+	check(controls.filter.profile.steering_rate==4 and controls.filter.profile.throttle_rise_seconds==0.30,"Default input settings preserve approved baseline")
+	settings.apply_input(controls,true)
+	check(is_equal_approx(controls.filter.profile.throttle_rise_seconds,0.18),"Light assistance keeps its faster throttle response")
+	var menu := RallyPauseMenu.new()
+	root.add_child(menu)
+	menu.build(settings)
+	menu.show_menu(true)
+	check(menu.visible and menu.resume_button.has_focus(),"Pause menu is keyboard/gamepad focusable")
+	menu.show_menu(false)
+	check(not menu.visible,"Closing menu restores gameplay surface")
+	menu.queue_free()
+	controls.queue_free()
+	await process_frame
+	finish()

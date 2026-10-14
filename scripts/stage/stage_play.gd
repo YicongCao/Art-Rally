@@ -16,6 +16,8 @@ var checkpoint_visual: MeshInstance3D
 var respawn_wait: bool = false
 var result_safety_reset: bool = false
 var presentation := RallyStagePresentation.new()
+var preferences := RallyGameSettings.new()
+var pause_menu: RallyPauseMenu
 
 
 func _ready() -> void:
@@ -44,6 +46,18 @@ func _ready() -> void:
 	checkpoint_visual.mesh = mesh
 	add_child(checkpoint_visual)
 	presentation.build(self)
+	if DisplayServer.get_name()!="headless" and not "--test-defaults" in OS.get_cmdline_user_args(): preferences.load_file()
+	pause_menu = RallyPauseMenu.new()
+	add_child(pause_menu)
+	pause_menu.build(preferences)
+	pause_menu.resume_requested.connect(_toggle_pause)
+	pause_menu.restart_requested.connect(_restart)
+	pause_menu.practice_requested.connect(_toggle_mode)
+	pause_menu.setting_changed.connect(_setting_changed)
+	pause_menu.defaults_requested.connect(func(): preferences.reset(); _apply_preferences(); _save_preferences())
+	controls.transmission_requested.connect(func(): preferences.set_value("automatic",vehicle.drivetrain.automatic); _save_preferences())
+	_apply_preferences()
+	if get_tree().paused: pause_menu.show_menu(true)
 
 
 func _spawn_pose() -> Transform3D:
@@ -113,8 +127,57 @@ func _restart() -> void:
 	result_safety_reset = false
 	recorder = VehicleTelemetryRecorder.new()
 	camera_snap = true
+	if is_instance_valid(pause_menu): pause_menu.show_menu(false)
 
 
 func _toggle_mode() -> void:
 	session.practice = not session.practice
 	_restart()
+
+
+func _apply_preferences() -> void:
+	preferences.apply_input(controls,light_assist)
+	vehicle.drivetrain.automatic = preferences.values.automatic
+	vehicle.config.front_brake_bias = preferences.values.brake_bias
+	vehicle.config.static_compression = 0.13/float(preferences.values.spring_scale)
+	presentation.flare.enabled = preferences.values.lens_flare
+	presentation.scenery.set_quality(preferences.values.low_detail)
+	presentation.environment.ssao_enabled = not preferences.values.low_detail
+
+
+func _setting_changed(key: String,value: Variant) -> void:
+	preferences.set_value(key,value)
+	_apply_preferences()
+	_save_preferences()
+
+
+func _save_preferences() -> void:
+	if DisplayServer.get_name()=="headless" or "--test-defaults" in OS.get_cmdline_user_args(): return
+	if preferences.save_file()!=OK and is_instance_valid(pause_menu): pause_menu.message.text = "设置已生效，但本机保存失败"
+
+
+func _toggle_profile() -> void:
+	light_assist = not light_assist
+	preferences.apply_input(controls,light_assist)
+
+
+func _toggle_pause() -> void:
+	super._toggle_pause()
+	if is_instance_valid(pause_menu): pause_menu.show_menu(get_tree().paused)
+
+
+func _safety_pause() -> void:
+	super._safety_pause()
+	if is_instance_valid(pause_menu): pause_menu.show_menu(true)
+
+
+func _export() -> void:
+	super._export()
+	if is_instance_valid(pause_menu):
+		pause_menu.show_menu(true)
+		pause_menu.message.text = "遥测已导出至 user://telemetry/，继续驾驶前请确认"
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo and event.physical_keycode==KEY_L:
+		_setting_changed("lens_flare",not preferences.values.lens_flare)
