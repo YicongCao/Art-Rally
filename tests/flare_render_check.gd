@@ -40,12 +40,19 @@ func _run() -> void:
 	flare.update(camera,direction,true,1)
 	var blocked_baseline := await capture()
 	var blocked_delta := difference(blocked_baseline,blocked)
+	blocker.position.x += 0.35
+	var partial_baseline := await capture()
+	flare.enabled = true
+	flare.update(camera,direction,true,1)
+	var partial := await capture()
+	var partial_delta := difference(partial_baseline,partial)
 	check(open_delta > 0.0005, "Unoccluded visible sun renders lens ghosts")
 	check(blocked_delta < maxf(open_delta * 0.05,0.00002), "Opaque render geometry without physics collider hides solar ghosts")
+	check(partial_delta > open_delta*0.15 and partial_delta < open_delta*0.85, "Partial solar occlusion smoothly reduces the ghost contribution")
 	flare.enabled = true
 	flare.update(camera,-direction,true,1)
 	check(not flare.overlay.visible, "Sun behind camera never renders flare")
-	print("FLARE GPU METRICS: open_delta=",open_delta," blocked_delta=",blocked_delta)
+	print("FLARE GPU METRICS: open_delta=",open_delta," blocked_delta=",blocked_delta," partial_delta=",partial_delta)
 	DirAccess.make_dir_recursive_absolute("res://logs")
 	clear.save_png("res://logs/flare_gpu_open.png")
 	blocked.save_png("res://logs/flare_gpu_blocked.png")
