@@ -19,6 +19,10 @@ var presentation := RallyStagePresentation.new()
 var preferences := RallyGameSettings.new()
 var pause_menu: RallyPauseMenu
 var feedback := RallyVehicleFeedback.new()
+var recovery_notice: String = ""
+var recovery_notice_time: float = 0
+var has_driven: bool = false
+var startup_focus_pause: bool = false
 
 
 func _ready() -> void:
@@ -29,6 +33,7 @@ func _ready() -> void:
 	telemetry_visible = false
 	controls.restart_requested.connect(_restart)
 	controls.mode_requested.connect(_toggle_mode)
+	controls.focus_returned.connect(_restore_launch_focus)
 	vehicle.reset_completed.connect(func(): respawn_wait = false)
 	var layer := CanvasLayer.new()
 	layer.layer = 5
@@ -68,26 +73,38 @@ func _spawn_pose() -> Transform3D:
 
 
 func _driver_command(speed: float, dt: float) -> DriverCommand:
-	if not session.accepts_input() or respawn_wait:
+	if respawn_wait or session.phase==RallyStageSession.Phase.FINISHED:
 		var held := DriverCommand.new()
 		held.brake = 1
 		return held
-	return controls.sample(speed, dt)
+	var command := controls.sample(speed,dt)
+	if command.throttle>0.01 or absf(command.steer)>0.01 or command.handbrake>0.01: has_driven = true
+	if session.phase==RallyStageSession.Phase.COUNTDOWN:
+		if command.throttle>0.01 and command.brake<0.05 and command.handbrake<0.05:
+			session.countdown = 0
+			session.phase = RallyStageSession.Phase.ARMED
+		else: command.brake = 1
+	return command
 
 
 func _physics_process(dt: float) -> void:
 	if get_tree().paused: return
 	recorder.capture(vehicle)
 	if respawn_wait: return
+	presentation.tire_marks.update(vehicle,dt)
+	if RallyStageBounds.outside(generator.route,vehicle.position,vehicle.linear_velocity,dt,session.projection_hint):
+		if session.phase==RallyStageSession.Phase.FINISHED:
+			respawn_wait = true
+			vehicle.request_reset(generator.route.pose_at(session.gates[-1]+8))
+		else: _recover(10,"越界复位")
+		return
 	session.step(vehicle.position, vehicle.linear_velocity.length(), dt)
 	if session.phase == RallyStageSession.Phase.FINISHED:
 		if vehicle.position.y < generator.route.position_at(generator.route.length).y - 12 and not result_safety_reset:
 			result_safety_reset = true
 			vehicle.request_reset(generator.route.pose_at(session.gates[-1] + 8))
 		return
-	if vehicle.position.y < generator.route.position_at(session.progress).y - 12 or float(session.projection.get("distance", 0)) > 35:
-		_reset()
-	elif presentation.scenery.spectator_intrusion(vehicle.position):
+	if presentation.scenery.spectator_intrusion(vehicle.position):
 		_reset()
 
 
@@ -100,10 +117,12 @@ func _process(dt: float) -> void:
 	if checkpoint_visual.visible:
 		checkpoint_visual.transform = generator.route.pose_at(session.gates[session.next_gate],0.025)
 	game_hud_clock += dt
+	if not get_tree().paused: recovery_notice_time = maxf(0,recovery_notice_time-dt)
 	if game_hud_clock >= 0.05:
 		game_hud_clock = 0
 		var data := RallyHUD.data_for(vehicle,session,get_tree().paused)
 		data["camera_mode"] = camera_mode
+		if recovery_notice_time>0: data["warning"] = recovery_notice
 		game_hud.refresh(data)
 	presentation.update(dt)
 	feedback.update(vehicle,preferences,controls,get_tree().paused,dt)
@@ -119,10 +138,17 @@ func _format_time(seconds: float) -> String:
 
 
 func _reset() -> void:
+	_recover(5,"车辆恢复")
+
+
+func _recover(seconds: float,reason: String) -> void:
 	if respawn_wait or session.phase == RallyStageSession.Phase.FINISHED: return
 	controls.clear()
 	respawn_wait = true
-	vehicle.request_reset(session.recover())
+	var old_penalty := session.penalty
+	vehicle.request_reset(session.recover(seconds))
+	recovery_notice = "%s · +%d 秒"%[reason,session.penalty-old_penalty]
+	recovery_notice_time = 3
 	camera_snap = true
 
 
@@ -132,7 +158,11 @@ func _restart() -> void:
 	respawn_wait = true
 	vehicle.request_reset(session.restart())
 	result_safety_reset = false
+	recovery_notice_time = 0
+	has_driven = false
+	startup_focus_pause = false
 	recorder = VehicleTelemetryRecorder.new()
+	presentation.tire_marks.clear()
 	camera_snap = true
 	if is_instance_valid(pause_menu): pause_menu.show_menu(false)
 
@@ -177,13 +207,20 @@ func _cycle_camera() -> void:
 
 
 func _toggle_pause() -> void:
+	startup_focus_pause = false
 	super._toggle_pause()
 	if is_instance_valid(pause_menu): pause_menu.show_menu(get_tree().paused)
 
 
 func _safety_pause() -> void:
+	if not get_tree().paused: startup_focus_pause = not has_driven and session.next_gate==0
 	super._safety_pause()
 	if is_instance_valid(pause_menu): pause_menu.show_menu(true)
+
+
+func _restore_launch_focus() -> void:
+	if startup_focus_pause and get_tree().paused:
+		_toggle_pause()
 
 
 func _export() -> void:

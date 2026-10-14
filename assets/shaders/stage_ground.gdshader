@@ -54,8 +54,10 @@ void fragment() {
 		gravel *= 1.0-(1.0-smoothstep(0.012,0.055,stones.y))*near_detail*0.10;
 		road_bump = crown*near_detail*on_road;
 		color = mix(color, earth * 1.09, shoulder);
-		float mud = step(1150.0,UV.y)*(1.0-step(1650.0,UV.y));
-		float asphalt = step(1650.0,UV.y)*(1.0-step(2100.0,UV.y));
+		// Irregular, compacted edges and dragged material break up the straight join.
+		float worn_s = UV.y+(noise(vec2(UV.x*1.8,UV.y*0.35))-0.5)*4.5+sin(UV.x*3.1)*0.8;
+		float mud = smoothstep(1147.0,1153.0,worn_s)*(1.0-smoothstep(1647.0,1653.0,worn_s));
+		float asphalt = smoothstep(1647.0,1653.0,worn_s)*(1.0-smoothstep(2097.0,2103.0,worn_s));
 		stone_speckle = mix(1.0,mix(0.15,0.07,asphalt),max(mud,asphalt)*on_road);
 		vec3 mud_color = mix(vec3(0.075,0.044,0.021),vec3(0.17,0.10,0.045),noise(world.xz*0.4));
 		mud_color *= 1.0-tracks*0.25;

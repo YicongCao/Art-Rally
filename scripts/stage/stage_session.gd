@@ -89,10 +89,10 @@ func step(position: Vector3, speed: float, dt: float) -> void:
 	previous = position
 
 
-func recover() -> Transform3D:
+func recover(penalty_seconds: float = 5.0) -> Transform3D:
 	if phase == Phase.FINISHED: return route.pose_at(gates[-1] + 5)
-	if phase == Phase.RUNNING:
-		if not practice: penalty += 5
+	if phase == Phase.RUNNING or penalty_seconds >= 10:
+		if not practice: penalty += maxf(0,penalty_seconds)
 		reset_count += 1
 	var s := 8.0 if next_gate == 0 else maxf(8, gates[next_gate - 1] - 6)
 	var pose := route.pose_at(s)

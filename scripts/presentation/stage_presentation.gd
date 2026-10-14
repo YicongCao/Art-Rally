@@ -10,12 +10,17 @@ var scene: Node3D
 var previous_msaa: int = 0
 var elapsed: float = 0
 var camera_rig := RallyCameraRig.new()
+var checkpoints := RallyCheckpointMarkers.new()
+var tire_marks := RallyTireMarks.new()
 
 
 func build(owner_scene: Node3D) -> void:
 	scene = owner_scene
 	scene.add_child(scenery)
 	scenery.build(scene.generator)
+	checkpoints.build(scene,scenery.route,scene.session.gates)
+	tire_marks.build(scene)
+	scene.vehicle.reset_completed.connect(tire_marks.break_trails)
 	atmosphere.build_at(scenery.dressing,scenery.route,scenery.center,scene.get_node("Sun"),1.8)
 	car_style.build(scene.vehicle)
 	camera_rig.build(scene.camera)
@@ -50,6 +55,7 @@ func build(owner_scene: Node3D) -> void:
 
 
 func update(dt: float) -> void:
+	checkpoints.update(scene.session.next_gate)
 	if not scene.get_tree().paused: elapsed += dt
 	camera_rig.update(scene.camera,scene.vehicle,scene.camera_mode,scene.preferences.values.camera_motion,scene.get_tree().paused,dt)
 	for i: int in range(scenery.foliage.animated_arms.size()):

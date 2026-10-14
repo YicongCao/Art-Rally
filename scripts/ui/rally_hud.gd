@@ -43,8 +43,11 @@ func set_route(route: RallyStageRoute) -> void:
 
 static func data_for(car: RallyVehicle, session: RallyStageSession, paused: bool) -> Dictionary:
 	var warning := ""
+	var gate := mini(session.next_gate,session.gates.size()-1)
+	var target := session.route.position_at(session.gates[gate])
+	var local := car.basis.inverse()*(target-car.position)
 	if session.phase == RallyStageSession.Phase.RUNNING:
-		if float(session.projection.get("s",0)) > session.gates[session.next_gate]+10: warning = "漏过检查点 · R 恢复后重过"
+		if float(session.projection.get("s",0)) > session.gates[session.next_gate]+10: warning = "漏过 CP %02d · 返回金色气柱，或 R 恢复"%(gate+1)
 		elif car.linear_velocity.dot(session.route.tangent_at(session.progress)) < -2: warning = "逆行 · 请掉头"
 	return {"speed":car.linear_velocity.length()*3.6,"rpm":car.drivetrain.rpm(),"redline":car.drivetrain.config.redline_rpm,
 		"gear":"R" if car.drivetrain.gear<0 else ("N" if car.drivetrain.gear==0 else str(car.drivetrain.gear)),
@@ -53,7 +56,8 @@ static func data_for(car: RallyVehicle, session: RallyStageSession, paused: bool
 		"gates":session.next_gate,"total_gates":session.gates.size(),"note":session.current_note if session.note_remaining>0 else "",
 		"note_distance":maxf(0,session.note_s-session.progress),"phase":int(session.phase),"countdown":session.countdown,
 		"practice":session.practice,"paused":paused,"warning":warning,"surface":car.wheels[0].surface.surface_id,
-		"position":Vector2(car.position.x,car.position.z),"heading":Vector2(-car.basis.z.x,-car.basis.z.z)}
+		"position":Vector2(car.position.x,car.position.z),"heading":Vector2(-car.basis.z.x,-car.basis.z.z),
+		"gate_number":gate+1,"gate_distance":car.position.distance_to(target),"gate_direction":Vector2(local.x,local.z).normalized()}
 
 
 func refresh(value: Dictionary) -> void:
@@ -80,6 +84,13 @@ func _draw() -> void:
 	draw_colored_polygon(PackedVector2Array([Vector2(37,38),Vector2(51,38),Vector2(43,64),Vector2(29,64)]),AMBER)
 	text("ART / RALLY",Vector2(63,52),20,PAPER,title_font)
 	text("夕照松岭   /   16:00",Vector2(63,78),13,MUTED)
+	if int(model.phase)!=RallyStageSession.Phase.FINISHED:
+		panel(Rect2(24,105,260,42))
+		text("NEXT  CP %02d  /  %d m"%[model.gate_number,model.gate_distance],Vector2(40,132),13,AMBER,number_font)
+		var forward: Vector2 = model.gate_direction
+		var side := Vector2(-forward.y,forward.x)
+		var at := Vector2(264,126)
+		draw_colored_polygon(PackedVector2Array([at+forward*10,at-forward*6+side*5,at-forward*6-side*5]),AMBER)
 	panel(Rect2(968,22,288,90))
 	text("自由练习" if model.practice else "赛段计时",Vector2(989,46),12,MUTED)
 	text(time_text(model.time),Vector2(988,80),30,PAPER,number_font)
@@ -91,14 +102,15 @@ func _draw() -> void:
 	if int(model.get("camera_mode",0))!=2: _draw_gauge()
 	if not str(model.warning).is_empty():
 		panel(Rect2(422,625,435,44),Color(0.15,0.08,0.05,0.94))
-		center_text(model.warning,Vector2(640,653),18,AMBER)
-	else:
+		center_text(model.warning,Vector2(640,653),15,AMBER)
+	elif int(model.get("camera_mode",0))!=2:
 		center_text("Esc 暂停/设置    C 视角    T 遥测",Vector2(640,697),12,PAPER)
 	if model.paused:
 		center_text("已暂停",Vector2(640,137),20,AMBER)
 	elif model.phase == RallyStageSession.Phase.COUNTDOWN:
 		panel(Rect2(579,270,122,112))
 		center_text(str(ceili(model.countdown)),Vector2(640,352),74,AMBER,number_font)
+		center_text("踩油即可发车",Vector2(640,410),17,PAPER)
 	elif model.phase == RallyStageSession.Phase.ARMED:
 		center_text("出发 · 穿过起点开始计时",Vector2(640,168),20,PAPER)
 	elif model.phase == RallyStageSession.Phase.FINISHED:

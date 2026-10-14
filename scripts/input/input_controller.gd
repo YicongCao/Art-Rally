@@ -3,6 +3,7 @@ extends Node
 
 signal pause_requested
 signal safety_pause_requested
+signal focus_returned
 signal reset_requested
 signal camera_requested
 signal telemetry_requested
@@ -30,6 +31,7 @@ func _ready() -> void:
 
 
 func _notification(what: int) -> void:
+	if what == NOTIFICATION_APPLICATION_FOCUS_IN and is_inside_tree(): focus_returned.emit()
 	if what == NOTIFICATION_APPLICATION_FOCUS_OUT and is_inside_tree():
 		suspend()
 		safety_pause_requested.emit()
@@ -83,7 +85,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			return
 		if blocked:
 			return
-		if code not in [KEY_W, KEY_S, KEY_A, KEY_D, KEY_SPACE, KEY_Q, KEY_E, KEY_R, KEY_C, KEY_T, KEY_M, KEY_F2, KEY_F3, KEY_F8]:
+		if code not in [KEY_W, KEY_S, KEY_A, KEY_D, KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT, KEY_SPACE, KEY_Q, KEY_E, KEY_R, KEY_C, KEY_T, KEY_M, KEY_F2, KEY_F3, KEY_F8]:
 			return
 		if event.pressed:
 			_select_device(-1)
@@ -135,9 +137,9 @@ func sample(speed: float, dt: float) -> DriverCommand:
 		return DriverCommand.new()
 	var raw := DriverCommand.new()
 	if active_device == -1:
-		raw.steer = float(keys.get(KEY_D, false)) - float(keys.get(KEY_A, false))
-		raw.throttle = float(keys.get(KEY_W, false))
-		raw.brake = float(keys.get(KEY_S, false))
+		raw.steer = float(keys.get(KEY_D, false) or keys.get(KEY_RIGHT, false)) - float(keys.get(KEY_A, false) or keys.get(KEY_LEFT, false))
+		raw.throttle = float(keys.get(KEY_W, false) or keys.get(KEY_UP, false))
+		raw.brake = float(keys.get(KEY_S, false) or keys.get(KEY_DOWN, false))
 		raw.handbrake = float(keys.get(KEY_SPACE, false))
 	else:
 		raw.steer = filter.stick(axes.get(JOY_AXIS_LEFT_X, 0.0))
