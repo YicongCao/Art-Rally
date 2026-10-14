@@ -32,6 +32,7 @@ func _ready() -> void:
 	controls.telemetry_requested.connect(func(): telemetry_visible = not telemetry_visible)
 	controls.profile_requested.connect(_toggle_profile)
 	controls.export_requested.connect(_export)
+	controls.transmission_requested.connect(func(): vehicle.drivetrain.automatic = not vehicle.drivetrain.automatic)
 	camera = $Camera
 	_build_hud()
 	debug_visual = MeshInstance3D.new()
@@ -102,6 +103,7 @@ func _process(dt: float) -> void:
 	debug_visual.visible = telemetry_visible
 	if telemetry_visible:
 		details.text = "%s | %s assist | physics %.2f ms\nSTEER %+.2f   GAS %.2f   BRAKE %.2f\n" % ["Keyboard" if controls.active_device < 0 else "Gamepad %d" % controls.active_device, "Light" if light_assist else "Standard", vehicle.physics_usec / 1000.0, vehicle.command.steer, vehicle.command.throttle, vehicle.command.brake]
+		details.text += "%d RPM | %s | clutch %.2f\n" % [vehicle.drivetrain.rpm(), "AUTO (M)" if vehicle.drivetrain.automatic else "MANUAL (M)", vehicle.drivetrain.clutch]
 		for i: int in range(4):
 			var wheel := vehicle.wheels[i]
 			details.text += "%s  %4d N  %3d mm  slip %+.2f  angle %+.1f\n" % [["FL", "FR", "RL", "RR"][i], wheel.load, wheel.length * 1000, wheel.slip, rad_to_deg(wheel.slip_angle)]

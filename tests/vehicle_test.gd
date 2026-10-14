@@ -47,9 +47,10 @@ func _run() -> void:
 	check(vehicle.linear_velocity.z > 1, "Reverse gear drives backwards through wheel forces")
 	vehicle.request_reset(Transform3D(Basis.IDENTITY, Vector3(0, 0.8, 0)))
 	await ticks(240)
-	vehicle.command.throttle = 0.3
+	vehicle.command.throttle = 0.5
 	vehicle.command.steer = 0.25
 	await ticks(480)
+	print("METRIC turn_position=", vehicle.position, " yaw=", vehicle.rotation.y, " rpm=", vehicle.drivetrain.rpm())
 	check(vehicle.position.x > 1 and absf(vehicle.rotation.y) > 0.1, "Steering generates a right-hand turn from contact forces")
 	world.queue_free()
 	await process_frame

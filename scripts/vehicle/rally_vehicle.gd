@@ -3,7 +3,7 @@ extends RigidBody3D
 
 @export var config: RallyVehicleConfig = preload("res://resources/vehicles/baseline.tres")
 @export var tire: RallyTireConfig = preload("res://resources/vehicles/asphalt_tire.tres")
-var drivetrain := SimpleDrivetrain.new()
+var drivetrain := RallyDrivetrain.new()
 var wheels: Array[RallyWheelState] = []
 var command := DriverCommand.new()
 var command_source: Callable
@@ -71,11 +71,13 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 	if command_source.is_valid():
 		command = command_source.call(state.linear_velocity.length(), state.step)
 	command.sanitize()
-	var torques := drivetrain.step(command, state.linear_velocity.length())
+	drivetrain.begin_tick(command, state.linear_velocity.length())
+	command.shift = 0
 	for i: int in range(4):
 		RallySuspension.sample(wheels[i], config.wheel_mount(i), state, config, get_rid())
 	RallySuspension.anti_roll(wheels[0], wheels[1], config.front_anti_roll)
 	RallySuspension.anti_roll(wheels[2], wheels[3], config.rear_anti_roll)
+	var brake_torques := PackedFloat64Array()
 	for i: int in range(4):
 		var wheel := wheels[i]
 		wheel.steer = -command.steer * config.max_steer_radians if i < 2 else 0.0
@@ -88,12 +90,19 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 		var brake_share := config.front_brake_bias if i < 2 else 1.0 - config.front_brake_bias
 		var brake_torque := command.brake * config.total_brake_torque * brake_share * 0.5
 		if i >= 2: brake_torque += command.handbrake * config.handbrake_torque
-		var tire_force := Vector2.ZERO
-		for substep: int in range(4):
-			var solved := RallyTireModel.solve(wheel, torques[i], brake_torque, state.step / 4, config, tire)
-			tire_force += solved * 0.25
-			wheel.longitudinal_speed += solved.x * state.step / config.body_mass
-			wheel.lateral_speed += solved.y * state.step / config.body_mass
+		brake_torques.append(brake_torque)
+	var forces: Array[Vector2] = [Vector2.ZERO, Vector2.ZERO, Vector2.ZERO, Vector2.ZERO]
+	# All four wheels share the same transmission state at each internal substep.
+	for substep: int in range(4):
+		var torques := drivetrain.step(command, wheels, state.step / 4)
+		for i: int in range(4):
+			var solved := RallyTireModel.solve(wheels[i], torques[i], brake_torques[i], state.step / 4, config, tire)
+			forces[i] += solved * 0.25
+			wheels[i].longitudinal_speed += solved.x * state.step / config.body_mass
+			wheels[i].lateral_speed += solved.y * state.step / config.body_mass
+	for i: int in range(4):
+		var wheel := wheels[i]
+		var tire_force := forces[i]
 		if wheel.grounded:
 			var roll := -config.rolling_resistance * wheel.load * tanh(wheel.longitudinal_speed / 0.5)
 			var total := wheel.normal * wheel.load + wheel.forward * (tire_force.x + roll) + wheel.right * tire_force.y
