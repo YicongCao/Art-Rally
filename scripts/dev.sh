@@ -50,6 +50,11 @@ case "$MODE" in
     run_logged "$ROOT/logs/import.log" --headless --path "$ROOT" --editor --import
     run_logged "$ROOT/logs/smoke.log" --headless --path "$ROOT" --script res://tests/smoke_test.gd
     grep -q '^SMOKE TEST PASSED$' "$ROOT/logs/smoke.log"
+    for test in "$ROOT"/tests/*_test.gd; do
+      [[ "$(basename "$test")" == "smoke_test.gd" ]] && continue
+      run_logged "$ROOT/logs/$(basename "$test" .gd).log" --headless --path "$ROOT" --fixed-fps 120 --script "$test"
+      grep -q '^TEST RESULT: .* 0 failures$' "$ROOT/logs/$(basename "$test" .gd).log"
+    done
     ;;
   *)
     echo "Usage: $0 {doctor|editor|run|check} [Godot options]" >&2
