@@ -24,3 +24,10 @@ static func sample(wheel: RallyWheelState, mount: Vector3, state: PhysicsDirectB
 	var bump := maxf(0, config.suspension_min - wheel.length)
 	var force := config.spring_rate() * wheel.compression + damping * compress_speed + config.bump_stiffness * bump
 	wheel.load = clampf(force, 0, config.body_mass * 9.81 * 3.0)
+
+
+static func anti_roll(left: RallyWheelState, right: RallyWheelState, stiffness: float) -> void:
+	if not left.grounded or not right.grounded: return
+	var transfer := clampf((left.compression - right.compression) * stiffness, -left.load, right.load)
+	left.load += transfer
+	right.load -= transfer

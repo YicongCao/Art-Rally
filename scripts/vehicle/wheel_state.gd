@@ -18,6 +18,8 @@ var slip: float = 0.0
 var slip_angle: float = 0.0
 var longitudinal_force: float = 0.0
 var lateral_force: float = 0.0
+var relaxed_slip: float = 0.0
+var relaxed_angle: float = 0.0
 
 
 func reset() -> void:
@@ -30,3 +32,5 @@ func reset() -> void:
 	slip_angle = 0.0
 	longitudinal_force = 0.0
 	lateral_force = 0.0
+	relaxed_slip = 0.0
+	relaxed_angle = 0.0

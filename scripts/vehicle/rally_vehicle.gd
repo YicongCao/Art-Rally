@@ -73,8 +73,11 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 	command.sanitize()
 	var torques := drivetrain.step(command, state.linear_velocity.length())
 	for i: int in range(4):
+		RallySuspension.sample(wheels[i], config.wheel_mount(i), state, config, get_rid())
+	RallySuspension.anti_roll(wheels[0], wheels[1], config.front_anti_roll)
+	RallySuspension.anti_roll(wheels[2], wheels[3], config.rear_anti_roll)
+	for i: int in range(4):
 		var wheel := wheels[i]
-		RallySuspension.sample(wheel, config.wheel_mount(i), state, config, get_rid())
 		wheel.steer = -command.steer * config.max_steer_radians if i < 2 else 0.0
 		var heading := -state.transform.basis.z.rotated(state.transform.basis.y, wheel.steer)
 		wheel.forward = heading.slide(wheel.normal).normalized() if wheel.grounded else heading

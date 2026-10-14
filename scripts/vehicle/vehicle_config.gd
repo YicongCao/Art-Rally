@@ -20,6 +20,8 @@ extends Resource
 @export var handbrake_torque: float = 2300.0
 @export var drag_coefficient_area: float = 0.85
 @export var rolling_resistance: float = 0.015
+@export var front_anti_roll: float = 6500.0
+@export var rear_anti_roll: float = 4500.0
 
 
 func spring_rate() -> float:
