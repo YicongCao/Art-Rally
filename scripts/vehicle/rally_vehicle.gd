@@ -1,6 +1,8 @@
 class_name RallyVehicle
 extends RigidBody3D
 
+signal reset_completed
+
 @export var config: RallyVehicleConfig = preload("res://resources/vehicles/baseline.tres")
 @export var tire: RallyTireConfig = preload("res://resources/vehicles/asphalt_tire.tres")
 var drivetrain := RallyDrivetrain.new()
@@ -48,6 +50,8 @@ func _ready() -> void:
 		visual.mesh = mesh
 		visual.rotation.z = PI * 0.5
 		pivot.add_child(visual)
+		for side: float in [-1.0, 1.0]:
+			GrayboxGeometry.box(pivot, "Hub", Vector3(0.018, 0.16, 0.32), Vector3(side * 0.125, 0, 0), Color("c1c5be"))
 		add_child(pivot)
 		wheel_visuals.append(pivot)
 
@@ -59,6 +63,7 @@ func request_reset(pose: Transform3D) -> void:
 
 func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 	var start := Time.get_ticks_usec()
+	var did_reset := reset_pending
 	if reset_pending:
 		state.transform = reset_pose
 		state.linear_velocity = Vector3.ZERO
@@ -67,7 +72,6 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 		command = DriverCommand.new()
 		drivetrain.reset()
 		reset_pending = false
-		reset_physics_interpolation()
 	if command_source.is_valid():
 		command = command_source.call(state.linear_velocity.length(), state.step)
 	command.sanitize()
@@ -112,7 +116,16 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 		wheel.spin = fmod(wheel.spin + wheel.omega * state.step, TAU)
 		wheel_visuals[i].position = config.wheel_mount(i) - Vector3.UP * wheel.length
 		wheel_visuals[i].rotation = Vector3(0, wheel.steer, 0)
-		wheel_visuals[i].get_child(0).rotation.x = -wheel.spin
+		wheel_visuals[i].get_child(0).basis = Basis(Vector3.RIGHT, -wheel.spin) * Basis(Vector3.FORWARD, -PI * 0.5)
+		for hub_index: int in [1, 2]:
+			wheel_visuals[i].get_child(hub_index).rotation.x = -wheel.spin
 	state.apply_central_force(-0.5 * 1.225 * config.drag_coefficient_area * state.linear_velocity.length() * state.linear_velocity)
 	simulation_tick += 1
 	physics_usec = Time.get_ticks_usec() - start
+	if did_reset: _complete_reset.call_deferred()
+
+
+func _complete_reset() -> void:
+	# Flush visual history after the physics server has synchronized the new pose.
+	reset_physics_interpolation()
+	reset_completed.emit()

@@ -2,6 +2,7 @@ class_name RallyInputController
 extends Node
 
 signal pause_requested
+signal safety_pause_requested
 signal reset_requested
 signal camera_requested
 signal telemetry_requested
@@ -26,14 +27,14 @@ func _ready() -> void:
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_APPLICATION_FOCUS_OUT and is_inside_tree():
 		suspend()
-		pause_requested.emit()
+		safety_pause_requested.emit()
 
 
 func _joy_connection_changed(device: int, connected: bool) -> void:
 	if device == active_device and not connected:
 		suspend()
 		active_device = -1
-		pause_requested.emit()
+		safety_pause_requested.emit()
 
 
 func suspend() -> void:

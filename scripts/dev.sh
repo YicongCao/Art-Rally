@@ -48,6 +48,9 @@ case "$MODE" in
   check)
     mkdir -p "$ROOT/logs"
     run_logged "$ROOT/logs/import.log" --headless --path "$ROOT" --editor --import
+    while IFS= read -r script; do
+      run_logged "$ROOT/logs/parse.log" --headless --path "$ROOT" --check-only --script "$script"
+    done < <(find "$ROOT/scripts" "$ROOT/tests" -name '*.gd' -type f | sort)
     run_logged "$ROOT/logs/smoke.log" --headless --path "$ROOT" --script res://tests/smoke_test.gd
     grep -q '^SMOKE TEST PASSED$' "$ROOT/logs/smoke.log"
     for test in "$ROOT"/tests/*_test.gd; do
@@ -56,8 +59,12 @@ case "$MODE" in
       grep -q '^TEST RESULT: .* 0 failures$' "$ROOT/logs/$(basename "$test" .gd).log"
     done
     ;;
+  regression)
+    "$ROOT/scripts/dev.sh" check
+    python3 "$ROOT/scripts/frame_rate_check.py" "$ENGINE" "$ROOT"
+    ;;
   *)
-    echo "Usage: $0 {doctor|editor|run|check} [Godot options]" >&2
+    echo "Usage: $0 {doctor|editor|run|check|regression} [Godot options]" >&2
     exit 2
     ;;
 esac

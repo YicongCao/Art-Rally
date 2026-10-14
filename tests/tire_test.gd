@@ -46,4 +46,24 @@ func _run() -> void:
 	check(is_equal_approx(left.load + right.load, 6000) and left.load > right.load, "Anti-roll bar transfers support without creating total load")
 	RallySuspension.anti_roll(left, right, 1000000)
 	check(left.load >= 0 and right.load >= 0, "Anti-roll bar cannot generate tensile road contact")
+	var bounds_ok := true
+	var symmetry_ok := true
+	for velocity: float in [-30.0, -0.1, 0.0, 0.1, 30.0]:
+		for load: float in [100.0, 3100.0, 9000.0]:
+			for spin: float in [-120.0, 0.0, 120.0]:
+				var a := RallyWheelState.new()
+				var b := RallyWheelState.new()
+				for sample: RallyWheelState in [a, b]:
+					sample.grounded = true
+					sample.load = load
+					sample.longitudinal_speed = velocity
+					sample.omega = spin
+				a.lateral_speed = 3.0
+				b.lateral_speed = -3.0
+				var fa := RallyTireModel.solve(a, 0, 500, 1.0 / 480, config, tire)
+				var fb := RallyTireModel.solve(b, 0, 500, 1.0 / 480, config, tire)
+				bounds_ok = bounds_ok and fa.is_finite() and fa.length() <= RallyTireModel.capacity(load, tire) + 0.01
+				symmetry_ok = symmetry_ok and absf(fa.y + fb.y) < 0.01 and absf(fa.x - fb.x) < 0.01
+	check(bounds_ok, "Tire force bounds hold across forward reverse rest and high wheelspin")
+	check(symmetry_ok, "Solved left/right tire responses remain symmetric across velocity and load sweep")
 	finish()

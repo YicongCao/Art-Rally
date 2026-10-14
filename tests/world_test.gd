@@ -17,6 +17,8 @@ func _run() -> void:
 	check(scene.recorder.frames.size() > 0, "Playable scene records telemetry on physics ticks")
 	scene._toggle_pause()
 	check(paused and scene.controls.blocked, "Pause blocks vehicle input")
+	scene.controls._notification(Node.NOTIFICATION_APPLICATION_FOCUS_OUT)
+	check(paused and scene.controls.blocked, "Focus loss while already paused never resumes simulation")
 	scene._toggle_pause()
 	check(not paused and not scene.controls.blocked, "Explicit resume clears blocked state")
 	var path: String = scene.recorder.export_csv(scene.vehicle)

@@ -23,10 +23,12 @@ func _ready() -> void:
 	vehicle.position = TestGround.SPAWN
 	vehicle.process_mode = Node.PROCESS_MODE_PAUSABLE
 	add_child(vehicle)
+	vehicle.reset_completed.connect(func(): camera_snap = true)
 	controls = RallyInputController.new()
 	add_child(controls)
 	vehicle.command_source = controls.sample
 	controls.pause_requested.connect(_toggle_pause)
+	controls.safety_pause_requested.connect(_safety_pause)
 	controls.reset_requested.connect(_reset)
 	controls.camera_requested.connect(func(): camera_mode = (camera_mode + 1) % 2; camera_snap = true)
 	controls.telemetry_requested.connect(func(): telemetry_visible = not telemetry_visible)
@@ -138,6 +140,11 @@ func _toggle_pause() -> void:
 	else:
 		controls.suspend()
 		get_tree().paused = true
+
+
+func _safety_pause() -> void:
+	controls.suspend()
+	get_tree().paused = true
 
 
 func _reset() -> void:

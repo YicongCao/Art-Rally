@@ -42,6 +42,16 @@ func _run() -> void:
 	controller._unhandled_input(key)
 	controller.resume()
 	check(is_zero_approx(controller.sample(0, 0.01).throttle), "Pause/resume does not retain held input")
+	var unsafe := DriverCommand.new()
+	unsafe.steer = NAN
+	unsafe.throttle = INF
+	unsafe.brake = -3
+	unsafe.handbrake = 5
+	unsafe.sanitize()
+	check(unsafe.steer == 0 and unsafe.throttle == 0 and unsafe.brake == 0 and unsafe.handbrake == 1, "Invalid commands cannot inject NaN or out-of-range control")
+	controller._unhandled_input(axis)
+	controller._joy_connection_changed(7, false)
+	check(controller.blocked and controller.active_device == -1 and controller.sample(0, 0.01).steer == 0, "Active controller disconnect blocks and clears commands")
 	controller.queue_free()
 	await process_frame
 	finish()
