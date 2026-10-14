@@ -19,6 +19,7 @@ var light_assist: bool = false
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	vehicle = RallyVehicle.new()
+	vehicle.config = vehicle.config.duplicate()
 	vehicle.name = "Vehicle"
 	vehicle.position = TestGround.SPAWN
 	vehicle.process_mode = Node.PROCESS_MODE_PAUSABLE
@@ -35,6 +36,7 @@ func _ready() -> void:
 	controls.profile_requested.connect(_toggle_profile)
 	controls.export_requested.connect(_export)
 	controls.transmission_requested.connect(func(): vehicle.drivetrain.automatic = not vehicle.drivetrain.automatic)
+	controls.contact_requested.connect(func(): vehicle.config.contact_envelope = not vehicle.config.contact_envelope)
 	camera = $Camera
 	_build_hud()
 	debug_visual = MeshInstance3D.new()
@@ -100,15 +102,16 @@ func _process(dt: float) -> void:
 	hud_clock += dt
 	if hud_clock < 0.05: return
 	hud_clock = 0
-	readout.text = "ART RALLY / DRIVING LAB\n%03d km/h    GEAR %s    %s" % [vehicle.linear_velocity.length() * 3.6, _gear_name(), "PAUSED - ENTER TO RESUME" if get_tree().paused else "ASPHALT"]
+	readout.text = "ART RALLY / DRIVING LAB\n%03d km/h    GEAR %s    %s" % [vehicle.linear_velocity.length() * 3.6, _gear_name(), "PAUSED - ENTER TO RESUME" if get_tree().paused else RallySurfaceQuery.PROFILES[vehicle.wheels[0].surface.surface_id].label]
 	details.visible = telemetry_visible
 	debug_visual.visible = telemetry_visible
 	if telemetry_visible:
 		details.text = "%s | %s assist | physics %.2f ms\nSTEER %+.2f   GAS %.2f   BRAKE %.2f\n" % ["Keyboard" if controls.active_device < 0 else "Gamepad %d" % controls.active_device, "Light" if light_assist else "Standard", vehicle.physics_usec / 1000.0, vehicle.command.steer, vehicle.command.throttle, vehicle.command.brake]
 		details.text += "%d RPM | %s | clutch %.2f\n" % [vehicle.drivetrain.rpm(), "AUTO (M)" if vehicle.drivetrain.automatic else "MANUAL (M)", vehicle.drivetrain.clutch]
+		details.text += "F3 contact: %s\n" % ("Envelope" if vehicle.config.contact_envelope else "Single ray")
 		for i: int in range(4):
 			var wheel := vehicle.wheels[i]
-			details.text += "%s  %4d N  %3d mm  slip %+.2f  angle %+.1f\n" % [["FL", "FR", "RL", "RR"][i], wheel.load, wheel.length * 1000, wheel.slip, rad_to_deg(wheel.slip_angle)]
+			details.text += "%s %4d N  slip %+.2f  %s  water %d mm\n" % [["FL", "FR", "RL", "RR"][i], wheel.load, wheel.slip, RallySurfaceQuery.PROFILES[wheel.surface.surface_id].label, wheel.surface.water_depth * 1000]
 		_draw_forces()
 
 

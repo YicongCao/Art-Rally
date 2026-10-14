@@ -16,7 +16,7 @@ func capture(vehicle: RallyVehicle) -> void:
 		vehicle.last_shift_requested, float(vehicle.drivetrain.automatic),
 	])
 	for wheel: RallyWheelState in vehicle.wheels:
-		row.append_array(PackedFloat64Array([float(wheel.grounded), wheel.load, wheel.length, wheel.omega, wheel.slip, wheel.slip_angle, wheel.longitudinal_force, wheel.lateral_force]))
+		row.append_array(PackedFloat64Array([float(wheel.grounded), wheel.load, wheel.length, wheel.omega, wheel.slip, wheel.slip_angle, wheel.longitudinal_force, wheel.lateral_force, wheel.surface.surface_id, wheel.surface.water_depth, wheel.water_force.length()]))
 	if frames.size() < MAX_FRAMES:
 		frames.append(row)
 	else:
@@ -32,7 +32,7 @@ func export_csv(vehicle: RallyVehicle) -> String:
 	if file == null: return ""
 	var header := HEADER
 	for corner: String in ["fl", "fr", "rl", "rr"]:
-		for field: String in ["contact", "load_n", "length_m", "omega_rads", "slip", "angle_rad", "fx_n", "fy_n"]:
+		for field: String in ["contact", "load_n", "length_m", "omega_rads", "slip", "angle_rad", "fx_n", "fy_n", "surface_id", "water_depth_m", "water_drag_n"]:
 			header += ",%s_%s" % [corner, field]
 	file.store_line(header)
 	var first := cursor if frames.size() == MAX_FRAMES else 0
@@ -42,6 +42,8 @@ func export_csv(vehicle: RallyVehicle) -> String:
 		file.store_csv_line(cells)
 	file.close()
 	var metadata := {"engine": Engine.get_version_info()["string"], "physics_hz": Engine.physics_ticks_per_second, "vehicle": _properties(vehicle.config), "tire": _properties(vehicle.tire), "drivetrain": _properties(vehicle.drivetrain.config), "frames": frames.size()}
+	metadata["surfaces"] = []
+	for profile: RallySurfaceProfile in RallySurfaceQuery.PROFILES: metadata.surfaces.append(_properties(profile))
 	var info := FileAccess.open(stem + ".json", FileAccess.WRITE)
 	if info == null: return ""
 	info.store_string(JSON.stringify(metadata, "\t"))

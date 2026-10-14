@@ -9,6 +9,7 @@ signal telemetry_requested
 signal transmission_requested
 signal profile_requested
 signal export_requested
+signal contact_requested
 
 var filter := DriverInputFilter.new()
 var active_device: int = -1
@@ -71,7 +72,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			return
 		if blocked:
 			return
-		if code not in [KEY_W, KEY_S, KEY_A, KEY_D, KEY_SPACE, KEY_Q, KEY_E, KEY_R, KEY_C, KEY_T, KEY_M, KEY_F2, KEY_F8]:
+		if code not in [KEY_W, KEY_S, KEY_A, KEY_D, KEY_SPACE, KEY_Q, KEY_E, KEY_R, KEY_C, KEY_T, KEY_M, KEY_F2, KEY_F3, KEY_F8]:
 			return
 		if event.pressed:
 			_select_device(-1)
@@ -87,6 +88,7 @@ func _unhandled_input(event: InputEvent) -> void:
 				KEY_T: telemetry_requested.emit()
 				KEY_M: transmission_requested.emit()
 				KEY_F2: profile_requested.emit()
+				KEY_F3: contact_requested.emit()
 				KEY_F8: export_requested.emit()
 	elif event is InputEventJoypadMotion:
 		if blocked or event.axis not in [JOY_AXIS_LEFT_X, JOY_AXIS_TRIGGER_LEFT, JOY_AXIS_TRIGGER_RIGHT]:

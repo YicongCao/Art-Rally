@@ -30,3 +30,20 @@ func _ready() -> void:
 	GrayboxGeometry.label(self, "03 / SLALOM", Vector3(-35, 3, 6))
 	GrayboxGeometry.label(self, "04 / BUMP + JUMP", Vector3(-65, 3, 6))
 	GrayboxGeometry.label(self, "05 / UNDULATIONS", Vector3(-90, 3, 6))
+	_build_surface_lanes()
+
+
+func _build_surface_lanes() -> void:
+	var field := RallySurfaceField.new()
+	add_child(field)
+	field.attach($Asphalt)
+	for lane: int in range(3):
+		var x := -95.0 + lane * 35.0
+		var id := lane + 1
+		var bounds := AABB(Vector3(x - 12, -2, -520), Vector3(24, 4, 200))
+		field.patches.append({"bounds": bounds, "id": id})
+		GrayboxGeometry.box(self, "SurfaceLane", Vector3(24, 0.008, 200), Vector3(x, 0.006, -420), RallySurfaceQuery.PROFILES[id].color)
+		GrayboxGeometry.label(self, "%s / 200 m" % RallySurfaceQuery.PROFILES[id].label, Vector3(x, 3, -312))
+	field.water = [{"bounds": AABB(Vector3(20, -2, -470), Vector3(24, 4, 45)), "depth": 0.10}]
+	GrayboxGeometry.box(self, "WaterLayer", Vector3(24, 0.01, 45), Vector3(32, 0.018, -447.5), Color("456e78"))
+	GrayboxGeometry.label(self, "WATER / 0.10 m", Vector3(32, 3, -418))

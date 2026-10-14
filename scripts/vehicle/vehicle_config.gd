@@ -22,6 +22,7 @@ extends Resource
 @export var rolling_resistance: float = 0.015
 @export var front_anti_roll: float = 6500.0
 @export var rear_anti_roll: float = 4500.0
+@export var contact_envelope: bool = false
 
 
 func spring_rate() -> float:
