@@ -37,6 +37,24 @@ func _run() -> void:
 			var hit := space.intersect_ray(PhysicsRayQueryParameters3D.create(mount, mount - pose.basis.y * 1.2, 1))
 			recoveries_valid = recoveries_valid and not hit.is_empty()
 	check(recoveries_valid, "Every checkpoint recovery pose has support under all four wheels")
+	var end_pose := route.pose_at(route.length, 0)
+	var runout := end_pose.origin - end_pose.basis.z * 100
+	var apron_hit := space.intersect_ray(PhysicsRayQueryParameters3D.create(runout + Vector3.UP * 8, runout - Vector3.UP * 8, 1))
+	check(not apron_hit.is_empty(), "Finish has at least one hundred meters of braking apron")
+	var duplicate := RallyStageGenerator.new()
+	duplicate.position.x = 4000
+	root.add_child(duplicate)
+	check(duplicate.decoration_positions == generator.decoration_positions, "Fixed seed reproduces landmark placement independent of scene origin")
+	duplicate.queue_free()
+	var sample_s := 1270.05
+	var point := route.position_at(sample_s)
+	var index := route.index_at(sample_s)
+	var optimized := generator.surface_footprint(point, route.tangents[index], route.rights[index], index)
+	var reference_samples: Array[RallySurfaceSample] = [generator.surface_at(point)]
+	for offset: Vector3 in [route.tangents[index] * 0.12, -route.tangents[index] * 0.12, route.rights[index] * 0.09, -route.rights[index] * 0.09]:
+		reference_samples.append(generator.surface_at(point + offset))
+	var reference := RallySurfaceSample.average(reference_samples)
+	check(absf(optimized.water_depth - reference.water_depth) < 0.001, "Optimized road footprint agrees with independent projection near water boundary")
 	print("STAGE GEOMETRY: length=", route.length, " samples=", route.points.size(), " chunks=", generator.chunk_bodies.size())
 	generator.queue_free()
 	await process_frame

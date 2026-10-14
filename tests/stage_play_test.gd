@@ -24,6 +24,14 @@ func _run() -> void:
 	check(not paused and scene.session.penalty == 0 and scene.session.next_gate == 0, "Restart from pause restores clean stage")
 	scene._toggle_mode()
 	check(scene.session.practice and scene.session.phase == RallyStageSession.Phase.COUNTDOWN, "Practice toggle restarts instead of editing an active race result")
+	await ticks(120)
+	scene.session.phase = RallyStageSession.Phase.FINISHED
+	scene.session.next_gate = scene.session.gates.size()
+	scene.session.elapsed = 220
+	scene.session.progress = scene.session.gates[-1]
+	scene.vehicle.request_reset(Transform3D(Basis.IDENTITY, Vector3(0, -100, 0)))
+	await ticks(480)
+	check(scene.session.total_time() == 220 and scene.vehicle.position.y > 0, "Out-of-bounds after finish preserves result and restores safe finish pose")
 	scene.queue_free()
 	await process_frame
 	finish()
