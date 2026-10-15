@@ -83,8 +83,14 @@ func capture(station: float, mode: int, target: float, filename: String, debug: 
 	await RenderingServer.frame_post_draw
 	if debug:
 		check(scene.debug_panel.model.wheels.size() == 4 and scene.debug_panel.history.size() > 20, "Debug screenshot contains live four-wheel data and populated histories")
+		check(scene.debug_panel.engine_history.size() == scene.debug_panel.history.size(), "Debug screenshot contains synchronized RPM and torque time series")
 		check(not scene.game_hud.visible and scene.debug_visual.visible, "Visual debugger replaces HUD and enables world-space force arrows")
 	var image := root.get_texture().get_image()
+	if debug:
+		var acceleration: Vector3 = scene.debug_panel.model.g
+		var ball := Vector2(907, 569) + Vector2(acceleration.x, acceleration.z).limit_length(2) * 21.5
+		var color := image.get_pixelv(Vector2i(ball))
+		check(color.r > color.g * 1.4 and color.r > color.b * 1.4, "Real render displays a red G-G acceleration ball")
 	check(image.get_size() == Vector2i(1280, 720), filename + " has the expected 16:9 frame")
 	check(image.save_jpg("res://docs/previews/" + filename, 0.9) == OK, filename + " saves successfully")
 	print("README CAPTURE: ", filename, " station=", current, " speed_kmh=", scene.vehicle.linear_velocity.length() * 3.6)

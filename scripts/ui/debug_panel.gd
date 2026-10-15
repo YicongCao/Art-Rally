@@ -7,13 +7,15 @@ const GREEN := Color("91d5b2")
 const RED := Color("e56b4f")
 const MUTED := Color("a6b5ab")
 const GRID := Color("40564b")
+const G_BALL_COLOR := RED
 const SAMPLE_INTERVAL := 0.05
 const MAX_SAMPLES := 120
+const HISTORY_SECONDS := MAX_SAMPLES * SAMPLE_INTERVAL
 const HISTORY_SPEED_MAX := 160.0
 var car: RallyVehicle
 var model: Dictionary = {}
 var history: Array[Vector2] = []
-var torque_curve := PackedVector2Array()
+var engine_history: Array[Vector2] = []
 var torque_max: float = 300
 var title_font := SystemFont.new()
 var text_font := SystemFont.new()
@@ -50,12 +52,8 @@ func set_enabled(enabled: bool) -> void:
 	clear_history()
 	visible = enabled
 	if enabled and is_instance_valid(car):
-		torque_curve.clear()
 		torque_max = 300
-		for i: int in range(81):
-			var rpm := lerpf(car.drivetrain.config.idle_rpm, car.drivetrain.config.redline_rpm, i / 80.0)
-			var torque := car.drivetrain.config.torque_at(rpm)
-			torque_curve.append(Vector2(rpm, torque))
+		for torque: float in car.drivetrain.config.torque_values:
 			torque_max = maxf(torque_max, torque * 1.15)
 		model = data_for(car, acceleration_g)
 	queue_redraw()
@@ -63,6 +61,7 @@ func set_enabled(enabled: bool) -> void:
 
 func clear_history() -> void:
 	history.clear()
+	engine_history.clear()
 	sample_clock = 0
 	refresh_clock = 0
 	velocity_valid = false
@@ -82,12 +81,15 @@ func _physics_process(dt: float) -> void:
 	sample_clock += dt
 	if sample_clock >= SAMPLE_INTERVAL:
 		sample_clock -= SAMPLE_INTERVAL
-		append_sample(Vector2(car.linear_velocity.length() * 3.6, car.drivetrain.rpm()))
+		append_sample(Vector2(car.linear_velocity.length() * 3.6, car.drivetrain.rpm()), car.drivetrain.output_torque)
 
 
-func append_sample(sample: Vector2) -> void:
+func append_sample(sample: Vector2, torque: float = 0) -> void:
 	history.append(sample)
-	if history.size() > MAX_SAMPLES: history.pop_front()
+	engine_history.append(Vector2(sample.y, torque))
+	if history.size() > MAX_SAMPLES:
+		history.pop_front()
+		engine_history.pop_front()
 
 
 func _process(dt: float) -> void:
@@ -124,7 +126,7 @@ static func data_for(vehicle: RallyVehicle, g_force: Vector3 = Vector3.ZERO) -> 
 	return {
 		"wheels": wheels, "speed": vehicle.linear_velocity.length() * 3.6, "rpm": drive.rpm(),
 		"redline": drive.config.redline_rpm, "power_ps": drive.config.rated_power_ps,
-		"torque": drive.output_torque, "available_torque": drive.config.torque_at(drive.rpm()),
+		"torque": drive.output_torque,
 		"power_kw": drive.output_torque * drive.engine_omega / 1000,
 		"clutch": drive.clutch, "clutch_torque": drive.clutch_torque, "shift_sync": drive.auto_shift_cut,
 		"shifting": drive.shift_remaining > 0, "gas": vehicle.command.throttle, "effective_gas": drive.effective_throttle,
@@ -158,7 +160,7 @@ func _draw() -> void:
 	_draw_engine()
 	_draw_chassis()
 	draw_rect(Rect2(455, 698, 801, 18), Color(0.035, 0.085, 0.07, 0.9))
-	text("只读遥测 · 绿色 = 轮胎力 / 法向载荷 · 金色 = 满油门曲线 · 暂停冻结历史", Vector2(465, 711), 11, PAPER)
+	text("只读遥测 · 金色 = RPM · 绿色 = 净扭矩 Nm · 红点 = G 值 · 暂停冻结历史", Vector2(465, 711), 11, PAPER)
 
 
 func _draw_wheel(index: int, at: Vector2) -> void:
@@ -190,33 +192,45 @@ func _draw_wheel(index: int, at: Vector2) -> void:
 
 func _draw_engine() -> void:
 	panel(Rect2(840, 160, 416, 284))
-	text("ENGINE / TORQUE", Vector2(860, 186), 18, PAPER, title_font)
+	text("ENGINE / LIVE HISTORY", Vector2(860, 186), 17, PAPER, title_font)
 	text("%d PS" % model.power_ps, Vector2(1178, 186), 14, AMBER, number_font)
-	text("满油门 Nm", Vector2(860, 212), 12, AMBER)
-	text("● 当前净输出", Vector2(1000, 212), 12, GREEN)
-	var plot := Rect2(884, 232, 344, 140)
-	for value: float in [-100, 0, 100, 200, 300]:
-		var y := torque_position(Vector2(0, value), plot).y
+	var latest := engine_history[-1] if not engine_history.is_empty() else Vector2(model.rpm, model.torque)
+	text("RPM %04d" % latest.x, Vector2(860, 212), 12, AMBER, number_font)
+	text("TORQUE %+6.1f Nm" % latest.y, Vector2(1080, 212), 12, GREEN, number_font)
+	var plot := Rect2(884, 238, 304, 134)
+	text("RPM", Vector2(849, 230), 10, AMBER, number_font)
+	text("Nm", Vector2(1204, 230), 10, GREEN, number_font)
+	for fraction: float in [0, 0.25, 0.5, 0.75, 1]:
+		var y := plot.end.y - fraction * plot.size.y
 		draw_line(Vector2(plot.position.x, y), Vector2(plot.end.x, y), GRID, 1, true)
-		text("%d" % value, Vector2(849, y + 4), 10, MUTED, number_font)
-	for value: float in [0, 2000, 4000, 6000, float(model.redline)]:
-		var x: float = plot.position.x + value / model.redline * plot.size.x
+		text("%4d" % (fraction * float(model.redline)), Vector2(849, y + 4), 10, AMBER, number_font)
+		text("%4d" % lerpf(-100, torque_max, fraction), Vector2(1195, y + 4), 10, GREEN, number_font)
+	for age: float in [HISTORY_SECONDS, 4, 2, 0]:
+		var x := plot.end.x - age / HISTORY_SECONDS * plot.size.x
 		draw_line(Vector2(x, plot.position.y), Vector2(x, plot.end.y), GRID, 1, true)
-		text("%d" % value, Vector2(x - 13, 389), 10, MUTED, number_font)
-	var points := PackedVector2Array()
-	for point: Vector2 in torque_curve: points.append(torque_position(point, plot))
-	if points.size() > 1: draw_polyline(points, AMBER, 2, true)
-	var operating := torque_position(Vector2(model.rpm, model.torque), plot)
-	draw_line(Vector2(operating.x, plot.position.y), Vector2(operating.x, plot.end.y), Color(0.57, 0.83, 0.70, 0.5), 1, true)
-	draw_arc(torque_position(Vector2(model.rpm, model.available_torque), plot), 4, 0, TAU, 16, AMBER, 1.5, true)
-	draw_circle(operating, 4, GREEN)
+		text("-%ds" % age if age > 0 else "NOW", Vector2(x - 12, 389), 10, MUTED, number_font)
+	var curves := engine_points(plot)
+	for key: String in ["rpm", "torque"]:
+		var points: PackedVector2Array = curves[key]
+		var color := AMBER if key == "rpm" else GREEN
+		if points.size() > 1: draw_polyline(points, color, 2, true)
+		if not points.is_empty(): draw_circle(points[-1], 3, color)
 	text("NET %+6.1f Nm / %+5.1f kW" % [model.torque, model.power_kw], Vector2(860, 410), 13, PAPER, number_font)
-	text("RPM", Vector2(1200, 410), 10, MUTED, number_font)
 	text("CLUTCH %3d%% / %+4d Nm   GAS %.2f > %.2f" % [model.clutch * 100, model.clutch_torque, model.gas, model.effective_gas], Vector2(860, 432), 11, MUTED, number_font)
 
 
-func torque_position(point: Vector2, plot: Rect2) -> Vector2:
-	return plot.position + Vector2(clampf(point.x / model.redline, 0, 1) * plot.size.x, (1 - clampf((point.y + 100) / (torque_max + 100), 0, 1)) * plot.size.y)
+func history_x(index: int, count: int, plot: Rect2) -> float:
+	return plot.end.x - (count - 1 - index) * SAMPLE_INTERVAL / HISTORY_SECONDS * plot.size.x
+
+
+func engine_points(plot: Rect2) -> Dictionary:
+	var rpms := PackedVector2Array()
+	var torques := PackedVector2Array()
+	for i: int in range(engine_history.size()):
+		var x := history_x(i, engine_history.size(), plot)
+		rpms.append(Vector2(x, plot.end.y - clampf(engine_history[i].x / maxf(float(model.redline), 1), 0, 1) * plot.size.y))
+		torques.append(Vector2(x, plot.end.y - clampf((engine_history[i].y + 100) / (torque_max + 100), 0, 1) * plot.size.y))
+	return {"rpm": rpms, "torque": torques}
 
 
 func _draw_chassis() -> void:
@@ -229,7 +243,7 @@ func _draw_chassis() -> void:
 	draw_line(center - Vector2(43, 0), center + Vector2(43, 0), GRID, 1, true)
 	draw_line(center - Vector2(0, 43), center + Vector2(0, 43), GRID, 1, true)
 	var acceleration: Vector3 = model.g
-	draw_circle(center + Vector2(acceleration.x, acceleration.z).limit_length(2) * 21.5, 4, GREEN)
+	draw_circle(center + Vector2(acceleration.x, acceleration.z).limit_length(2) * 21.5, 4, G_BALL_COLOR)
 	text("2g", Vector2(923, 619), 10, MUTED, number_font)
 	text("LAT  %+.2fg" % acceleration.x, Vector2(860, 628), 11, PAPER, number_font)
 	text("LONG %+.2fg" % -acceleration.z, Vector2(860, 643), 11, PAPER, number_font)
@@ -242,7 +256,7 @@ func _draw_chassis() -> void:
 		var speeds := PackedVector2Array()
 		var rpms := PackedVector2Array()
 		for i: int in range(history.size()):
-			var x := plot.end.x - (history.size() - 1 - i) * plot.size.x / (MAX_SAMPLES - 1)
+			var x := history_x(i, history.size(), plot)
 			speeds.append(Vector2(x, plot.end.y - clampf(history[i].x / HISTORY_SPEED_MAX, 0, 1) * plot.size.y))
 			rpms.append(Vector2(x, plot.end.y - clampf(history[i].y / model.redline, 0, 1) * plot.size.y))
 		draw_polyline(speeds, GREEN, 1.5, true)

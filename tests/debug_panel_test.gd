@@ -2,6 +2,7 @@ extends "res://tests/test_suite.gd"
 
 
 func _run() -> void:
+	history_checks()
 	var drive := RallyDrivetrain.new()
 	var command := DriverCommand.new()
 	command.throttle = 0.6
@@ -53,6 +54,33 @@ func _run() -> void:
 	finish()
 
 
+func history_checks() -> void:
+	var panel := RallyDebugPanel.new()
+	panel.model = {"redline": 7600.0}
+	var plot := Rect2(100, 100, 300, 120)
+	panel.append_sample(Vector2(30, 2000), -50)
+	check(panel.engine_history[0] == Vector2(2000, -50), "Engine history records measured RPM and signed torque together")
+	var first := panel.engine_points(plot)
+	check(first.rpm[0].x == plot.end.x and first.torque[0].x == plot.end.x, "Newest samples of both engine curves sit at the right edge")
+	panel.append_sample(Vector2(50, 5000), 180)
+	var next := panel.engine_points(plot)
+	var shift := RallyDebugPanel.SAMPLE_INTERVAL / RallyDebugPanel.HISTORY_SECONDS * plot.size.x
+	check(is_equal_approx(next.rpm[0].x, first.rpm[0].x - shift) and next.rpm[1].x == plot.end.x, "New driving samples move earlier data left at a fixed seconds-per-pixel scale")
+	check(next.rpm[0].x == next.torque[0].x and next.rpm[1].x == next.torque[1].x, "RPM and torque curves share synchronized time coordinates")
+	check(is_equal_approx(next.rpm[1].y, plot.end.y - 5000.0 / 7600 * plot.size.y), "RPM curve uses its independent redline-scaled vertical axis")
+	check(is_equal_approx(next.torque[0].y, plot.end.y - 50.0 / 400 * plot.size.y), "Torque axis preserves engine braking below zero Nm")
+	panel.append_sample(Vector2(100, 9000), 450)
+	var clipped := panel.engine_points(plot)
+	check(clipped.rpm[-1].y == plot.position.y and clipped.torque[-1].y == plot.position.y and panel.engine_history[-1] == Vector2(9000, 450), "Plot clipping does not change raw RPM or torque readings")
+	for i: int in range(RallyDebugPanel.MAX_SAMPLES + 10): panel.append_sample(Vector2(i, i * 20), i)
+	check(panel.history.size() == RallyDebugPanel.MAX_SAMPLES and panel.engine_history.size() == panel.history.size(), "All time series are trimmed together to bounded six-second histories")
+	check(panel.engine_history[0].y == 10 and panel.engine_history[-1].y == RallyDebugPanel.MAX_SAMPLES + 9, "Scrolling retains the newest samples in chronological order")
+	panel.clear_history()
+	check(panel.history.is_empty() and panel.engine_history.is_empty(), "Reset clears torque, RPM and speed histories together")
+	check(RallyDebugPanel.G_BALL_COLOR == RallyDebugPanel.RED, "G-G acceleration ball uses the red debug color")
+	panel.free()
+
+
 func scene_checks() -> void:
 	var scene: Node3D = load("res://scenes/stages/sunset_ridge.tscn").instantiate()
 	root.add_child(scene)
@@ -76,7 +104,7 @@ func scene_checks() -> void:
 	scene._toggle_pause()
 	var count: int = scene.debug_panel.history.size()
 	await ticks(30)
-	check(scene.debug_panel.history.size() == count, "Pause freezes graph sampling while leaving diagnostics visible")
+	check(scene.debug_panel.history.size() == count and scene.debug_panel.engine_history.size() == count, "Pause freezes both engine and chassis histories while leaving diagnostics visible")
 	scene.controls._unhandled_input(key)
 	check(not scene.debug_panel.visible, "F9 can hide frozen diagnostics while paused")
 	scene._toggle_pause()
