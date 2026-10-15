@@ -85,6 +85,11 @@ func _draw() -> void:
 	draw_colored_polygon(PackedVector2Array([Vector2(37,38),Vector2(51,38),Vector2(43,64),Vector2(29,64)]),AMBER)
 	text("ART / RALLY",Vector2(63,52),20,PAPER,title_font)
 	text("夕照松岭 / 16:00 · %s"%model.get("drive_layout","AWD"),Vector2(63,78),12,MUTED)
+	var auto_label := str(model.get("label",""))
+	if not auto_label.is_empty():
+		panel(Rect2(300,22,150,74))
+		text(auto_label,Vector2(316,49),16,AMBER,title_font)
+		text("%02d km/h · %+0.2f m"%[float(model.get("target_speed",0))*3.6,float(model.get("lateral_error",0))],Vector2(316,76),11,PAPER,number_font)
 	if int(model.phase)!=RallyStageSession.Phase.FINISHED:
 		panel(Rect2(24,105,260,42))
 		text("NEXT  CP %02d  /  %d m"%[model.gate_number,model.gate_distance],Vector2(40,132),13,AMBER,number_font)
@@ -115,7 +120,7 @@ func _draw() -> void:
 		panel(Rect2(422,625,435,44),Color(0.15,0.08,0.05,0.94))
 		center_text(model.warning,Vector2(640,653),15,AMBER)
 	elif int(model.get("camera_mode",0))!=2:
-		center_text("Esc 暂停/设置    C 视角    F9 调试    T 遥测",Vector2(640,697),12,PAPER)
+		center_text("Esc 暂停/设置    C 视角    F9 调试    F10 自动驾驶    T 遥测",Vector2(640,697),12,PAPER)
 	if model.paused:
 		center_text("已暂停",Vector2(640,137),20,AMBER)
 	elif model.phase == RallyStageSession.Phase.COUNTDOWN and remaining<=0:
@@ -130,7 +135,8 @@ func _draw() -> void:
 		center_text("夕照松岭 · 完赛",Vector2(640,300),17,PAPER)
 		center_text(time_text(model.time),Vector2(640,354),42,PAPER,number_font)
 		center_text("罚时 +%ds  /  检查点 %d/%d"%[model.penalty,model.gates,model.total_gates],Vector2(640,390),15,MUTED)
-		center_text("F5 / 手柄 Back 重跑    Esc 设置",Vector2(640,425),15,AMBER)
+		if not auto_label.is_empty(): center_text(auto_label+" 参考驾驶",Vector2(640,412),13,AMBER)
+		center_text("F5 / 手柄 Back 重跑    Esc 设置",Vector2(640,439),15,AMBER)
 
 
 func _draw_note() -> void:

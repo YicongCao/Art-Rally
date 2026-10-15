@@ -26,6 +26,7 @@ var startup_focus_pause: bool = false
 var reverse_assist := RallyReverseAssist.new()
 var selecting_vehicle: bool = false
 var vehicle_selector: RallyVehicleSelector
+var auto_driver := RallyAutoDriver.new()
 
 
 func _ready() -> void:
@@ -37,6 +38,8 @@ func _ready() -> void:
 	controls.restart_requested.connect(_restart)
 	controls.mode_requested.connect(_toggle_mode)
 	controls.focus_returned.connect(_restore_launch_focus)
+	controls.autopilot_requested.connect(_cycle_autopilot)
+	controls.human_drive_input.connect(_human_drive_input)
 	vehicle.reset_completed.connect(func(): respawn_wait = false)
 	var layer := CanvasLayer.new()
 	layer.layer = 5
@@ -63,6 +66,7 @@ func _ready() -> void:
 	pause_menu.restart_requested.connect(_restart)
 	pause_menu.practice_requested.connect(_toggle_mode)
 	pause_menu.vehicle_requested.connect(func(): _open_vehicle_selection(true))
+	pause_menu.autopilot_changed.connect(_set_autopilot_mode_name)
 	pause_menu.setting_changed.connect(_setting_changed)
 	pause_menu.defaults_requested.connect(_reset_preferences)
 	controls.transmission_requested.connect(func(): preferences.set_value("automatic",vehicle.drivetrain.automatic); _save_preferences())
@@ -77,6 +81,8 @@ func _ready() -> void:
 	vehicle_selector.build()
 	vehicle_selector.confirmed.connect(_confirm_vehicle)
 	vehicle_selector.cancelled.connect(_cancel_vehicle_selection)
+	auto_driver.begin_run(generator.route,vehicle.position)
+	pause_menu.set_autopilot_mode(auto_driver.mode_name())
 	if get_tree().paused: pause_menu.show_menu(true)
 	# Physics tests and capture tools deliberately bypass the front-end, using defaults.
 	if DisplayServer.get_name()!="headless" and not "--test-defaults" in OS.get_cmdline_user_args(): _open_vehicle_selection()
@@ -91,7 +97,7 @@ func _driver_command(speed: float, dt: float) -> DriverCommand:
 		var held := DriverCommand.new()
 		held.brake = 1
 		return held
-	var command := controls.sample(speed,dt)
+	var command := auto_driver.sample(generator.route,vehicle,controls,speed,dt)
 	var contacts := 0
 	for wheel: RallyWheelState in vehicle.wheels:
 		if wheel.grounded: contacts += 1
@@ -107,7 +113,7 @@ func _driver_command(speed: float, dt: float) -> DriverCommand:
 
 func _physics_process(dt: float) -> void:
 	if get_tree().paused or selecting_vehicle: return
-	recorder.capture(vehicle)
+	recorder.capture(vehicle,auto_driver.telemetry(controls.active_device))
 	if respawn_wait: return
 	presentation.tire_marks.update(vehicle,dt)
 	if RallyStageBounds.outside(generator.route,vehicle.position,vehicle.linear_velocity,dt,session.projection_hint):
@@ -143,8 +149,10 @@ func _process(dt: float) -> void:
 		data["reverse_remaining"] = reverse_assist.remaining()
 		data["returning_forward"] = reverse_assist.returning_forward
 		data["reverse_assist"] = preferences.values.reverse_assist
+		data.merge(auto_driver.telemetry(controls.active_device),true)
 		if recovery_notice_time>0: data["warning"] = recovery_notice
 		game_hud.refresh(data)
+		debug_panel.set_driver_state(auto_driver.telemetry(controls.active_device))
 	presentation.update(dt)
 	feedback.update(vehicle,preferences,controls,get_tree().paused,dt)
 
@@ -168,7 +176,9 @@ func _recover(seconds: float,reason: String) -> void:
 	controls.clear()
 	respawn_wait = true
 	var old_penalty := session.penalty
-	vehicle.request_reset(session.recover(seconds))
+	var pose := session.recover(seconds)
+	auto_driver.reset_navigation(generator.route,pose.origin)
+	vehicle.request_reset(pose)
 	recovery_notice = "%s · +%d 秒"%[reason,session.penalty-old_penalty]
 	recovery_notice_time = 3
 	camera_snap = true
@@ -180,7 +190,9 @@ func _restart() -> void:
 	get_tree().paused = false
 	controls.resume()
 	respawn_wait = true
-	vehicle.request_reset(session.restart())
+	var pose := session.restart()
+	auto_driver.begin_run(generator.route,pose.origin)
+	vehicle.request_reset(pose)
 	result_safety_reset = false
 	recovery_notice_time = 0
 	has_driven = false
@@ -293,6 +305,29 @@ func _open_vehicle_selection(can_cancel: bool = false) -> void:
 func _toggle_debug() -> void:
 	if selecting_vehicle: return
 	super._toggle_debug()
+
+
+func _cycle_autopilot() -> void:
+	if selecting_vehicle: return
+	auto_driver.cycle()
+	controls.clear()
+	auto_driver.reset_navigation(generator.route,vehicle.position)
+	if is_instance_valid(pause_menu): pause_menu.set_autopilot_mode(auto_driver.mode_name())
+
+
+func _set_autopilot_mode_name(mode: String) -> void:
+	if selecting_vehicle: return
+	auto_driver.set_mode_name(mode)
+	controls.clear()
+	auto_driver.reset_navigation(generator.route,vehicle.position)
+	if is_instance_valid(pause_menu): pause_menu.set_autopilot_mode(auto_driver.mode_name())
+
+
+func _human_drive_input(_device: int) -> void:
+	if not auto_driver.human_takeover(): return
+	controls.filter.reset()
+	controls.virtual_active = false
+	if is_instance_valid(pause_menu): pause_menu.set_autopilot_mode(auto_driver.mode_name())
 
 
 func _confirm_vehicle(layout: String) -> void:

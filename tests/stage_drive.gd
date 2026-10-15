@@ -6,23 +6,46 @@ var max_lateral: float = 0
 var samples := 0
 var peak_cost: int = 0
 var costs := PackedInt64Array()
-var keyboard: bool = false
-var keyboard_filter := DriverInputFilter.new()
+var input_mode: String = "vgamepad"
+var layout: String = "AWD"
 
 
 func _run() -> void:
-	keyboard = "--keyboard" in OS.get_cmdline_user_args()
+	for argument: String in OS.get_cmdline_user_args():
+		if argument == "--keyboard": input_mode = "vkeyboard"
+		elif argument.begins_with("--input="): input_mode = argument.trim_prefix("--input=")
+		elif argument.begins_with("--layout="): layout = argument.trim_prefix("--layout=").to_upper()
+	if input_mode not in ["vkeyboard","vgamepad"] or layout not in ["FWD","AWD","RWD"]:
+		check(false,"Stage drive arguments select a supported layout and virtual input")
+		finish()
+		return
 	scene = load("res://scenes/stages/sunset_ridge.tscn").instantiate()
 	root.add_child(scene)
-	scene.vehicle.command_source = drive
+	scene.vehicle.drivetrain.config.drive_layout = layout
+	scene._set_autopilot_mode_name(input_mode)
 	scene.set_process(false)
-	var suffix := "_keyboard" if keyboard else ""
+	var suffix := "_%s_%s"%[layout.to_lower(),input_mode]
 	var trace := FileAccess.open("res://logs/stage_drive%s.csv"%suffix, FileAccess.WRITE)
 	trace.store_line("tick,s,lateral,speed,gate,phase")
+	var last_progress := 0.0
+	var stalled_ticks := 0
+	var stalled := false
 	for i: int in range(120 * 650):
 		await ticks(1)
+		var projection: Dictionary = scene.generator.route.project(scene.vehicle.position,hint,35)
+		hint = int(projection.index)
+		max_lateral = maxf(max_lateral,absf(float(projection.lateral)))
 		if i % 120 == 0:
 			trace.store_line("%d,%.3f,%.3f,%.3f,%d,%d" % [i, scene.session.progress, scene.session.projection.get("lateral", 0), scene.vehicle.linear_velocity.length(), scene.session.next_gate, scene.session.phase])
+			if scene.session.phase == RallyStageSession.Phase.RUNNING:
+				if scene.session.progress > last_progress + 0.2:
+					last_progress = scene.session.progress
+					stalled_ticks = 0
+				else:
+					stalled_ticks += 120
+					if stalled_ticks >= 120 * 30:
+						stalled = true
+						break
 		peak_cost = maxi(peak_cost, scene.vehicle.physics_usec)
 		costs.append(scene.vehicle.physics_usec)
 		if scene.session.phase == RallyStageSession.Phase.FINISHED: break
@@ -31,49 +54,17 @@ func _run() -> void:
 	check(scene.session.phase == RallyStageSession.Phase.FINISHED, "Physical controller drives every checkpoint from start to finish")
 	check(scene.session.reset_count == 0, "End-to-end stage needs no recovery or teleportation")
 	check(max_lateral < 2.8, "Automated shakedown remains within road width")
+	check(not stalled,"Automated shakedown keeps making route progress")
 	costs.sort()
-	var report := {"finished": scene.session.phase == RallyStageSession.Phase.FINISHED, "elapsed": scene.session.elapsed, "max_lateral_m": max_lateral, "gates": scene.session.next_gate, "progress_m": scene.session.progress, "peak_vehicle_callback_ms": peak_cost / 1000.0, "p95_vehicle_callback_ms": costs[int(costs.size() * 0.95)] / 1000.0}
-	report["input_mode"] = "binary_keyboard" if keyboard else "analog_commands"
+	var p95 := costs[int(costs.size() * 0.95)] / 1000.0 if not costs.is_empty() else INF
+	var report := {"finished": scene.session.phase == RallyStageSession.Phase.FINISHED, "elapsed": scene.session.elapsed, "max_lateral_m": max_lateral, "gates": scene.session.next_gate, "progress_m": scene.session.progress, "peak_vehicle_callback_ms": peak_cost / 1000.0, "p95_vehicle_callback_ms": p95}
+	report["input_mode"] = input_mode
+	report["drive_layout"] = layout
+	report["driver_source"] = scene.auto_driver.source_name(scene.controls.active_device)
+	report["recoveries"] = scene.session.reset_count
 	var output := FileAccess.open("res://logs/stage_drive%s_metrics.json"%suffix, FileAccess.WRITE)
 	output.store_string(JSON.stringify(report, "\t"))
 	print("STAGE DRIVE: ", report)
 	scene.queue_free()
 	await process_frame
 	finish()
-
-
-func drive(speed: float, dt: float) -> DriverCommand:
-	var command := DriverCommand.new()
-	if not scene.session.accepts_input():
-		command.brake = 1
-		return command
-	var route: RallyStageRoute = scene.generator.route
-	var p := route.project(scene.vehicle.position, hint, 35)
-	hint = p.index
-	max_lateral = maxf(max_lateral, absf(p.lateral))
-	var lookahead := clampf(3.0 + speed * 0.55, 5, 13)
-	var target := route.position_at(p.s + lookahead)
-	var local: Vector3 = scene.vehicle.to_local(target)
-	var angle := atan2(local.x, -local.z)
-	command.steer = clampf(atan2(2.6 * 2 * sin(angle), lookahead) / 0.55, -1, 1)
-	var wanted := 15.0
-	if p.s > 1110 and p.s < 1650: wanted = 10.0
-	if absf(p.s - 2650) < 50: wanted = 10.0
-	for ahead: float in [0, 10, 25, 45]:
-		var s: float = p.s + ahead
-		var before := route.tangent_at(s)
-		var after := route.tangent_at(s + 8)
-		var curvature := before.angle_to(after) / 8.0
-		var turn_speed := sqrt(2.8 / maxf(curvature, 0.001))
-		wanted = minf(wanted, sqrt(turn_speed * turn_speed + 2.0 * 2.0 * ahead))
-	command.throttle = clampf(0.25 + (wanted - speed) * 0.22, 0, 1)
-	command.brake = clampf((speed - wanted - 0.3) * 0.22, 0, 0.7)
-	if keyboard:
-		var raw := DriverCommand.new()
-		wanted = minf(wanted,10)
-		var error := command.steer-keyboard_filter.steering
-		raw.steer = signf(error) if absf(error)>0.015 else 0
-		raw.throttle = 1 if speed<wanted else 0
-		raw.brake = 1 if speed>wanted+0.7 else 0
-		return keyboard_filter.step(raw,speed,dt,true)
-	return command

@@ -68,6 +68,16 @@ case "$MODE" in
     run_logged "$ROOT/logs/stage_drive.log" --headless --path "$ROOT" --fixed-fps 120 --script res://tests/stage_drive.gd -- "$@"
     grep -q '^TEST RESULT: .* 0 failures$' "$ROOT/logs/stage_drive.log"
     ;;
+  stage-matrix)
+    mkdir -p "$ROOT/logs"
+    for layout in FWD AWD RWD; do
+      for input in vkeyboard vgamepad; do
+        log="$ROOT/logs/stage_drive_${layout}_${input}.log"
+        run_logged "$log" --headless --path "$ROOT" --fixed-fps 120 --script res://tests/stage_drive.gd -- "--layout=$layout" "--input=$input"
+        grep -q '^TEST RESULT: .* 0 failures$' "$log"
+      done
+    done
+    ;;
   lab)
     exec "$ENGINE" --path "$ROOT" --scene res://scenes/dev/driving_lab.tscn "$@"
     ;;
@@ -97,8 +107,13 @@ case "$MODE" in
     run_logged "$ROOT/logs/drive_choice_render_check.log" --path "$ROOT" --max-fps 60 --script res://tests/drive_choice_render_check.gd -- --test-defaults
     grep -q '^TEST RESULT: .* 0 failures$' "$ROOT/logs/drive_choice_render_check.log"
     ;;
+  autopilot-render-check)
+    mkdir -p "$ROOT/logs"
+    run_logged "$ROOT/logs/autopilot_render_check.log" --path "$ROOT" --max-fps 60 --script res://tests/autopilot_render_check.gd -- --test-defaults
+    grep -q '^TEST RESULT: .* 0 failures$' "$ROOT/logs/autopilot_render_check.log"
+    ;;
   *)
-    echo "Usage: $0 {doctor|editor|run|lab|stage|preview|check|regression|stage-check|preview-check|preview-render-check|m5-render-check|drive-choice-render-check} [Godot options]" >&2
+    echo "Usage: $0 {doctor|editor|run|lab|stage|preview|check|regression|stage-check|stage-matrix|preview-check|preview-render-check|m5-render-check|drive-choice-render-check|autopilot-render-check} [Godot options]" >&2
     exit 2
     ;;
 esac

@@ -7,10 +7,12 @@ signal practice_requested
 signal setting_changed(key: String,value: Variant)
 signal defaults_requested
 signal vehicle_requested
+signal autopilot_changed(mode: String)
 var prefs: RallyGameSettings
 var widgets: Dictionary = {}
 var resume_button: Button
 var message: Label
+var autopilot_selector: OptionButton
 
 
 func build(settings: RallyGameSettings) -> void:
@@ -67,6 +69,18 @@ func build(settings: RallyGameSettings) -> void:
 	button(buttons,"重跑赛段",func(): restart_requested.emit())
 	button(buttons,"计时 / 练习",func(): practice_requested.emit())
 	button(column,"更换车辆（确认后重开赛段）",func(): vehicle_requested.emit())
+	var auto_row := HBoxContainer.new()
+	column.add_child(auto_row)
+	var auto_label := Label.new()
+	auto_label.text = "自动驾驶"
+	auto_label.custom_minimum_size.x = 165
+	auto_row.add_child(auto_label)
+	autopilot_selector = OptionButton.new()
+	autopilot_selector.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	for option_title: String in ["关闭（真人驾驶）","虚拟键盘","虚拟手柄"]:
+		autopilot_selector.add_item(option_title)
+	autopilot_selector.item_selected.connect(func(index: int): autopilot_changed.emit(["off","vkeyboard","vgamepad"][index]))
+	auto_row.add_child(autopilot_selector)
 	var scroll := ScrollContainer.new()
 	scroll.custom_minimum_size = Vector2(475,clampf(get_viewport().get_visible_rect().size.y-310,180,335))
 	panel.custom_minimum_size.y = 0
@@ -105,7 +119,7 @@ func build(settings: RallyGameSettings) -> void:
 		widgets[entry[0]] = toggle
 	button(column,"恢复默认设置",func(): defaults_requested.emit(); sync())
 	message = Label.new()
-	message.text = "设置保存在本机 · 方向键/手柄可导航 · Esc / Start 继续"
+	message.text = "设置保存在本机 · F10 切换自动驾驶 · Esc / Start 继续"
 	message.add_theme_font_size_override("font_size",12)
 	column.add_child(message)
 	visible = false
@@ -136,6 +150,11 @@ func sync() -> void:
 			widget.set_value_no_signal(prefs.values[key])
 			widget.get_parent().get_child(2).text = "%.2f"%prefs.values[key]
 		else: widget.set_pressed_no_signal(prefs.values[key])
+
+
+func set_autopilot_mode(mode: String) -> void:
+	if not is_instance_valid(autopilot_selector): return
+	autopilot_selector.select(maxi(0,["off","vkeyboard","vgamepad"].find(mode)))
 
 
 func show_menu(value: bool) -> void:

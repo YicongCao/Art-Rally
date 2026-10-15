@@ -26,6 +26,7 @@ var previous_velocity := Vector3.ZERO
 var velocity_valid: bool = false
 var acceleration_g := Vector3.ZERO
 var background := StyleBoxFlat.new()
+var driver_state: Dictionary = {}
 
 
 func _ready() -> void:
@@ -56,6 +57,7 @@ func set_enabled(enabled: bool) -> void:
 		for torque: float in car.drivetrain.config.torque_values:
 			torque_max = maxf(torque_max, torque * 1.15)
 		model = data_for(car, acceleration_g)
+		model.merge(driver_state,true)
 	queue_redraw()
 
 
@@ -66,6 +68,10 @@ func clear_history() -> void:
 	refresh_clock = 0
 	velocity_valid = false
 	acceleration_g = Vector3.ZERO
+
+
+func set_driver_state(value: Dictionary) -> void:
+	driver_state = value.duplicate()
 
 
 func _physics_process(dt: float) -> void:
@@ -98,6 +104,7 @@ func _process(dt: float) -> void:
 	if refresh_clock < SAMPLE_INTERVAL: return
 	refresh_clock = 0
 	model = data_for(car, acceleration_g)
+	model.merge(driver_state,true)
 	queue_redraw()
 
 
@@ -148,10 +155,13 @@ func _draw() -> void:
 	panel(Rect2(24, 22, 1232, 74))
 	text("ART / RALLY  ·  DEBUG", Vector2(40, 48), 21, PAPER, title_font)
 	text("F9 显示/隐藏  ·  T 原始遥测  ·  F8 导出", Vector2(40, 76), 12, MUTED)
-	text("%03d KM/H   G%s   %04d RPM   %s" % [model.speed, model.gear, model.rpm, model.layout], Vector2(430, 48), 20, PAPER, number_font)
+	var driver_label := str(model.get("label",""))
+	text("%03d KM/H   G%s   %04d RPM   %s%s" % [model.speed, model.gear, model.rpm, model.layout, "   "+driver_label if not driver_label.is_empty() else ""], Vector2(430, 48), 20, PAPER, number_font)
 	text("TICK %06d  /  %d Hz  /  %d FPS  /  PHYS %.2f ms" % [model.tick, Engine.physics_ticks_per_second, Engine.get_frames_per_second(), model.physics_ms], Vector2(430, 76), 12, MUTED, number_font)
 	var status := "PAUSED" if get_tree().paused else ("SYNC DOWN" if model.shift_sync else ("SHIFTING" if model.shifting else "LIVE / 20 Hz"))
 	text(status, Vector2(1090, 48), 14, AMBER if get_tree().paused or model.shift_sync else GREEN, title_font)
+	if not driver_label.is_empty():
+		text("TARGET %02d km/h  /  ERR %+.2f m" % [float(model.get("target_speed",0))*3.6,float(model.get("lateral_error",0))],Vector2(1025,76),11,AMBER,number_font)
 	panel(Rect2(24, 131, 420, 50))
 	text("WHEEL / CONTACT", Vector2(40, 153), 17, PAPER, title_font)
 	text("Fz 载荷 / 行程 / 滑移 / 摩擦圆", Vector2(40, 174), 11, MUTED)

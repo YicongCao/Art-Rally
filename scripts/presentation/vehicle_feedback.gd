@@ -76,11 +76,12 @@ func update(car: RallyVehicle, settings: RallyGameSettings, controls: RallyInput
 		emitter.emitting = active
 		emitter.amount_ratio = clampf(absf(wheel.longitudinal_speed)*0.02+absf(wheel.slip)*0.25,0.1,0.7)
 	rumble_clock += dt
-	if not settings.values.vibration or controls.active_device<0:
+	var device := controls.rumble_device()
+	if not settings.values.vibration or device<0:
 		stop_rumble()
-	elif rumble_clock>0.08 and controls.active_device in Input.get_connected_joypads():
-		if rumble_device!=controls.active_device: stop_rumble()
-		rumble_device = controls.active_device
+	elif rumble_clock>0.08 and device in Input.get_connected_joypads():
+		if rumble_device!=device: stop_rumble()
+		rumble_device = device
 		Input.start_joy_vibration(rumble_device,minf(last_mix.slip*0.25,0.25),minf(last_mix.impact*0.4,0.35),0.12)
 		rumble_clock = 0
 

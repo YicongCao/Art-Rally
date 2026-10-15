@@ -2,18 +2,21 @@ class_name VehicleTelemetryRecorder
 extends RefCounted
 
 const MAX_FRAMES := 120 * 120
-const HEADER := "tick,speed_mps,px,py,pz,yaw_rad,roll_rad,pitch_rad,steer,throttle,brake,handbrake,gear,physics_usec,rpm,clutch,shift_request,automatic"
+const HEADER := "tick,speed_mps,px,py,pz,yaw_rad,roll_rad,pitch_rad,steer,throttle,brake,handbrake,gear,physics_usec,rpm,clutch,shift_request,automatic,driver_source_id,auto_target_speed_mps,auto_lateral_m,auto_takeovers"
 var frames: Array[PackedFloat64Array] = []
 var cursor: int = 0
 
 
-func capture(vehicle: RallyVehicle) -> void:
+func capture(vehicle: RallyVehicle, driver: Dictionary = {}) -> void:
 	var row := PackedFloat64Array([
 		vehicle.simulation_tick, vehicle.linear_velocity.length(), vehicle.position.x, vehicle.position.y, vehicle.position.z,
 		vehicle.rotation.y, vehicle.rotation.z, vehicle.rotation.x, vehicle.command.steer, vehicle.command.throttle,
 		vehicle.command.brake, vehicle.command.handbrake, vehicle.drivetrain.gear, vehicle.physics_usec,
 		vehicle.drivetrain.rpm(), vehicle.drivetrain.clutch,
 		vehicle.last_shift_requested, float(vehicle.drivetrain.automatic),
+		float(driver.get("source_id",RallyAutoDriver.Source.TEST_HARNESS)),
+		float(driver.get("target_speed",0.0)),float(driver.get("lateral_error",0.0)),
+		float(driver.get("takeovers",0)),
 	])
 	for wheel: RallyWheelState in vehicle.wheels:
 		row.append_array(PackedFloat64Array([float(wheel.grounded), wheel.load, wheel.length, wheel.omega, wheel.slip, wheel.slip_angle, wheel.longitudinal_force, wheel.lateral_force, wheel.surface.surface_id, wheel.surface.water_depth, wheel.water_force.length()]))
@@ -42,6 +45,7 @@ func export_csv(vehicle: RallyVehicle) -> String:
 		file.store_csv_line(cells)
 	file.close()
 	var metadata := {"engine": Engine.get_version_info()["string"], "physics_hz": Engine.physics_ticks_per_second, "vehicle": _properties(vehicle.config), "tire": _properties(vehicle.tire), "drivetrain": _properties(vehicle.drivetrain.config), "frames": frames.size()}
+	metadata["driver_sources"] = RallyAutoDriver.SOURCE_NAMES
 	metadata["surfaces"] = []
 	for profile: RallySurfaceProfile in RallySurfaceQuery.PROFILES: metadata.surfaces.append(_properties(profile))
 	var info := FileAccess.open(stem + ".json", FileAccess.WRITE)

@@ -108,7 +108,9 @@ func _build_hud() -> void:
 
 func _physics_process(_dt: float) -> void:
 	if get_tree().paused: return
-	recorder.capture(vehicle)
+	recorder.capture(vehicle,{
+		"source_id": RallyAutoDriver.Source.HUMAN_KEYBOARD if controls.active_device < 0 else RallyAutoDriver.Source.HUMAN_GAMEPAD,
+	})
 	if vehicle.position.y < -15: _reset()
 
 
