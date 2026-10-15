@@ -92,8 +92,13 @@ case "$MODE" in
     run_logged "$ROOT/logs/m5_render_check.log" --path "$ROOT" --max-fps 60 --script res://tests/m5_render_check.gd -- --test-defaults
     grep -q '^TEST RESULT: .* 0 failures$' "$ROOT/logs/m5_render_check.log"
     ;;
+  drive-choice-render-check)
+    mkdir -p "$ROOT/logs"
+    run_logged "$ROOT/logs/drive_choice_render_check.log" --path "$ROOT" --max-fps 60 --script res://tests/drive_choice_render_check.gd -- --test-defaults
+    grep -q '^TEST RESULT: .* 0 failures$' "$ROOT/logs/drive_choice_render_check.log"
+    ;;
   *)
-    echo "Usage: $0 {doctor|editor|run|lab|stage|preview|check|regression|stage-check|preview-check|preview-render-check|m5-render-check} [Godot options]" >&2
+    echo "Usage: $0 {doctor|editor|run|lab|stage|preview|check|regression|stage-check|preview-check|preview-render-check|m5-render-check|drive-choice-render-check} [Godot options]" >&2
     exit 2
     ;;
 esac
