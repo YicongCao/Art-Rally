@@ -164,6 +164,7 @@ resources/vehicles/       车辆、柏油轮胎和动力总成基线资源
 resources/surfaces/       柏油、砂石、泥地与草土参数
 resources/stages/         路线种子、控制点与长度配置
 docs/PROJECT_PLAN.zh-CN.md 完整策划案
+docs/V0.2_TIRE_CONTACT_DEFORMATION.zh-CN.md v0.2 轮胎接触、形变与刷子模型方案
 ```
 
 `.godot/` 是可以重新生成的本地缓存，不进入版本控制。GDScript 的 `.uid` 文件需要保留并提交，以保持资源引用稳定。
@@ -172,7 +173,7 @@ docs/PROJECT_PLAN.zh-CN.md 完整策划案
 
 不需要建模 MCP、Blender、C# 工具链或第三方车辆插件。初期场景和车辆可通过基础网格与程序化生成实现。导出模板仅在需要打包独立应用时安装，应与 `.godot-version` 中的引擎版本完全一致。
 
-下一步：M6 的人工调校、长期性能/硬件兼容验收与 macOS 打包。轮胎包络仍基于射线，没有真实非簧载质量与侧壁碰撞；水阻是经验模型，空中轮端转矩也没有完整车身反作用耦合。
+下一步：按 [v0.2 轮胎技术方案](docs/V0.2_TIRE_CONTACT_DEFORMATION.zh-CN.md) 分阶段实现径向形变、动态椭圆接触斑、自适应采样和接触斑感知刷子模型。v0.2 仍不引入独立非簧载刚体、侧壁碰撞或 FEM；真实手柄和真实 Windows 验收继续作为发布门槛。
 
 测试指标、提交分节和模型限制见 [M1 + M2 验收记录](docs/M1_M2_VALIDATION.zh-CN.md)。
 
