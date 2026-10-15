@@ -57,6 +57,8 @@ macOS 首次安装：`brew install --cask godot`。Homebrew 跟随新版发布�
 ./scripts/dev.sh m6-perf # 1080p 跟车/驾驶舱/F9 三次完整性能与内存长跑
 ./scripts/dev.sh m6-release-check # 内置字体、1080p HUD、最小窗口与完赛流程检查
 ./scripts/dev.sh controller-probe # 枚举当前真实手柄名称、GUID、映射与初始轴值
+./scripts/dev.sh export-macos # 使用匹配模板生成 .app、ZIP 和 SHA-256
+./scripts/dev.sh macos-app-check # 从导出包验证主场景、音频、字体、设置与成绩读写
 ```
 
 编辑器中按 **F5** 运行主赛段。进入游戏窗口后 F5 为重跑、F6 切到赛段、F7 切到原测试场；注意与编辑器快捷键的焦点区别。原测试场保留直道、25 m 定圆、蛇形、减速带和跳跃，并在远端 320–520 m 区域增加砂石、泥地、草土和水洼对比区。
@@ -64,6 +66,8 @@ macOS 首次安装：`brew install --cask godot`。Homebrew 跟随新版发布�
 `check` 验证环境、输入、轮胎、车辆动态、多路面、水阻、道路几何、赛段会话及恢复；长距离完整物理试跑独立为 `stage-check`，避免每次改动都等待完整跑段。日志存入忽略版本控制的 `logs/`。真实手柄连接与新增驾驶体验需人工验收。
 
 `m6-perf` 需要真实 Metal 窗口并耗时约 12 分钟；它以生产自动驾驶连续跑三次，分别覆盖默认跟车、驾驶舱和 F9 调试面板，输出原始帧间隔、60 帧节奏 P95/P99、Godot 总物理、车辆回调、draw call、三角元及内存趋势到 `logs/m6_performance.json`。性能报告与测量限制见 [M6 验收记录](docs/M6_VALIDATION.zh-CN.md)。
+
+macOS 导出要求安装与 `.godot-version` 完全一致的 4.7.2 模板；`doctor` 会显示模板状态。产物位于忽略版本控制的 `builds/macos/Art Rally.app` 和 `Art-Rally-macos-universal.zip`。当前包使用本机可验证的 ad-hoc 签名，不是 Developer ID 正式签名，也没有 Apple 公证；从网络下载或传到其他 Mac 后仍可能触发 Gatekeeper 提示。
 
 简介区的三张实机截图可用 `godot --path . --max-fps 60 --script tests/readme_capture.gd -- --test-defaults` 批量更新，需要真实图形窗口；工具使用默认设置，不修改玩家的本机设置。
 

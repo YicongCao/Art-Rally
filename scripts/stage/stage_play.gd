@@ -96,6 +96,12 @@ func _ready() -> void:
 	if get_tree().paused: pause_menu.show_menu(true)
 	# Physics tests and capture tools deliberately bypass the front-end, using defaults.
 	if DisplayServer.get_name()!="headless" and not "--test-defaults" in OS.get_cmdline_user_args(): _open_vehicle_selection()
+	if "--package-smoke" in OS.get_cmdline_user_args(): _run_package_smoke.call_deferred()
+
+
+func _run_package_smoke() -> void:
+	for i: int in range(30): await get_tree().process_frame
+	RallyPackageSmoke.run(self)
 
 
 func _spawn_pose() -> Transform3D:

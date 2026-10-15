@@ -25,7 +25,13 @@ fi
 run_logged() {
   local log="$1"
   shift
-  "$ENGINE" "$@" 2>&1 | tee "$log"
+  run_external_logged "$log" "$ENGINE" "$@"
+}
+
+run_external_logged() {
+  local log="$1"
+  shift
+  "$@" 2>&1 | tee "$log"
   # Godot may exit successfully despite a resource or GDScript load error.
   if grep -Eq 'SCRIPT ERROR:|(^|[[:space:]])ERROR:|Parse Error:' "$log"; then
     echo "Godot reported an error. See $log" >&2
@@ -37,7 +43,10 @@ MODE="${1:-editor}"
 if [[ $# -gt 0 ]]; then shift; fi
 case "$MODE" in
   doctor)
-    printf 'Engine: %s\nVersion: %s\nProject: %s\nArchitecture: %s\n' "$ENGINE" "$ACTUAL" "$ROOT" "$(uname -m)"
+    TEMPLATE_DIR="$HOME/Library/Application Support/Godot/export_templates/$EXPECTED.stable"
+    TEMPLATE_STATUS="missing"
+    [[ -f "$TEMPLATE_DIR/macos.zip" ]] && TEMPLATE_STATUS="$TEMPLATE_DIR/macos.zip"
+    printf 'Engine: %s\nVersion: %s\nProject: %s\nArchitecture: %s\nmacOS template: %s\n' "$ENGINE" "$ACTUAL" "$ROOT" "$(uname -m)" "$TEMPLATE_STATUS"
     ;;
   editor)
     exec "$ENGINE" --path "$ROOT" --editor "$@"
@@ -132,8 +141,31 @@ case "$MODE" in
     run_logged "$ROOT/logs/controller_probe.log" --path "$ROOT" --max-fps 60 --script res://tests/controller_probe.gd
     grep -q '^CONTROLLER PROBE:' "$ROOT/logs/controller_probe.log"
     ;;
+  export-macos)
+    TEMPLATE_DIR="$HOME/Library/Application Support/Godot/export_templates/$EXPECTED.stable"
+    if [[ ! -f "$TEMPLATE_DIR/macos.zip" ]]; then
+      echo "Missing matching macOS export template: $TEMPLATE_DIR/macos.zip" >&2
+      exit 1
+    fi
+    mkdir -p "$ROOT/logs" "$ROOT/builds/macos"
+    rm -rf "$ROOT/builds/macos/Art Rally.app" "$ROOT/builds/macos/Art-Rally-macos-universal.zip"
+    run_logged "$ROOT/logs/export_macos.log" --headless --path "$ROOT" --export-release "macOS" "$ROOT/builds/macos/Art Rally.app"
+    test -x "$ROOT/builds/macos/Art Rally.app/Contents/MacOS/Art Rally"
+    ditto -c -k --sequesterRsrc --keepParent "$ROOT/builds/macos/Art Rally.app" "$ROOT/builds/macos/Art-Rally-macos-universal.zip"
+    shasum -a 256 "$ROOT/builds/macos/Art-Rally-macos-universal.zip" > "$ROOT/builds/macos/Art-Rally-macos-universal.zip.sha256"
+    ;;
+  macos-app-check)
+    APP="$ROOT/builds/macos/Art Rally.app"
+    EXECUTABLE="$APP/Contents/MacOS/Art Rally"
+    test -x "$EXECUTABLE"
+    mkdir -p "$ROOT/logs"
+    run_external_logged "$ROOT/logs/macos_app_check.log" "$EXECUTABLE" --max-fps 60 -- --test-defaults --package-smoke
+    grep -q '^PACKAGE SMOKE PASSED$' "$ROOT/logs/macos_app_check.log"
+    test "$(plutil -extract CFBundleIdentifier raw "$APP/Contents/Info.plist")" = "com.yicongcao.artrally"
+    lipo -archs "$EXECUTABLE" | grep -qw arm64
+    ;;
   *)
-    echo "Usage: $0 {doctor|editor|run|lab|stage|preview|check|regression|stage-check|stage-matrix|preview-check|preview-render-check|m5-render-check|drive-choice-render-check|autopilot-render-check|result-render-check|m6-perf|m6-release-check|controller-probe} [Godot options]" >&2
+    echo "Usage: $0 {doctor|editor|run|lab|stage|preview|check|regression|stage-check|stage-matrix|preview-check|preview-render-check|m5-render-check|drive-choice-render-check|autopilot-render-check|result-render-check|m6-perf|m6-release-check|controller-probe|export-macos|macos-app-check} [Godot options]" >&2
     exit 2
     ;;
 esac

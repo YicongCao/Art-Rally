@@ -38,7 +38,7 @@
 - [x] 1920×1080 整段性能和连续重跑内存报告
 - [x] 字体、声音链路、窗口和暂停 / 完赛流程自动收尾
 - [ ] FWD / AWD / RWD 的真人键盘与真实手柄完整跑段
-- [ ] Godot 4.7.2 macOS 独立应用导出与包内验证
+- [x] Godot 4.7.2 macOS 独立应用导出与包内验证
 
 真实手柄的扳机量程、摇杆死区、震动和断线重连必须由物理设备人工验证；后续虚拟手柄自动驾驶只能验证游戏内部输入处理链，不能替代这项硬件验收。
 
@@ -118,3 +118,34 @@ caffeinate -dimsu ./scripts/dev.sh m6-perf
 音频仍全部由项目代码合成，无外部录音依赖。自动检查覆盖七类 PCM 非零、峰值不削波、湿地/水层分轨、默认音量下的聚合余量、四轮水花和暂停冻结。主观的引擎/胎噪/水声/冲击声平衡仍必须在下一节真实试听后确认；在没有听感反馈前不凭波形数字任意改变混音。
 
 `logs/` 现在包含 `.gdignore`，生成的 PNG、CSV 和 JSON 不再被 Godot 资源导入器扫描，避免性能长跑报告触发无关 UID 警告。
+
+## macOS 独立应用
+
+安装了与引擎严格匹配的 Godot `4.7.2.stable` macOS 导出模板。完整官方模板归档以发布方 `SHA512-SUMS.txt` 校验通过：
+
+```text
+ca4d71c4d7b81dfc15d1a98baa07534aa95b03fdda78a0075b06672e1648d2e5f40980c9adc28d23e1b92e732ee7bf3461997aa804af74ec2fcd7a93ccb84079
+```
+
+官方 4.7.2 `macos.zip` 只提供 universal 模板，因此提交的 `export_presets.cfg` 使用 `universal`，而不是请求不存在的独立 arm64 模板。最终应用同时包含 `x86_64 arm64`，在 M4 Pro 上原生使用 arm64；包标识为 `com.yicongcao.artrally`，版本 `0.1.0`。模板要求的 ETC2 / ASTC 导入开关已加入 `project.godot`。
+
+产物：
+
+```text
+builds/macos/Art Rally.app                    177 MiB
+builds/macos/Art-Rally-macos-universal.zip     81 MiB
+SHA-256 62fedbaba7b11f030fa7fbb49925d7b29cf3b88ea71e30803a8b48170bcc36a7
+```
+
+`macos-app-check` 从导出后的真实可执行文件启动 Metal / Forward+，包内冒烟通过：
+
+- 主场景、3.05 km 路线、车辆和四轮资源可加载；
+- 合成引擎音频流存在且 PCM 完整；
+- 内置中文与数字字体可读；
+- 隔离的临时设置文件可写入并由新实例读回；
+- 隔离的临时成绩文件可写入并由新实例读回；
+- 冒烟结束后临时文件被删除。
+
+另外使用 macOS `open -W` 从 `.app` 启动同一冒烟入口成功，验证 Finder 方式的应用捆绑启动。`codesign --verify --deep --strict` 通过；签名类型为 `adhoc`，没有 Team Identifier。它不是 Developer ID 正式签名，也没有公证或面向外部用户的 Gatekeeper 保证。应用图标仍使用模板默认图标，这不阻塞最初约定的本机可运行包。
+
+应用内已明确验证默认自动驾驶关闭；F10 / 暂停菜单可开启虚拟键盘或虚拟手柄观察演示，真人驾驶输入可立即接管。构建产物保留在忽略版本控制的 `builds/`，仓库只提交可复现导出的预设、检查命令和源码。
