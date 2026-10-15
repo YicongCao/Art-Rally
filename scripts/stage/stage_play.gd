@@ -291,6 +291,7 @@ func _apply_preferences() -> void:
 	vehicle.drivetrain.automatic = preferences.values.automatic
 	vehicle.config.front_brake_bias = preferences.values.brake_bias
 	vehicle.config.static_compression = 0.13/float(preferences.values.spring_scale)
+	vehicle.visual_deformation_gain = preferences.values.tire_visual_gain
 	presentation.flare.enabled = preferences.values.lens_flare
 	presentation.scenery.set_quality(preferences.values.low_detail)
 	presentation.environment.ssao_enabled = false

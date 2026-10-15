@@ -19,7 +19,14 @@ func capture(vehicle: RallyVehicle, driver: Dictionary = {}) -> void:
 		float(driver.get("takeovers",0)),
 	])
 	for wheel: RallyWheelState in vehicle.wheels:
-		row.append_array(PackedFloat64Array([float(wheel.grounded), wheel.load, wheel.length, wheel.omega, wheel.slip, wheel.slip_angle, wheel.longitudinal_force, wheel.lateral_force, wheel.surface.surface_id, wheel.surface.water_depth, wheel.water_force.length()]))
+		var patch := wheel.patch
+		row.append_array(PackedFloat64Array([
+			float(wheel.grounded),wheel.load,wheel.length,wheel.omega,wheel.slip,wheel.slip_angle,wheel.longitudinal_force,wheel.lateral_force,
+			wheel.surface.surface_id,wheel.surface.water_depth,wheel.water_force.length(),
+			wheel.radial_deflection,wheel.loaded_radius,wheel.effective_radius,
+			patch.half_length*2.0,patch.half_width*2.0,patch.area,patch.samples.size(),patch.support_ratio,patch.wet_fraction,
+			patch.pressure_center.x,patch.pressure_center.y,wheel.aligning_moment,wheel.slip_dissipation,wheel.radial_damping_power,wheel.diagnostic_flags,
+		]))
 	if frames.size() < MAX_FRAMES:
 		frames.append(row)
 	else:
@@ -35,7 +42,9 @@ func export_csv(vehicle: RallyVehicle) -> String:
 	if file == null: return ""
 	var header := HEADER
 	for corner: String in ["fl", "fr", "rl", "rr"]:
-		for field: String in ["contact", "load_n", "length_m", "omega_rads", "slip", "angle_rad", "fx_n", "fy_n", "surface_id", "water_depth_m", "water_drag_n"]:
+		for field: String in ["contact", "load_n", "length_m", "omega_rads", "slip", "angle_rad", "fx_n", "fy_n", "surface_id", "water_depth_m", "water_drag_n",
+			"deflection_m","loaded_radius_m","effective_radius_m","patch_length_m","patch_width_m","patch_area_m2","sample_count","support_ratio","wet_fraction",
+			"pressure_center_x_m","pressure_center_y_m","aligning_moment_nm","slip_dissipation_w","radial_damping_power_w","diagnostic_flags"]:
 			header += ",%s_%s" % [corner, field]
 	file.store_line(header)
 	var first := cursor if frames.size() == MAX_FRAMES else 0

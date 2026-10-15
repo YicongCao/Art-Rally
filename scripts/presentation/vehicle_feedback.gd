@@ -34,13 +34,16 @@ static func mix_for(car: RallyVehicle) -> Dictionary:
 	for wheel: RallyWheelState in car.wheels:
 		if not wheel.grounded or wheel.load<=0: continue
 		var speed := clampf(absf(wheel.longitudinal_speed)/25,0,1)
-		var slip := clampf(absf(wheel.slip)*0.6+absf(wheel.slip_angle)*1.5,0,1)
-		var wet := clampf(wheel.surface.water_depth/0.08,0,1)
+		var kinematic_slip := clampf(absf(wheel.slip)*0.6+absf(wheel.slip_angle)*1.5,0,1)
+		var dissipation_slip := clampf(wheel.slip_dissipation/15000.0,0,1)
+		var slip := dissipation_slip if car.config.tire_contact_model=="COMPLIANT_PATCH" else kinematic_slip
+		var wet := clampf(wheel.patch.wet_fraction,0,1) if car.config.tire_contact_model=="COMPLIANT_PATCH" else clampf(wheel.surface.water_depth/0.08,0,1)
 		var key: String = ["asphalt","gravel","mud","gravel"][wheel.surface.surface_id]
 		result[key] += speed*(0.035+slip*0.13)*(1-wet*0.6)
 		result.water += speed*wet*0.14
 		result.slip += slip*0.25
-		result.impact = maxf(result.impact,clampf((wheel.load-6500)/13000,0,1))
+		var radial_impact := clampf(-wheel.radial_damping_power/18000.0,0,1)
+		result.impact = maxf(result.impact,maxf(clampf((wheel.load-6500)/13000,0,1),radial_impact))
 	return result
 
 
@@ -74,7 +77,8 @@ func update(car: RallyVehicle, settings: RallyGameSettings, controls: RallyInput
 		var emitter: GPUParticles3D = entry.emitter
 		emitter.global_position = wheel.point+Vector3.UP*0.10
 		emitter.emitting = active
-		emitter.amount_ratio = clampf(absf(wheel.longitudinal_speed)*0.02+absf(wheel.slip)*0.25,0.1,0.7)
+		var slip_amount := clampf(wheel.slip_dissipation/15000.0,0,1) if car.config.tire_contact_model=="COMPLIANT_PATCH" else absf(wheel.slip)
+		emitter.amount_ratio = clampf(absf(wheel.longitudinal_speed)*0.02+slip_amount*0.25,0.1,0.7)
 	rumble_clock += dt
 	var device := controls.rumble_device()
 	if not settings.values.vibration or device<0:

@@ -89,7 +89,7 @@ func build(settings: RallyGameSettings) -> void:
 	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	list.add_theme_constant_override("separation",8)
 	scroll.add_child(list)
-	for entry: Array in [["volume","声音音量"],["steering_response","键盘转向响应"],["return_rate","键盘回正速度"],["throttle_rise","油门建立时间"],["brake_rise","制动建立时间"],["stick_deadzone","手柄摇杆死区"],["brake_bias","前轮制动比例"],["spring_scale","悬架弹簧倍率"]]:
+	for entry: Array in [["volume","声音音量"],["steering_response","键盘转向响应"],["return_rate","键盘回正速度"],["throttle_rise","油门建立时间"],["brake_rise","制动建立时间"],["stick_deadzone","手柄摇杆死区"],["brake_bias","前轮制动比例"],["spring_scale","悬架弹簧倍率"],["tire_visual_gain","轮胎形变显示倍率"]]:
 		var row := HBoxContainer.new()
 		list.add_child(row)
 		var label := Label.new()

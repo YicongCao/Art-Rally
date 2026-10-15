@@ -20,7 +20,9 @@ func _run() -> void:
 	scene.preferences.reset()
 	scene.preferences.set_value("volume",0)
 	scene.preferences.set_value("low_detail","--low-detail" in OS.get_cmdline_user_args())
+	scene.preferences.set_value("tire_visual_gain",2.0 if "--tire-visual-2x" in OS.get_cmdline_user_args() else 1.0)
 	scene._apply_preferences()
+	if "--compliant" in OS.get_cmdline_user_args(): scene.vehicle.config.tire_contact_model = "COMPLIANT_PATCH"
 	if "--no-batches" in OS.get_cmdline_user_args():
 		for batch: MultiMeshInstance3D in scene.presentation.scenery.all_batches: batch.visible = false
 	if "--no-checkpoints" in OS.get_cmdline_user_args(): scene.presentation.checkpoints.root.visible = false

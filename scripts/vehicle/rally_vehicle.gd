@@ -15,6 +15,7 @@ var reset_pose := Transform3D(Basis.IDENTITY, Vector3(0, 0.8, 12))
 var physics_usec: int = 0
 var simulation_tick: int = 0
 var last_shift_requested: int = 0
+var visual_deformation_gain: float = 1.0
 
 
 func _ready() -> void:
@@ -128,7 +129,8 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 		wheel.spin = fmod(wheel.spin + wheel.omega * state.step, TAU)
 		wheel_visuals[i].position = config.wheel_mount(i) - Vector3.UP * wheel.length
 		wheel_visuals[i].rotation = Vector3(0, wheel.steer, 0)
-		wheel_visuals[i].get_child(0).basis = Basis(Vector3.RIGHT, -wheel.spin) * Basis(Vector3.FORWARD, -PI * 0.5)
+		var tire_basis := Basis(Vector3.RIGHT,-wheel.spin)*Basis(Vector3.FORWARD,-PI*0.5)
+		wheel_visuals[i].get_child(0).basis = tire_basis.scaled_local(tire_visual_scale(wheel))
 		for hub_index: int in [1, 2]:
 			wheel_visuals[i].get_child(hub_index).rotation.x = -wheel.spin
 	state.apply_central_force(-0.5 * 1.225 * config.drag_coefficient_area * state.linear_velocity.length() * state.linear_velocity)
@@ -145,6 +147,12 @@ func _driven_radius(handbrake: bool) -> float:
 	for index: int in indices:
 		total += wheels[index].effective_radius if config.tire_contact_model=="COMPLIANT_PATCH" else config.wheel_radius
 	return total/indices.size()
+
+
+func tire_visual_scale(wheel: RallyWheelState) -> Vector3:
+	if config.tire_contact_model!="COMPLIANT_PATCH" or visual_deformation_gain<=0.0: return Vector3.ONE
+	var ratio := clampf(wheel.radial_deflection/maxf(config.wheel_radius,0.001)*visual_deformation_gain,0.0,0.25)
+	return Vector3(1.0-ratio,1.0,1.0+ratio*0.35)
 
 
 func _complete_reset() -> void:

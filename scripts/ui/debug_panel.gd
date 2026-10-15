@@ -122,6 +122,11 @@ static func data_for(vehicle: RallyVehicle, g_force: Vector3 = Vector3.ZERO) -> 
 			"usage": force.length() / limit if limit > 0.01 else 0.0, "limit": limit,
 			"surface": RallySurfaceQuery.PROFILES[wheel.surface.surface_id].label, "water_mm": wheel.surface.water_depth * 1000,
 			"water_drag": wheel.water_force.length(), "driven": drive.config.drive_layout == "AWD" or (i < 2 if drive.config.drive_layout == "FWD" else i >= 2),
+			"deflection_mm":wheel.radial_deflection*1000.0,"loaded_radius_mm":wheel.loaded_radius*1000.0,"effective_radius_mm":wheel.effective_radius*1000.0,
+			"patch_length_mm":wheel.patch.half_length*2000.0,"patch_width_mm":wheel.patch.half_width*2000.0,"patch_samples":wheel.patch.samples.size(),
+			"support_ratio":wheel.patch.support_ratio,"wet_fraction":wheel.patch.wet_fraction,"pressure_center_mm":wheel.patch.pressure_center*1000.0,
+			"aligning_moment":wheel.aligning_moment,"slip_power":wheel.slip_dissipation,"radial_power":wheel.radial_damping_power,
+			"diagnostic_flags":wheel.diagnostic_flags,
 		})
 		total_load += wheel.load
 		if i < 2: front_load += wheel.load
@@ -180,11 +185,12 @@ func _draw_wheel(index: int, at: Vector2) -> void:
 	text("Fz %4d N" % wheel.load, at + Vector2(12, 70), 13, PAPER, number_font)
 	bar(Rect2(at + Vector2(12, 79), Vector2(180, 5)), wheel.load / maxf(model.static_load * 2, 1), contact_color)
 	draw_line(at + Vector2(102, 77), at + Vector2(102, 86), MUTED, 1)
-	text("LEN %4.1f cm" % wheel.length_cm, at + Vector2(12, 104), 12, PAPER, number_font)
+	text("SUS %4.1f cm / TIRE %4.1f mm" % [wheel.length_cm,wheel.deflection_mm], at + Vector2(12, 104), 10, PAPER, number_font)
 	bar(Rect2(at + Vector2(12, 113), Vector2(180, 5)), wheel.travel, AMBER)
-	text("SLIP %+.2f / %+.1f deg" % [wheel.slip, wheel.angle], at + Vector2(12, 139), 11, RED if absf(wheel.slip) > 0.35 else PAPER, number_font)
-	text("Fx %+5d N" % wheel.fx, at + Vector2(12, 166), 11, PAPER, number_font)
-	text("Fy %+5d N" % wheel.fy, at + Vector2(12, 188), 11, PAPER, number_font)
+	text("PATCH %3d×%3d mm / %2d pts" % [wheel.patch_length_mm,wheel.patch_width_mm,wheel.patch_samples],at+Vector2(12,132),10,RED if wheel.diagnostic_flags!=0 else MUTED,number_font)
+	text("SLIP %+.2f / %+.1f deg" % [wheel.slip, wheel.angle], at + Vector2(12, 151), 11, RED if absf(wheel.slip) > 0.35 else PAPER, number_font)
+	text("Fx %+5d N" % wheel.fx, at + Vector2(12, 171), 11, PAPER, number_font)
+	text("Fy %+5d N" % wheel.fy, at + Vector2(12, 191), 11, PAPER, number_font)
 	var center := at + Vector2(159, 179)
 	draw_arc(center, 25, 0, TAU, 40, GRID, 1, true)
 	draw_line(center - Vector2(29, 0), center + Vector2(29, 0), GRID, 1, true)
@@ -193,7 +199,7 @@ func _draw_wheel(index: int, at: Vector2) -> void:
 	draw_line(center, center + force, contact_color, 2, true)
 	draw_circle(center + force, 3, contact_color)
 	text("GRIP %3d%% / %4d RPM" % [wheel.usage * 100, wheel.rpm], at + Vector2(12, 219), 11, PAPER, number_font)
-	text("WATER DRAG %d N" % wheel.water_drag, at + Vector2(12, 237), 10, MUTED, number_font)
+	text("Mz %+4d / LOSS %4.1f kW / WET %2d%%" % [wheel.aligning_moment,wheel.slip_power/1000.0,wheel.wet_fraction*100],at+Vector2(12,237),9,MUTED,number_font)
 
 
 func _draw_engine() -> void:

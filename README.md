@@ -56,6 +56,7 @@ macOS 首次安装：`brew install --cask godot`。Homebrew 跟随新版发布�
 ./scripts/dev.sh result-render-check # 真实窗口检查完赛时间、罚时与最佳成绩
 ./scripts/dev.sh m6-perf # 1080p 跟车/驾驶舱/F9 三次完整性能与内存长跑
 ./scripts/dev.sh m6-release-check # 内置字体、1080p HUD、最小窗口与完赛流程检查
+./scripts/dev.sh v02-tire-render-check # 真实窗口检查轮胎形变、动态接触斑与 F9 数据
 ./scripts/dev.sh controller-probe # 枚举当前真实手柄名称、GUID、映射与初始轴值
 ./scripts/dev.sh export-macos # 使用匹配模板生成 .app、ZIP 和 SHA-256
 ./scripts/dev.sh macos-app-check # 从导出包验证主场景、音频、字体、设置与成绩读写
@@ -119,7 +120,7 @@ Windows x86_64 包可由同一台 Mac 使用官方 4.7.2 模板交叉导出，�
 
 M6 的 FWD/AWD/RWD × 真人键盘/真实手柄六组跑段、热插拔、震动和试听记录使用 [人工验收清单](docs/M6_MANUAL_ACCEPTANCE.zh-CN.md)。虚拟手柄自动跑段不能将这些硬件项标记为通过。
 
-Esc 打开暂停/设置，Enter 或手柄 Start 明确恢复；失焦和活动手柄断开也会暂停。菜单支持键盘方向键/手柄导航，可调整音量、光斑、驾驶舱轻微震动、画面细节、自动挡、键盘辅助、踏板平滑和手柄死区；少量制动平衡/弹簧调校保存在本机，随时可恢复默认。配置位置为 `user://driving_settings.cfg`，不会修改 Git 中的基线车辆资源。
+Esc 打开暂停/设置，Enter 或手柄 Start 明确恢复；失焦和活动手柄断开也会暂停。菜单支持键盘方向键/手柄导航，可调整音量、光斑、驾驶舱轻微震动、轮胎形变显示倍率、画面细节、自动挡、键盘辅助、踏板平滑和手柄死区；少量制动平衡/弹簧调校保存在本机，随时可恢复默认。轮胎显示倍率只改变胎体网格，不参与接触或轮胎力计算。配置位置为 `user://driving_settings.cfg`，不会修改 Git 中的基线车辆资源。
 
 F8 暂停并导出最近最多 120 秒遥测至 `user://telemetry/`。T 在正式 HUD 和四轮开发遥测之间切换。主 HUD 显示转速弧、速度、挡位、踏板条、路面、路线图、计时和路书；驾驶舱模式使用舱内数字仪表，避免叠加两套大仪表。
 
