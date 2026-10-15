@@ -4,3 +4,4 @@
 
 [resource]
 script = ExtResource("1")
+calibration_version = "200ps-v1"

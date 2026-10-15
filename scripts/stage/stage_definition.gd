@@ -1,6 +1,7 @@
 class_name RallyStageDefinition
 extends Resource
 
+@export var stage_id: String = "sunset_ridge"
 @export var title: String = "Sunset Ridge"
 @export var seed_value: int = 73421
 @export var target_length: float = 3050.0

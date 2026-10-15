@@ -112,8 +112,13 @@ case "$MODE" in
     run_logged "$ROOT/logs/autopilot_render_check.log" --path "$ROOT" --max-fps 60 --script res://tests/autopilot_render_check.gd -- --test-defaults
     grep -q '^TEST RESULT: .* 0 failures$' "$ROOT/logs/autopilot_render_check.log"
     ;;
+  result-render-check)
+    mkdir -p "$ROOT/logs"
+    run_logged "$ROOT/logs/result_render_check.log" --path "$ROOT" --max-fps 60 --script res://tests/result_render_check.gd -- --test-defaults
+    grep -q '^TEST RESULT: .* 0 failures$' "$ROOT/logs/result_render_check.log"
+    ;;
   *)
-    echo "Usage: $0 {doctor|editor|run|lab|stage|preview|check|regression|stage-check|stage-matrix|preview-check|preview-render-check|m5-render-check|drive-choice-render-check|autopilot-render-check} [Godot options]" >&2
+    echo "Usage: $0 {doctor|editor|run|lab|stage|preview|check|regression|stage-check|stage-matrix|preview-check|preview-render-check|m5-render-check|drive-choice-render-check|autopilot-render-check|result-render-check} [Godot options]" >&2
     exit 2
     ;;
 esac

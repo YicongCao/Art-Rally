@@ -2,3 +2,4 @@
 [ext_resource type="Script" path="res://scripts/stage/stage_definition.gd" id="1"]
 [resource]
 script = ExtResource("1")
+stage_id = "sunset_ridge"

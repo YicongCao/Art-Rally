@@ -97,12 +97,14 @@ func _draw() -> void:
 		var side := Vector2(-forward.y,forward.x)
 		var at := Vector2(264,126)
 		draw_colored_polygon(PackedVector2Array([at+forward*10,at-forward*6+side*5,at-forward*6-side*5]),AMBER)
-	panel(Rect2(968,22,288,90))
+	panel(Rect2(968,22,288,112))
 	text("自由练习" if model.practice else "赛段计时",Vector2(989,46),12,MUTED)
 	text(time_text(model.time),Vector2(988,80),30,PAPER,number_font)
 	if model.penalty>0: text("+%ds"%model.penalty,Vector2(1185,46),14,AMBER,number_font)
-	draw_rect(Rect2(988,94,244,3),Color("3b5148"))
-	draw_rect(Rect2(988,94,244*clampf(model.progress/model.length,0,1),3),AMBER)
+	var best_time := float(model.get("best_time",-1))
+	if best_time>=0: text("%s  %s"%[model.get("best_label","个人最佳"),time_text(best_time)],Vector2(988,103),12,MUTED,number_font)
+	draw_rect(Rect2(988,119,244,3),Color("3b5148"))
+	draw_rect(Rect2(988,119,244*clampf(model.progress/model.length,0,1),3),AMBER)
 	_draw_note()
 	_draw_map()
 	if int(model.get("camera_mode",0))!=2: _draw_gauge()
@@ -130,13 +132,17 @@ func _draw() -> void:
 	elif model.phase == RallyStageSession.Phase.ARMED:
 		center_text("出发 · 穿过起点开始计时",Vector2(640,168),20,PAPER)
 	elif model.phase == RallyStageSession.Phase.FINISHED:
-		panel(Rect2(400,225,480,225))
-		center_text("STAGE COMPLETE",Vector2(640,268),25,AMBER,title_font)
-		center_text("夕照松岭 · 完赛",Vector2(640,300),17,PAPER)
-		center_text(time_text(model.time),Vector2(640,354),42,PAPER,number_font)
-		center_text("罚时 +%ds  /  检查点 %d/%d"%[model.penalty,model.gates,model.total_gates],Vector2(640,390),15,MUTED)
-		if not auto_label.is_empty(): center_text(auto_label+" 参考驾驶",Vector2(640,412),13,AMBER)
-		center_text("F5 / 手柄 Back 重跑    Esc 设置",Vector2(640,439),15,AMBER)
+		panel(Rect2(400,205,480,270))
+		center_text("STAGE COMPLETE",Vector2(640,248),25,AMBER,title_font)
+		center_text("夕照松岭 · 完赛",Vector2(640,280),17,PAPER)
+		center_text(time_text(model.time),Vector2(640,336),42,PAPER,number_font)
+		center_text("行驶 %s  + 罚时 %ds  /  检查点 %d/%d"%[time_text(float(model.get("elapsed",model.time-model.penalty))),model.penalty,model.gates,model.total_gates],Vector2(640,374),14,MUTED)
+		var result_line := str(model.get("best_label","个人最佳"))
+		if best_time>=0: result_line += "  "+time_text(best_time)
+		if model.get("new_record",false): result_line = "新纪录  ·  "+result_line
+		center_text(result_line,Vector2(640,405),14,AMBER)
+		if not auto_label.is_empty(): center_text(auto_label+" 参考驾驶",Vector2(640,429),12,MUTED)
+		center_text("F5 / 手柄 Back 重跑    Esc 设置",Vector2(640,458),15,AMBER)
 
 
 func _draw_note() -> void:

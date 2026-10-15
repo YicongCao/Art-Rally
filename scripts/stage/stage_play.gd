@@ -27,6 +27,11 @@ var reverse_assist := RallyReverseAssist.new()
 var selecting_vehicle: bool = false
 var vehicle_selector: RallyVehicleSelector
 var auto_driver := RallyAutoDriver.new()
+var result_store := RallyStageResultStore.new()
+var result_summary: Dictionary = {}
+var finish_record: Dictionary = {}
+var finish_recorded: bool = false
+var result_persistence_enabled: bool = false
 
 
 func _ready() -> void:
@@ -83,6 +88,11 @@ func _ready() -> void:
 	vehicle_selector.cancelled.connect(_cancel_vehicle_selection)
 	auto_driver.begin_run(generator.route,vehicle.position)
 	pause_menu.set_autopilot_mode(auto_driver.mode_name())
+	result_persistence_enabled = DisplayServer.get_name()!="headless" and not "--test-defaults" in OS.get_cmdline_user_args()
+	if result_persistence_enabled:
+		var result_error := result_store.load_file()
+		if result_error!=OK: pause_menu.message.text = "成绩读取失败，本次仍可驾驶"
+	_refresh_result_summary()
 	if get_tree().paused: pause_menu.show_menu(true)
 	# Physics tests and capture tools deliberately bypass the front-end, using defaults.
 	if DisplayServer.get_name()!="headless" and not "--test-defaults" in OS.get_cmdline_user_args(): _open_vehicle_selection()
@@ -122,7 +132,10 @@ func _physics_process(dt: float) -> void:
 			vehicle.request_reset(generator.route.pose_at(session.gates[-1]+8))
 		else: _recover(10,"越界复位")
 		return
+	var previous_phase := session.phase
 	session.step(vehicle.position, vehicle.linear_velocity.length(), dt)
+	if previous_phase!=RallyStageSession.Phase.FINISHED and session.phase==RallyStageSession.Phase.FINISHED:
+		_record_finish()
 	if session.phase == RallyStageSession.Phase.FINISHED:
 		if vehicle.position.y < generator.route.position_at(generator.route.length).y - 12 and not result_safety_reset:
 			result_safety_reset = true
@@ -150,6 +163,7 @@ func _process(dt: float) -> void:
 		data["returning_forward"] = reverse_assist.returning_forward
 		data["reverse_assist"] = preferences.values.reverse_assist
 		data.merge(auto_driver.telemetry(controls.active_device),true)
+		data.merge(_result_hud_data(),true)
 		if recovery_notice_time>0: data["warning"] = recovery_notice
 		game_hud.refresh(data)
 		debug_panel.set_driver_state(auto_driver.telemetry(controls.active_device))
@@ -164,6 +178,59 @@ func _exit_tree() -> void:
 
 func _format_time(seconds: float) -> String:
 	return "%02d:%05.2f" % [int(seconds) / 60, fmod(seconds, 60)]
+
+
+func _record_finish() -> void:
+	if finish_recorded: return
+	finish_recorded = true
+	var source := auto_driver.source_name(controls.active_device)
+	finish_record = result_store.record({
+		"stage_id":generator.definition.stage_id,
+		"drive_layout":vehicle.drivetrain.config.drive_layout,
+		"calibration_version":vehicle.drivetrain.config.calibration_version,
+		"driver_source":source,
+		"eligible_for_human_best":source in ["human_keyboard","human_gamepad"],
+		"elapsed":session.elapsed,
+		"penalty":session.penalty,
+		"total_time":session.total_time(),
+		"reset_count":session.reset_count,
+		"takeover_count":auto_driver.takeover_count,
+		"practice":session.practice,
+		"recorded_at":Time.get_unix_time_from_system(),
+	})
+	if bool(finish_record.get("saved",false)) and result_persistence_enabled:
+		var error := result_store.save_file()
+		if error!=OK:
+			finish_record["save_error"] = error
+			if is_instance_valid(pause_menu): pause_menu.message.text = "完赛有效，但成绩保存失败"
+	_refresh_result_summary()
+
+
+func _refresh_result_summary() -> void:
+	result_summary = result_store.summary(generator.definition.stage_id,vehicle.drivetrain.config.drive_layout,vehicle.drivetrain.config.calibration_version)
+
+
+func _result_hud_data() -> Dictionary:
+	var category := str(finish_record.get("category","")) if session.phase==RallyStageSession.Phase.FINISHED else ""
+	if category.is_empty():
+		match auto_driver.source(controls.active_device):
+			RallyAutoDriver.Source.AUTOPILOT_VKEYBOARD: category = "autopilot_vkeyboard"
+			RallyAutoDriver.Source.AUTOPILOT_VGAMEPAD: category = "autopilot_vgamepad"
+			RallyAutoDriver.Source.MIXED_TAKEOVER: category = "mixed"
+			_: category = "human"
+	var best: Dictionary = result_summary.get(category,{}) if category in ["autopilot_vkeyboard","autopilot_vgamepad"] else result_summary.get("human_best",{})
+	var label := "个人最佳"
+	if category=="autopilot_vkeyboard": label = "自动键盘参考"
+	elif category=="autopilot_vgamepad": label = "自动手柄参考"
+	elif category=="mixed": label = "混合驾驶 · 不计榜"
+	return {
+		"elapsed":session.elapsed,
+		"best_time":float(best.get("total_time",-1.0)),
+		"best_label":label,
+		"new_record":bool(finish_record.get("new_record",false)),
+		"result_category":category,
+		"result_saved":bool(finish_record.get("saved",false)),
+	}
 
 
 func _reset() -> void:
@@ -192,6 +259,9 @@ func _restart() -> void:
 	respawn_wait = true
 	var pose := session.restart()
 	auto_driver.begin_run(generator.route,pose.origin)
+	finish_record.clear()
+	finish_recorded = false
+	_refresh_result_summary()
 	vehicle.request_reset(pose)
 	result_safety_reset = false
 	recovery_notice_time = 0
