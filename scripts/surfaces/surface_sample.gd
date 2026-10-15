@@ -11,6 +11,17 @@ var wet_grip: float = 0.65
 var water_depth: float = 0.0
 
 
+func reset() -> void:
+	surface_id = 0
+	friction_scale = 1.0
+	longitudinal_scale = 1.0
+	lateral_scale = 1.0
+	sliding_scale = 1.0
+	rolling_extra = 0.0
+	wet_grip = 0.65
+	water_depth = 0.0
+
+
 static func from_profile(profile: RallySurfaceProfile, depth: float = 0) -> RallySurfaceSample:
 	var result := RallySurfaceSample.new()
 	result.surface_id = profile.surface_id
@@ -31,12 +42,30 @@ func grip(speed: float) -> float:
 
 
 static func average(samples: Array[RallySurfaceSample]) -> RallySurfaceSample:
+	var weights := PackedFloat64Array()
+	weights.resize(samples.size())
+	weights.fill(1.0/maxi(samples.size(),1))
+	return weighted_average(samples,weights)
+
+
+static func weighted_average(samples: Array[RallySurfaceSample],weights: PackedFloat64Array) -> RallySurfaceSample:
 	var result := RallySurfaceSample.new()
-	result.surface_id = samples[0].surface_id
+	if samples.is_empty() or weights.size()!=samples.size(): return result
+	var weight_sum := 0.0
+	var id_weights := PackedFloat64Array([0,0,0,0])
+	for i: int in range(samples.size()):
+		var weight := maxf(0.0,weights[i])
+		weight_sum += weight
+		if samples[i].surface_id>=0 and samples[i].surface_id<id_weights.size(): id_weights[samples[i].surface_id] += weight
+	if weight_sum<=0.0: return result
+	var dominant := 0
+	for i: int in range(1,id_weights.size()):
+		if id_weights[i]>id_weights[dominant]: dominant = i
+	result.surface_id = dominant
 	for field: String in ["friction_scale", "longitudinal_scale", "lateral_scale", "sliding_scale", "rolling_extra", "wet_grip", "water_depth"]:
 		var sum := 0.0
-		for sample: RallySurfaceSample in samples: sum += float(sample.get(field))
-		result.set(field, sum / samples.size())
+		for i: int in range(samples.size()): sum += float(samples[i].get(field))*maxf(0.0,weights[i])
+		result.set(field, sum/weight_sum)
 	return result
 
 

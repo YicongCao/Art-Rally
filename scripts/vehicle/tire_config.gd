@@ -23,6 +23,18 @@ extends Resource
 @export var bottoming_stiffness: float = 2500000.0
 @export_range(0.0,1.0,0.01) var effective_radius_deflection_ratio: float = 0.65
 
+@export_group("Contact Patch")
+@export var patch_length_scale: float = 0.55
+@export var carcass_contact_pressure_pa: float = 20000.0
+@export var min_patch_half_length: float = 0.025
+@export var max_patch_half_length: float = 0.095
+@export var min_patch_half_width: float = 0.055
+@export var max_patch_half_width: float = 0.115
+@export_range(0.25,2.0,0.05) var patch_pressure_exponent: float = 1.0
+@export var contact_height_refine_threshold: float = 0.003
+@export var contact_normal_refine_radians: float = 0.07
+@export var contact_cluster_tolerance: float = 0.06
+
 
 func vertical_linear_stiffness() -> float:
 	var pressure_ratio := inflation_pressure_pa / maxf(reference_pressure_pa,1.0)

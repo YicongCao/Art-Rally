@@ -13,6 +13,7 @@ var effective_radius: float = 0.34
 var radial_damping_power: float = 0.0
 var contact_age: float = 0.0
 var diagnostic_flags: int = 0
+var patch := RallyWheelContactPatch.new()
 var omega: float = 0.0
 var spin: float = 0.0
 var steer: float = 0.0
@@ -40,6 +41,7 @@ func reset(radius: float = 0.34) -> void:
 	radial_damping_power = 0.0
 	contact_age = 0.0
 	diagnostic_flags = 0
+	patch.begin_step()
 	omega = 0.0
 	spin = 0.0
 	slip = 0.0
