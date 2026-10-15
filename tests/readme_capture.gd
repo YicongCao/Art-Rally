@@ -83,7 +83,7 @@ func capture(station: float, mode: int, target: float, filename: String, debug: 
 	await RenderingServer.frame_post_draw
 	if debug:
 		check(scene.debug_panel.model.wheels.size() == 4 and scene.debug_panel.history.size() > 20, "Debug screenshot contains live four-wheel data and populated histories")
-		check(scene.debug_panel.engine_history.size() == scene.debug_panel.history.size(), "Debug screenshot contains synchronized RPM and torque time series")
+		check(scene.debug_panel.torque_history.size() == scene.debug_panel.history.size(), "Debug screenshot contains torque history and synchronized chassis RPM history")
 		check(not scene.game_hud.visible and scene.debug_visual.visible, "Visual debugger replaces HUD and enables world-space force arrows")
 	var image := root.get_texture().get_image()
 	if debug:

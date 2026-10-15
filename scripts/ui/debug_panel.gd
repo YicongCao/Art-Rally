@@ -15,7 +15,7 @@ const HISTORY_SPEED_MAX := 160.0
 var car: RallyVehicle
 var model: Dictionary = {}
 var history: Array[Vector2] = []
-var engine_history: Array[Vector2] = []
+var torque_history: Array[float] = []
 var torque_max: float = 300
 var title_font := SystemFont.new()
 var text_font := SystemFont.new()
@@ -61,7 +61,7 @@ func set_enabled(enabled: bool) -> void:
 
 func clear_history() -> void:
 	history.clear()
-	engine_history.clear()
+	torque_history.clear()
 	sample_clock = 0
 	refresh_clock = 0
 	velocity_valid = false
@@ -86,10 +86,10 @@ func _physics_process(dt: float) -> void:
 
 func append_sample(sample: Vector2, torque: float = 0) -> void:
 	history.append(sample)
-	engine_history.append(Vector2(sample.y, torque))
+	torque_history.append(torque)
 	if history.size() > MAX_SAMPLES:
 		history.pop_front()
-		engine_history.pop_front()
+		torque_history.pop_front()
 
 
 func _process(dt: float) -> void:
@@ -192,29 +192,23 @@ func _draw_wheel(index: int, at: Vector2) -> void:
 
 func _draw_engine() -> void:
 	panel(Rect2(840, 160, 416, 284))
-	text("ENGINE / LIVE HISTORY", Vector2(860, 186), 17, PAPER, title_font)
+	text("ENGINE / TORQUE HISTORY", Vector2(860, 186), 17, PAPER, title_font)
 	text("%d PS" % model.power_ps, Vector2(1178, 186), 14, AMBER, number_font)
-	var latest := engine_history[-1] if not engine_history.is_empty() else Vector2(model.rpm, model.torque)
-	text("RPM %04d" % latest.x, Vector2(860, 212), 12, AMBER, number_font)
-	text("TORQUE %+6.1f Nm" % latest.y, Vector2(1080, 212), 12, GREEN, number_font)
-	var plot := Rect2(884, 238, 304, 134)
-	text("RPM", Vector2(849, 230), 10, AMBER, number_font)
-	text("Nm", Vector2(1204, 230), 10, GREEN, number_font)
+	var latest: float = torque_history[-1] if not torque_history.is_empty() else model.torque
+	text("NET TORQUE %+6.1f Nm" % latest, Vector2(860, 212), 12, GREEN, number_font)
+	var plot := Rect2(890, 238, 338, 134)
+	text("Nm", Vector2(860, 230), 10, GREEN, number_font)
 	for fraction: float in [0, 0.25, 0.5, 0.75, 1]:
 		var y := plot.end.y - fraction * plot.size.y
 		draw_line(Vector2(plot.position.x, y), Vector2(plot.end.x, y), GRID, 1, true)
-		text("%4d" % (fraction * float(model.redline)), Vector2(849, y + 4), 10, AMBER, number_font)
-		text("%4d" % lerpf(-100, torque_max, fraction), Vector2(1195, y + 4), 10, GREEN, number_font)
+		text("%4d" % lerpf(-100, torque_max, fraction), Vector2(849, y + 4), 10, GREEN, number_font)
 	for age: float in [HISTORY_SECONDS, 4, 2, 0]:
 		var x := plot.end.x - age / HISTORY_SECONDS * plot.size.x
 		draw_line(Vector2(x, plot.position.y), Vector2(x, plot.end.y), GRID, 1, true)
 		text("-%ds" % age if age > 0 else "NOW", Vector2(x - 12, 389), 10, MUTED, number_font)
-	var curves := engine_points(plot)
-	for key: String in ["rpm", "torque"]:
-		var points: PackedVector2Array = curves[key]
-		var color := AMBER if key == "rpm" else GREEN
-		if points.size() > 1: draw_polyline(points, color, 2, true)
-		if not points.is_empty(): draw_circle(points[-1], 3, color)
+	var points := torque_points(plot)
+	if points.size() > 1: draw_polyline(points, GREEN, 2, true)
+	if not points.is_empty(): draw_circle(points[-1], 3, GREEN)
 	text("NET %+6.1f Nm / %+5.1f kW" % [model.torque, model.power_kw], Vector2(860, 410), 13, PAPER, number_font)
 	text("CLUTCH %3d%% / %+4d Nm   GAS %.2f > %.2f" % [model.clutch * 100, model.clutch_torque, model.gas, model.effective_gas], Vector2(860, 432), 11, MUTED, number_font)
 
@@ -223,14 +217,12 @@ func history_x(index: int, count: int, plot: Rect2) -> float:
 	return plot.end.x - (count - 1 - index) * SAMPLE_INTERVAL / HISTORY_SECONDS * plot.size.x
 
 
-func engine_points(plot: Rect2) -> Dictionary:
-	var rpms := PackedVector2Array()
+func torque_points(plot: Rect2) -> PackedVector2Array:
 	var torques := PackedVector2Array()
-	for i: int in range(engine_history.size()):
-		var x := history_x(i, engine_history.size(), plot)
-		rpms.append(Vector2(x, plot.end.y - clampf(engine_history[i].x / maxf(float(model.redline), 1), 0, 1) * plot.size.y))
-		torques.append(Vector2(x, plot.end.y - clampf((engine_history[i].y + 100) / (torque_max + 100), 0, 1) * plot.size.y))
-	return {"rpm": rpms, "torque": torques}
+	for i: int in range(torque_history.size()):
+		var x := history_x(i, torque_history.size(), plot)
+		torques.append(Vector2(x, plot.end.y - clampf((torque_history[i] + 100) / (torque_max + 100), 0, 1) * plot.size.y))
+	return torques
 
 
 func _draw_chassis() -> void:
