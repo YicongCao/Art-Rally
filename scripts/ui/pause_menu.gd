@@ -41,10 +41,8 @@ func build(settings: RallyGameSettings) -> void:
 	style.content_margin_bottom = 18
 	panel.add_theme_stylebox_override("panel",style)
 	center.add_child(panel)
-	var font := SystemFont.new()
-	font.font_names = PackedStringArray(["PingFang SC","Noto Sans CJK SC"])
 	var theme := Theme.new()
-	theme.default_font = font
+	theme.default_font = RallyFonts.TEXT
 	theme.default_font_size = 15
 	theme.set_color("font_color","Label",Color("eee7d4"))
 	for state: String in ["normal","hover","pressed","focus"]:
@@ -61,6 +59,7 @@ func build(settings: RallyGameSettings) -> void:
 	panel.add_child(column)
 	var title := Label.new()
 	title.text = "ART / RALLY     暂停与设置"
+	title.add_theme_font_override("font",RallyFonts.bold())
 	title.add_theme_font_size_override("font_size",23)
 	column.add_child(title)
 	var buttons := HBoxContainer.new()

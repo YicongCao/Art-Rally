@@ -55,6 +55,7 @@ macOS 首次安装：`brew install --cask godot`。Homebrew 跟随新版发布�
 ./scripts/dev.sh autopilot-render-check # 真实窗口检查自动驾驶 HUD 与调试面板
 ./scripts/dev.sh result-render-check # 真实窗口检查完赛时间、罚时与最佳成绩
 ./scripts/dev.sh m6-perf # 1080p 跟车/驾驶舱/F9 三次完整性能与内存长跑
+./scripts/dev.sh m6-release-check # 内置字体、1080p HUD、最小窗口与完赛流程检查
 ```
 
 编辑器中按 **F5** 运行主赛段。进入游戏窗口后 F5 为重跑、F6 切到赛段、F7 切到原测试场；注意与编辑器快捷键的焦点区别。原测试场保留直道、25 m 定圆、蛇形、减速带和跳跃，并在远端 320–520 m 区域增加砂石、泥地、草土和水洼对比区。
@@ -128,6 +129,8 @@ F8 暂停并导出最近最多 120 秒遥测至 `user://telemetry/`。T 在正�
 道路以浅褐砂石为主，1150–1650 m 为深褐泥地（含两处积水），1650–2100 m 为炭灰柏油，之后恢复砂石；2650 m 附近有坡顶。全程有低多边形树林、岩石、分层远山、立体切面云和方向性光斑；柏油弯道有护栏，近路树干/大石块有简化碰撞。四组观众位于可见围绳后，驶入观众保护区会安全恢复。没有撞人玩法或隐形阻挡墙。
 
 原可驾驶道路/路肩走廊不变，远景地形是视觉背景，不支持任意开放世界驾驶；过远驶离道路或坠落仍会恢复。声音由本项目程序合成，不是实车录音，来源说明见 `assets/audio/README.md`。
+
+中文界面和数字仪表使用随项目打包的 Noto Sans SC / Noto Sans Mono 可变字体，不依赖运行机器安装 PingFang 或其他系统字体；字体来源、SHA-256 和 SIL Open Font License 见 `assets/fonts/README.md`。
 
 ## 项目结构
 

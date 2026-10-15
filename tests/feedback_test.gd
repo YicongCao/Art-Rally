@@ -19,6 +19,12 @@ func _run() -> void:
 		wheel.surface = RallySurfaceSample.from_profile(RallySurfaceQuery.PROFILES[2],0.08)
 	var wet := RallyVehicleFeedback.mix_for(car)
 	check(wet.mud>0 and wet.water>0 and wet.asphalt==0,"Material and water layer produce distinct audio contributions")
+	car.command.throttle = 1
+	var loaded_mix := RallyVehicleFeedback.mix_for(car)
+	var mix_sum := 0.0
+	for key: String in ["engine","load","asphalt","gravel","mud","water"]:
+		mix_sum += float(loaded_mix[key])
+	check(is_finite(mix_sum) and mix_sum*float(RallyGameSettings.DEFAULTS.volume)<1.0,"Default synthesized mix retains aggregate headroom under wet loaded driving")
 	var effects := RallyVehicleFeedback.new()
 	var holder := Node3D.new()
 	root.add_child(holder)

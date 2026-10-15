@@ -10,12 +10,10 @@ var throttle: float = 0
 var automatic: bool = true
 var drive_layout: String = "AWD"
 var drive_status: String = ""
-var font := SystemFont.new()
+var font: Font = RallyFonts.mono_bold()
 
 
 func _ready() -> void:
-	font.font_names = PackedStringArray(["Menlo","DejaVu Sans Mono"])
-	font.font_weight = 700
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 
 

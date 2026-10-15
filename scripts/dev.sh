@@ -122,8 +122,13 @@ case "$MODE" in
     run_logged "$ROOT/logs/m6_performance.log" --path "$ROOT" --always-on-top --disable-vsync --max-fps 0 --script res://tests/m6_performance_check.gd -- --test-defaults "$@"
     grep -q '^TEST RESULT: .* 0 failures$' "$ROOT/logs/m6_performance.log"
     ;;
+  m6-release-check)
+    mkdir -p "$ROOT/logs"
+    run_logged "$ROOT/logs/m6_release_check.log" --path "$ROOT" --max-fps 60 --script res://tests/m6_release_check.gd -- --test-defaults
+    grep -q '^TEST RESULT: .* 0 failures$' "$ROOT/logs/m6_release_check.log"
+    ;;
   *)
-    echo "Usage: $0 {doctor|editor|run|lab|stage|preview|check|regression|stage-check|stage-matrix|preview-check|preview-render-check|m5-render-check|drive-choice-render-check|autopilot-render-check|result-render-check|m6-perf} [Godot options]" >&2
+    echo "Usage: $0 {doctor|editor|run|lab|stage|preview|check|regression|stage-check|stage-matrix|preview-check|preview-render-check|m5-render-check|drive-choice-render-check|autopilot-render-check|result-render-check|m6-perf|m6-release-check} [Godot options]" >&2
     exit 2
     ;;
 esac

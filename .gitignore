@@ -1,6 +1,7 @@
 .godot/
 .DS_Store
 builds/
-logs/
+logs/*
+!logs/.gdignore
 *.tmp
 *.blend1

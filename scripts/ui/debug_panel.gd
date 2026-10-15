@@ -17,9 +17,9 @@ var model: Dictionary = {}
 var history: Array[Vector2] = []
 var torque_history: Array[float] = []
 var torque_max: float = 300
-var title_font := SystemFont.new()
-var text_font := SystemFont.new()
-var number_font := SystemFont.new()
+var title_font: Font = RallyFonts.bold()
+var text_font: Font = RallyFonts.TEXT
+var number_font: Font = RallyFonts.mono_bold()
 var refresh_clock: float = 0
 var sample_clock: float = 0
 var previous_velocity := Vector3.ZERO
@@ -33,10 +33,6 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	title_font.font_names = PackedStringArray(["Avenir Next", "DejaVu Sans"])
-	title_font.font_weight = 700
-	text_font.font_names = PackedStringArray(["PingFang SC", "Noto Sans CJK SC"])
-	number_font.font_names = PackedStringArray(["Menlo", "DejaVu Sans Mono"])
 	background.bg_color = Color(0.035, 0.085, 0.07, 0.94)
 	background.corner_radius_top_left = 5
 	background.corner_radius_bottom_right = 5

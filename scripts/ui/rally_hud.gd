@@ -7,9 +7,9 @@ const AMBER := Color("e8ac59")
 const MUTED := Color("9ea99c")
 const RED := Color("e56b4f")
 const NOTE_TEXT := {"LEFT_MEDIUM":"左弯 3", "RIGHT_MEDIUM":"右弯 3", "LEFT_TIGHT":"左急弯", "RIGHT_TIGHT":"右急弯", "MUD_NARROW":"泥地 · 收窄", "WATER":"积水 · 减速", "ASPHALT":"进入柏油", "GRAVEL":"进入砂石", "CREST_JUMP":"坡顶 · 跳跃", "FINISH":"终点"}
-var title_font := SystemFont.new()
-var number_font := SystemFont.new()
-var text_font := SystemFont.new()
+var title_font: Font = RallyFonts.bold()
+var number_font: Font = RallyFonts.mono_bold()
+var text_font: Font = RallyFonts.TEXT
 var model: Dictionary = {}
 var route_map := PackedVector2Array()
 var map_min := Vector2.ZERO
@@ -21,10 +21,6 @@ var ui_offset := Vector2.ZERO
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	title_font.font_names = PackedStringArray(["Avenir Next","DejaVu Sans"])
-	title_font.font_weight = 700
-	number_font.font_names = PackedStringArray(["Menlo","DejaVu Sans Mono"])
-	text_font.font_names = PackedStringArray(["PingFang SC","Noto Sans CJK SC"])
 
 
 func set_route(route: RallyStageRoute) -> void:

@@ -45,9 +45,7 @@ func _ready() -> void:
 	sample_label = readout
 	notice.text = "WASD drive | SPACE handbrake | R restart | C camera\nG visual A/B | 1/2/3 views | V sun view | L lens flare\nTAB clean view | F7 lab | 200 m sample only"
 	for label: Label in [readout, details, notice]: label.add_theme_font_size_override("font_size",14)
-	var font := SystemFont.new()
-	font.font_names = PackedStringArray(["Avenir Next","DejaVu Sans"])
-	readout.add_theme_font_override("font",font)
+	readout.add_theme_font_override("font",RallyFonts.TEXT)
 	readout.add_theme_font_size_override("font_size",18)
 	notice.add_theme_font_size_override("font_size",12)
 
