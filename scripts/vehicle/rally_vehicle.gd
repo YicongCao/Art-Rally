@@ -102,23 +102,27 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 		if i >= 2: brake_torque += command.handbrake * config.handbrake_torque
 		brake_torques.append(brake_torque)
 	var forces: Array[Vector2] = [Vector2.ZERO, Vector2.ZERO, Vector2.ZERO, Vector2.ZERO]
+	var aligning_moments := PackedFloat64Array([0,0,0,0])
 	# All four wheels share the same transmission state at each internal substep.
-	for substep: int in range(4):
-		var torques := drivetrain.step(command, wheels, state.step / 4)
+	var substep_dt := state.step/config.tire_substeps
+	for substep: int in range(config.tire_substeps):
+		var torques := drivetrain.step(command,wheels,substep_dt)
 		for i: int in range(4):
-			var solved := RallyTireModel.solve(wheels[i], torques[i], brake_torques[i], state.step / 4, config, tire)
-			forces[i] += solved * 0.25
+			var solved := RallyTireModel.solve(wheels[i],torques[i],brake_torques[i],substep_dt,config,tire)
+			forces[i] += solved/config.tire_substeps
 			wheels[i].longitudinal_speed += solved.x * state.step / config.body_mass
 			wheels[i].lateral_speed += solved.y * state.step / config.body_mass
 	for i: int in range(4):
 		var wheel := wheels[i]
-		var tire_force := forces[i]
+		var tire_force := RallyTireModel.correct_patch_force(wheel,forces[i],state.step,config,tire)
+		aligning_moments[i] = wheel.aligning_moment
 		wheel.water_force = Vector3.ZERO
 		if wheel.grounded:
 			var roll := -(config.rolling_resistance + wheel.surface.rolling_extra) * wheel.load * tanh(wheel.longitudinal_speed / 0.5)
 			wheel.water_force = wheel.surface.water_resistance(wheel.forward * wheel.longitudinal_speed + wheel.right * wheel.lateral_speed, wheel.load, state.step, config.body_mass / 4)
 			var total := wheel.normal * wheel.load + wheel.forward * (tire_force.x + roll) + wheel.right * tire_force.y + wheel.water_force
 			state.apply_force(total, wheel.point - state.transform.origin)
+			if not is_zero_approx(aligning_moments[i]): state.apply_torque(wheel.normal*aligning_moments[i])
 		wheel.longitudinal_force = tire_force.x
 		wheel.lateral_force = tire_force.y
 		wheel.spin = fmod(wheel.spin + wheel.omega * state.step, TAU)

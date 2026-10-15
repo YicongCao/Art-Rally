@@ -24,6 +24,7 @@ extends Resource
 @export var rear_anti_roll: float = 4500.0
 @export var contact_envelope: bool = false
 @export_enum("LEGACY","COMPLIANT_PATCH") var tire_contact_model: String = "LEGACY"
+@export_range(1,8,1) var tire_substeps: int = 4
 
 
 func spring_rate() -> float:

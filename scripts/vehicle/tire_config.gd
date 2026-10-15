@@ -35,6 +35,13 @@ extends Resource
 @export var contact_normal_refine_radians: float = 0.07
 @export var contact_cluster_tolerance: float = 0.06
 
+@export_group("Patch Brush")
+@export var longitudinal_relaxation_length: float = 0.25
+@export var lateral_relaxation_length: float = 0.45
+@export var patch_relaxation_scale: float = 0.5
+@export_range(0.0,1.0,0.01) var aligning_moment_gain: float = 0.15
+@export var max_aligning_moment: float = 900.0
+
 
 func vertical_linear_stiffness() -> float:
 	var pressure_ratio := inflation_pressure_pa / maxf(reference_pressure_pa,1.0)
