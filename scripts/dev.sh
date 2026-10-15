@@ -127,8 +127,13 @@ case "$MODE" in
     run_logged "$ROOT/logs/m6_release_check.log" --path "$ROOT" --max-fps 60 --script res://tests/m6_release_check.gd -- --test-defaults
     grep -q '^TEST RESULT: .* 0 failures$' "$ROOT/logs/m6_release_check.log"
     ;;
+  controller-probe)
+    mkdir -p "$ROOT/logs"
+    run_logged "$ROOT/logs/controller_probe.log" --path "$ROOT" --max-fps 60 --script res://tests/controller_probe.gd
+    grep -q '^CONTROLLER PROBE:' "$ROOT/logs/controller_probe.log"
+    ;;
   *)
-    echo "Usage: $0 {doctor|editor|run|lab|stage|preview|check|regression|stage-check|stage-matrix|preview-check|preview-render-check|m5-render-check|drive-choice-render-check|autopilot-render-check|result-render-check|m6-perf|m6-release-check} [Godot options]" >&2
+    echo "Usage: $0 {doctor|editor|run|lab|stage|preview|check|regression|stage-check|stage-matrix|preview-check|preview-render-check|m5-render-check|drive-choice-render-check|autopilot-render-check|result-render-check|m6-perf|m6-release-check|controller-probe} [Godot options]" >&2
     exit 2
     ;;
 esac
