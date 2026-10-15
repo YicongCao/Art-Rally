@@ -2,7 +2,7 @@
 
 ## 简介
 
-低多边形画面、驾驶物理优先的拉力游戏。M1–M5 已完成代码实现：约 3.05 km 的“夕照松岭”现已应用确认过的 16:00 场景风格，配备 HUD/仪表、三视角、合成驾驶音效、尘泥水反馈与暂停设置。当前动力基线为 200 PS；真实手柄、听感和整段人工试玩仍需验收，打包属于 M6。
+低多边形画面、驾驶物理优先的拉力游戏。**v0.1.0** 已完成 M1–M6 的工程交付：约 3.05 km 的“夕照松岭”、200 PS 的 FWD/AWD/RWD、HUD/仪表、三视角、自动驾驶、成绩保存、合成驾驶音效、尘泥水反馈、性能长跑，以及 macOS / Windows 双平台独立包。真实手柄、主观听感、六组真人完整跑段和真实 Windows 图形性能仍待正式验收。
 
 <table>
   <tr>
@@ -59,6 +59,8 @@ macOS 首次安装：`brew install --cask godot`。Homebrew 跟随新版发布�
 ./scripts/dev.sh controller-probe # 枚举当前真实手柄名称、GUID、映射与初始轴值
 ./scripts/dev.sh export-macos # 使用匹配模板生成 .app、ZIP 和 SHA-256
 ./scripts/dev.sh macos-app-check # 从导出包验证主场景、音频、字体、设置与成绩读写
+./scripts/dev.sh export-windows # 在 macOS 上交叉导出 Windows x86_64 包
+./scripts/dev.sh windows-package-check # 校验 PE32+ 架构、嵌入资源和 ZIP
 ```
 
 编辑器中按 **F5** 运行主赛段。进入游戏窗口后 F5 为重跑、F6 切到赛段、F7 切到原测试场；注意与编辑器快捷键的焦点区别。原测试场保留直道、25 m 定圆、蛇形、减速带和跳跃，并在远端 320–520 m 区域增加砂石、泥地、草土和水洼对比区。
@@ -68,6 +70,8 @@ macOS 首次安装：`brew install --cask godot`。Homebrew 跟随新版发布�
 `m6-perf` 需要真实 Metal 窗口并耗时约 12 分钟；它以生产自动驾驶连续跑三次，分别覆盖默认跟车、驾驶舱和 F9 调试面板，输出原始帧间隔、60 帧节奏 P95/P99、Godot 总物理、车辆回调、draw call、三角元及内存趋势到 `logs/m6_performance.json`。性能报告与测量限制见 [M6 验收记录](docs/M6_VALIDATION.zh-CN.md)。
 
 macOS 导出要求安装与 `.godot-version` 完全一致的 4.7.2 模板；`doctor` 会显示模板状态。产物位于忽略版本控制的 `builds/macos/Art Rally.app` 和 `Art-Rally-macos-universal.zip`。当前包使用本机可验证的 ad-hoc 签名，不是 Developer ID 正式签名，也没有 Apple 公证；从网络下载或传到其他 Mac 后仍可能触发 Gatekeeper 提示。
+
+Windows x86_64 包可由同一台 Mac 使用官方 4.7.2 模板交叉导出，不需要 Windows SDK。产物位于 `builds/windows/Art Rally/Art Rally.exe` 和 `Art-Rally-windows-x86_64.zip`，PCK 嵌入 EXE；目前没有 Authenticode 签名，可能触发 SmartScreen。macOS 只能校验 PE 结构和导出资源，不能运行 `.exe`；复制到 Windows 后执行 `powershell -ExecutionPolicy Bypass -File scripts/windows_smoke.ps1`，并重新完成 D3D12/Vulkan、镜头光斑、真实性能和手柄验收。
 
 简介区的三张实机截图可用 `godot --path . --max-fps 60 --script tests/readme_capture.gd -- --test-defaults` 批量更新，需要真实图形窗口；工具使用默认设置，不修改玩家的本机设置。
 

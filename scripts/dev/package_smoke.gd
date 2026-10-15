@@ -4,6 +4,8 @@ extends RefCounted
 
 static func run(scene: Node3D) -> void:
 	var failures := PackedStringArray()
+	if ProjectSettings.get_setting("application/config/version","")!="0.1.0":
+		failures.append("application version")
 	if scene.generator.route.length<3000 or scene.vehicle.wheels.size()!=4:
 		failures.append("main stage resources")
 	if not scene.feedback.players.has("engine") or RallySynthAudio.stream("engine").data.size()<1000:

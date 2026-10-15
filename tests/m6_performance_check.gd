@@ -19,7 +19,7 @@ var previous_frame_usec: int = 0
 
 func _run() -> void:
 	if DisplayServer.get_name()=="headless":
-		check(false,"M6 performance check requires Metal / Forward+ window rendering")
+		check(false,"M6 performance check requires a real Forward+ rendering window")
 		finish()
 		return
 	var run_count := 3

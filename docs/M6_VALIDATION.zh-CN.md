@@ -1,6 +1,6 @@
 # M6：首版验收、自动驾驶与打包
 
-状态：进行中。本文记录 M6 的可复现基线、实现结果、人工验收和发布限制；未完成的项目不会标记为通过。
+状态：`v0.1.0` 工程交付完成，人工硬件验收仍待补充。自动驾驶、成绩、性能、字体及 macOS / Windows 打包均已实现并验证到当前平台可覆盖的边界；真实手柄、主观试听、六组真人跑段和真实 Windows 运行不会被虚拟输入或交叉导出冒充为通过。
 
 ## 开始基线
 
@@ -133,8 +133,8 @@ ca4d71c4d7b81dfc15d1a98baa07534aa95b03fdda78a0075b06672e1648d2e5f40980c9adc28d23
 
 ```text
 builds/macos/Art Rally.app                    177 MiB
-builds/macos/Art-Rally-macos-universal.zip     81 MiB
-SHA-256 62fedbaba7b11f030fa7fbb49925d7b29cf3b88ea71e30803a8b48170bcc36a7
+builds/macos/Art-Rally-macos-universal.zip   71.6 MiB
+SHA-256 217129635a65cecde02bffee5822b10466b1d86a7c141cb59bce625f972dc64e
 ```
 
 `macos-app-check` 从导出后的真实可执行文件启动 Metal / Forward+，包内冒烟通过：
@@ -149,3 +149,24 @@ SHA-256 62fedbaba7b11f030fa7fbb49925d7b29cf3b88ea71e30803a8b48170bcc36a7
 另外使用 macOS `open -W` 从 `.app` 启动同一冒烟入口成功，验证 Finder 方式的应用捆绑启动。`codesign --verify --deep --strict` 通过；签名类型为 `adhoc`，没有 Team Identifier。它不是 Developer ID 正式签名，也没有公证或面向外部用户的 Gatekeeper 保证。应用图标仍使用模板默认图标，这不阻塞最初约定的本机可运行包。
 
 应用内已明确验证默认自动驾驶关闭；F10 / 暂停菜单可开启虚拟键盘或虚拟手柄观察演示，真人驾驶输入可立即接管。构建产物保留在忽略版本控制的 `builds/`，仓库只提交可复现导出的预设、检查命令和源码。
+
+## Windows x86_64 交叉导出
+
+同一份 Godot 4.7.2 官方模板归档中安装了 `windows_release_x86_64.exe` 和对应 debug / console 模板；在 macOS 上不需要 Windows SDK 即可完成标准 Godot 导出。Windows preset 与 macOS 使用相同的资源包含/排除规则，PCK 嵌入 EXE。
+
+产物：
+
+```text
+builds/windows/Art Rally/Art Rally.exe             123,841,112 bytes
+builds/windows/Art-Rally-windows-x86_64.zip         52,463,901 bytes
+SHA-256 0736b171bf840d6b8b132aeca8a211c90dfe95e13667fa85c6d8d1e3c576a107
+```
+
+macOS 侧结构检查通过：
+
+- 文件是 PE32+ GUI x86-64，可选头为 PE32+；
+- EXE 大于模板本体且包含嵌入项目资源；
+- 导出日志确认 `package_smoke.gd`、内置字体与运行时资源进入 PCK；
+- ZIP 完整性检查通过。
+
+macOS 无法原生执行该 EXE，因此上述结果只能证明“可交叉导出且包结构完整”，不能证明 Windows 运行时已经验收。真实 Windows 上仍需执行 `scripts/windows_smoke.ps1`，然后验证 Forward+ 的 Vulkan / D3D12 回退、镜头光斑深度遮挡、1080p 性能、XInput 手柄、震动、声音和 `user://` 的 AppData 写入。当前 EXE 没有 Authenticode 签名，可能出现 SmartScreen 提示。

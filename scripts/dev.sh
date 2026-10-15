@@ -44,9 +44,11 @@ if [[ $# -gt 0 ]]; then shift; fi
 case "$MODE" in
   doctor)
     TEMPLATE_DIR="$HOME/Library/Application Support/Godot/export_templates/$EXPECTED.stable"
-    TEMPLATE_STATUS="missing"
-    [[ -f "$TEMPLATE_DIR/macos.zip" ]] && TEMPLATE_STATUS="$TEMPLATE_DIR/macos.zip"
-    printf 'Engine: %s\nVersion: %s\nProject: %s\nArchitecture: %s\nmacOS template: %s\n' "$ENGINE" "$ACTUAL" "$ROOT" "$(uname -m)" "$TEMPLATE_STATUS"
+    MACOS_TEMPLATE_STATUS="missing"
+    WINDOWS_TEMPLATE_STATUS="missing"
+    [[ -f "$TEMPLATE_DIR/macos.zip" ]] && MACOS_TEMPLATE_STATUS="$TEMPLATE_DIR/macos.zip"
+    [[ -f "$TEMPLATE_DIR/windows_release_x86_64.exe" ]] && WINDOWS_TEMPLATE_STATUS="$TEMPLATE_DIR/windows_release_x86_64.exe"
+    printf 'Engine: %s\nVersion: %s\nProject: %s\nArchitecture: %s\nmacOS template: %s\nWindows x86_64 template: %s\n' "$ENGINE" "$ACTUAL" "$ROOT" "$(uname -m)" "$MACOS_TEMPLATE_STATUS" "$WINDOWS_TEMPLATE_STATUS"
     ;;
   editor)
     exec "$ENGINE" --path "$ROOT" --editor "$@"
@@ -152,7 +154,7 @@ case "$MODE" in
     run_logged "$ROOT/logs/export_macos.log" --headless --path "$ROOT" --export-release "macOS" "$ROOT/builds/macos/Art Rally.app"
     test -x "$ROOT/builds/macos/Art Rally.app/Contents/MacOS/Art Rally"
     ditto -c -k --sequesterRsrc --keepParent "$ROOT/builds/macos/Art Rally.app" "$ROOT/builds/macos/Art-Rally-macos-universal.zip"
-    shasum -a 256 "$ROOT/builds/macos/Art-Rally-macos-universal.zip" > "$ROOT/builds/macos/Art-Rally-macos-universal.zip.sha256"
+    (cd "$ROOT/builds/macos" && shasum -a 256 "Art-Rally-macos-universal.zip" > "Art-Rally-macos-universal.zip.sha256")
     ;;
   macos-app-check)
     APP="$ROOT/builds/macos/Art Rally.app"
@@ -164,8 +166,42 @@ case "$MODE" in
     test "$(plutil -extract CFBundleIdentifier raw "$APP/Contents/Info.plist")" = "com.yicongcao.artrally"
     lipo -archs "$EXECUTABLE" | grep -qw arm64
     ;;
+  export-windows)
+    TEMPLATE_DIR="$HOME/Library/Application Support/Godot/export_templates/$EXPECTED.stable"
+    if [[ ! -f "$TEMPLATE_DIR/windows_release_x86_64.exe" ]]; then
+      echo "Missing matching Windows x86_64 export template: $TEMPLATE_DIR/windows_release_x86_64.exe" >&2
+      exit 1
+    fi
+    mkdir -p "$ROOT/logs" "$ROOT/builds/windows"
+    rm -rf "$ROOT/builds/windows/Art Rally" "$ROOT/builds/windows/Art-Rally-windows-x86_64.zip" "$ROOT/builds/windows/Art-Rally-windows-x86_64.zip.sha256"
+    mkdir -p "$ROOT/builds/windows/Art Rally"
+    run_logged "$ROOT/logs/export_windows.log" --headless --path "$ROOT" --export-release "Windows Desktop" "$ROOT/builds/windows/Art Rally/Art Rally.exe"
+    test -f "$ROOT/builds/windows/Art Rally/Art Rally.exe"
+    (cd "$ROOT/builds/windows" && /usr/bin/zip -r -9 -X "Art-Rally-windows-x86_64.zip" "Art Rally")
+    (cd "$ROOT/builds/windows" && shasum -a 256 "Art-Rally-windows-x86_64.zip" > "Art-Rally-windows-x86_64.zip.sha256")
+    ;;
+  windows-package-check)
+    EXE="$ROOT/builds/windows/Art Rally/Art Rally.exe"
+    ZIP="$ROOT/builds/windows/Art-Rally-windows-x86_64.zip"
+    test -f "$EXE" -a -f "$ZIP"
+    file "$EXE" | grep -Eq 'PE32\+ executable.*x86-64'
+    python3 - "$EXE" <<'PY'
+import pathlib, struct, sys
+path = pathlib.Path(sys.argv[1])
+data = path.read_bytes()
+assert data[:2] == b"MZ"
+pe = struct.unpack_from("<I", data, 0x3C)[0]
+assert data[pe:pe + 4] == b"PE\0\0"
+assert struct.unpack_from("<H", data, pe + 4)[0] == 0x8664
+assert struct.unpack_from("<H", data, pe + 24)[0] == 0x20B
+assert len(data) > 120_000_000
+print("WINDOWS PACKAGE STRUCTURE PASSED")
+PY
+    unzip -t "$ZIP" >/dev/null
+    grep -q 'res://scripts/dev/package_smoke.gd.remap' "$ROOT/logs/export_windows.log"
+    ;;
   *)
-    echo "Usage: $0 {doctor|editor|run|lab|stage|preview|check|regression|stage-check|stage-matrix|preview-check|preview-render-check|m5-render-check|drive-choice-render-check|autopilot-render-check|result-render-check|m6-perf|m6-release-check|controller-probe|export-macos|macos-app-check} [Godot options]" >&2
+    echo "Usage: $0 {doctor|editor|run|lab|stage|preview|check|regression|stage-check|stage-matrix|preview-check|preview-render-check|m5-render-check|drive-choice-render-check|autopilot-render-check|result-render-check|m6-perf|m6-release-check|controller-probe|export-macos|macos-app-check|export-windows|windows-package-check} [Godot options]" >&2
     exit 2
     ;;
 esac
