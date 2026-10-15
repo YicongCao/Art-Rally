@@ -98,6 +98,7 @@ func _build_chunk(start: int, end: int) -> void:
 	mesh.surface_set_material(0, material)
 	var visual := MeshInstance3D.new()
 	visual.mesh = mesh
+	visual.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(visual)
 	road_visuals.append(visual)
 	var body := StaticBody3D.new()
@@ -138,6 +139,7 @@ func _build_water(start: int, end: int) -> void:
 	mesh.surface_set_material(0, material)
 	var visual := MeshInstance3D.new()
 	visual.mesh = mesh
+	visual.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(visual)
 	water_visuals.append(visual)
 
@@ -145,12 +147,13 @@ func _build_water(start: int, end: int) -> void:
 func _build_markers() -> void:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = definition.seed_value
+	var marker_transforms: Array[Transform3D] = []
 	for s: int in range(20, int(route.length), 25):
 		var index := route.index_at(s)
 		for side: float in [-1, 1]:
 			var point := route.position_at(s) + route.rights[index] * side * (route.width_at(s) * 0.5 + 0.5)
 			point.y += 0.25
-			GrayboxGeometry.box(self, "RoadMarker", Vector3(0.13, 0.65, 0.13), point, Color("e2d9b1"))
+			marker_transforms.append(Transform3D(Basis.IDENTITY,point))
 		if s % 100 == 20:
 			var position := route.position_at(s) + route.rights[index] * rng.randf_range(10, 17)
 			position.y -= 1
@@ -162,3 +165,23 @@ func _build_markers() -> void:
 		for side: float in [-1, 1]:
 			GrayboxGeometry.box(self, "GatePost", Vector3(0.3, 3.4, 0.3), at + right * side * 4 + Vector3.UP * 1.7, Color("d99442"))
 		GrayboxGeometry.label(self, "START" if s == 20 else "FINISH", at + Vector3.UP * 3.5)
+	_build_marker_batch(marker_transforms)
+
+
+func _build_marker_batch(transforms: Array[Transform3D]) -> void:
+	var box := BoxMesh.new()
+	box.size = Vector3(0.13,0.65,0.13)
+	var material := StandardMaterial3D.new()
+	material.albedo_color = Color("e2d9b1")
+	material.roughness = 0.95
+	box.material = material
+	var multimesh := MultiMesh.new()
+	multimesh.transform_format = MultiMesh.TRANSFORM_3D
+	multimesh.mesh = box
+	multimesh.instance_count = transforms.size()
+	for i: int in range(transforms.size()): multimesh.set_instance_transform(i,transforms[i])
+	var visual := MultiMeshInstance3D.new()
+	visual.name = "RoadMarkers"
+	visual.multimesh = multimesh
+	visual.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	add_child(visual)

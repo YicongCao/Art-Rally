@@ -9,6 +9,7 @@ func _initialize() -> void:
 
 
 func _run() -> void:
+	if "--no-vsync" in OS.get_cmdline_user_args(): DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
 	scene = load("res://scenes/stages/sunset_ridge.tscn").instantiate()
 	root.add_child(scene)
 	var station := 493.0
@@ -18,7 +19,24 @@ func _run() -> void:
 		if argument.begins_with("--camera="): mode = int(argument.trim_prefix("--camera="))
 	scene.preferences.reset()
 	scene.preferences.set_value("volume",0)
+	scene.preferences.set_value("low_detail","--low-detail" in OS.get_cmdline_user_args())
 	scene._apply_preferences()
+	if "--no-batches" in OS.get_cmdline_user_args():
+		for batch: MultiMeshInstance3D in scene.presentation.scenery.all_batches: batch.visible = false
+	if "--no-checkpoints" in OS.get_cmdline_user_args(): scene.presentation.checkpoints.root.visible = false
+	if "--no-shadows" in OS.get_cmdline_user_args(): scene.get_node("Sun").shadow_enabled = false
+	if "--no-ssao" in OS.get_cmdline_user_args(): scene.presentation.environment.ssao_enabled = false
+	if "--msaa2" in OS.get_cmdline_user_args(): root.msaa_3d = Viewport.MSAA_2X
+	if "--no-ui" in OS.get_cmdline_user_args():
+		scene.game_hud.visible = false
+		scene.set_process(false)
+	if "--no-dressing" in OS.get_cmdline_user_args(): scene.presentation.scenery.dressing.visible = false
+	if "--no-generator-props" in OS.get_cmdline_user_args():
+		for child: Node in scene.generator.get_children():
+			if child is MeshInstance3D:
+				var visual := child as MeshInstance3D
+				if visual in scene.generator.road_visuals or visual in scene.generator.water_visuals: continue
+			if child is Node3D and child is not StaticBody3D: child.visible = false
 	scene.camera_mode = mode
 	scene.session.phase = RallyStageSession.Phase.RUNNING
 	scene.session.countdown = 0

@@ -8,6 +8,7 @@ var flare := RallySampleFlare.new()
 var environment: Environment
 var scene: Node3D
 var previous_msaa: int = 0
+var previous_screen_aa: int = 0
 var elapsed: float = 0
 var camera_rig := RallyCameraRig.new()
 var checkpoints := RallyCheckpointMarkers.new()
@@ -44,14 +45,16 @@ func build(owner_scene: Node3D) -> void:
 	environment.fog_light_energy = 0.7
 	environment.fog_density = 0.00038
 	environment.fog_sky_affect = 0.12
-	environment.ssao_enabled = true
+	environment.ssao_enabled = false
 	environment.ssao_radius = 1
 	scene.get_node("WorldEnvironment").environment = environment
 	scene.get_node("Sun").directional_shadow_max_distance = 170
 	scene.camera.far = 6200
 	scene.camera.fov = 62
 	previous_msaa = scene.get_viewport().msaa_3d
-	scene.get_viewport().msaa_3d = Viewport.MSAA_4X
+	previous_screen_aa = scene.get_viewport().screen_space_aa
+	scene.get_viewport().msaa_3d = Viewport.MSAA_DISABLED
+	scene.get_viewport().screen_space_aa = Viewport.SCREEN_SPACE_AA_FXAA
 
 
 func update(dt: float) -> void:
@@ -65,4 +68,6 @@ func update(dt: float) -> void:
 
 
 func dispose() -> void:
-	if is_instance_valid(scene) and scene.is_inside_tree(): scene.get_viewport().msaa_3d = previous_msaa
+	if is_instance_valid(scene) and scene.is_inside_tree():
+		scene.get_viewport().msaa_3d = previous_msaa
+		scene.get_viewport().screen_space_aa = previous_screen_aa

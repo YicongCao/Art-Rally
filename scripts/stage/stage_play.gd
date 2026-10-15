@@ -287,7 +287,7 @@ func _apply_preferences() -> void:
 	vehicle.config.static_compression = 0.13/float(preferences.values.spring_scale)
 	presentation.flare.enabled = preferences.values.lens_flare
 	presentation.scenery.set_quality(preferences.values.low_detail)
-	presentation.environment.ssao_enabled = not preferences.values.low_detail
+	presentation.environment.ssao_enabled = false
 
 
 func _setting_changed(key: String,value: Variant) -> void:

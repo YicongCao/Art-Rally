@@ -1,6 +1,7 @@
 class_name RallySampleDressing
 extends RefCounted
 
+const BATCH_LENGTH := 160.0
 var land: Node3D
 var range_start: float = 430
 var range_end: float = 630
@@ -22,6 +23,8 @@ func build_range(landscape: Node3D, start: float, end: float, density: float = 1
 	range_end = end
 	var multiplier := (end-start)/200.0*density
 	rng.seed = 84903
+	meshes["shadow_pine"] = RallySampleMeshes.tree_shadow(false)
+	meshes["shadow_umbrella"] = RallySampleMeshes.tree_shadow(true)
 	for variant: int in range(3):
 		meshes["pine%d"%variant] = RallySampleMeshes.pine(variant*39+1,false)
 		meshes["umbrella%d"%variant] = RallySampleMeshes.pine(variant*19+2,true)
@@ -57,7 +60,7 @@ func build_range(landscape: Node3D, start: float, end: float, density: float = 1
 
 func place(kind: String, s: float, lateral: float, scale_factor: float) -> void:
 	var key := kind+str(rng.randi_range(0,2))
-	var chunk := int((s-range_start)/40)
+	var chunk := int((s-range_start)/BATCH_LENGTH)
 	var batch_key := "%s_%d" % [key,chunk]
 	if not batches.has(batch_key): batches[batch_key] = {"mesh":key,"transforms":[],"colors":[]}
 	var point: Vector3 = land.ground_at(s,lateral)
@@ -76,16 +79,47 @@ func _flush() -> void:
 		multimesh.use_colors = true
 		multimesh.mesh = meshes[batch.mesh]
 		multimesh.instance_count = batch.transforms.size()
+		var center := Vector3.ZERO
+		for transform: Transform3D in batch.transforms: center += transform.origin
+		if not batch.transforms.is_empty(): center /= batch.transforms.size()
 		for i: int in range(multimesh.instance_count):
-			multimesh.set_instance_transform(i,batch.transforms[i])
+			var local: Transform3D = batch.transforms[i]
+			local.origin -= center
+			multimesh.set_instance_transform(i,local)
 			multimesh.set_instance_color(i,batch.colors[i])
 		var instance := MultiMeshInstance3D.new()
 		instance.name = key
+		instance.position = center
 		instance.multimesh = multimesh
-		instance.visibility_range_end = 95 if key.begins_with("grass") else 520
+		instance.visibility_range_end = default_visibility(key)
 		instance.visibility_range_end_margin = 15
-		if key.begins_with("grass"): instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		var tree := key.begins_with("pine") or key.begins_with("umbrella")
+		if tree or key.begins_with("grass") or key.begins_with("shrub") or key.begins_with("rock"):
+			instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		land.dressing.add_child(instance)
+		if tree:
+			var shadow_multimesh := MultiMesh.new()
+			shadow_multimesh.transform_format = MultiMesh.TRANSFORM_3D
+			shadow_multimesh.mesh = meshes["shadow_umbrella" if key.begins_with("umbrella") else "shadow_pine"]
+			shadow_multimesh.instance_count = multimesh.instance_count
+			for i: int in range(multimesh.instance_count):
+				shadow_multimesh.set_instance_transform(i,multimesh.get_instance_transform(i))
+			var shadow := MultiMeshInstance3D.new()
+			shadow.name = "shadow_"+key
+			shadow.position = center
+			shadow.multimesh = shadow_multimesh
+			shadow.visibility_range_end = 210
+			shadow.visibility_range_end_margin = 15
+			shadow.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_SHADOWS_ONLY
+			land.dressing.add_child(shadow)
+
+
+static func default_visibility(key: String) -> float:
+	if key.begins_with("shadow_"): return 210
+	if key.begins_with("grass"): return 80
+	if key.begins_with("shrub"): return 180
+	if key.begins_with("rock"): return 220
+	return 360
 
 
 func _spectators(station: float) -> void:
@@ -105,6 +139,7 @@ func _spectators(station: float) -> void:
 		builder.beam(Vector3(-0.23,1.22,0),Vector3(-0.30,0.83,-0.07),0.065,shirt)
 		var figure := MeshInstance3D.new()
 		figure.mesh = builder.finish()
+		figure.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		figure.position = at
 		figure.rotation.y = atan2(-land.route.rights[land.route.index_at(s)].x,-land.route.rights[land.route.index_at(s)].z)
 		people.add_child(figure)
@@ -116,6 +151,7 @@ func _spectators(station: float) -> void:
 		arm_builder.ellipsoid(Vector3(0.065,0.085,0.065),Vector3(0.2,0.45,0),Color("c89870"))
 		var mesh := MeshInstance3D.new()
 		mesh.mesh = arm_builder.finish()
+		mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		arm.add_child(mesh)
 		animated_arms.append(arm)
 	# Visible rope separates the spectator sample from the driving corridor.
@@ -128,6 +164,7 @@ func _spectators(station: float) -> void:
 		previous = at+Vector3.UP*0.8
 	var mesh := MeshInstance3D.new()
 	mesh.mesh = fence.finish()
+	mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	people.add_child(mesh)
 
 

@@ -87,6 +87,16 @@ static func pine(seed_value: int, umbrella: bool) -> ArrayMesh:
 	return builder.finish()
 
 
+static func tree_shadow(umbrella: bool) -> ArrayMesh:
+	var builder := RallySampleMeshes.new()
+	builder.cone(0.22,0.08,6.2,Vector3(0,3.1,0),Color.WHITE,5)
+	if umbrella:
+		builder.cone(2.2,1.35,1.5,Vector3(0,5.7,0),Color.WHITE,7)
+	else:
+		builder.cone(2.0,0.10,4.8,Vector3(0,4.0,0),Color.WHITE,7)
+	return builder.finish()
+
+
 static func rock(seed_value: int) -> ArrayMesh:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = seed_value

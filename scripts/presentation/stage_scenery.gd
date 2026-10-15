@@ -136,6 +136,7 @@ func _build_terrain() -> void:
 	var mesh := MeshInstance3D.new()
 	mesh.name = "StageTerrain"
 	mesh.mesh = tool.commit()
+	mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	var material := ShaderMaterial.new()
 	material.shader = preload("res://assets/shaders/stage_ground.gdshader")
 	mesh.material_override = material
@@ -153,36 +154,40 @@ func _build_mountains() -> void:
 		if child is MeshInstance3D and str(child.name).begins_with("MountainLayer"):
 			child.scale = Vector3(2.8,1.65,2.8)
 			child.position = center-child.scale*center
+			child.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		elif str(child.name) == "DistantValleyFloor":
 			child.scale = Vector3(1.5,1,1.5)
+			child.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	sample.dressing = null
 	sample.free()
 
 
 func _build_obstacles() -> void:
+	var body := StaticBody3D.new()
+	body.name = "CombinedSceneryObstacles"
+	body.collision_layer = 4
+	body.collision_mask = 2
 	for placement: Dictionary in foliage.placements:
 		var tree: bool = placement.kind in ["pine","umbrella"]
 		var rock: bool = placement.kind=="rock" and placement.scale>0.8 and absf(placement.lateral)<11
 		if (not tree and not rock) or absf(placement.lateral) > 14: continue
-		var body := StaticBody3D.new()
-		body.position = placement.point
-		body.collision_layer = 4
-		body.collision_mask = 2
 		var collision := CollisionShape3D.new()
 		if tree:
 			var cylinder := CylinderShape3D.new()
 			cylinder.radius = 0.20*float(placement.scale)
 			cylinder.height = 4*float(placement.scale)
-			collision.position.y = cylinder.height*0.5
+			collision.position = placement.point+Vector3.UP*cylinder.height*0.5
 			collision.shape = cylinder
 		else:
 			var sphere := SphereShape3D.new()
 			sphere.radius = 0.6*float(placement.scale)
-			collision.position.y = 0.4*float(placement.scale)
+			collision.position = placement.point+Vector3.UP*0.4*float(placement.scale)
 			collision.shape = sphere
 		body.add_child(collision)
+	if body.get_child_count()>0:
 		add_child(body)
 		obstacles.append(body)
+	else: body.free()
 
 
 func _build_gravel() -> void:
@@ -204,9 +209,16 @@ func _build_gravel() -> void:
 		mm.transform_format = MultiMesh.TRANSFORM_3D
 		mm.mesh = mesh
 		mm.instance_count = transforms.size()
-		for i: int in range(transforms.size()): mm.set_instance_transform(i,transforms[i])
+		var center := Vector3.ZERO
+		for transform: Transform3D in transforms: center += transform.origin
+		if not transforms.is_empty(): center /= transforms.size()
+		for i: int in range(transforms.size()):
+			var local := transforms[i]
+			local.origin -= center
+			mm.set_instance_transform(i,local)
 		var visual := MultiMeshInstance3D.new()
 		visual.name = "Aggregate%d"%start
+		visual.position = center
 		visual.multimesh = mm
 		visual.visibility_range_end = 75
 		visual.visibility_range_end_margin = 12
@@ -217,6 +229,10 @@ func _build_gravel() -> void:
 
 
 func _build_guardrails() -> void:
+	var body := StaticBody3D.new()
+	body.name = "CombinedGuardrails"
+	body.collision_layer = 4
+	body.collision_mask = 2
 	for s: int in range(1680,2080,4):
 		var angle := route.tangent_at(s).signed_angle_to(route.tangent_at(s+8),Vector3.UP)
 		if absf(angle)<0.025: continue
@@ -224,10 +240,21 @@ func _build_guardrails() -> void:
 		var a := ground_at(s,lateral)+Vector3.UP*0.62
 		var b := ground_at(s+4,lateral)+Vector3.UP*0.62
 		var rotation := Basis.looking_at((b-a).normalized()).get_euler()*180/PI
-		var rail := GrayboxGeometry.box(dressing,"Guardrail",Vector3(0.12,0.18,a.distance_to(b)+0.1),(a+b)*0.5,Color("929b8d"),true,rotation) as StaticBody3D
-		rail.collision_layer = 4
-		obstacles.append(rail)
-		GrayboxGeometry.box(dressing,"RailPost",Vector3(0.11,0.70,0.11),a-Vector3.UP*0.3,Color("5e6b60"))
+		var rail := GrayboxGeometry.box(dressing,"Guardrail",Vector3(0.12,0.18,a.distance_to(b)+0.1),(a+b)*0.5,Color("929b8d"),false,rotation)
+		(rail.get_child(0) as MeshInstance3D).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		var collision := CollisionShape3D.new()
+		var shape := BoxShape3D.new()
+		shape.size = Vector3(0.12,0.18,a.distance_to(b)+0.1)
+		collision.shape = shape
+		collision.position = (a+b)*0.5
+		collision.rotation_degrees = rotation
+		body.add_child(collision)
+		var post := GrayboxGeometry.box(dressing,"RailPost",Vector3(0.11,0.70,0.11),a-Vector3.UP*0.3,Color("5e6b60"))
+		(post.get_child(0) as MeshInstance3D).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	if body.get_child_count()>0:
+		add_child(body)
+		obstacles.append(body)
+	else: body.free()
 
 
 func spectator_intrusion(point: Vector3) -> bool:
@@ -245,4 +272,5 @@ func set_quality(low: bool) -> void:
 	for batch: MultiMeshInstance3D in grass_batches: batch.visible = not low
 	for batch: MultiMeshInstance3D in all_batches:
 		if str(batch.name).begins_with("Aggregate"): batch.visible = not low
-		elif not str(batch.name).begins_with("grass"): batch.visibility_range_end = 270 if low else 520
+		elif not str(batch.name).begins_with("grass"):
+			batch.visibility_range_end = 220 if low else RallySampleDressing.default_visibility(str(batch.name))
