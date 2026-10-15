@@ -4,7 +4,7 @@ extends RefCounted
 
 static func run(scene: Node3D) -> void:
 	var failures := PackedStringArray()
-	if ProjectSettings.get_setting("application/config/version","")!="0.1.0":
+	if ProjectSettings.get_setting("application/config/version","")!="0.2.0":
 		failures.append("application version")
 	if scene.generator.route.length<3000 or scene.vehicle.wheels.size()!=4:
 		failures.append("main stage resources")
@@ -29,7 +29,7 @@ static func run(scene: Node3D) -> void:
 	var results := RallyStageResultStore.new()
 	results.path = result_path
 	results.record({
-		"stage_id":"sunset_ridge","drive_layout":"AWD","calibration_version":"200ps-v1",
+		"stage_id":"sunset_ridge","drive_layout":"AWD","calibration_version":"200ps-v2-patch1",
 		"driver_source":"human_keyboard","eligible_for_human_best":true,
 		"elapsed":120.0,"penalty":5.0,"total_time":125.0,
 		"reset_count":1,"takeover_count":0,"recorded_at":Time.get_unix_time_from_system(),
@@ -39,7 +39,7 @@ static func run(scene: Node3D) -> void:
 	else:
 		var loaded_results := RallyStageResultStore.new()
 		loaded_results.path = result_path
-		if loaded_results.load_file()!=OK or loaded_results.summary("sunset_ridge","AWD","200ps-v1").human_best.get("total_time",-1)!=125.0:
+		if loaded_results.load_file()!=OK or loaded_results.summary("sunset_ridge","AWD","200ps-v2-patch1").human_best.get("total_time",-1)!=125.0:
 			failures.append("results read")
 	DirAccess.remove_absolute(result_path)
 	if failures.is_empty():
