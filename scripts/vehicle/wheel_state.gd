@@ -7,6 +7,12 @@ var normal := Vector3.UP
 var length: float = 0.48
 var compression: float = 0.0
 var load: float = 0.0
+var radial_deflection: float = 0.0
+var loaded_radius: float = 0.34
+var effective_radius: float = 0.34
+var radial_damping_power: float = 0.0
+var contact_age: float = 0.0
+var diagnostic_flags: int = 0
 var omega: float = 0.0
 var spin: float = 0.0
 var steer: float = 0.0
@@ -24,10 +30,16 @@ var surface := RallySurfaceSample.new()
 var water_force := Vector3.ZERO
 
 
-func reset() -> void:
+func reset(radius: float = 0.34) -> void:
 	grounded = false
 	load = 0.0
 	compression = 0.0
+	radial_deflection = 0.0
+	loaded_radius = radius
+	effective_radius = radius
+	radial_damping_power = 0.0
+	contact_age = 0.0
+	diagnostic_flags = 0
 	omega = 0.0
 	spin = 0.0
 	slip = 0.0

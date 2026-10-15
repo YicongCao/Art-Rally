@@ -38,7 +38,10 @@ func _ready() -> void:
 	GrayboxGeometry.box(self, "Cabin", Vector3(1.4, 0.58, 1.7), Vector3(0, 0.5, 0.18), Color("293c48"))
 	GrayboxGeometry.box(self, "HoodStripe", Vector3(0.32, 0.015, 1.15), Vector3(0, 0.245, -1.15), Color("e6d8b5"))
 	for i: int in range(4):
-		wheels.append(RallyWheelState.new())
+		var wheel_state := RallyWheelState.new()
+		wheel_state.loaded_radius = config.wheel_radius
+		wheel_state.effective_radius = config.wheel_radius
+		wheels.append(wheel_state)
 		var pivot := Node3D.new()
 		var mesh := CylinderMesh.new()
 		mesh.top_radius = config.wheel_radius
@@ -70,7 +73,7 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 		state.transform = reset_pose
 		state.linear_velocity = Vector3.ZERO
 		state.angular_velocity = Vector3.ZERO
-		for wheel: RallyWheelState in wheels: wheel.reset()
+		for wheel: RallyWheelState in wheels: wheel.reset(config.wheel_radius)
 		command = DriverCommand.new()
 		drivetrain.reset()
 		reset_pending = false
@@ -80,10 +83,10 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 	last_shift_requested = command.shift
 	for i: int in range(4):
 		wheels[i].steer = -command.steer * config.max_steer_radians if i < 2 else 0.0
-		RallySuspension.sample(wheels[i], config.wheel_mount(i), state, config, get_rid())
+		RallySuspension.sample(wheels[i], config.wheel_mount(i), state, config, tire, get_rid())
 	RallySuspension.anti_roll(wheels[0], wheels[1], config.front_anti_roll)
 	RallySuspension.anti_roll(wheels[2], wheels[3], config.rear_anti_roll)
-	drivetrain.begin_tick(command, state.linear_velocity.length(), config.wheel_radius, wheels, state.linear_velocity.dot(-state.transform.basis.z))
+	drivetrain.begin_tick(command, state.linear_velocity.length(), _driven_radius(command.handbrake>0.1), wheels, state.linear_velocity.dot(-state.transform.basis.z))
 	command.shift = 0
 	var brake_torques := PackedFloat64Array()
 	for i: int in range(4):
@@ -128,6 +131,16 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 	simulation_tick += 1
 	physics_usec = Time.get_ticks_usec() - start
 	if did_reset: _complete_reset.call_deferred()
+
+
+func _driven_radius(handbrake: bool) -> float:
+	var indices: Array[int] = [0,1,2,3]
+	if drivetrain.config.drive_layout=="FWD" or (drivetrain.config.drive_layout=="AWD" and handbrake): indices = [0,1]
+	elif drivetrain.config.drive_layout=="RWD": indices = [2,3]
+	var total := 0.0
+	for index: int in indices:
+		total += wheels[index].effective_radius if config.tire_contact_model=="COMPLIANT_PATCH" else config.wheel_radius
+	return total/indices.size()
 
 
 func _complete_reset() -> void:

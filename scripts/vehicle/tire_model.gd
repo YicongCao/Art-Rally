@@ -14,7 +14,7 @@ static func curve(slip: float, stiffness: float, sliding_ratio: float = 0.78) ->
 
 
 static func solve(wheel: RallyWheelState, drive: float, brake: float, dt: float, config: RallyVehicleConfig, tire: RallyTireConfig) -> Vector2:
-	var radius := config.wheel_radius
+	var radius := wheel.effective_radius if config.tire_contact_model=="COMPLIANT_PATCH" else config.wheel_radius
 	var inertia := config.wheel_inertia
 	var limit := capacity(wheel.load, tire) * wheel.surface.grip(wheel.longitudinal_speed)
 	var longitudinal_stiffness := tire.longitudinal_stiffness * wheel.surface.longitudinal_scale
