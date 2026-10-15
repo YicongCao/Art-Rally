@@ -4,11 +4,11 @@ var world: Node3D
 var field: RallySurfaceField
 var car: RallyVehicle
 var metrics: Dictionary = {}
-var compliant: bool = false
+var legacy: bool = false
 
 
 func _run() -> void:
-	compliant = "--compliant" in OS.get_cmdline_user_args()
+	legacy = "--legacy" in OS.get_cmdline_user_args()
 	world = Node3D.new()
 	root.add_child(world)
 	field = RallySurfaceField.new()
@@ -78,7 +78,7 @@ func _run() -> void:
 		bounded = bounded and car.position.is_finite() and car.position.y > 0.4 and car.position.y < 1.1
 	check(crossed and bounded, "Material transition is continuous without geometry-induced launch")
 	DirAccess.make_dir_recursive_absolute("res://logs")
-	var output := FileAccess.open("res://logs/surface_metrics_compliant.json" if compliant else "res://logs/surface_metrics.json", FileAccess.WRITE)
+	var output := FileAccess.open("res://logs/surface_metrics_legacy.json" if legacy else "res://logs/surface_metrics.json", FileAccess.WRITE)
 	output.store_string(JSON.stringify(metrics, "\t"))
 	print("SURFACE METRICS: ", metrics)
 	world.queue_free()
@@ -92,7 +92,7 @@ func fresh() -> void:
 		await ticks(2)
 	car = RallyVehicle.new()
 	car.config = car.config.duplicate()
-	car.config.tire_contact_model = "COMPLIANT_PATCH" if compliant else "LEGACY"
+	car.config.tire_contact_model = "LEGACY" if legacy else "COMPLIANT_PATCH"
 	car.position = Vector3(0, 0.8, 0)
 	world.add_child(car)
 	await ticks(360)

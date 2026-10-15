@@ -4,3 +4,30 @@
 
 [resource]
 script = ExtResource("1")
+section_width = 0.23
+inflation_pressure_pa = 210000.0
+reference_pressure_pa = 210000.0
+radial_stiffness = 180000.0
+radial_pressure_gain = 0.45
+radial_nonlinear_stiffness = 1800000.0
+radial_damping = 120.0
+max_radial_deflection = 0.055
+bottoming_start = 0.045
+bottoming_stiffness = 2500000.0
+effective_radius_deflection_ratio = 0.65
+patch_length_scale = 0.55
+carcass_contact_pressure_pa = 20000.0
+min_patch_half_length = 0.025
+max_patch_half_length = 0.095
+min_patch_half_width = 0.055
+max_patch_half_width = 0.115
+patch_pressure_exponent = 1.0
+contact_height_refine_threshold = 0.003
+contact_normal_refine_radians = 0.07
+contact_cluster_tolerance = 0.06
+longitudinal_relaxation_length = 0.30
+lateral_relaxation_length = 0.30
+patch_relaxation_scale = 0.5
+patch_force_correction_ratio = 0.20
+aligning_moment_gain = 0.0
+max_aligning_moment = 900.0

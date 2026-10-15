@@ -6,11 +6,11 @@ var metrics: Dictionary = {}
 var keyboard_filter := DriverInputFilter.new()
 var keyboard_tick: int = 0
 var keyboard_sign: float = 1.0
-var compliant: bool = false
+var legacy: bool = false
 
 
 func _run() -> void:
-	compliant = "--compliant" in OS.get_cmdline_user_args()
+	legacy = "--legacy" in OS.get_cmdline_user_args()
 	world = Node3D.new()
 	root.add_child(world)
 	GrayboxGeometry.box(world, "Ground", Vector3(1000, 1, 2200), Vector3(0, -0.5, -600), Color.GRAY, true)
@@ -140,7 +140,7 @@ func _run() -> void:
 	await ticks(480)
 	check(absf(car.rotation.z) < 0.02 and car.linear_velocity.length() < 0.1 and absf(car.wheels[0].relaxed_slip) < 0.01, "Overturned vehicle reset clears dynamic state")
 	DirAccess.make_dir_recursive_absolute("res://logs")
-	var report := FileAccess.open("res://logs/dynamics_metrics_compliant.json" if compliant else "res://logs/dynamics_metrics.json", FileAccess.WRITE)
+	var report := FileAccess.open("res://logs/dynamics_metrics_legacy.json" if legacy else "res://logs/dynamics_metrics.json", FileAccess.WRITE)
 	report.store_string(JSON.stringify(metrics, "\t"))
 	print("DYNAMICS METRICS: ", JSON.stringify(metrics))
 	world.queue_free()
@@ -154,7 +154,7 @@ func fresh() -> void:
 		await ticks(2)
 	car = RallyVehicle.new()
 	car.config = car.config.duplicate()
-	car.config.tire_contact_model = "COMPLIANT_PATCH" if compliant else "LEGACY"
+	car.config.tire_contact_model = "LEGACY" if legacy else "COMPLIANT_PATCH"
 	car.position = Vector3(0, 0.8, 0)
 	world.add_child(car)
 	await ticks(360)

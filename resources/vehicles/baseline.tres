@@ -4,3 +4,5 @@
 
 [resource]
 script = ExtResource("1")
+tire_contact_model = "COMPLIANT_PATCH"
+tire_substeps = 4

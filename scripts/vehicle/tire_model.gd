@@ -87,7 +87,7 @@ static func correct_patch_force(wheel: RallyWheelState,aggregate_force: Vector2,
 	var lateral_stiffness := tire.lateral_stiffness*wheel.surface.lateral_scale
 	var lateral_scale := 1.0/(1.0+limit*lateral_stiffness*dt/(denominator*(config.body_mass/4.0)))
 	var corrected := Vector2(response.x,response.y*lateral_scale)
-	var correction := (corrected-aggregate_force).limit_length(capacity(wheel.load,tire)*0.5)
+	var correction := (corrected-aggregate_force).limit_length(capacity(wheel.load,tire)*tire.patch_force_correction_ratio)
 	corrected = aggregate_force+correction
 	var radius := wheel.effective_radius
 	wheel.omega += -(corrected.x-aggregate_force.x)*radius*dt/config.wheel_inertia
@@ -134,13 +134,12 @@ static func _patch_response(wheel: RallyWheelState,longitudinal_slip: float,late
 static func _uniform_patch_response(wheel: RallyWheelState,longitudinal_slip: float,lateral_angle: float,tire: RallyTireConfig,base_capacity: float) -> Vector3:
 	var local_limit := base_capacity*wheel.surface.grip(wheel.longitudinal_speed)
 	if local_limit<=0.0: return Vector3.ZERO
-	var trial := Vector2(
-		longitudinal_slip*tire.longitudinal_stiffness*wheel.surface.longitudinal_scale*PI*0.5,
-		-lateral_angle*tire.lateral_stiffness*wheel.surface.lateral_scale*PI*0.5
-	)
-	if trial.length_squared()<=0.0: return Vector3.ZERO
-	var utilization := trial.length()
 	var sliding := clampf(tire.sliding_ratio*wheel.surface.sliding_scale,0.1,1.0)
-	var response := trial.normalized()*absf(curve(utilization,1.0,sliding))*local_limit
+	var response := Vector2(
+		curve(longitudinal_slip,tire.longitudinal_stiffness*wheel.surface.longitudinal_scale,sliding)*local_limit,
+		-curve(lateral_angle,tire.lateral_stiffness*wheel.surface.lateral_scale,sliding)*local_limit
+	).limit_length(local_limit)
+	if response.length_squared()<=0.0: return Vector3.ZERO
+	var utilization := response.length()/local_limit
 	var trail := wheel.patch.half_length*0.33*(1.0-clampf(utilization,0.0,1.0))
 	return Vector3(response.x,response.y,-trail*response.y)

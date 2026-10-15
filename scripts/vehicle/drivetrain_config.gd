@@ -1,7 +1,7 @@
 class_name RallyDrivetrainConfig
 extends Resource
 
-@export var calibration_version: String = "200ps-v1"
+@export var calibration_version: String = "200ps-v2-patch1"
 @export_enum("FWD", "AWD", "RWD") var drive_layout: String = "AWD"
 @export var rated_power_ps: float = 200.0
 @export var torque_rpms := PackedFloat64Array([950, 1800, 3000, 4500, 5500, 6500, 7600])

@@ -7,6 +7,7 @@ func _run() -> void:
 	GrayboxGeometry.box(world, "Ground", Vector3(100, 1, 200), Vector3(0, -0.5, -60), Color.GRAY, true)
 	var car := RallyVehicle.new()
 	car.config = car.config.duplicate()
+	car.config.tire_contact_model = "LEGACY"
 	car.config.contact_envelope = true
 	car.position.y = 0.8
 	world.add_child(car)

@@ -36,10 +36,11 @@ extends Resource
 @export var contact_cluster_tolerance: float = 0.06
 
 @export_group("Patch Brush")
-@export var longitudinal_relaxation_length: float = 0.25
-@export var lateral_relaxation_length: float = 0.45
+@export var longitudinal_relaxation_length: float = 0.30
+@export var lateral_relaxation_length: float = 0.30
 @export var patch_relaxation_scale: float = 0.5
-@export_range(0.0,1.0,0.01) var aligning_moment_gain: float = 0.15
+@export_range(0.0,1.0,0.01) var patch_force_correction_ratio: float = 0.20
+@export_range(0.0,1.0,0.01) var aligning_moment_gain: float = 0.0
 @export var max_aligning_moment: float = 900.0
 
 

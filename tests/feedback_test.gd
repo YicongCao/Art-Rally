@@ -16,7 +16,9 @@ func _run() -> void:
 		wheel.load = 3000
 		wheel.longitudinal_speed = 20
 		wheel.slip = 0.4
+		wheel.slip_dissipation = 6000
 		wheel.surface = RallySurfaceSample.from_profile(RallySurfaceQuery.PROFILES[2],0.08)
+		wheel.patch.wet_fraction = 1.0
 	var wet := RallyVehicleFeedback.mix_for(car)
 	check(wet.mud>0 and wet.water>0 and wet.asphalt==0,"Material and water layer produce distinct audio contributions")
 	car.command.throttle = 1
