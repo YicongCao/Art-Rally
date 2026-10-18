@@ -4,24 +4,25 @@ extends Control
 const INK := Color("102823")
 const PAPER := Color("eee7d4")
 const AMBER := Color("e8ac59")
-const MUTED := Color("9ea99c")
+const MUTED := Color("ccd5ce")
 const RED := Color("e56b4f")
 const NOTE_TEXT := {"LEFT_MEDIUM":"左弯 3", "RIGHT_MEDIUM":"右弯 3", "LEFT_TIGHT":"左急弯", "RIGHT_TIGHT":"右急弯", "MUD_NARROW":"泥地 · 收窄", "WATER":"积水 · 减速", "ASPHALT":"进入柏油", "GRAVEL":"进入砂石", "CREST_JUMP":"坡顶 · 跳跃", "FINISH":"终点"}
 var title_font: Font = RallyFonts.bold()
 var number_font: Font = RallyFonts.mono_bold()
 var text_font: Font = RallyFonts.regular()
 var model: Dictionary = {}
-var player_plate: String = ""
 var route_map := PackedVector2Array()
 var map_min := Vector2.ZERO
 var map_scale: float = 1
 var ui_scale: float = 1
 var ui_offset := Vector2.ZERO
+var acrylic := RallyAcrylicPanels.new()
 
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	add_child(acrylic)
 
 
 func set_route(route: RallyStageRoute) -> void:
@@ -44,7 +45,7 @@ static func data_for(car: RallyVehicle, session: RallyStageSession, paused: bool
 	var target := session.route.position_at(session.gates[gate])
 	var local := car.basis.inverse()*(target-car.position)
 	if session.phase == RallyStageSession.Phase.RUNNING:
-		if float(session.projection.get("s",0)) > session.gates[session.next_gate]+10: warning = "漏过 CP %02d · 返回金色气柱，或 R 恢复"%(gate+1)
+		if float(session.projection.get("s",0)) > session.gates[session.next_gate]+10: warning = "漏过检查点 %02d · 返回金色气柱，或 R 恢复"%(gate+1)
 		elif car.linear_velocity.dot(session.route.tangent_at(session.progress)) < -2: warning = "逆行 · 请掉头"
 	return {"speed":car.linear_velocity.length()*3.6,"rpm":car.drivetrain.rpm(),"redline":car.drivetrain.config.redline_rpm,
 		"gear":"R" if car.drivetrain.gear<0 else ("N" if car.drivetrain.gear==0 else str(car.drivetrain.gear)),"drive_layout":car.drivetrain.config.drive_layout,
@@ -77,6 +78,10 @@ func _draw() -> void:
 	var layout := layout_for(size)
 	ui_scale = layout.scale
 	ui_offset = layout.offset
+	acrylic.ui_scale = ui_scale
+	acrylic.ui_offset = ui_offset
+	acrylic.regions.clear()
+	acrylic.queue_redraw()
 	draw_set_transform(ui_offset,0,Vector2.ONE*ui_scale)
 	panel(Rect2(24,22,260,74))
 	draw_colored_polygon(PackedVector2Array([Vector2(37,38),Vector2(51,38),Vector2(43,64),Vector2(29,64)]),AMBER)
@@ -89,7 +94,8 @@ func _draw() -> void:
 		text("%02d km/h · %+0.2f m"%[float(model.get("target_speed",0))*3.6,float(model.get("lateral_error",0))],Vector2(316,76),11,PAPER,number_font)
 	if int(model.phase)!=RallyStageSession.Phase.FINISHED:
 		panel(Rect2(24,105,260,42))
-		text("NEXT  CP %02d  /  %d m"%[model.gate_number,model.gate_distance],Vector2(40,132),13,AMBER,number_font)
+		draw_texture_rect(RallyGateSymbols.texture("checkpoint"),Rect2(38,113,22,22),false,AMBER)
+		text("%02d  /  %d m"%[model.gate_number,model.gate_distance],Vector2(69,132),13,AMBER,number_font)
 		var forward: Vector2 = model.gate_direction
 		var side := Vector2(-forward.y,forward.x)
 		var at := Vector2(264,126)
@@ -120,8 +126,6 @@ func _draw() -> void:
 		center_text(model.warning,Vector2(640,653),15,AMBER)
 	elif int(model.get("camera_mode",0))!=2:
 		center_text("Esc 暂停/设置    C 视角    F9 调试    F10 自动驾驶    T 遥测",Vector2(640,697),12,PAPER)
-	if not player_plate.is_empty() and str(model.warning).is_empty():
-		RallyPlatePreview.draw_plate(self,Rect2(1082,152,150,24),player_plate)
 	if model.paused:
 		center_text("已暂停",Vector2(640,137),20,AMBER)
 	elif model.phase == RallyStageSession.Phase.COUNTDOWN and remaining<=0:
@@ -132,7 +136,7 @@ func _draw() -> void:
 		center_text("出发 · 穿过起点开始计时",Vector2(640,168),20,PAPER)
 	elif model.phase == RallyStageSession.Phase.FINISHED:
 		panel(Rect2(400,205,480,270))
-		center_text("STAGE COMPLETE",Vector2(640,248),25,AMBER,title_font)
+		draw_texture_rect(RallyGateSymbols.texture("finish"),Rect2(617,213,46,46),false,AMBER)
 		center_text(str(model.get("stage_title","夕照松岭"))+" · 完赛",Vector2(640,280),17,PAPER)
 		center_text(time_text(model.time),Vector2(640,336),42,PAPER,number_font)
 		center_text("行驶 %s  + 罚时 %ds  /  检查点 %d/%d"%[time_text(float(model.get("elapsed",model.time-model.penalty))),model.penalty,model.gates,model.total_gates],Vector2(640,374),14,MUTED)
@@ -225,12 +229,19 @@ func panel(rect: Rect2, color: Color = Color(0.035,0.09,0.075,0.90)) -> void:
 	var p := rect.position
 	var e := rect.end
 	var polygon := PackedVector2Array([p+Vector2(10,0),Vector2(e.x,p.y),Vector2(e.x,e.y-10),e-Vector2(10,0),Vector2(p.x,e.y),p+Vector2(0,10)])
-	draw_colored_polygon(polygon,color)
-	draw_line(p+Vector2(10,0),Vector2(e.x,p.y),Color(0.9,0.75,0.48,0.55),1,true)
+	var tint := color
+	tint.a = .58 if color.r > color.g else .34
+	acrylic.regions.append({"shape":polygon,"tint":tint})
+	var border := polygon.duplicate()
+	border.append(polygon[0])
+	draw_polyline(border,Color(.85,.94,.91,.19),1,true)
+	draw_line(p+Vector2(10,0),Vector2(e.x,p.y),Color(.94,1.0,.97,.40),1,true)
 
 
 func text(value: String, at: Vector2, font_size: int, color: Color = PAPER, font: Font = null) -> void:
-	draw_string(text_font if font==null else font,at,value,HORIZONTAL_ALIGNMENT_LEFT,-1,font_size,color)
+	var face := text_font if font==null else font
+	draw_string(face,at+Vector2(0,1.3),value,HORIZONTAL_ALIGNMENT_LEFT,-1,font_size,Color(0.015,.035,.03,.78))
+	draw_string(face,at,value,HORIZONTAL_ALIGNMENT_LEFT,-1,font_size,color)
 
 
 func center_text(value: String, at: Vector2, font_size: int, color: Color = PAPER, font: Font = null) -> void:

@@ -2,7 +2,7 @@ class_name RallyCheckpointMarkers
 extends RefCounted
 
 var materials: Array[ShaderMaterial] = []
-var labels: Array[Label3D] = []
+var symbols: Array[Sprite3D] = []
 var root := Node3D.new()
 var last_gate: int = -1
 var tube_multimesh := MultiMesh.new()
@@ -22,15 +22,8 @@ func build(parent: Node3D,route: RallyStageRoute,gates: PackedFloat64Array) -> v
 			var anchor := pose.origin+pose.basis.x*side*(route.width_at(gates[i])*0.5+0.85)-Vector3.UP*0.15
 			blower_transforms.append(Transform3D(Basis.IDENTITY,anchor+Vector3.UP*0.14))
 			tube_transforms.append(Transform3D(Basis.IDENTITY,anchor+Vector3.UP*0.28))
-		var label := Label3D.new()
-		label.text = "CP %02d"%(i+1)
-		label.position = pose.origin+Vector3.UP*5.0
-		label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-		label.font_size = 48
-		label.pixel_size = 0.013
-		label.visibility_range_end = 240
-		root.add_child(label)
-		labels.append(label)
+		var kind := "start" if i == 0 else ("finish" if i == gates.size()-1 else "checkpoint")
+		symbols.append(RallyGateSymbols.create(root,kind,pose.origin+Vector3.UP*4.4))
 	_build_blowers(blower_transforms)
 	tube_multimesh.transform_format = MultiMesh.TRANSFORM_3D
 	tube_multimesh.use_colors = true
@@ -52,8 +45,8 @@ func update(next_gate: int) -> void:
 		var color := Color("eab45c") if i==next_gate else (Color("42695a") if i<next_gate else Color("547e85"))
 		for side: int in range(2):
 			tube_multimesh.set_instance_color(i*2+side,color)
-		labels[i].text = ("NEXT  " if i==next_gate else "")+"CP %02d"%(i+1)
-		labels[i].modulate = Color("ffe2a3") if i==next_gate else Color("aec5b9")
+		symbols[i].visible = i == next_gate
+		symbols[i].modulate = Color("ffe2a3")
 
 
 func _tube_mesh(material: Material) -> ArrayMesh:

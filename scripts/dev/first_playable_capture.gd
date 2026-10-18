@@ -53,8 +53,32 @@ func _run() -> void:
 		app.race.presentation.environment.adjustment_enabled = false
 		app.race.camera_mode = 2
 		await capture(RallyContentCatalog.VEHICLES[i]+"-cockpit")
+		if i > 0: await capture_environment_detail(i)
 		app.leave_race()
 		await process_frame
 	app.queue_free()
 	await process_frame
 	quit()
+
+
+func capture_environment_detail(index: int) -> void:
+	var camera := Camera3D.new()
+	app.race.add_child(camera)
+	camera.current = true
+	app.race.game_hud.visible = false
+	app.race.presentation.flare.enabled = false
+	if index == 1:
+		var scenery: RallyStageScenery = app.race.presentation.scenery
+		camera.global_position = Vector3(scenery.bounds.position.x-650,-12,scenery.center.z)
+		var direction: Vector3 = app.race.presentation.atmosphere.sun_direction
+		camera.look_at(camera.global_position+Vector3(direction.x,-.22,direction.z).normalized()*120)
+		await capture("ocean-glints")
+	else:
+		var route: RallyStageRoute = app.race.generator.route
+		camera.global_position = route.position_at(380)+route.rights[route.index_at(380)]*15+Vector3.UP*7
+		camera.look_at(route.position_at(700)+Vector3.UP*2)
+		await capture("morning-mist")
+	app.race.camera.make_current()
+	camera.queue_free()
+	app.race.game_hud.visible = true
+	app.race.presentation.flare.enabled = true

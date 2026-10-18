@@ -41,7 +41,11 @@ func _run() -> void:
 				app.race.controls.resume()
 				app.race.pause_menu.show_menu(false)
 			await physics_frame
-		if id == "F160": await capture("driving")
+		if id == "F160":
+			await capture("driving")
+			app.race._toggle_pause()
+			await capture("pause")
+			app.race._toggle_pause()
 		paused = true
 		app.race.set_process(false)
 		app.race.game_hud.visible = false

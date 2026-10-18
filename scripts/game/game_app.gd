@@ -102,7 +102,7 @@ func _page(title: String, subtitle: String, name_id: String) -> void:
 	margins.add_child(scroll)
 	column = VBoxContainer.new()
 	column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	column.add_theme_constant_override("separation",14)
+	column.add_theme_constant_override("separation",10 if name_id in ["stages","vehicles"] else 14)
 	scroll.add_child(column)
 	_label(column,"ART / RALLY      —      " + ("DRIVER ID" if name_id == "plate" else "STAGE BRIEFING") if paper else "ART / RALLY     —     FIRST PLAYABLE",15,Color("ad4d36") if paper else Color("edbc75"))
 	_label(column,title,42)
@@ -139,6 +139,19 @@ func _row(parent: Node) -> HBoxContainer:
 	return row
 
 
+func _actions(back_title: String,back: Callable,confirm_title: String = "",confirm: Callable = Callable()) -> RallyActionBar:
+	return RallyActionBar.create(column,back_title,func(): audio.cue("ui"); back.call(),confirm_title,func(): audio.cue("ui"); confirm.call())
+
+
+func _selected_card(card: VBoxContainer,selected: bool) -> void:
+	if not selected: return
+	var panel := card.get_parent() as PanelContainer
+	var style := panel.get_theme_stylebox("panel").duplicate() as StyleBoxFlat
+	style.border_color = Color("e6b66d")
+	style.set_border_width_all(2)
+	panel.add_theme_stylebox_override("panel",style)
+
+
 func _card(parent: Node) -> VBoxContainer:
 	var panel := PanelContainer.new()
 	panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -158,18 +171,18 @@ func show_home() -> void:
 	_page("穿过山野，追逐下一秒。","三条风景赛段 · 三种驾驶性格 · 你的最佳轨迹", "home")
 	var main := _row(column)
 	main.add_theme_constant_override("separation",12)
+	_menu_tile(main,"设置","操作 · 画面 · 声音","settings",Color("375463"),show_settings,true)
+	_menu_tile(main,"自由练习","熟悉路线，找到你的节奏","practice",Color("346e63"),func(): practice=true; tutorial=false; show_stages(),true)
 	var challenge := _menu_tile(main,"开始计时挑战  →","3 条赛道 / 3 辆赛车 / 9 个挑战","challenge",Color("e2b671"),func(): practice=false; tutorial=false; show_stages(),true)
 	challenge.size_flags_stretch_ratio = 2
 	challenge.custom_minimum_size.x = 340
 	challenge.grab_focus()
-	_menu_tile(main,"自由练习","熟悉路线，找到你的节奏","practice",Color("346e63"),func(): practice=true; tutorial=false; show_stages(),true)
-	_menu_tile(main,"设置","操作 · 画面 · 声音","settings",Color("375463"),show_settings,true)
 	var secondary := _row(column)
 	secondary.add_theme_constant_override("separation",12)
+	_menu_tile(secondary,"退出游戏","","exit",Color("293a39"),func(): get_tree().quit(),false)
 	_menu_tile(secondary,"驾驶教学","约 2 分钟","learn",Color("263f3b"),show_tutorial,false)
 	_menu_tile(secondary,"成绩册","你的最佳轨迹","records",Color("263f3b"),show_records,false)
 	_menu_tile(secondary,"制作名单","幕后与鸣谢","credits",Color("263f3b"),show_credits,false)
-	_menu_tile(secondary,"退出游戏","","exit",Color("293a39"),func(): get_tree().quit(),false)
 	_label(column,"W / S 加速制动    A / D 转向    空格 手刹    R 恢复    C 镜头    Esc 暂停\n手柄：左右扳机加速 / 制动，左摇杆转向，A 手刹，Y 恢复，X 镜头",15,Color("b4c6b8"))
 
 
@@ -225,10 +238,12 @@ func show_stages() -> void:
 	for id: String in RallyContentCatalog.STAGES:
 		var definition := RallyContentCatalog.stage(id)
 		var card := _card(row)
+		card.add_theme_constant_override("separation",10)
+		_selected_card(card,id == chosen_stage)
 		var preview := RallyMenuBackdrop.new()
 		preview.biome = definition.environment_id
 		preview.ink_wash = false
-		preview.custom_minimum_size = Vector2(260,155)
+		preview.custom_minimum_size = Vector2(260,145)
 		card.add_child(preview)
 		_label(card,definition.title,26)
 		_label(card,definition.subtitle,16)
@@ -238,8 +253,8 @@ func show_stages() -> void:
 			var challenge := RallyContentCatalog.challenge(id,vehicle_id)
 			medals += vehicle_id+" "+MEDALS[int(profile.result_for(challenge.key()).get("medal",0))]+"\n"
 		_label(card,medals.strip_edges(),16,Color("e9bd78"))
-		_button(card,"选择赛段 →",func(): chosen_stage=id; show_vehicles())
-	_button(column,"← 主菜单",show_home)
+		_button(card,"已选择" if id == chosen_stage else "选择赛段",func(): chosen_stage=id; show_stages())
+	_actions("← 主菜单",show_home,"确认赛道 →",show_vehicles).primary_button.grab_focus()
 
 
 func show_vehicles() -> void:
@@ -248,12 +263,14 @@ func show_vehicles() -> void:
 	for id: String in RallyContentCatalog.VEHICLES:
 		var vehicle := RallyContentCatalog.vehicle(id)
 		var card := _card(row)
+		card.add_theme_constant_override("separation",10)
+		_selected_card(card,id == chosen_vehicle)
 		_vehicle_preview(card,vehicle)
 		_label(card,vehicle.title,24,vehicle.accent.lightened(.3))
 		_label(card,"%s · %d PS · %d kg"%[vehicle.drive_layout,vehicle.power_ps,vehicle.mass_kg],17)
 		_label(card,vehicle.description,16)
-		_button(card,"驾驶 "+id,func(): chosen_vehicle=id; show_briefing())
-	_button(column,"← 选择赛道",show_stages)
+		_button(card,("已选择 " if id == chosen_vehicle else "选择 ")+id,func(): chosen_vehicle=id; show_vehicles())
+	_actions("← 选择赛道",show_stages,"确认车辆 →",show_briefing).primary_button.grab_focus()
 
 
 func _vehicle_preview(parent: Node,definition: RallyVehicleDefinition) -> void:
@@ -370,9 +387,7 @@ func show_briefing() -> void:
 		rules.add_child(rule)
 		_label(rule,entry[0],16)
 		_label(rule,entry[1],14,Color("65746c"))
-	var actions := _row(column)
-	_button(actions,"驶向起点 →",start_race).grab_focus()
-	_button(actions,"← 更换车辆",show_vehicles)
+	_actions("← 更换车辆",show_vehicles,"驶向起点 →",start_race).primary_button.grab_focus()
 
 
 func start_race() -> void:
@@ -472,10 +487,13 @@ func show_results(result: Dictionary) -> void:
 		if not outcome.get("saved",false): _label(column,"成绩尚未保存："+str(outcome.get("reason","")),20,Color("ffba80"))
 	else: _label(column,"练习 / 自动驾驶 / 混合接管成绩 · 不计奖牌与个人纪录",20)
 	if not str(outcome.get("reason","")).is_empty(): _label(column,outcome.reason,17)
-	var row := _row(column)
-	_button(row,"再跑一次",retry).grab_focus()
-	_button(row,"更换车辆",func(): leave_race(); show_vehicles())
-	_button(row,"返回赛道选择",leave_race)
+	var actions := _actions("返回赛道选择",leave_race,"再跑一次",retry)
+	var change := _button(actions,"更换车辆",func(): leave_race(); show_vehicles())
+	change.custom_minimum_size = Vector2(180,40)
+	change.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	change.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	actions.move_child(change,1)
+	actions.primary_button.grab_focus()
 
 
 func show_records() -> void:
@@ -495,7 +513,7 @@ func show_records() -> void:
 			_label(card,car+" · "+MEDALS[medal],20)
 			_label(card,_time(result.best.total_time) if result.has("best") else "等待你的第一条轨迹",18)
 	_label(column,"全金达成 · 每一段旅途都留下了金色轨迹！" if gold==9 else ("基础挑战完成 · 九枚奖牌，九段旅途。" if bronze==9 else "基础挑战 %d / 9    金牌 %d / 9"%[bronze,gold]),21,Color("efbf6e"))
-	_button(column,"← 主菜单",show_home)
+	_actions("← 主菜单",show_home)
 
 
 func show_tutorial() -> void:
@@ -505,8 +523,7 @@ func show_tutorial() -> void:
 	chosen_vehicle = "F160"
 	_page("先熟悉你的车","一段可随时跳过的小练习，使用夕照松岭的起点。","tutorial")
 	_label(column,"加速与制动 → 转向 → 路书 → 恢复车辆\n\nW / S，A / D，R；或手柄扳机、左摇杆、Y。\n正式比赛需要完整通过检查点；恢复会增加罚时。",24)
-	_button(column,"开始教学",start_race).grab_focus()
-	_button(column,"跳过，直接开始挑战",func(): tutorial=false; practice=false; show_stages())
+	_actions("跳过，直接开始挑战",func(): tutorial=false; practice=false; show_stages(),"开始教学",start_race).primary_button.grab_focus()
 
 
 func show_settings() -> void:
@@ -548,7 +565,7 @@ func show_settings() -> void:
 		right.add_child(check)
 	_button(column,"键盘按键映射",show_bindings)
 	_button(column,"恢复默认设置",func(): prefs.reset(); profile.data.bindings={}; audio.apply_settings(prefs); _save(); show_settings())
-	_button(column,"← 主菜单",show_home)
+	_actions("← 主菜单",show_home,"完成设置",show_home)
 
 
 func show_plate_setup(first_use: bool = false) -> void:
@@ -591,9 +608,8 @@ func show_plate_setup(first_use: bool = false) -> void:
 	plate_preview = RallyPlatePreview.new()
 	plate_preview.custom_minimum_size = Vector2(400,112)
 	display.add_child(plate_preview)
-	var buttons := _row(column)
-	var submit := _button(buttons,"保存并进入游戏" if first_use else "保存车牌",func(): _submit_plate(first_use))
-	if not first_use: _button(buttons,"← 返回设置",show_settings)
+	var buttons := _actions("" if first_use else "← 返回设置",show_settings,"保存并进入游戏" if first_use else "保存车牌",func(): _submit_plate(first_use))
+	var submit := buttons.primary_button
 	var update := func(value: String):
 		counter.text = "%d / %d" % [value.length(),RallyPlateText.MAX_LENGTH]
 		var valid := RallyPlateText.valid(value.strip_edges())
@@ -615,7 +631,7 @@ func _submit_plate(first_use: bool) -> void:
 		plate_error.text = "车牌保存失败，原设置已保留。请检查磁盘空间和权限。"
 		if first_use and not plate_error.has_meta("temporary_button"):
 			plate_error.set_meta("temporary_button",true)
-			_button(column,"先使用此车牌，继续游戏",_use_plate_temporarily)
+			_actions("",Callable(),"先使用此车牌，继续游戏",_use_plate_temporarily)
 		return
 	if first_use: show_home()
 	else: show_settings()
@@ -640,7 +656,7 @@ func show_bindings() -> void:
 		var key := str(entry[0])
 		var button := _button(grid,entry[1]+"  "+OS.get_keycode_string(int(profile.data.bindings.get(key,entry[0]))),func(): pass)
 		button.pressed.connect(func(): binding_wait=key; binding_button=button; button.text="请按新按键…")
-	_button(column,"← 设置",show_settings)
+	_actions("← 设置",show_settings,"完成映射",show_settings)
 
 
 func _input(event: InputEvent) -> void:
@@ -666,7 +682,7 @@ func show_credits() -> void:
 	_page("沿途的创作者","Art Rally / 原创复古计时拉力","credits")
 	_label(column,"引擎：Godot Engine / Jolt Physics\n车辆、风景、涂装：Art Rally 原创低多边形设计\n音效与音乐：项目内原创程序合成，全部离线打包\n字体与依赖许可：见随包 ASSET_CREDITS.md\n\n感谢每一位试驾并留下反馈的玩家。",24)
 	_label(column,"试玩版 · 奖牌阈值待真人标定。Windows 与实体手柄需在对应设备完成验收。",16)
-	_button(column,"← 主菜单",show_home)
+	_actions("← 主菜单",show_home)
 
 
 func _save() -> void:

@@ -77,10 +77,25 @@ func dispose() -> void:
 
 func _apply_biome(sky: ShaderMaterial) -> void:
 	var biome: String = scene.generator.definition.environment_id
-	if biome=="autumn": return
 	var sun: DirectionalLight3D = scene.get_node("Sun")
 	var palette: Array[Color]
-	if biome=="coast":
+	var cloud_light := Color("fff3d9")
+	var cloud_shadow := Color("bdc9cd")
+	if biome=="autumn":
+		palette = [Color("ffda9a"),Color("eca79b"),Color("91a7ca")]
+		var forward: Vector3 = scene.generator.route.tangent_at(430)
+		forward.y = 0
+		var horizontal: Vector3 = forward.normalized().rotated(Vector3.UP,deg_to_rad(-65))
+		atmosphere.sun_direction = horizontal*cos(deg_to_rad(12.5))+Vector3.UP*sin(deg_to_rad(12.5))
+		sun.light_color = Color("ffcf91")
+		sun.light_energy = 1.8
+		environment.ambient_light_color = Color("94abc7")
+		environment.ambient_light_energy = .48
+		environment.fog_light_color = Color("d4b5a4")
+		environment.fog_density = .0005
+		cloud_light = Color("ffdda7")
+		cloud_shadow = Color("967f94")
+	elif biome=="coast":
 		palette = [Color("fff0d4"),Color("d6e8e4"),Color("7eb7d2")]
 		sun.light_color = Color("fff3d9")
 		sun.light_energy = 1.35
@@ -88,27 +103,34 @@ func _apply_biome(sky: ShaderMaterial) -> void:
 		environment.fog_light_color = Color("d0e1dd")
 		environment.fog_density = .00035
 		atmosphere.sun_direction = Vector3(-.4,.78,-.48).normalized()
+		var sea := scenery.dressing.get_node("CoastalOcean") as MeshInstance3D
+		sea.material_override.set_shader_parameter("sun_direction",atmosphere.sun_direction)
 	else:
-		palette = [Color("e3d9bb"),Color("b6c8d1"),Color("91acbc")]
-		sun.light_color = Color("f8e6c0")
-		sun.light_energy = 1.10
-		environment.ambient_light_color = Color("9fb8c5")
-		environment.fog_light_color = Color("b7ccd3")
-		environment.fog_density = .0011
-		environment.fog_height = scenery.bounds.position.y-12
-		environment.fog_height_density = .008
-		atmosphere.sun_direction = Vector3(.35,.40,-.85).normalized()
+		palette = [Color("f4e7c9"),Color("c0d5d9"),Color("8daebd")]
+		sun.light_color = Color("ffe5bb")
+		sun.light_energy = 1.1
+		environment.ambient_light_color = Color("b0c9d4")
+		environment.ambient_light_energy = .65
+		environment.fog_light_color = Color("bed2d2")
+		environment.fog_light_energy = .85
+		environment.fog_density = .0016
+		environment.fog_height = scene.generator.route.points[0].y+24
+		environment.fog_height_density = .018
+		var morning := Vector3(.35,0,-.85).normalized()
+		atmosphere.sun_direction = morning*cos(deg_to_rad(18))+Vector3.UP*sin(deg_to_rad(18))
+		cloud_light = Color("f0ebd9")
+		cloud_shadow = Color("a6bdc7")
 	sun.basis = Basis.looking_at(-atmosphere.sun_direction,Vector3.UP)
 	sky.set_shader_parameter("sun_direction",atmosphere.sun_direction)
 	for i: int in range(3):
 		var key: String = ["horizon_sun","horizon_away","zenith_color"][i]
 		sky.set_shader_parameter(key,palette[i])
-		for cloud: MeshInstance3D in atmosphere.near_clouds+atmosphere.far_clouds:
-			var material := cloud.mesh.surface_get_material(0)
-			if material is ShaderMaterial:
-				material = material.duplicate()
-				material.set_shader_parameter(key,palette[i])
-				material.set_shader_parameter("cloud_shadow",Color("a6bdc7") if biome=="highland" else Color("bdc9cd"))
-				material.set_shader_parameter("cloud_light",Color("edf0e6") if biome=="highland" else Color("fff3d9"))
-				material.set_shader_parameter("sun_direction",atmosphere.sun_direction)
-				cloud.mesh.surface_set_material(0,material)
+	for cloud: MeshInstance3D in atmosphere.near_clouds+atmosphere.far_clouds:
+		var material := cloud.mesh.surface_get_material(0) as ShaderMaterial
+		if material == null: continue
+		material = material.duplicate()
+		for i: int in range(3): material.set_shader_parameter(["horizon_sun","horizon_away","zenith_color"][i],palette[i])
+		material.set_shader_parameter("cloud_shadow",cloud_shadow)
+		material.set_shader_parameter("cloud_light",cloud_light)
+		material.set_shader_parameter("sun_direction",atmosphere.sun_direction)
+		cloud.mesh.surface_set_material(0,material)

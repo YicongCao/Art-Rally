@@ -13,6 +13,7 @@ var widgets: Dictionary = {}
 var resume_button: Button
 var message: Label
 var autopilot_selector: OptionButton
+var actions: RallyActionBar
 
 
 func build(settings: RallyGameSettings) -> void:
@@ -64,7 +65,6 @@ func build(settings: RallyGameSettings) -> void:
 	column.add_child(title)
 	var buttons := HBoxContainer.new()
 	column.add_child(buttons)
-	resume_button = button(buttons,"继续驾驶",func(): resume_requested.emit())
 	button(buttons,"重跑赛段",func(): restart_requested.emit())
 	button(buttons,"计时 / 练习",func(): practice_requested.emit())
 	button(column,"更换车辆（确认后重开赛段）",func(): vehicle_requested.emit())
@@ -81,9 +81,9 @@ func build(settings: RallyGameSettings) -> void:
 	autopilot_selector.item_selected.connect(func(index: int): autopilot_changed.emit(["off","vkeyboard","vgamepad"][index]))
 	auto_row.add_child(autopilot_selector)
 	var scroll := ScrollContainer.new()
-	scroll.custom_minimum_size = Vector2(475,clampf(get_viewport().get_visible_rect().size.y-310,180,335))
+	scroll.custom_minimum_size = Vector2(475,clampf(get_viewport().get_visible_rect().size.y-370,150,275))
 	panel.custom_minimum_size.y = 0
-	root.resized.connect(func(): scroll.custom_minimum_size.y = clampf(get_viewport().get_visible_rect().size.y-310,180,335))
+	root.resized.connect(func(): scroll.custom_minimum_size.y = clampf(get_viewport().get_visible_rect().size.y-370,150,275))
 	column.add_child(scroll)
 	var list := VBoxContainer.new()
 	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -121,6 +121,8 @@ func build(settings: RallyGameSettings) -> void:
 	message.text = "设置保存在本机 · F10 切换自动驾驶 · Esc / Start 继续"
 	message.add_theme_font_size_override("font_size",12)
 	column.add_child(message)
+	actions = RallyActionBar.create(column,"",Callable(),"继续驾驶 →",func(): resume_requested.emit(),true)
+	resume_button = actions.primary_button
 	visible = false
 
 

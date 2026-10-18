@@ -22,7 +22,6 @@ func start() -> void:
 	initialize_gameplay()
 	var plate := RallyPlateText.display(profile.data.get("plate",""))
 	RallyVehiclePlate.attach(presentation.car_style.body,challenge.vehicle,plate)
-	game_hud.player_plate = plate
 	session.practice = free_practice or tutorial
 	_apply_preferences()
 	controls.allow_mechanical_shortcuts = session.practice
@@ -30,8 +29,7 @@ func start() -> void:
 	# Official challenges retain fixed mechanical setup. Developer tools remain in the lab.
 	for key: String in ["brake_bias","spring_scale"]:
 		pause_menu.widgets[key].editable = session.practice
-	var column := pause_menu.resume_button.get_parent().get_parent()
-	pause_menu.button(column,"返回赛道选择 · 放弃当前跑段",func(): return_requested.emit())
+	pause_menu.actions.add_back("返回赛道选择",func(): return_requested.emit(),true)
 	pause_menu.message.text = "练习不计入奖牌与个人纪录" if session.practice else "正式挑战 · 机械调校固定 · 自动驾驶跑段不计成绩"
 	_build_spatial_ambience()
 	add_child(ghost)

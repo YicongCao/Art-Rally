@@ -76,14 +76,9 @@ func build() -> void:
 	info.text = "%.0f PS / 约 %.0f kW · 共用车身、重心与动力，仅改变驱动轴。\n停稳持续刹车 3 秒 → 倒挡；S/↓ 倒车，W/↑ 前进。" % [power_ps, power_ps * 0.73549875]
 	info.add_theme_font_size_override("font_size",14)
 	column.add_child(info)
-	start_button = Button.new()
-	start_button.text = "开始新赛段  /  Enter · Start"
-	start_button.pressed.connect(func(): confirmed.emit(selected))
-	column.add_child(start_button)
-	cancel_button = Button.new()
-	cancel_button.text = "返回设置"
-	cancel_button.pressed.connect(func(): cancelled.emit())
-	column.add_child(cancel_button)
+	var actions := RallyActionBar.create(column,"返回设置",func(): cancelled.emit(),"开始新赛段 →",func(): confirmed.emit(selected),true)
+	start_button = actions.primary_button
+	cancel_button = actions.back_button
 	visible = false
 
 

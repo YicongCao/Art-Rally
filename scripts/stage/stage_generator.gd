@@ -167,7 +167,6 @@ func _build_markers() -> void:
 		var right := route.rights[route.index_at(s)]
 		for side: float in [-1, 1]:
 			GrayboxGeometry.box(self, "GatePost", Vector3(0.3, 3.4, 0.3), at + right * side * 4 + Vector3.UP * 1.7, Color("d99442"))
-		GrayboxGeometry.label(self, "START" if s == 20 else "FINISH", at + Vector3.UP * 3.5)
 	_build_marker_batch(marker_transforms)
 
 
