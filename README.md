@@ -2,32 +2,54 @@
 
 ## 简介
 
-低多边形、完全离线的计时拉力游戏。当前为 **0.3.0-rc.1 首个完整试玩候选版**：三条主题赛道、F160 / R200 / A240 三辆原创赛车、三档动力的 27 个独立挑战、奖牌与分段计时、个人幽灵、本地档案、菜单、教学及声音。底层仍采用原有 120 Hz 车辆与轮胎系统。
+低多边形、完全离线的计时拉力游戏。当前版本为 **[0.3.1](https://github.com/YicongCao/Art-Rally/releases/latest)**：三条主题赛道、F160 / R200 / A240 三辆原创赛车、三档动力的 27 个独立挑战、奖牌与分段计时、个人幽灵、本地档案、赛后回放、航拍相册及声音。底层仍采用原有 120 Hz 车辆与轮胎系统。
 
 [0.3.0 候选版变化](docs/V0_3_0_RC.zh-CN.md) · [实施计划](docs/FIRST_PLAYABLE_PLAN.zh-CN.md) · [实施状态与未通过项](docs/FIRST_PLAYABLE_STATUS.zh-CN.md) · [实测验收报告](docs/FIRST_PLAYABLE_VALIDATION.zh-CN.md) · [操作说明](docs/PLAY_GUIDE.zh-CN.md) · [素材名单](docs/ASSET_CREDITS.md)
 
-当前奖牌为暂定阈值，真人标定、主观试听、真实 Windows、实体手柄及林地稳定 60 FPS 仍需验收；候选包不等于可公开发布版本。
+## 直接玩游戏
 
-源码启动请先进入这个版本所在的项目目录，再执行 `./scripts/dev.sh run`。启动脚本会先导入资源、更新 GDScript 类缓存，再显示标题菜单；首次导入会稍慢。不要在仍停留于旧版本的另一份 checkout 中运行同名命令。终端会打印本次使用的项目绝对路径，启动日志位于 `logs/startup_import.log` 与 `logs/game.log`。
+**源码启动最简单的命令**（在项目根目录执行，需安装下文指定版本的 Godot）：
+
+```bash
+./scripts/dev.sh run
+```
+
+启动后进入标题菜单，可选择计时挑战、自由练习和设置。脚本会先导入资源、更新脚本缓存，首次启动会稍慢；终端会打印项目绝对路径。请确认进入的是最新版本所在的目录。
+
+**无需开发环境：** 从 [最新发行版](https://github.com/YicongCao/Art-Rally/releases/latest) 下载对应系统的 ZIP，解压后打开 macOS 的 `Art Rally.app` 或 Windows 的 `Art Rally.exe`。macOS 包已实机验证；Windows 包已完成交叉导出与结构校验，仍待真实 Windows 运行验证。奖牌阈值仍待熟练真人基准跑标定。
 
 <table>
   <tr>
     <td width="33%" align="center">
-      <a href="docs/previews/first-playable-sunset_ridge.jpg"><img src="docs/previews/first-playable-sunset_ridge.jpg" alt="砂石赛段实机画面：夕照山林、拉力赛车与驾驶 HUD" width="100%"></a><br>
+      <a href="docs/previews/showcase-sunset_ridge.jpg"><img src="docs/previews/showcase-sunset_ridge.jpg" alt="Art Rally 0.3.1 实机画面：夕照松岭 · F160" width="100%"></a><br>
       <sub><b>夕照松岭 · F160</b></sub>
     </td>
     <td width="33%" align="center">
-      <a href="docs/previews/first-playable-sunlit_cape.jpg"><img src="docs/previews/first-playable-sunlit_cape.jpg" alt="晴岬海岸实机画面：乳白灯塔、青蓝海面与红色后驱轿跑" width="100%"></a><br>
+      <a href="docs/previews/showcase-sunlit_cape.jpg"><img src="docs/previews/showcase-sunlit_cape.jpg" alt="Art Rally 0.3.1 实机画面：晴岬海岸 · R200" width="100%"></a><br>
       <sub><b>晴岬海岸 · R200</b></sub>
     </td>
     <td width="33%" align="center">
-      <a href="docs/previews/first-playable-misty_highlands.jpg"><img src="docs/previews/first-playable-misty_highlands.jpg" alt="雾杉高地实机画面：蓝灰山石、墨绿针叶林与蓝色四驱赛车" width="100%"></a><br>
+      <a href="docs/previews/showcase-misty_highlands.jpg"><img src="docs/previews/showcase-misty_highlands.jpg" alt="Art Rally 0.3.1 实机画面：雾杉高地 · A240" width="100%"></a><br>
       <sub><b>雾杉高地 · A240</b></sub>
+    </td>
+  </tr>
+  <tr>
+    <td width="33%" align="center">
+      <a href="docs/previews/showcase-home.jpg"><img src="docs/previews/showcase-home.jpg" alt="Art Rally 0.3.1 实机画面：标题菜单" width="100%"></a><br>
+      <sub><b>标题菜单</b></sub>
+    </td>
+    <td width="33%" align="center">
+      <a href="docs/previews/showcase-stages.jpg"><img src="docs/previews/showcase-stages.jpg" alt="Art Rally 0.3.1 实机画面：赛道选择" width="100%"></a><br>
+      <sub><b>赛道选择</b></sub>
+    </td>
+    <td width="33%" align="center">
+      <a href="docs/previews/showcase-replay.jpg"><img src="docs/previews/showcase-replay.jpg" alt="Art Rally 0.3.1 实机画面：赛后回放 · 电视跟随" width="100%"></a><br>
+      <sub><b>赛后回放 · 电视跟随</b></sub>
     </td>
   </tr>
 </table>
 
-以上为三主题自动驾驶实机截图，点击查看大图。当前版本继承并扩展 [秋日视觉方向](docs/ART_DIRECTION_AUTUMN.zh-CN.md)。
+六张均为当前版本实机截图，点击查看大图。三条赛道使用自动驾驶采集；赛后页展示实际轨迹的电视跟随回放。
 
 ## 开发环境
 
@@ -41,41 +63,66 @@ macOS 首次安装：`brew install --cask godot`。Homebrew 跟随新版发布�
 
 ## 常用命令
 
-在项目根目录执行：
+所有命令均在项目根目录执行。日常游玩只需要 `run`；下列测试和打包命令供开发使用。
+
+### 游玩与开发入口
 
 ```bash
-./scripts/dev.sh doctor  # 查看引擎路径、版本和架构
-./scripts/dev.sh editor  # 打开 Godot 项目编辑器
 ./scripts/dev.sh run     # 启动完整游戏主菜单
+./scripts/dev.sh editor  # 打开 Godot 项目编辑器
+./scripts/dev.sh doctor  # 查看引擎路径、版本和架构
 ./scripts/dev.sh stage   # 保留旧松岭开发入口
 ./scripts/dev.sh lab     # 保留原驾驶测试场，附多路面测试区
 ./scripts/dev.sh preview # 保留独立 200 米视觉样板用于对比
+```
+
+### 自动化测试与完整跑段
+
+```bash
 ./scripts/dev.sh check   # 导入、全脚本解析、模型和场景测试
 ./scripts/dev.sh regression # 加做 30/60/120 FPS 输入回放对比（需 Python 3）
 ./scripts/dev.sh stage-check # 完整物理试跑，依次通过全部检查点
 ./scripts/dev.sh stage-check --keyboard # 二值键盘输入经辅助层完整跑段
 ./scripts/dev.sh stage-matrix # FWD/AWD/RWD × 虚拟键盘/手柄六组合自动驾驶
-./scripts/dev.sh preview-check # 验证样板及视觉开关的驾驶一致性
-./scripts/dev.sh preview-render-check # 真实图形窗口验证镜头光斑的深度遮挡
-./scripts/dev.sh m5-render-check # 真实图形/音频后端、驾驶舱、暂停和菜单布局检查
-./scripts/dev.sh autopilot-render-check # 真实窗口检查自动驾驶 HUD 与调试面板
-./scripts/dev.sh result-render-check # 真实窗口检查完赛时间、罚时与最佳成绩
-./scripts/dev.sh m6-perf # 1080p 跟车/驾驶舱/T 三次完整性能与内存长跑
-./scripts/dev.sh m6-release-check # 内置字体、1080p HUD、最小窗口与完赛流程检查
-./scripts/dev.sh v02-tire-render-check # 真实窗口检查轮胎形变、动态接触斑与 T 数据
-./scripts/dev.sh autumn-capture # 自动驾驶采集砂石、泥地、驾驶舱三张秋日实机图
-./scripts/dev.sh pacenote-render-check # 渲染左右普通弯、急弯四张实际路书卡片
 ./scripts/dev.sh first-playable-matrix # 27 个赛道 × 车型 × 动力组合完整自动驾驶回归
 ./scripts/dev.sh first-playable-lifecycle # 连续十次场景切换
+./scripts/dev.sh preview-check # 验证样板及视觉开关的驾驶一致性
+```
+
+### 画面、音频和手柄验证
+
+```bash
+./scripts/dev.sh m5-render-check # 真实图形/音频后端、驾驶舱、暂停和菜单布局检查
+./scripts/dev.sh m6-release-check # 内置字体、1080p HUD、最小窗口与完赛流程检查
+./scripts/dev.sh autopilot-render-check # 真实窗口检查自动驾驶 HUD 与调试面板
+./scripts/dev.sh result-render-check # 真实窗口检查完赛时间、罚时与最佳成绩
+./scripts/dev.sh preview-render-check # 真实图形窗口验证镜头光斑的深度遮挡
+./scripts/dev.sh v02-tire-render-check # 真实窗口检查轮胎形变、动态接触斑与 T 数据
 ./scripts/dev.sh first-playable-audio # 真实声音输出总线检查
-./scripts/dev.sh first-playable-capture # 新版菜单/车型/三赛道截图
-./scripts/dev.sh first-playable-perf # 三主题完整赛段 1080p 吞吐测试
 ./scripts/dev.sh controller-probe # 枚举当前真实手柄名称、GUID、映射与初始轴值
+```
+
+### 截图与性能采集
+
+```bash
+./scripts/dev.sh first-playable-capture # 新版菜单/车型/三赛道截图
+./scripts/dev.sh autumn-capture # 自动驾驶采集砂石、泥地、驾驶舱三张秋日实机图
+./scripts/dev.sh pacenote-render-check # 渲染左右普通弯、急弯四张实际路书卡片
+./scripts/dev.sh first-playable-perf # 三主题完整赛段 1080p 吞吐测试
+./scripts/dev.sh m6-perf # 1080p 跟车/驾驶舱/T 三次完整性能与内存长跑
+godot --path . --max-fps 60 --script res://scripts/dev/readme_showcase.gd -- --test-defaults # 更新 README 六张截图
+```
+
+### 打包与包体检查
+
+```bash
 ./scripts/dev.sh export-macos # 使用匹配模板生成 .app、ZIP 和 SHA-256
 ./scripts/dev.sh macos-app-check # 从导出包验证主场景、音频、字体、设置与成绩读写
 ./scripts/dev.sh export-windows # 在 macOS 上交叉导出 Windows x86_64 包
 ./scripts/dev.sh windows-package-check # 校验 PE32+ 架构、嵌入资源和 ZIP
 ```
+
+自定义引擎路径时，在命令前指定 `GODOT_BIN`，例如 `GODOT_BIN=/path/to/Godot ./scripts/dev.sh run`。截图与渲染检查需要真实图形窗口；README 截图工具使用独立测试档案，不覆盖玩家进度。
 
 编辑器中按 **F5** 运行完整游戏。正式比赛窗口内 F5 为重跑；开发入口的 F6/F7 保留赛段/测试场切换，正式挑战中返回选关；注意与编辑器快捷键的焦点区别。原测试场保留直道、25 m 定圆、蛇形、减速带和跳跃，并在远端 320–520 m 区域增加砂石、泥地、草土和水洼对比区。
 
@@ -87,11 +134,11 @@ macOS 导出要求安装与 `.godot-version` 完全一致的 4.7.2 模板；`doc
 
 Windows x86_64 包可由同一台 Mac 使用官方 4.7.2 模板交叉导出，不需要 Windows SDK。产物位于 `builds/windows/Art Rally/Art Rally.exe` 和 `Art-Rally-windows-x86_64.zip`，PCK 嵌入 EXE；目前没有 Authenticode 签名，可能触发 SmartScreen。macOS 只能校验 PE 结构和导出资源，不能运行 `.exe`；复制到 Windows 后执行 `powershell -ExecutionPolicy Bypass -File scripts/windows_smoke.ps1`，并重新完成 D3D12/Vulkan、镜头光斑、真实性能和手柄验收。
 
-简介区的三张实机截图可用 `./scripts/dev.sh first-playable-capture` 批量更新，需要真实图形窗口；工具使用默认设置，不修改玩家的本机设置。
+启动日志位于 `logs/startup_import.log` 与 `logs/game.log`；其他检查日志也写入 `logs/`。
 
 ## 输入预设
 
-进入比赛前选择 F160 前驱掀背、R200 后驱轿跑或 A240 四驱宽体车，分别为 160 / 200 / 240 PS，并采用独立质量、尺寸、模型和音色。正式挑战固定机械调校；练习模式可调整制动比例和弹簧。暂停菜单更换车辆会返回选关。旧开发入口仍保留共用基线车的 FWD/AWD/RWD 对比。
+进入比赛前选择 F160 前驱掀背、R200 后驱轿跑或 A240 四驱宽体车，基础动力分别为 192 / 240 / 288 PS，每辆车另有 1.5 倍和 2 倍动力版本，并采用独立质量、尺寸、模型和音色。正式挑战固定机械调校；练习模式可调整制动比例和弹簧。暂停菜单更换车辆会返回选关。旧开发入口仍保留共用基线车的 FWD/AWD/RWD 对比。
 
 键盘默认标准辅助；F2 切换轻辅助。默认自动换挡和自动离合，M 切换手动换挡。默认启用倒车辅助：停稳后持续按 S/↓（手柄 LT）0.6 秒，缩短的横条结束后自动挂 R；R 挡时同一按键变为倒车油门。按 W/↑（RT）切回前进；若车还在后退，会先制动停稳再挂一挡。松开制动、暂停、复位或手动换挡会取消倒计时，空中或仍在移动时不计时。
 
@@ -101,11 +148,11 @@ Windows x86_64 包可由同一台 Mac 使用官方 4.7.2 模板交叉导出，�
 
 ## 动力与换挡
 
-三种驱动方式均为 **200 PS（约 147 kW）、峰值 260 Nm、1250 kg、六速**。PS 为公制马力；扭矩曲线按发动机净输出标定，而非在标称功率上再重复扣除内部阻力。
+正式游戏使用三辆车各自的动力与质量参数；旧开发测试场共用 **200 PS、峰值 260 Nm、1250 kg、六速** 基线。PS 为公制马力；扭矩曲线按发动机净输出标定，而非在标称功率上再重复扣除内部阻力。
 
 自动升挡同时检查发动机转速、实际前进车速、驱动轮空转和离合器耦合，泥地空转不会让挡位连续升高。实际车速过低会主动降到合适挡位；如果空转轮速使降挡有超转风险，会短暂收油同步再降挡。空中、拉手刹或手动模式不会自动换挡。
 
-高转速、低车速仍可能是真实轮胎空转；不会伪造转速/速度，也没有新增全局牵引力控制。HUD 显示“驱动轮空转 / 同步降挡”，驾驶舱对应 `WHEELSPIN / SYNC DOWN`。泥地的前驱/后驱尤其需要渐进油门。新标定与历史验收指标的区别见 [200 PS 动力与换挡修正](docs/POWER_GEARING.zh-CN.md)。
+高转速、低车速仍可能是真实轮胎空转；不会伪造转速/速度，也没有新增全局牵引力控制。正式驾驶 HUD 已隐藏空转指示，详细轮胎状态可在 T 遥测面板查看。泥地的前驱/后驱尤其需要渐进油门。新标定与历史验收指标的区别见 [200 PS 动力与换挡修正](docs/POWER_GEARING.zh-CN.md)。
 
 ## 操作与设置
 
@@ -146,11 +193,11 @@ F8 暂停并导出最近最多 120 秒遥测至 `user://telemetry/`。T 在正�
 
 ## 赛段规则
 
-等待会自动结束，也可以直接踩油结束发车等待，无需先按空格解除制动；向前通过起点才开始计时。首次窗口重新获得焦点可直接操作，开始驾驶后仍保留切窗安全暂停。31 个检查点都有双侧摆动充气柱：金色是下一必经点，绿色表示已通过，HUD 同时显示编号、距离和方向。漏门不会被后续门跳过，可返回补过或按 R 恢复。
+等待会自动结束，也可以直接踩油结束发车等待，无需先按空格解除制动；向前通过起点才开始计时。首次窗口重新获得焦点可直接操作，开始驾驶后仍保留切窗安全暂停。31 个检查点都有双侧摆动充气柱：金色是下一必经点，绿色表示已通过，HUD 同时显示编号、距离和方向。车身擦过门柱范围即可通过；漏过检查点罚时 5 秒并继续，无需返回。
 
 计时模式越过可驾驶区域边界会在掉出碰撞地形前自动复位，并罚 10 秒；手动 R 恢复仍罚 5 秒，练习模式不罚时。F5 重跑清空计时、罚时、检查点、路书及轮胎印。暂停不计时，完赛冻结结果。
 
-正式完赛记录保存在 `user://player/profile.json`，按赛道版本、车型标定版本及规则版本隔离，幽灵保存在同目录 `ghosts/`。每挑战独立保存最佳成绩、三个累计分段、奖牌和近期记录。练习、自动驾驶及混合接管均不写入玩家纪录。成绩与幽灵通过临时文件和备份一致提交，损坏会尝试恢复并提示。旧 `stage_results.cfg` 原型成绩另行归档。
+正式完赛记录保存在 `user://player/profile.json`，按赛道版本、车型标定版本及规则版本隔离，幽灵保存在同目录 `ghosts/`。每挑战独立保存最佳成绩、按距离划分的分段成绩、奖牌和近期记录。练习、自动驾驶及混合接管均不写入玩家纪录。成绩与幽灵通过临时文件和备份一致提交，损坏会尝试恢复并提示。旧 `stage_results.cfg` 原型成绩另行归档。
 
 正式流程的操作、声音及存档说明见 [试玩指南](docs/PLAY_GUIDE.zh-CN.md)。下面的具体距离描述对应夕照松岭。
 
