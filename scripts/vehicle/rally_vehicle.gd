@@ -44,20 +44,13 @@ func _ready() -> void:
 		wheel_state.effective_radius = config.wheel_radius
 		wheels.append(wheel_state)
 		var pivot := Node3D.new()
-		var mesh := CylinderMesh.new()
-		mesh.top_radius = config.wheel_radius
-		mesh.bottom_radius = config.wheel_radius
-		mesh.height = 0.23
-		mesh.radial_segments = 16
-		var material := StandardMaterial3D.new()
-		material.albedo_color = Color("182027")
-		mesh.material = material
 		var visual := MeshInstance3D.new()
-		visual.mesh = mesh
+		visual.mesh = RallyWheelMeshes.tire(config.wheel_radius)
 		visual.rotation.z = PI * 0.5
 		pivot.add_child(visual)
 		for side: float in [-1.0, 1.0]:
 			GrayboxGeometry.box(pivot, "Hub", Vector3(0.018, 0.16, 0.32), Vector3(side * 0.125, 0, 0), Color("c1c5be"))
+		RallyWheelMeshes.install_hubs(pivot)
 		add_child(pivot)
 		wheel_visuals.append(pivot)
 

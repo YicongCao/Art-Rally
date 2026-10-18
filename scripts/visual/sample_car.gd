@@ -77,21 +77,6 @@ func build(car: RallyVehicle, definition: RallyVehicleDefinition = null) -> void
 		light.position = Vector3(side*0.57,0.14,1.985)
 		light.material_override = brake_material
 		body.add_child(light)
-	for pivot: Node3D in car.wheel_visuals:
-		for index: int in [1,2]:
-			var hub: Node3D = pivot.get_child(index)
-			original_hubs.append(hub.get_child(0))
-			hub.get_child(0).visible = false
-			var rim := RallySampleMeshes.new()
-			rim.cone(0.205,0.205,0.035,Vector3.ZERO,cream,12)
-			var instance := MeshInstance3D.new()
-			instance.mesh = rim.finish()
-			instance.rotation.z = PI/2
-			hub.add_child(instance)
-			styled_hubs.append(instance)
-			for i: int in range(6):
-				var a := i*TAU/6
-				styled_hubs.append(GrayboxGeometry.box(hub,"Spoke",Vector3(0.043,0.04,0.13),Vector3(0,cos(a)*0.11,sin(a)*0.11),dark,false,Vector3(rad_to_deg(-a),0,0)))
 
 
 static func quad(builder: RallySampleMeshes, a: Vector3,b: Vector3,c: Vector3,d: Vector3,color: Color) -> void:
@@ -120,15 +105,7 @@ func _build_model(car: RallyVehicle, definition: RallyVehicleDefinition) -> void
 	brake_material.emission_enabled = true
 	brake_material.emission = Color("f45a36")
 	_bind_lamps(body)
-	var rim := StandardMaterial3D.new()
-	rim.albedo_color = {"F160":Color("eee4cb"),"R200":Color("41494a"),"A240":Color("d8a143")}[definition.vehicle_id]
-	rim.metallic = .35
-	rim.roughness = .45
-	for pivot: Node3D in car.wheel_visuals:
-		for index: int in [1,2]:
-			var hub: Node3D = pivot.get_child(index)
-			for mesh: Node in hub.get_children():
-				if mesh is MeshInstance3D: mesh.material_override = rim
+
 
 
 func _bind_lamps(node: Node) -> void:

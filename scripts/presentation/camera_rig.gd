@@ -13,6 +13,7 @@ var chase_position := Vector3.ZERO
 var history_valid: bool = false
 var last_mode: int = -1
 var elapsed: float = 0
+var view_angles := Vector2.ZERO
 
 
 func build(camera: Camera3D) -> void:
@@ -91,27 +92,35 @@ func build(camera: Camera3D) -> void:
 
 func reset() -> void:
 	history_valid = false
+	view_angles=Vector2.ZERO
 
 
-func update(camera: Camera3D,car: RallyVehicle,mode: int,motion: bool,paused: bool,dt: float) -> void:
+func update(camera: Camera3D,car: RallyVehicle,mode: int,motion: bool,paused: bool,dt: float,look: Vector2 = Vector2.ZERO) -> void:
 	if not paused: elapsed += dt
 	if mode!=last_mode:
 		reset()
 		last_mode = mode
+	if not paused:
+		view_angles.x=wrapf(view_angles.x+look.x*2.1*dt,-PI,PI)
+		view_angles.y=clampf(view_angles.y-look.y*1.25*dt,-.20,.65)
 	var pose := car.get_global_transform_interpolated()
 	if mode==0:
 		var forward := Vector3(-pose.basis.z.x,0,-pose.basis.z.z).normalized()
-		var target := pose.origin-forward*6.6+Vector3.UP*2.55
+		var right := forward.cross(Vector3.UP)
+		var target := pose.origin-forward*cos(view_angles.x)*6.6+right*sin(view_angles.x)*6.6+Vector3.UP*(2.55+sin(view_angles.y)*4)
 		chase_position = chase_position.lerp(target,1-exp(-9*dt)) if history_valid else target
 		camera.position = chase_position
-		camera.look_at(pose.origin+forward*9+Vector3.UP*1.3)
+		camera.look_at(pose.origin+forward*(9*(1-smoothstep(0,.9,absf(view_angles.x))))+Vector3.UP*1.3)
 		history_valid = true
 	else:
 		var offset := Vector3(0,0.74,-0.80) if mode==2 else Vector3(0,0.72,-1.40)
 		if definition!=null: offset = definition.cockpit_offset if mode==2 else definition.hood_offset
 		if motion: offset.y += sin(elapsed*37)*minf(car.linear_velocity.length()/20,1)*0.005
 		camera.position = pose*offset
-		camera.look_at(camera.position-pose.basis.z*40,pose.basis.y)
+		var head := pose.basis*Basis(Vector3.UP,-view_angles.x)*Basis(Vector3.RIGHT,view_angles.y)
+		camera.look_at(camera.position-head.z*40,head.y)
+		# Keep the dashboard attached to the car while the driver's head turns.
+		dashboard.global_basis=pose.basis
 	dashboard.visible = mode==2
 	display_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS if mode==2 else SubViewport.UPDATE_DISABLED
 	display_clock += dt

@@ -210,8 +210,10 @@ v0.2 轮胎模型已按 [技术方案](docs/V0.2_TIRE_CONTACT_DEFORMATION.zh-CN.
 
 执行顺序与验收标准见 [开发计划](docs/DEVELOPMENT_PLAN.zh-CN.md)。手柄优先标定，键盘通过输入平滑与车速相关转向辅助降低难度，两者共享相同车辆物理。
 
-最新赛道与选车改动见 [赛道第二版更新](docs/ROUTE_V2_UPDATE.zh-CN.md)。当前运行版本为 `0.3.0-rc.4`；当前路线版本 5、车辆标定 fp2，与旧版成绩、幽灵隔离。页面动效、回放与音乐调整见 [体验打磨更新](docs/CINEMATIC_POLISH.zh-CN.md)。
+最新赛道与选车改动见 [赛道第二版更新](docs/ROUTE_V2_UPDATE.zh-CN.md)。当前运行版本为 `0.3.0`；当前路线版本 7、车辆标定 fp3，与旧版成绩、幽灵隔离。页面动效、回放与音乐调整见 [体验打磨更新](docs/CINEMATIC_POLISH.zh-CN.md)。
 
 本轮界面、混合路面与窄桥、回放、航拍相册和四主题 MIDI 配乐见 [玩家体验更新](docs/PLAYER_EXPERIENCE_UPDATE.zh-CN.md)。
 
 最新驾驶与回放更新：固定回放观察侧、实时扬尘胎痕、检查点秒差、分类设置、中文男女领航及三种独立曲风，见 [更新与验证说明](docs/DRIVING_EXPERIENCE_2026-10-18.zh-CN.md)。
+
+[0.3.0 公开试玩版下载](https://github.com/YicongCao/Art-Rally/releases/tag/v0.3.0) · [本轮发布验证](docs/validation/v030-release.zh-CN.md)。

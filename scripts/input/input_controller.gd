@@ -5,6 +5,7 @@ signal pause_requested
 signal safety_pause_requested
 signal focus_returned
 signal reset_requested
+signal view_reset_requested
 signal camera_requested
 signal telemetry_requested
 signal debug_requested
@@ -30,6 +31,8 @@ var buttons: Dictionary = {}
 var axes: Dictionary = {}
 var last_raw := DriverCommand.new()
 var virtual_active: bool = false
+var view_axes := Vector2.ZERO
+var view_device: int = -1
 
 
 func _ready() -> void:
@@ -45,6 +48,9 @@ func _notification(what: int) -> void:
 
 
 func _joy_connection_changed(device: int, connected: bool) -> void:
+	if device==view_device and not connected:
+		view_axes=Vector2.ZERO
+		view_device=-1
 	if device == active_device and not connected:
 		suspend()
 		active_device = -1
@@ -62,6 +68,8 @@ func resume() -> void:
 
 
 func clear() -> void:
+	view_axes=Vector2.ZERO
+	view_device=-1
 	keys.clear()
 	buttons.clear()
 	axes.clear()
@@ -129,6 +137,16 @@ func _unhandled_input(event: InputEvent) -> void:
 				KEY_F3: contact_requested.emit()
 				KEY_F8: export_requested.emit()
 	elif event is InputEventJoypadMotion:
+		if event.axis in [JOY_AXIS_RIGHT_X,JOY_AXIS_RIGHT_Y]:
+			if blocked: return
+			# Looking around is presentation input: preserve held throttle/steering
+			# and do not turn an autopilot/ghost run into a human driving takeover.
+			if absf(event.axis_value)>.18 and view_device!=event.device:
+				view_axes=Vector2.ZERO
+				view_device=event.device
+			if event.device==view_device:
+				view_axes[0 if event.axis==JOY_AXIS_RIGHT_X else 1]=event.axis_value
+			return
 		if blocked or event.axis not in [JOY_AXIS_LEFT_X, JOY_AXIS_TRIGGER_LEFT, JOY_AXIS_TRIGGER_RIGHT]:
 			return
 		var active: bool = absf(event.axis_value) > 0.18 if event.axis == JOY_AXIS_LEFT_X else event.axis_value > 0.18
@@ -138,6 +156,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		if event.device == active_device:
 			axes[event.axis] = event.axis_value
 	elif event is InputEventJoypadButton:
+		if event.button_index==JOY_BUTTON_RIGHT_STICK and event.pressed and not blocked:
+			view_axes=Vector2.ZERO
+			view_reset_requested.emit()
+			return
 		if event.button_index == JOY_BUTTON_START and event.pressed:
 			pause_requested.emit()
 			return
@@ -205,3 +227,10 @@ static func _copy_command(source: DriverCommand) -> DriverCommand:
 	result.handbrake = source.handbrake
 	result.shift = source.shift
 	return result
+
+
+func look_vector() -> Vector2:
+	if blocked: return Vector2.ZERO
+	var magnitude := minf(view_axes.length(),1)
+	if magnitude<=.18: return Vector2.ZERO
+	return view_axes.normalized()*pow((magnitude-.18)/.82,1.35)

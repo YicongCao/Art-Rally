@@ -1,0 +1,114 @@
+[
+  {
+    "suite": "v030_polish",
+    "exit": 0,
+    "summary": [
+      "TEST RESULT: 35 checks, 0 failures"
+    ]
+  },
+  {
+    "suite": "input",
+    "exit": 0,
+    "summary": [
+      "TEST RESULT: 11 checks, 0 failures"
+    ]
+  },
+  {
+    "suite": "menu_controller",
+    "exit": 0,
+    "summary": [
+      "TEST RESULT: 35 checks, 0 failures"
+    ]
+  },
+  {
+    "suite": "power_progression",
+    "exit": 0,
+    "summary": [
+      "TEST RESULT: 97 checks, 0 failures"
+    ]
+  },
+  {
+    "suite": "plate_identity",
+    "exit": 0,
+    "summary": [
+      "TEST RESULT: 42 checks, 0 failures"
+    ]
+  },
+  {
+    "suite": "first_playable_flow",
+    "exit": 0,
+    "summary": [
+      "TEST RESULT: 27 checks, 0 failures"
+    ]
+  },
+  {
+    "suite": "profile_ghost",
+    "exit": 0,
+    "summary": [
+      "TEST RESULT: 31 checks, 0 failures"
+    ]
+  },
+  {
+    "suite": "cinematic_polish",
+    "exit": 0,
+    "summary": [
+      "TEST RESULT: 26 checks, 0 failures"
+    ]
+  },
+  {
+    "suite": "tire_feedback",
+    "exit": 0,
+    "summary": [
+      "TEST RESULT: 5 checks, 0 failures"
+    ]
+  },
+  {
+    "suite": "patch_tire",
+    "exit": 0,
+    "summary": [
+      "TEST RESULT: 8 checks, 0 failures"
+    ]
+  },
+  {
+    "suite": "visual_sample",
+    "exit": 0,
+    "summary": [
+      "TEST RESULT: 17 checks, 0 failures"
+    ]
+  },
+  {
+    "suite": "terrain_detail",
+    "exit": 0,
+    "summary": [
+      "TEST RESULT: 56 checks, 0 failures"
+    ]
+  },
+  {
+    "suite": "route_revision",
+    "exit": 0,
+    "summary": [
+      "TEST RESULT: 41 checks, 0 failures"
+    ]
+  },
+  {
+    "suite": "matrix_sunset_ridge",
+    "exit": 0,
+    "summary": [
+      "TEST RESULT: 9 checks, 0 failures"
+    ]
+  },
+  {
+    "suite": "matrix_sunlit_cape",
+    "exit": 0,
+    "summary": [
+      "TEST RESULT: 9 checks, 0 failures"
+    ]
+  },
+  {
+    "suite": "matrix_misty_highlands",
+    "exit": 0,
+    "summary": [
+      "TEST RESULT: 9 checks, 0 failures"
+    ]
+  }
+]

@@ -28,5 +28,5 @@ elevation_profile = Vector2(125, -10)
 river_crossings = PackedVector3Array(770,16,4.6,2120,18,4.5)
 
 log_pile_stations = PackedFloat32Array()
-rough_patches = PackedVector3Array(695,38,0.035,865,42,0.045,2055,40,0.04,2230,48,0.045)
+rough_patches = PackedVector3Array(695.0,38.0,0.063,735,40,0.075,865.0,42.0,0.081,2055.0,40.0,0.072,2170,38,0.08,2230.0,48.0,0.081,2260,40,0.075)
 bank_sections = PackedVector3Array(850,895,0.10,2220,2285,-0.10)

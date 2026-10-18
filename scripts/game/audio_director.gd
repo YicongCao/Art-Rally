@@ -105,6 +105,10 @@ func diagnostic() -> String:
 
 
 func _exit_tree() -> void:
+	stop_all()
+
+
+func stop_all() -> void:
 	for child: Node in get_children():
 		if child is AudioStreamPlayer:
 			child.stop()

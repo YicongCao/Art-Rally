@@ -33,6 +33,7 @@ func build(owner_scene: Node3D) -> void:
 	camera_rig.definition = scene.vehicle_definition
 	camera_rig.build(scene.camera)
 	scene.vehicle.reset_completed.connect(camera_rig.reset)
+	scene.controls.view_reset_requested.connect(camera_rig.reset)
 	flare.build(scene.camera)
 	environment = Environment.new()
 	environment.background_mode = Environment.BG_SKY
@@ -71,7 +72,7 @@ func update(dt: float) -> void:
 		elapsed += dt
 		sky_life.advance(dt)
 		tail_streaks.update(scene.vehicle.get_global_transform_interpolated(),scene.vehicle.linear_velocity.length(),dt,scene.camera)
-	camera_rig.update(scene.camera,scene.vehicle,scene.camera_mode,scene.preferences.values.camera_motion,scene.get_tree().paused,dt)
+	camera_rig.update(scene.camera,scene.vehicle,scene.camera_mode,scene.preferences.values.camera_motion,scene.get_tree().paused,dt,scene.controls.look_vector())
 	for i: int in range(scenery.foliage.animated_arms.size()):
 		scenery.foliage.animated_arms[i].rotation.z = sin(elapsed*2.4+i)*0.2
 	for boat: Dictionary in scenery.sailboats:

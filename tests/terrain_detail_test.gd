@@ -26,8 +26,8 @@ func _run() -> void:
 		for bridge: Vector3 in route.definition.river_crossings:
 			for s: int in range(int(bridge.x-bridge.y*.5-20),int(bridge.x+bridge.y*.5+20)):
 				bridges_flat=bridges_flat and absf(route.road_relief(s,1))<.0001
-		check(max_bump>.015 and max_bump<.061,id+" contains centimetre-scale relief")
-		check(float(active)/loose<.35 and float(active)/loose>.02,id+" relief is sparse rather than continuous")
+		check(max_bump>.05 and max_bump<.125,id+" contains centimetre-scale relief")
+		check(float(active)/loose<.65 and float(active)/loose>.16,id+" relief is sparse rather than continuous")
 		check(asphalt_flat and bridges_flat,id+" asphalt and bridge approaches stay smooth")
 		var positive := false
 		var negative := false

@@ -22,7 +22,7 @@ extends Resource
 ])
 
 
-@export var stage_version: String = "6"
+@export var stage_version: String = "7"
 @export_enum("autumn", "coast", "highland") var environment_id: String = "autumn"
 @export var subtitle: String = "秋日山林 · 混合路面"
 @export var surface_sections := PackedVector3Array([Vector3(1150,1650,2),Vector3(1650,2100,0)])

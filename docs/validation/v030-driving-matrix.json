@@ -1,0 +1,155 @@
+[
+  {
+    "elapsed": 257.733333333263,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.709746658802032,
+    "physics_p95_ms": 5.888,
+    "power_tier": 0,
+    "progress": 3018.2007741383,
+    "recoveries": 0,
+    "splits": [
+      76.15833333334,
+      177.01666666667,
+      257.733333333263
+    ],
+    "stage": "sunset_ridge",
+    "vehicle": "F160"
+  },
+  {
+    "elapsed": 249.78333333327,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.629128336906433,
+    "physics_p95_ms": 3.148,
+    "power_tier": 0,
+    "progress": 3017.96879106036,
+    "recoveries": 0,
+    "splits": [
+      73.7583333333381,
+      171.525000000008,
+      249.78333333327
+    ],
+    "stage": "sunset_ridge",
+    "vehicle": "R200"
+  },
+  {
+    "elapsed": 243.158333333277,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.654277801513672,
+    "physics_p95_ms": 2.454,
+    "power_tier": 0,
+    "progress": 3017.97068601144,
+    "recoveries": 0,
+    "splits": [
+      72.7666666666706,
+      166.033333333347,
+      243.158333333277
+    ],
+    "stage": "sunset_ridge",
+    "vehicle": "A240"
+  },
+  {
+    "elapsed": 213.766666666637,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.663388252258301,
+    "physics_p95_ms": 5.841,
+    "power_tier": 0,
+    "progress": 2768.25017619987,
+    "recoveries": 0,
+    "splits": [
+      70.3083333333354,
+      141.608333333369,
+      213.766666666637
+    ],
+    "stage": "sunlit_cape",
+    "vehicle": "F160"
+  },
+  {
+    "elapsed": 209.574999999974,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.59406989812851,
+    "physics_p95_ms": 3.343,
+    "power_tier": 0,
+    "progress": 2767.96300556564,
+    "recoveries": 0,
+    "splits": [
+      68.6500000000007,
+      138.641666666705,
+      209.574999999974
+    ],
+    "stage": "sunlit_cape",
+    "vehicle": "R200"
+  },
+  {
+    "elapsed": 207.433333333309,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.600276231765747,
+    "physics_p95_ms": 3.134,
+    "power_tier": 0,
+    "progress": 2768.0148992062,
+    "recoveries": 0,
+    "splits": [
+      67.725,
+      137.15000000004,
+      207.433333333309
+    ],
+    "stage": "sunlit_cape",
+    "vehicle": "A240"
+  },
+  {
+    "elapsed": 271.624999999917,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.489775806665421,
+    "physics_p95_ms": 5.81,
+    "power_tier": 0,
+    "progress": 3168.22095659672,
+    "recoveries": 0,
+    "splits": [
+      86.5166666666816,
+      184.30833333333,
+      271.624999999917
+    ],
+    "stage": "misty_highlands",
+    "vehicle": "F160"
+  },
+  {
+    "elapsed": 258.741666666596,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.602733612060547,
+    "physics_p95_ms": 3.1,
+    "power_tier": 0,
+    "progress": 3167.92711877463,
+    "recoveries": 0,
+    "splits": [
+      81.6750000000111,
+      174.491666666672,
+      258.741666666596
+    ],
+    "stage": "misty_highlands",
+    "vehicle": "R200"
+  },
+  {
+    "elapsed": 250.774999999936,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.605764448642731,
+    "physics_p95_ms": 2.362,
+    "power_tier": 0,
+    "progress": 3167.99185881464,
+    "recoveries": 0,
+    "splits": [
+      79.0166666666756,
+      169.408333333344,
+      250.774999999936
+    ],
+    "stage": "misty_highlands",
+    "vehicle": "A240"
+  }
+]

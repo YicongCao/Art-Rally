@@ -32,18 +32,15 @@ func build(vehicle: RallyVehicleDefinition, data: Dictionary,translucent: bool =
 		add_child(pivot)
 		wheels.append(pivot)
 		var tire := MeshInstance3D.new()
-		var mesh := CylinderMesh.new()
-		mesh.top_radius = 0.32
-		mesh.bottom_radius = 0.32
-		mesh.height = 0.21
-		tire.mesh = mesh
+		tire.mesh = RallyWheelMeshes.tire(.34)
 		tire.rotation.z = PI/2
 		pivot.add_child(tire)
+		for side: float in [-1,1]:
+			var hub := MeshInstance3D.new()
+			hub.mesh=RallyWheelMeshes.five_spoke()
+			hub.position.y=side*.125
+			tire.add_child(hub)
 		if not solid: _tint(tire)
-		else:
-			var rubber := StandardMaterial3D.new()
-			rubber.albedo_color = Color("273632")
-			tire.material_override = rubber
 	visible = false
 
 

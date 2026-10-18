@@ -114,6 +114,11 @@ func _page(title: String, subtitle: String, name_id: String) -> void:
 		ground.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		ground.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		ui.add_child(ground)
+	if name_id=="loading":
+		var patina := RallyRacingPatina.new()
+		patina.page_corner=true
+		patina.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		ui.add_child(patina)
 	var margins := MarginContainer.new()
 	margins.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	for side: String in ["left","right"]: margins.add_theme_constant_override("margin_"+side,48)
@@ -175,6 +180,7 @@ func _actions(back_title: String,back: Callable,confirm_title: String = "",confi
 func _selected_card(card: VBoxContainer,selected: bool) -> void:
 	if not selected: return
 	var panel := card.get_parent() as PanelContainer
+	RallyRacingPatina.select_mark(panel,true)
 	var style := panel.get_theme_stylebox("panel").duplicate() as StyleBoxFlat
 	style.border_color = Color("e6b66d")
 	style.set_border_width_all(2)
@@ -218,7 +224,7 @@ func show_home() -> void:
 	_menu_tile(secondary,"操作指南","","guide",Color("203b37"),show_guide,false)
 	_menu_tile(secondary,"成绩册","","records",Color("203b37"),show_records,false)
 	_menu_tile(secondary,"制作名单","","credits",Color("203b37"),show_credits,false)
-	_menu_tile(secondary,"退出","","exit",Color("203b37"),func(): get_tree().quit(),false)
+	_menu_tile(secondary,"退出","","exit",Color("203b37"),_quit_game,false)
 
 
 func show_guide() -> void:
@@ -234,6 +240,7 @@ Esc　暂停"],["手柄","十字键 / 左摇杆　菜单导航
 A / ×　确认　　B / ○　返回
 右 / 左扳机　加速 / 制动
 左摇杆　转向
+右摇杆　环视　　R3　回正
 A　手刹　　Y　恢复
 X　镜头　　肩键　换挡
 Start　暂停"],["回放","空格　播放 / 暂停
@@ -400,17 +407,15 @@ func _vehicle_preview(parent: Node,definition: RallyVehicleDefinition) -> void:
 	for side: float in [-1,1]:
 		for axle: float in [-1,1]:
 			var wheel := MeshInstance3D.new()
-			var mesh := CylinderMesh.new()
-			mesh.top_radius = .33
-			mesh.bottom_radius = .33
-			mesh.height = .23
-			var material := StandardMaterial3D.new()
-			material.albedo_color = Color("273532")
-			mesh.material = material
-			wheel.mesh = mesh
+			wheel.mesh = RallyWheelMeshes.tire(.34)
 			wheel.rotation.z = PI/2
 			wheel.position = Vector3(side*definition.track_width/2,-.32,axle*definition.wheelbase/2)
 			body.add_child(wheel)
+			for face: float in [-1,1]:
+				var hub := MeshInstance3D.new()
+				hub.mesh=RallyWheelMeshes.five_spoke()
+				hub.position.y=face*.125
+				wheel.add_child(hub)
 	var light := DirectionalLight3D.new()
 	light.rotation_degrees = Vector3(-45,-25,0)
 	light.light_energy = 1.8
@@ -433,17 +438,25 @@ func _loading_page() -> void:
 	var challenge := RallyContentCatalog.challenge(chosen_stage,chosen_vehicle,chosen_power_tier)
 	_page(challenge.stage.title,("自由练习" if practice else "计时挑战")+" / "+RallyContentCatalog.power_label(chosen_vehicle,chosen_power_tier),"loading")
 	status_label = _label(column,"正在加载",18)
-	progress_bar = ProgressBar.new()
-	progress_bar.custom_minimum_size.y = 18
+	progress_bar = RallyLoadingProgress.new()
+	progress_bar.custom_minimum_size.y = 26
 	column.add_child(progress_bar)
 	var layout := _row(column)
 	layout.add_theme_constant_override("separation",32)
 	var preview := RallyMenuBackdrop.new()
 	preview.biome = challenge.stage.environment_id
 	preview.ink_wash = false
-	preview.custom_minimum_size = Vector2(350,220)
-	preview.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	layout.add_child(preview)
+	preview.breakout = true
+	var frame := Control.new()
+	frame.custom_minimum_size=Vector2(350,250)
+	frame.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+	layout.add_child(frame)
+	frame.add_child(preview)
+	preview.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	preview.offset_left=18
+	preview.offset_top=14
+	preview.offset_right=-24
+	preview.offset_bottom=-30
 	var details := VBoxContainer.new()
 	details.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	details.size_flags_stretch_ratio = 1.4
@@ -1020,7 +1033,7 @@ func show_credits() -> void:
 	_page("沿途的创作者","Art Rally / 原创复古计时拉力","credits")
 	_label(column,"引擎：Godot Engine / Jolt Physics\n车辆、风景、涂装：Art Rally 原创低多边形设计\n音效与音乐：项目原创合成
 中文领航：Kokoro 合成语音，全部离线打包\n字体与依赖许可：见随包 ASSET_CREDITS.md\n\n感谢每一位试驾并留下反馈的玩家。",24)
-	_label(column,"试玩版 · 奖牌阈值待真人标定。Windows 与实体手柄需在对应设备完成验收。",16)
+	_label(column,"0.3.0 · 离线计时拉力 · 本地成绩与个人幽灵",16)
 	_actions("← 主菜单",show_home)
 
 
@@ -1062,3 +1075,10 @@ func _unhandled_input(event: InputEvent) -> void:
 	else:
 		return
 	get_viewport().set_input_as_handled()
+
+
+func _quit_game() -> void:
+	audio.set_process(false)
+	audio.stop_all()
+	await get_tree().create_timer(.12).timeout
+	get_tree().quit()

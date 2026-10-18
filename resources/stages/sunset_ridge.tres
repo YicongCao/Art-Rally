@@ -12,5 +12,5 @@ width_sections = PackedVector3Array(230,430,1.1,620,740,-0.9,1020,1090,-0.8,1110
 hazard_notes = Array[Dictionary]([{"s":360,"code":"CREST_JUMP"},{"s":650,"code":"CAUTION_NARROW"},{"s":850,"code":"CREST_JUMP"},{"s":1060,"code":"CAUTION_NARROW"},{"s":1150,"code":"CUT"},{"s":1270,"code":"WATER"},{"s":1430,"code":"CREST_JUMP"},{"s":1480,"code":"WATER"},{"s":1650,"code":"CAUTION_NARROW"},{"s":2100,"code":"CUT"},{"s":2230,"code":"CREST_JUMP"},{"s":2450,"code":"CAUTION_NARROW"},{"s":2650,"code":"CREST_JUMP"}])
 
 log_pile_stations = PackedFloat32Array(530,720,1760,2350)
-rough_patches = PackedVector3Array(270,52,0.045,520,48,0.055,705,46,0.04,1000,50,0.05,1190,46,0.045,1515,42,0.055,2390,56,0.045,2790,50,0.04)
+rough_patches = PackedVector3Array(165,48,0.08,270.0,52.0,0.081,435,46,0.085,520.0,48.0,0.099,705.0,46.0,0.072,800,42,0.075,1000.0,50.0,0.09,1190.0,46.0,0.081,1350,46,0.085,1515.0,42.0,0.099,2290,48,0.08,2390.0,56.0,0.081,2535,44,0.075,2790.0,50.0,0.072)
 bank_sections = PackedVector3Array(480,560,0.12,680,745,-0.10,970,1040,0.10,2360,2430,-0.12)

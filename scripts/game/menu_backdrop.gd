@@ -4,6 +4,7 @@ extends Control
 var wash := GradientTexture2D.new()
 var biome: String = "autumn"
 var ink_wash: bool = true
+var breakout: bool = false
 
 
 func _ready() -> void:
@@ -21,6 +22,13 @@ func _draw() -> void:
 		"coast": _coast()
 		"highland": _highland()
 		_: _autumn()
+	if breakout:
+		# Foreground silhouettes break the rectangular landscape frame.
+		_pine(.025,1.10,.81,Color("254f45"))
+		_pine(.985,1.10,.66,Color("356450"))
+		if biome=="autumn":
+			_line([[.12,1.03],[.10,.58]],Color("8c6447"),.012)
+			_poly([[.035,.72],[.005,.47],[.085,.30],[.17,.37],[.22,.61],[.15,.77]],Color("dc8748"))
 	if ink_wash: draw_texture_rect(wash,Rect2(Vector2.ZERO,size),false)
 
 

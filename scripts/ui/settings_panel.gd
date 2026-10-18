@@ -58,6 +58,8 @@ func build(settings: RallyGameSettings,height: float = 330) -> void:
 			toggle.button_pressed = prefs.values[entry[0]]
 			toggle.toggled.connect(func(value: bool): setting_changed.emit(entry[0],value))
 			list.add_child(toggle)
+			RallyRacingPatina.select_mark(toggle,toggle.button_pressed)
+			toggle.toggled.connect(func(on: bool): RallyRacingPatina.select_mark(toggle,on))
 			widgets[entry[0]] = toggle
 		for entry: Array in SLIDERS[i]: _slider(list,entry)
 		if i==2:
@@ -119,4 +121,6 @@ func sync() -> void:
 			widget.set_value_no_signal(prefs.values[key])
 			widget.get_parent().get_child(2).text = "%.2f"%prefs.values[key]
 		elif widget is OptionButton: widget.select(["female","male","off"].find(prefs.values.voice))
-		else: widget.set_pressed_no_signal(prefs.values[key])
+		else:
+			widget.set_pressed_no_signal(prefs.values[key])
+			RallyRacingPatina.select_mark(widget,widget.button_pressed)

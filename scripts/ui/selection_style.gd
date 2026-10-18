@@ -5,6 +5,7 @@ static func apply(button: Button,selected: bool) -> void:
 	button.toggle_mode = true
 	button.set_pressed_no_signal(selected)
 	button.set_meta("selected",selected)
+	RallyRacingPatina.select_mark(button,selected)
 	button.icon = load("res://assets/ui/icons/check.svg") if selected else null
 	button.expand_icon = true
 	button.add_theme_constant_override("icon_max_width",18)
