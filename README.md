@@ -8,6 +8,8 @@
 
 当前奖牌为暂定阈值，真人标定、主观试听、真实 Windows、实体手柄及林地稳定 60 FPS 仍需验收；候选包不等于可公开发布版本。
 
+源码启动请先进入这个版本所在的项目目录，再执行 `./scripts/dev.sh run`。启动脚本会先导入资源、更新 GDScript 类缓存，再显示标题菜单；首次导入会稍慢。不要在仍停留于旧版本的另一份 checkout 中运行同名命令。终端会打印本次使用的项目绝对路径，启动日志位于 `logs/startup_import.log` 与 `logs/game.log`。
+
 <table>
   <tr>
     <td width="33%" align="center">

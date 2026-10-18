@@ -39,6 +39,14 @@ run_external_logged() {
   fi
 }
 
+prepare_runtime() {
+  mkdir -p "$ROOT/logs"
+  # A source checkout has no imported assets or global GDScript class cache.
+  # Refresh both before running, including after pulling new scripts/assets.
+  printf 'Preparing Art Rally project: %s\n' "$ROOT"
+  run_logged "$ROOT/logs/startup_import.log" --headless --path "$ROOT" --editor --import
+}
+
 MODE="${1:-editor}"
 if [[ $# -gt 0 ]]; then shift; fi
 case "$MODE" in
@@ -64,7 +72,8 @@ case "$MODE" in
     exec "$ENGINE" --path "$ROOT" --editor "$@"
     ;;
   run)
-    exec "$ENGINE" --path "$ROOT" "$@"
+    prepare_runtime
+    run_logged "$ROOT/logs/game.log" --path "$ROOT" "$@"
     ;;
   check)
     mkdir -p "$ROOT/logs"
@@ -101,12 +110,15 @@ case "$MODE" in
     done
     ;;
   lab)
+    prepare_runtime
     exec "$ENGINE" --path "$ROOT" --scene res://scenes/dev/driving_lab.tscn "$@"
     ;;
   stage)
+    prepare_runtime
     exec "$ENGINE" --path "$ROOT" --scene res://scenes/stages/sunset_ridge.tscn "$@"
     ;;
   preview)
+    prepare_runtime
     exec "$ENGINE" --path "$ROOT" --scene res://scenes/dev/visual_sample.tscn "$@"
     ;;
   preview-check)
