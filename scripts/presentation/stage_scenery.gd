@@ -15,6 +15,7 @@ var grass_batches: Array[MultiMeshInstance3D] = []
 var all_batches: Array[MultiMeshInstance3D] = []
 var gravel_batches: int = 0
 var bounds := AABB()
+var sailboats: Array[Dictionary] = []
 
 
 func build(stage: RallyStageGenerator) -> void:
@@ -42,6 +43,7 @@ func build(stage: RallyStageGenerator) -> void:
 		spectator_zones.append(ground_at(station+5,8))
 		spectator_regions.append({"a":ground_at(station-1,8),"b":ground_at(station+13,8)})
 	_build_landmarks()
+	RallyStageLandmarks.build(self)
 	_build_obstacles()
 	_build_guardrails()
 	_build_gravel()
@@ -87,7 +89,25 @@ func height_at(x: float,z: float) -> float:
 	var far: float = p.point.y-6+terrain_noise.get_noise_2d(x,z)*58+signf(p.lateral)*minf(d*0.14,27)
 	if generator.definition.environment_id=="coast" and float(p.lateral)<0:
 		far = lerpf(p.point.y-12,-40,smoothstep(25,180,d))
-	return lerpf(close-0.65,far,smoothstep(21,110,d))
+	var clearance := lerpf(2.5,.35,smoothstep(6,18,d))
+	var height := lerpf(close-clearance,far,smoothstep(21,110,d))
+	# Carve an actual sandy bay beneath the final overlook, so the beach props
+	# cannot be buried by the generic cliff/noise terrain.
+	if generator.definition.environment_id=="coast" and float(p.s)>route.length-160 and float(p.lateral)<-25:
+		var bay := smoothstep(route.length-160,route.length-90,float(p.s))*smoothstep(25,38,-float(p.lateral))
+		var beach_height := lerpf(-24.4,-40,smoothstep(85,130,-float(p.lateral)))
+		height = lerpf(height,beach_height,bay)
+	var end := route.points[-1]
+	var forward := route.tangents[-1]
+	forward.y = 0
+	forward = forward.normalized()
+	var beyond := Vector3(x-end.x,0,z-end.z).dot(forward)
+	if generator.definition.environment_id=="coast" and beyond>110:
+		height = lerpf(height,-40,smoothstep(110,230,beyond))
+	if generator.definition.environment_id=="highland" and float(p.s)>route.length-200:
+		var drop := smoothstep(route.length-200,route.length-80,float(p.s))*smoothstep(32,180,d)
+		height = lerpf(height,p.point.y-130+terrain_noise.get_noise_2d(x,z)*35,drop)
+	return height
 
 
 func ground_at(s: float,lateral: float) -> Vector3:
@@ -102,7 +122,12 @@ func ground_at(s: float,lateral: float) -> Vector3:
 
 func allows_decoration(point: Vector3, kind: String, scale_factor: float) -> bool:
 	var p := nearest(point)
+	if absf(float(p.s)-route.length*.51)<22 and float(p.lateral)>5 and float(p.lateral)<19: return false
+	if float(p.s)>route.length-140 and kind in ["pine","umbrella","rock"]: return false
+	if float(p.s)>route.length-75 and float(p.lateral)<-7 and float(p.lateral)>-100: return false
 	if generator.definition.environment_id=="coast" and (point.y < -18 or (float(p.lateral)<-18 and kind in ["pine","umbrella"])): return false
+	for note: Dictionary in generator.definition.hazard_notes:
+		if note.code=="CUT" and absf(float(p.s)-float(note.s))<40 and float(p.distance)<route.width_at(p.s)*.5+1.2: return false
 	for landmark: Dictionary in generator.definition.landmarks:
 		if point.distance_to(ground_at(landmark.s,landmark.side*18))<12: return false
 	var radius := 2.8*scale_factor if kind in ["pine","umbrella"] else (1.4*scale_factor if kind == "rock" else 0.25)
@@ -126,12 +151,12 @@ func _apply_materials() -> void:
 func _build_terrain() -> void:
 	var start := Vector2(bounds.position.x-400,bounds.position.z-400)
 	var extent := Vector2(bounds.size.x+800,bounds.size.z+800)
-	var count := Vector2i(ceili(extent.x/16),ceili(extent.y/16))
+	var count := Vector2i(ceili(extent.x/8),ceili(extent.y/8))
 	var vertices := PackedVector3Array()
 	for z: int in range(count.y+1):
 		for x: int in range(count.x+1):
-			var px := start.x+x*16
-			var pz := start.y+z*16
+			var px := start.x+x*8
+			var pz := start.y+z*8
 			vertices.append(Vector3(px,height_at(px,pz),pz))
 	var tool := SurfaceTool.new()
 	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
@@ -179,6 +204,10 @@ func _build_mountains() -> void:
 			child.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		elif str(child.name) == "DistantValleyFloor":
 			child.scale = Vector3(1.5,1,1.5)
+			# The background floor must never intersect a lower section of the route.
+			var minimum := route.points[0].y
+			for point: Vector3 in route.points: minimum = minf(minimum,point.y)
+			child.position.y = minimum-100
 			child.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	sample.dressing = null
 	sample.free()

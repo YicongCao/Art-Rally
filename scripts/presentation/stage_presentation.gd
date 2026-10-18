@@ -65,6 +65,8 @@ func update(dt: float) -> void:
 	camera_rig.update(scene.camera,scene.vehicle,scene.camera_mode,scene.preferences.values.camera_motion,scene.get_tree().paused,dt)
 	for i: int in range(scenery.foliage.animated_arms.size()):
 		scenery.foliage.animated_arms[i].rotation.z = sin(elapsed*2.4+i)*0.2
+	for boat: Dictionary in scenery.sailboats:
+		boat.node.position = boat.origin+boat.direction*fmod(elapsed*.65,600.0)+Vector3.UP*sin(elapsed*1.2)*.12
 	car_style.brake_material.emission_energy_multiplier = 1.5 if scene.vehicle.command.brake>0.1 else 0.15
 	flare.update(scene.camera,atmosphere.sun_direction,true,dt)
 
@@ -113,9 +115,9 @@ func _apply_biome(sky: ShaderMaterial) -> void:
 		environment.ambient_light_energy = .65
 		environment.fog_light_color = Color("bed2d2")
 		environment.fog_light_energy = .85
-		environment.fog_density = .0016
-		environment.fog_height = scene.generator.route.points[0].y+24
-		environment.fog_height_density = .018
+		environment.fog_density = .00065
+		environment.fog_height = scene.generator.route.points[0].y-12
+		environment.fog_height_density = .002
 		var morning := Vector3(.35,0,-.85).normalized()
 		atmosphere.sun_direction = morning*cos(deg_to_rad(18))+Vector3.UP*sin(deg_to_rad(18))
 		cloud_light = Color("f0ebd9")

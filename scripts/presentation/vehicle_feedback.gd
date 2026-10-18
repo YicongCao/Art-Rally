@@ -129,9 +129,12 @@ func update(car: RallyVehicle, settings: RallyGameSettings, controls: RallyInput
 		active = active and ((kind=="dust" and wheel.surface.surface_id in [1,3] and wheel.surface.water_depth<0.005) or (kind=="mud" and wheel.surface.surface_id==2 and wheel.surface.water_depth<0.015) or (kind=="water" and wheel.surface.water_depth>0.005))
 		var emitter: GPUParticles3D = entry.emitter
 		emitter.global_position = wheel.point+Vector3.UP*0.10
+		emitter.global_basis = car.global_basis
 		emitter.emitting = active
 		var slip_amount := clampf(wheel.slip_dissipation/15000.0,0,1) if car.config.tire_contact_model=="COMPLIANT_PATCH" else absf(wheel.slip)
-		emitter.amount_ratio = clampf(absf(wheel.longitudinal_speed)*0.02+slip_amount*0.25,0.1,0.7)
+		# Keep dust distributed across the whole emission cycle. A low amount_ratio
+		# leaves long gaps in a fast-moving trail even though emitting stays true.
+		emitter.amount_ratio = 1.0 if kind=="dust" else clampf(absf(wheel.longitudinal_speed)*0.02+slip_amount*0.25,0.1,0.7)
 	rumble_clock += dt
 	var device := controls.rumble_device()
 	if not settings.values.vibration or device<0:
@@ -169,19 +172,19 @@ func dispose() -> void:
 func _particle(kind: String) -> GPUParticles3D:
 	var emitter := GPUParticles3D.new()
 	emitter.name = "WheelFX_"+kind
-	emitter.amount = 35 if kind=="dust" else 24
-	emitter.lifetime = 1.3 if kind=="dust" else 0.48
+	emitter.amount = 42 if kind=="dust" else 24
+	emitter.lifetime = 2.2 if kind=="dust" else 0.48
 	emitter.local_coords = false
 	emitter.emitting = false
 	emitter.process_mode = Node.PROCESS_MODE_PAUSABLE
-	emitter.visibility_aabb = AABB(Vector3(-8,-3,-8),Vector3(16,12,16))
+	emitter.visibility_aabb = AABB(Vector3(-110,-4,-110),Vector3(220,24,220)) if kind=="dust" else AABB(Vector3(-8,-3,-8),Vector3(16,12,16))
 	emitter.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	var material := StandardMaterial3D.new()
 	material.albedo_color = Color("b7a27b") if kind=="dust" else (Color("6b4b2c") if kind=="mud" else Color("a6cccf"))
 	var mesh: Mesh
 	if kind=="dust":
 		var gradient := Gradient.new()
-		gradient.colors = PackedColorArray([Color(1,1,1,0.20),Color(1,1,1,0)])
+		gradient.colors = PackedColorArray([Color(1,1,1,0.60),Color(1,1,1,0)])
 		var texture := GradientTexture2D.new()
 		texture.gradient = gradient
 		texture.width = 32
@@ -192,8 +195,13 @@ func _particle(kind: String) -> GPUParticles3D:
 		material.albedo_texture = texture
 		material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 		material.billboard_mode = BaseMaterial3D.BILLBOARD_PARTICLES
+		material.emission_enabled = true
+		material.emission = Color("c9ad77")
+		material.emission_energy_multiplier = .2
+		material.proximity_fade_enabled = true
+		material.proximity_fade_distance = 0.7
 		var quad := QuadMesh.new()
-		quad.size = Vector2(1.2,1.2)
+		quad.size = Vector2(2.3,2.3)
 		mesh = quad
 	else:
 		var cube := BoxMesh.new()
@@ -203,12 +211,12 @@ func _particle(kind: String) -> GPUParticles3D:
 	mesh.surface_set_material(0,material)
 	emitter.draw_pass_1 = mesh
 	var process := ParticleProcessMaterial.new()
-	process.direction = Vector3(0,1,0)
-	process.spread = 65
-	process.initial_velocity_min = 0.4 if kind=="dust" else 1.4
-	process.initial_velocity_max = 1.2 if kind=="dust" else 3.2
-	process.gravity = Vector3(0,0.2,0) if kind=="dust" else Vector3(0,-8,0)
-	process.scale_min = 0.4
+	process.direction = Vector3(0,.5,1).normalized() if kind=="dust" else Vector3.UP
+	process.spread = 35 if kind=="dust" else 65
+	process.initial_velocity_min = 1.4 if kind=="dust" else 1.4
+	process.initial_velocity_max = 2.8 if kind=="dust" else 3.2
+	process.gravity = Vector3(0,0.32,0) if kind=="dust" else Vector3(0,-8,0)
+	process.scale_min = 0.65 if kind=="dust" else 0.4
 	process.scale_max = 1.0
 	var ramp := Gradient.new()
 	ramp.offsets = PackedFloat32Array([0,0.15,1])

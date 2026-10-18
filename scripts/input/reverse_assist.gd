@@ -1,7 +1,7 @@
 class_name RallyReverseAssist
 extends RefCounted
 
-const HOLD_SECONDS := 3.0
+const HOLD_SECONDS := 1.0
 const STOP_SPEED := 0.30
 var held_seconds: float = 0
 var reverse_throttle: float = 0

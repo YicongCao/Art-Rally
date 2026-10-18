@@ -6,7 +6,7 @@ const PAPER := Color("eee7d4")
 const AMBER := Color("e8ac59")
 const MUTED := Color("ccd5ce")
 const RED := Color("e56b4f")
-const NOTE_TEXT := {"LEFT_MEDIUM":"左弯 3", "RIGHT_MEDIUM":"右弯 3", "LEFT_TIGHT":"左急弯", "RIGHT_TIGHT":"右急弯", "MUD_NARROW":"泥地 · 收窄", "WATER":"积水 · 减速", "ASPHALT":"进入柏油", "GRAVEL":"进入砂石", "CREST_JUMP":"坡顶 · 跳跃", "FINISH":"终点"}
+const NOTE_TEXT := {"LEFT_MEDIUM":"左弯 3", "RIGHT_MEDIUM":"右弯 3", "LEFT_TIGHT":"左急弯", "RIGHT_TIGHT":"右急弯", "CAUTION_NARROW":"注意 · 收窄勿切", "CUT":"弯心平整 · 可小切", "MUD_NARROW":"泥地 · 收窄", "WATER":"积水 · 减速", "ASPHALT":"进入柏油", "GRAVEL":"进入砂石", "CREST_JUMP":"坡顶 · 跳跃", "FINISH":"终点"}
 var title_font: Font = RallyFonts.bold()
 var number_font: Font = RallyFonts.mono_bold()
 var text_font: Font = RallyFonts.regular()
@@ -116,7 +116,7 @@ func _draw() -> void:
 		panel(Rect2(440,536,400,68))
 		center_text("保持制动挂倒挡 · %.1f 秒"%remaining,Vector2(640,563),17,AMBER)
 		draw_rect(Rect2(460,579,360,7),Color("40574b"))
-		draw_rect(Rect2(460,579,360*clampf(remaining/3.0,0,1),7),AMBER)
+		draw_rect(Rect2(460,579,360*clampf(remaining/RallyReverseAssist.HOLD_SECONDS,0,1),7),AMBER)
 	elif model.get("returning_forward",false):
 		center_text("切回前进挡：正在制动至停稳",Vector2(640,578),17,AMBER)
 	elif model.gear=="R" and model.get("reverse_assist",false):
@@ -172,8 +172,13 @@ func _draw_note() -> void:
 		var arrow := pacenote_arrow(code,at)
 		draw_polyline(arrow.path,AMBER,5,true)
 		draw_colored_polygon(arrow.head,AMBER)
+	elif code == "FINISH":
+		draw_texture_rect(RallyGateSymbols.texture("finish"),Rect2(at-Vector2(25,25),Vector2(50,50)),false)
 	elif code == "CREST_JUMP":
 		draw_polyline(PackedVector2Array([at+Vector2(-24,14),at+Vector2(-8,-3),at+Vector2(7,-3),at+Vector2(25,14)]),AMBER,4,true)
+	elif code == "CUT":
+		draw_polyline(PackedVector2Array([at+Vector2(-20,22),at+Vector2(12,-18),at+Vector2(22,-18)]),Color("9fc9c5"),4,true)
+		draw_arc(at+Vector2(19,20),35,PI,PI*1.5,12,PAPER,2,true)
 	elif code == "WATER":
 		for y: int in range(3): draw_polyline(PackedVector2Array([at+Vector2(-22,y*9-9),at+Vector2(-8,y*9-14),at+Vector2(6,y*9-9),at+Vector2(20,y*9-14)]),Color("9fc9c5"),3,true)
 	else:

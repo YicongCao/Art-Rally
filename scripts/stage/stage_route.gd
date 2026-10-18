@@ -26,6 +26,9 @@ func build(settings: RallyStageDefinition) -> void:
 	for i: int in range(count + 1):
 		var s := i * spacing
 		var point := curve.sample_baked(s, true)
+		if settings.elevation_profile!=Vector2.ZERO:
+			point.y = lerpf(settings.elevation_profile.x,settings.elevation_profile.y,s/length)
+		point.y += settings.rolling_amplitude*sin(s*TAU/190)*sin(s*TAU/370)*smoothstep(50,120,s)*(1-smoothstep(length-180,length-60,s))
 		var roughness := 0.006 if settings.surface_id(s) == 0 else 0.025
 		point.y += roughness * sin(s * 1.3) * sin(s * 0.17)
 		for crest: Vector3 in settings.crests:

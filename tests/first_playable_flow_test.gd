@@ -40,10 +40,16 @@ func _run() -> void:
 	app.profile.data.unlocked_power_tier = 2
 	app.show_vehicles()
 	var options := app.ui.find_children("*","Button",true,false).filter(func(button: Button): return button.has_meta("power_tier"))
+	check(options.size()==9,"Each of three car cards contains its own three power choices")
+	for option: Button in options:
+		check(option.get_parent().get_parent().get_meta("vehicle_id")==option.get_meta("vehicle_id"),"Power choice is grouped inside its owning car card")
 	options[1].pressed.emit()
 	check(app.chosen_power_tier==1,"Manual +50% selection survives the page rebuild")
 	app.ui.find_children("*","Button",true,false).filter(func(button: Button): return button.has_meta("power_tier"))[2].pressed.emit()
 	check(app.chosen_power_tier==2,"Manual +100% selection survives the page rebuild")
+	app._select_vehicle_variant("R200",1)
+	check(app.chosen_vehicle=="R200" and app.chosen_power_tier==1 and app.vehicle_power_choices.F160==2,"Another card changes the active car and retains the previous car's power choice")
+	app._select_vehicle_variant("F160",2)
 	await app.start_race()
 	check(app.race.vehicle.drivetrain.config.rated_power_ps==320 and app.race.challenge.vehicle.power_tier==2,"Selected +100% F160 actually loads 320 PS into gameplay")
 	check(app.profile.data.last_power_tier==2,"The loaded variant is the saved recent selection")

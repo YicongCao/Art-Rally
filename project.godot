@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Art Rally"
-config/version="0.3.0-rc.1"
+config/version="0.3.0-rc.2"
 run/main_scene="res://scenes/game/game.tscn"
 config/features=PackedStringArray("4.7", "Forward Plus")
 

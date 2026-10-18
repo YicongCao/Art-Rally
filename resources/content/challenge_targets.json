@@ -4,163 +4,163 @@
     "sunset_ridge/F160": {
       "reference_seconds": 265,
       "human_calibrated": false,
-      "stage_version": "1",
+      "stage_version": "2",
       "vehicle_revision": "fp1"
     },
     "sunset_ridge/R200": {
       "reference_seconds": 260,
       "human_calibrated": false,
-      "stage_version": "1",
+      "stage_version": "2",
       "vehicle_revision": "fp1"
     },
     "sunset_ridge/A240": {
       "reference_seconds": 240,
       "human_calibrated": false,
-      "stage_version": "1",
+      "stage_version": "2",
       "vehicle_revision": "fp1"
     },
     "sunlit_cape/F160": {
       "reference_seconds": 220,
       "human_calibrated": false,
-      "stage_version": "1",
+      "stage_version": "2",
       "vehicle_revision": "fp1"
     },
     "sunlit_cape/R200": {
       "reference_seconds": 215,
       "human_calibrated": false,
-      "stage_version": "1",
+      "stage_version": "2",
       "vehicle_revision": "fp1"
     },
     "sunlit_cape/A240": {
       "reference_seconds": 205,
       "human_calibrated": false,
-      "stage_version": "1",
+      "stage_version": "2",
       "vehicle_revision": "fp1"
     },
     "misty_highlands/F160": {
       "reference_seconds": 290,
       "human_calibrated": false,
-      "stage_version": "1",
+      "stage_version": "2",
       "vehicle_revision": "fp1"
     },
     "misty_highlands/R200": {
       "reference_seconds": 285,
       "human_calibrated": false,
-      "stage_version": "1",
+      "stage_version": "2",
       "vehicle_revision": "fp1"
     },
     "misty_highlands/A240": {
       "reference_seconds": 265,
       "human_calibrated": false,
-      "stage_version": "1",
+      "stage_version": "2",
       "vehicle_revision": "fp1"
     },
     "sunset_ridge/F160/p150": {
       "reference_seconds": 249.1,
       "human_calibrated": false,
-      "stage_version": "1",
+      "stage_version": "2",
       "vehicle_revision": "fp1-p150"
     },
     "sunset_ridge/F160/p200": {
       "reference_seconds": 238.5,
       "human_calibrated": false,
-      "stage_version": "1",
+      "stage_version": "2",
       "vehicle_revision": "fp1-p200"
     },
     "sunset_ridge/R200/p150": {
       "reference_seconds": 244.4,
       "human_calibrated": false,
-      "stage_version": "1",
+      "stage_version": "2",
       "vehicle_revision": "fp1-p150"
     },
     "sunset_ridge/R200/p200": {
       "reference_seconds": 234.0,
       "human_calibrated": false,
-      "stage_version": "1",
+      "stage_version": "2",
       "vehicle_revision": "fp1-p200"
     },
     "sunset_ridge/A240/p150": {
       "reference_seconds": 225.6,
       "human_calibrated": false,
-      "stage_version": "1",
+      "stage_version": "2",
       "vehicle_revision": "fp1-p150"
     },
     "sunset_ridge/A240/p200": {
       "reference_seconds": 216.0,
       "human_calibrated": false,
-      "stage_version": "1",
+      "stage_version": "2",
       "vehicle_revision": "fp1-p200"
     },
     "sunlit_cape/F160/p150": {
       "reference_seconds": 206.8,
       "human_calibrated": false,
-      "stage_version": "1",
+      "stage_version": "2",
       "vehicle_revision": "fp1-p150"
     },
     "sunlit_cape/F160/p200": {
       "reference_seconds": 198.0,
       "human_calibrated": false,
-      "stage_version": "1",
+      "stage_version": "2",
       "vehicle_revision": "fp1-p200"
     },
     "sunlit_cape/R200/p150": {
       "reference_seconds": 202.1,
       "human_calibrated": false,
-      "stage_version": "1",
+      "stage_version": "2",
       "vehicle_revision": "fp1-p150"
     },
     "sunlit_cape/R200/p200": {
       "reference_seconds": 193.5,
       "human_calibrated": false,
-      "stage_version": "1",
+      "stage_version": "2",
       "vehicle_revision": "fp1-p200"
     },
     "sunlit_cape/A240/p150": {
       "reference_seconds": 192.7,
       "human_calibrated": false,
-      "stage_version": "1",
+      "stage_version": "2",
       "vehicle_revision": "fp1-p150"
     },
     "sunlit_cape/A240/p200": {
       "reference_seconds": 184.5,
       "human_calibrated": false,
-      "stage_version": "1",
+      "stage_version": "2",
       "vehicle_revision": "fp1-p200"
     },
     "misty_highlands/F160/p150": {
       "reference_seconds": 272.6,
       "human_calibrated": false,
-      "stage_version": "1",
+      "stage_version": "2",
       "vehicle_revision": "fp1-p150"
     },
     "misty_highlands/F160/p200": {
       "reference_seconds": 261.0,
       "human_calibrated": false,
-      "stage_version": "1",
+      "stage_version": "2",
       "vehicle_revision": "fp1-p200"
     },
     "misty_highlands/R200/p150": {
       "reference_seconds": 267.9,
       "human_calibrated": false,
-      "stage_version": "1",
+      "stage_version": "2",
       "vehicle_revision": "fp1-p150"
     },
     "misty_highlands/R200/p200": {
       "reference_seconds": 256.5,
       "human_calibrated": false,
-      "stage_version": "1",
+      "stage_version": "2",
       "vehicle_revision": "fp1-p200"
     },
     "misty_highlands/A240/p150": {
       "reference_seconds": 249.1,
       "human_calibrated": false,
-      "stage_version": "1",
+      "stage_version": "2",
       "vehicle_revision": "fp1-p150"
     },
     "misty_highlands/A240/p200": {
       "reference_seconds": 238.5,
       "human_calibrated": false,
-      "stage_version": "1",
+      "stage_version": "2",
       "vehicle_revision": "fp1-p200"
     }
   }

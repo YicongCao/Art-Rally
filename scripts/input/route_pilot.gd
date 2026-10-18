@@ -34,10 +34,9 @@ func step(route: RallyStageRoute, vehicle: RallyVehicle, speed: float, speed_cap
 	var command := DriverCommand.new()
 	command.steer = clampf(steering_angle / vehicle.config.max_steer_radians, -1.0, 1.0)
 	wanted_speed = minf(15.0, speed_cap)
-	if progress > 1110.0 and progress < 1650.0:
-		wanted_speed = minf(wanted_speed, 10.0)
-	if absf(progress - 2650.0) < 50.0:
-		wanted_speed = minf(wanted_speed, 10.0)
+	if route.definition.surface_id(progress)==2: wanted_speed = minf(wanted_speed,10.0)
+	for crest: Vector3 in route.definition.crests:
+		if absf(progress-crest.x)<35: wanted_speed = minf(wanted_speed,10.0)
 	for ahead: float in [0.0, 10.0, 25.0, 45.0]:
 		var station := minf(progress + ahead, route.length - 0.01)
 		var after_station := minf(station + 8.0, route.length - 0.001)

@@ -3,7 +3,7 @@ extends RallyDrivingRuntime
 const NOTE_TEXT := {
 	"LEFT_MEDIUM": "左弯 3", "RIGHT_MEDIUM": "右弯 3",
 	"LEFT_TIGHT": "左急弯 / 减速", "RIGHT_TIGHT": "右急弯 / 减速",
-	"MUD_NARROW": "泥地 · 路面收窄", "WATER": "前方积水 · 减速直行",
+	"CAUTION_NARROW":"注意 · 收窄勿切", "CUT":"弯心平整 · 可小切", "MUD_NARROW": "泥地 · 路面收窄", "WATER": "前方积水 · 减速直行",
 	"ASPHALT": "进入柏油", "GRAVEL": "进入砂石", "CREST_JUMP": "坡顶跳跃 · 保持直线",
 	"FINISH": "终点 · 通过后减速",
 }
@@ -16,6 +16,7 @@ var game_hud: RallyHUD
 var game_hud_clock: float = 0
 var checkpoint_visual: MeshInstance3D
 var respawn_wait: bool = false
+var recovery_hold: bool = false
 var result_safety_reset: bool = false
 var presentation := RallyStagePresentation.new()
 var preferences := RallyGameSettings.new()
@@ -121,6 +122,12 @@ func _driver_command(speed: float, dt: float) -> DriverCommand:
 		held.brake = 1
 		return held
 	var command := auto_driver.sample(generator.route,vehicle,controls,speed,dt)
+	if recovery_hold:
+		# A recovery on a slope holds the car until the player operates a pedal.
+		# Steering alone must not release it and let it roll into the last gate.
+		if command.throttle>.01 or controls.last_raw.brake>.2 or command.handbrake>.05 or command.shift!=0:
+			recovery_hold = false
+		else: command.brake = 1
 	var contacts := 0
 	for wheel: RallyWheelState in vehicle.wheels:
 		if wheel.grounded: contacts += 1
@@ -258,6 +265,7 @@ func _recover(seconds: float,reason: String) -> void:
 	reverse_assist.reset()
 	controls.clear()
 	respawn_wait = true
+	recovery_hold = true
 	var old_penalty := session.penalty
 	var pose := session.recover(seconds)
 	auto_driver.reset_navigation(generator.route,pose.origin)
@@ -273,6 +281,7 @@ func _restart() -> void:
 	get_tree().paused = false
 	controls.resume()
 	respawn_wait = true
+	recovery_hold = false
 	var pose := session.restart()
 	auto_driver.begin_run(generator.route,pose.origin)
 	finish_record.clear()

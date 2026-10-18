@@ -73,7 +73,7 @@ func build() -> void:
 		row.add_child(card)
 		cards[entry[0]] = card
 	var info := Label.new()
-	info.text = "%.0f PS / 约 %.0f kW · 共用车身、重心与动力，仅改变驱动轴。\n停稳持续刹车 3 秒 → 倒挡；S/↓ 倒车，W/↑ 前进。" % [power_ps, power_ps * 0.73549875]
+	info.text = "%.0f PS / 约 %.0f kW · 共用车身、重心与动力，仅改变驱动轴。\n停稳持续刹车 1 秒 → 倒挡；S/↓ 倒车，W/↑ 前进。" % [power_ps, power_ps * 0.73549875]
 	info.add_theme_font_size_override("font_size",14)
 	column.add_child(info)
 	var actions := RallyActionBar.create(column,"返回设置",func(): cancelled.emit(),"开始新赛段 →",func(): confirmed.emit(selected),true)

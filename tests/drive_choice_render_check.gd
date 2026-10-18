@@ -32,12 +32,12 @@ func _run() -> void:
 		scene.controls.blocked = false
 		await physics_frame
 	scene.controls.keys[KEY_S] = true
-	for i: int in range(160):
+	for i: int in range(60):
 		paused = false
 		await physics_frame
 	await RenderingServer.frame_post_draw
 	root.get_texture().get_image().save_png("res://logs/reverse_hold.png")
-	check(scene.reverse_assist.remaining()>1 and scene.reverse_assist.remaining()<3,"Live reverse countdown reaches HUD during held brake")
+	check(scene.reverse_assist.remaining()>0 and scene.reverse_assist.remaining()<=1,"Live reverse countdown reaches HUD during held brake")
 	scene.queue_free()
 	paused = false
 	for i: int in range(10): await process_frame

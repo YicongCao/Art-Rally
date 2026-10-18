@@ -40,8 +40,8 @@ func _build_runout() -> void:
 	var pose := route.pose_at(route.length, 0)
 	var forward := -pose.basis.z
 	var center := pose.origin + forward * 70 - pose.basis.y * 0.5
-	var body := GrayboxGeometry.box(self, "FinishApron", Vector3(16, 1, 145), center, RallySurfaceQuery.PROFILES[1].color, true, pose.basis.get_euler() * 180 / PI)
-	body.set_meta("surface_id", 1)
+	var body := GrayboxGeometry.box(self, "FinishApron", Vector3(16, 1, 145), center, RallySurfaceQuery.PROFILES[definition.surface_id(route.length)].color, true, pose.basis.get_euler() * 180 / PI)
+	body.set_meta("surface_id", definition.surface_id(route.length))
 
 
 func surface_at(point: Vector3, hint: int = -1) -> RallySurfaceSample:

@@ -15,6 +15,11 @@ func _run() -> void:
 	check(scene.session.penalty == 5, "Repeated reset events within same physics step cannot double charge")
 	await ticks(360)
 	check(scene.vehicle.position.distance_to(scene.generator.route.pose_at(114).origin) < 0.5 and not scene.respawn_wait, "Deferred recovery settles on last passed checkpoint approach")
+	check(scene.recovery_hold,"Slope recovery keeps the service brake applied until a pedal is operated")
+	scene.controls.keys[KEY_W] = true
+	await ticks(180)
+	check(not scene.recovery_hold and scene.vehicle.linear_velocity.length()>1,"Throttle releases recovery hold and drives away normally")
+	scene.controls.keys[KEY_W] = false
 	scene._toggle_pause()
 	var clock: float = scene.session.elapsed
 	await ticks(120)

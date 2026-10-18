@@ -75,7 +75,7 @@ func _process(dt: float) -> void:
 	ghost.update(session.total_time(),vehicle.position,preferences.values.ghost and session.phase==RallyStageSession.Phase.RUNNING)
 	if audio_director!=null:
 		if session.next_note!=previous_note:
-			audio_director.cue("warning" if session.current_note in ["WATER","CREST_JUMP","MUD_NARROW"] else "note")
+			audio_director.cue("warning" if session.current_note in ["WATER","CREST_JUMP","MUD_NARROW","CAUTION_NARROW"] else "note")
 			previous_note = session.next_note
 		if int(session.phase)!=previous_phase_audio:
 			if session.phase==RallyStageSession.Phase.ARMED: audio_director.cue("start")

@@ -31,7 +31,7 @@ func _run() -> void:
 	await capture("stages")
 	click_button(visible_button("确认赛道 →"))
 	await settled()
-	check(app.screen == "vehicles" and visible_button("确认车辆 →") != null and app.ui.find_children("*", "Button", true, false).size() == 8, "Stage confirmation opens three vehicles with a separate confirmation")
+	check(app.screen == "vehicles" and not app.ui.find_children("*", "Button", true, false).filter(func(b: Button): return b.text.begins_with("驾驶 ")).is_empty() and app.ui.find_children("*", "Button", true, false).filter(func(b: Button): return b.has_meta("power_tier")).size() == 9, "Stage confirmation opens three vehicles with a separate confirmation")
 	await capture("vehicles")
 	app.show_home()
 	await settled()

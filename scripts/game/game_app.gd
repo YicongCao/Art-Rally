@@ -15,6 +15,7 @@ var race: Node3D
 var chosen_stage: String = "sunset_ridge"
 var chosen_vehicle: String = "F160"
 var chosen_power_tier: int = 0
+var vehicle_power_choices: Dictionary = {}
 var practice: bool = false
 var tutorial: bool = false
 var screen: String = ""
@@ -260,27 +261,43 @@ func show_stages() -> void:
 
 
 func show_vehicles() -> void:
-	_page("选择你的搭档",RallyContentCatalog.stage(chosen_stage).title+" · 标准版金牌 → +50% 版金牌 → +100% · 各档独立纪录", "vehicles")
+	_page("选择你的搭档",RallyContentCatalog.stage(chosen_stage).title+" · 为每台车选择动力版本", "vehicles")
 	chosen_power_tier = mini(chosen_power_tier,profile.unlocked_power_tier())
-	var tiers := _row(column)
-	for tier: int in range(3):
-		var available := tier<=profile.unlocked_power_tier()
-		var option := _button(tiers,("● " if tier==chosen_power_tier else "")+RallyContentCatalog.POWER_LABELS[tier]+(" · 未解锁" if not available else ""),func(): chosen_power_tier=tier; show_vehicles())
-		option.disabled = not available
-		option.set_meta("power_tier",tier)
-		option.tooltip_text = "任意标准版金牌解锁" if tier==1 else ("任意 +50% 版金牌解锁" if tier==2 else "原始标定")
+	vehicle_power_choices[chosen_vehicle] = chosen_power_tier
 	var row := _row(column)
 	for id: String in RallyContentCatalog.VEHICLES:
-		var vehicle := RallyContentCatalog.vehicle(id,chosen_power_tier)
+		var selected_tier := mini(int(vehicle_power_choices.get(id,0)),profile.unlocked_power_tier())
+		var vehicle := RallyContentCatalog.vehicle(id,selected_tier)
 		var card := _card(row)
-		card.add_theme_constant_override("separation",10)
+		card.set_meta("vehicle_id",id)
+		card.add_theme_constant_override("separation",8)
 		_selected_card(card,id == chosen_vehicle)
 		_vehicle_preview(card,vehicle)
 		_label(card,vehicle.title,24,vehicle.accent.lightened(.3))
 		_label(card,"%s · %d PS · %d kg"%[vehicle.drive_layout,vehicle.power_ps,vehicle.mass_kg],17)
 		_label(card,vehicle.description,16)
-		_button(card,("已选择 " if id == chosen_vehicle else "选择 ")+id,func(): chosen_vehicle=id; show_vehicles())
-	_actions("← 选择赛道",show_stages,"确认车辆 →",start_race).primary_button.grab_focus()
+		var tiers := _row(card)
+		tiers.add_theme_constant_override("separation",6)
+		for tier: int in range(3):
+			var available := tier<=profile.unlocked_power_tier()
+			var caption: String = ["标准","+50%","+100%"][tier]
+			var option := _button(tiers,("● " if tier==selected_tier else "")+caption+(" 🔒" if not available else ""),_select_vehicle_variant.bind(id,tier))
+			option.custom_minimum_size = Vector2(0,42)
+			option.add_theme_font_size_override("font_size",16)
+			option.disabled = not available
+			option.set_meta("power_tier",tier)
+			option.set_meta("vehicle_id",id)
+			option.tooltip_text = "标准版金牌解锁全车系 +50%" if tier==1 else ("+50% 版金牌解锁全车系 +100%" if tier==2 else "标准动力")
+		_button(card,("已选择 " if id == chosen_vehicle else "选择 ")+id,_select_vehicle_variant.bind(id,selected_tier))
+	_actions("← 选择赛道",show_stages,"驾驶 %s · %s →"%[chosen_vehicle,["标准","+50%","+100%"][chosen_power_tier]],start_race).primary_button.grab_focus()
+
+
+func _select_vehicle_variant(id: String,tier: int) -> void:
+	if tier>profile.unlocked_power_tier(): return
+	chosen_vehicle = id
+	chosen_power_tier = tier
+	vehicle_power_choices[id] = tier
+	show_vehicles()
 
 
 func _vehicle_preview(parent: Node,definition: RallyVehicleDefinition) -> void:
