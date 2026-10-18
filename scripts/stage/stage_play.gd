@@ -1,4 +1,4 @@
-extends "res://scripts/dev/driving_lab.gd"
+extends RallyDrivingRuntime
 
 const NOTE_TEXT := {
 	"LEFT_MEDIUM": "左弯 3", "RIGHT_MEDIUM": "右弯 3",

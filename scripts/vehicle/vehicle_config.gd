@@ -1,6 +1,7 @@
 class_name RallyVehicleConfig
 extends Resource
 
+@export var body_size := Vector3(1.65,0.44,3.7)
 @export var body_mass: float = 1250.0
 @export var body_inertia := Vector3(650, 1750, 1850)
 @export var center_of_mass := Vector3(0, -0.10, 0)

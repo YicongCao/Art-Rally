@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="RallyStageDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/stage/stage_definition.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+stage_id = "sunlit_cape"
+title = "晴岬海岸"
+subtitle = "晴日海崖 · 柏油制动与发夹"
+target_length = 2800
+road_width = 6.0
+seed_value = 24681
+environment_id = "coast"
+default_surface = 0
+control_points = PackedVector3Array(0,0,0,0,3,-170,100,12,-310,250,22,-390,360,28,-330,355,30,-250,420,34,-200,530,38,-270,560,42,-450,430,48,-600,300,51,-650,230,54,-740,300,58,-820,425,62,-800,520,66,-860,540,71,-1030,420,76,-1200,250,80,-1250,150,84,-1200,100,86,-1270,170,91,-1410,320,95,-1530)
+surface_sections = PackedVector3Array()
+width_sections = PackedVector3Array()
+water_sections = PackedVector3Array()
+crests = PackedVector3Array()
+hazard_notes = Array[Dictionary]([])
+culverts = PackedFloat32Array()
+guardrail_sections = PackedVector2Array(100,2750)
+spectators = PackedFloat32Array(80,900,1800,2670)
+landmarks = Array[Dictionary]([{"s": 1450.0, "kind": "lighthouse", "side": -1.0}])

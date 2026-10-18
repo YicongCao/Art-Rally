@@ -4,6 +4,8 @@ render_mode diffuse_burley;
 varying vec3 world;
 varying vec4 zone;
 uniform bool road_mesh = false;
+uniform vec3 grass_dark : source_color = vec3(0.60,0.49,0.26);
+uniform vec3 grass_light : source_color = vec3(0.81,0.69,0.40);
 
 float hash(vec2 p) {
 	vec3 p3 = fract(vec3(p.xyx) * 0.1031);
@@ -38,13 +40,13 @@ void fragment() {
 	float large = noise(world.xz * 0.07);
 	float grit = mix(noise(world.xz * 16.0),0.5,clamp(length(fwidth(world.xz))*12.0,0.0,1.0));
 	float fleck = smoothstep(0.75, 0.93, noise(world.xz * 7.0));
-	vec3 grass = mix(vec3(0.32, 0.21, 0.055), vec3(0.62, 0.43, 0.13), large);
+	vec3 grass = mix(grass_dark,grass_light,large);
 	vec3 earth = mix(vec3(0.26, 0.22, 0.14), vec3(0.39, 0.33, 0.21), noise(world.xz * 0.31));
 	vec3 color = mix(grass, earth, smoothstep(0.44, 0.8, noise(world.xz * 0.11)) * 0.25);
 	float road_bump = 0.0;
 	float stone_speckle = 1.0;
 	if (road_mesh) {
-		float half_width = 2.8 - 0.25*smoothstep(1130.0,1170.0,UV.y)*(1.0-smoothstep(1620.0,1660.0,UV.y));
+		float half_width = UV2.x;
 		float on_road = 1.0 - smoothstep(half_width-0.15, half_width+0.1, abs(UV.x));
 		float shoulder = 1.0 - smoothstep(3.1, 4.2, abs(UV.x));
 		vec3 gravel = mix(vec3(0.27, 0.26, 0.21), vec3(0.44, 0.40, 0.30), large * 0.45 + 0.35);
@@ -60,8 +62,8 @@ void fragment() {
 		color = mix(color, earth * 1.09, shoulder);
 		// Irregular, compacted edges and dragged material break up the straight join.
 		float worn_s = UV.y+(noise(vec2(UV.x*1.8,UV.y*0.35))-0.5)*4.5+sin(UV.x*3.1)*0.8;
-		float mud = smoothstep(1147.0,1153.0,worn_s)*(1.0-smoothstep(1647.0,1653.0,worn_s));
-		float asphalt = smoothstep(1647.0,1653.0,worn_s)*(1.0-smoothstep(2097.0,2103.0,worn_s));
+		float mud = clamp(1.0-abs(UV2.y-2.0),0.0,1.0);
+		float asphalt = 1.0-clamp(UV2.y,0.0,1.0);
 		stone_speckle = mix(1.0,mix(0.15,0.07,asphalt),max(mud,asphalt)*on_road);
 		vec3 mud_color = mix(vec3(0.075,0.044,0.021),vec3(0.17,0.10,0.045),noise(world.xz*0.4));
 		mud_color *= 1.0-tracks*0.25;
@@ -75,7 +77,7 @@ void fragment() {
 	color *= 0.92 + grit * 0.14;
 	color += vec3(fleck * 0.012 * stone_speckle);
 	ALBEDO = color;
-	bool muddy_lane = road_mesh && UV.y>=1150.0 && UV.y<1650.0 && abs(UV.x)<2.55;
+	bool muddy_lane = road_mesh && UV2.y>1.5 && UV2.y<2.5 && abs(UV.x)<UV2.x;
 	ROUGHNESS = muddy_lane ? 0.76 : 0.96;
 	SPECULAR = muddy_lane ? 0.12 : 0.08;
 	vec2 bumps = vec2(dFdx(road_bump),dFdy(road_bump));

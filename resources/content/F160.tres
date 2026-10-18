@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="RallyVehicleDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/vehicle_definition.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+vehicle_id = "F160"
+model_path = "res://assets/vehicles/F160.glb"
+title = "F160 / 前驱轻型掀背"
+description = "轻快易上手 · 留意出弯推头"
+drive_layout = "FWD"
+power_ps = 160
+mass_kg = 1000
+wheelbase = 2.35
+track_width = 1.5
+body_size = Vector3(1.65,0.48,3.65)
+paint = Color(0.91,0.89,0.79,1)
+accent = Color(0.12,0.64,0.58,1)
+number = 16
+cockpit_offset = Vector3(0,0.80,-0.64)
+hood_offset = Vector3(0,0.75,-1.25)

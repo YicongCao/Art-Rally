@@ -27,11 +27,11 @@ func build() -> void:
 
 
 func _build_culvert() -> void:
-	var pose := route.pose_at(1420, 0)
-	for side: float in [-1, 1]:
-		GrayboxGeometry.box(self, "CulvertWing", Vector3(1.0, 0.5, 3.0), pose * Vector3(side * 4.3, -0.35, 0), Color("686d64"), false, pose.basis.get_euler() * 180 / PI)
-		GrayboxGeometry.box(self, "DrainOpening", Vector3(0.04, 0.35, 1.1), pose * Vector3(side * 4.85, -0.35, 0), Color("25302a"), false, pose.basis.get_euler() * 180 / PI)
-
+	for station: float in definition.culverts:
+		var pose := route.pose_at(station, 0)
+		for side: float in [-1, 1]:
+			GrayboxGeometry.box(self, "CulvertWing", Vector3(1.0, 0.5, 3.0), pose * Vector3(side * 4.3, -0.35, 0), Color("686d64"), false, pose.basis.get_euler() * 180 / PI)
+			GrayboxGeometry.box(self, "DrainOpening", Vector3(0.04, 0.35, 1.1), pose * Vector3(side * 4.85, -0.35, 0), Color("25302a"), false, pose.basis.get_euler() * 180 / PI)
 
 func _build_runout() -> void:
 	# A long braking apron lies beyond the timed finish; the result remains frozen there.
@@ -88,6 +88,7 @@ func _build_chunk(start: int, end: int) -> void:
 			for corner: Vector2i in [Vector2i(i,col),Vector2i(i+1,col),Vector2i(i,col+1),Vector2i(i,col+1),Vector2i(i+1,col),Vector2i(i+1,col+1)]:
 				var vertex := vertex_at(corner.x,corner.y)
 				tool.set_uv(Vector2((vertex-route.points[corner.x]).dot(route.rights[corner.x]),route.distances[corner.x]))
+				tool.set_uv2(Vector2(route.width_at(route.distances[corner.x])*0.5,definition.surface_id(route.distances[corner.x])))
 				tool.set_color(color)
 				tool.add_vertex(vertex)
 	tool.generate_normals()

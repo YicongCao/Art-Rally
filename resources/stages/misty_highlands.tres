@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="RallyStageDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/stage/stage_definition.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+stage_id = "misty_highlands"
+title = "雾杉高地"
+subtitle = "晨雾山口 · 起伏砂石与泥水"
+target_length = 3200
+road_width = 5.2
+seed_value = 92841
+environment_id = "highland"
+default_surface = 1
+control_points = PackedVector3Array(0,0,0,0,5,-180,-110,12,-350,-170,16,-560,-80,22,-740,120,28,-890,210,32,-1100,100,39,-1270,-80,46,-1390,-200,49,-1580,-120,54,-1800,90,60,-1980,200,65,-2190,140,72,-2400,-50,76,-2550,-120,80,-2730,0,84,-2920)
+surface_sections = PackedVector3Array(900,1120,2,2100,2330,2)
+width_sections = PackedVector3Array(900,1120,-0.3,2100,2330,-0.3)
+water_sections = PackedVector3Array(980,995,0.06,2190,2205,0.07)
+crests = PackedVector3Array(650,0.55,12,1700,0.65,14,2700,0.55,14)
+hazard_notes = Array[Dictionary]([{"s":900.0,"code":"MUD_NARROW"},{"s":980.0,"code":"WATER"},{"s":1120.0,"code":"GRAVEL"},{"s":2100.0,"code":"MUD_NARROW"},{"s":2190.0,"code":"WATER"},{"s":2330.0,"code":"GRAVEL"}])
+culverts = PackedFloat32Array(990,2195)
+guardrail_sections = PackedVector2Array(1520,1800)
+spectators = PackedFloat32Array(80,600,1630,3060)
+landmarks = Array[Dictionary]([{"s":1650.0,"kind":"stones","side":1.0}])

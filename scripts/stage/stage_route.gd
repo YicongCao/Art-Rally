@@ -28,7 +28,8 @@ func build(settings: RallyStageDefinition) -> void:
 		var point := curve.sample_baked(s, true)
 		var roughness := 0.006 if settings.surface_id(s) == 0 else 0.025
 		point.y += roughness * sin(s * 1.3) * sin(s * 0.17)
-		point.y += 1.3 * exp(-pow((s - 2650) / 7.0, 2))
+		for crest: Vector3 in settings.crests:
+			point.y += crest.y*exp(-pow((s-crest.x)/maxf(crest.z,0.1),2))
 		points.append(point)
 		distances.append(s)
 	for i: int in range(points.size()):
@@ -62,7 +63,7 @@ func tangent_at(s: float) -> Vector3:
 
 
 func width_at(s: float) -> float:
-	return definition.road_width - 0.5 * smoothstep(1130, 1170, s) * (1 - smoothstep(1620, 1660, s))
+	return definition.width_at(s)
 
 
 func pose_at(s: float, clearance: float = 0.82) -> Transform3D:
@@ -98,7 +99,9 @@ func _build_notes() -> void:
 			var severity := "TIGHT" if absf(angle) > 0.75 else "MEDIUM"
 			notes.append({"s": distances[i], "code": direction + "_" + severity})
 			last_turn = distances[i]
-	for note: Dictionary in [{"s": 1150.0, "code": "MUD_NARROW"}, {"s": 1270.0, "code": "WATER"}, {"s": 1480.0, "code": "WATER"}, {"s": 1650.0, "code": "ASPHALT"}, {"s": 2100.0, "code": "GRAVEL"}, {"s": 2650.0, "code": "CREST_JUMP"}, {"s": length - 30.0, "code": "FINISH"}]:
+	var hazards := definition.hazard_notes.duplicate(true)
+	hazards.append({"s":length-30.0,"code":"FINISH"})
+	for note: Dictionary in hazards:
 		# Keep a clear announcement window around hazards rather than overwriting them with a bend.
 		notes = notes.filter(func(turn: Dictionary) -> bool: return absf(float(turn.s) - float(note.s)) > 55)
 		notes.append(note)

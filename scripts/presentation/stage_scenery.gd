@@ -35,7 +35,7 @@ func build(stage: RallyStageGenerator) -> void:
 	_apply_materials()
 	_build_terrain()
 	_build_mountains()
-	foliage.spectator_stations = [80.0,503.0,1880.0,2970.0]
+	foliage.spectator_stations.assign(generator.definition.spectators)
 	foliage.build_range(self,12,route.length-35,0.58)
 	for station: float in foliage.spectator_stations:
 		spectator_zones.append(ground_at(station+5,8))
@@ -233,24 +233,25 @@ func _build_guardrails() -> void:
 	body.name = "CombinedGuardrails"
 	body.collision_layer = 4
 	body.collision_mask = 2
-	for s: int in range(1680,2080,4):
-		var angle := route.tangent_at(s).signed_angle_to(route.tangent_at(s+8),Vector3.UP)
-		if absf(angle)<0.025: continue
-		var lateral := signf(angle)*(route.width_at(s)*0.5+1.1)
-		var a := ground_at(s,lateral)+Vector3.UP*0.62
-		var b := ground_at(s+4,lateral)+Vector3.UP*0.62
-		var rotation := Basis.looking_at((b-a).normalized()).get_euler()*180/PI
-		var rail := GrayboxGeometry.box(dressing,"Guardrail",Vector3(0.12,0.18,a.distance_to(b)+0.1),(a+b)*0.5,Color("929b8d"),false,rotation)
-		(rail.get_child(0) as MeshInstance3D).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-		var collision := CollisionShape3D.new()
-		var shape := BoxShape3D.new()
-		shape.size = Vector3(0.12,0.18,a.distance_to(b)+0.1)
-		collision.shape = shape
-		collision.position = (a+b)*0.5
-		collision.rotation_degrees = rotation
-		body.add_child(collision)
-		var post := GrayboxGeometry.box(dressing,"RailPost",Vector3(0.11,0.70,0.11),a-Vector3.UP*0.3,Color("5e6b60"))
-		(post.get_child(0) as MeshInstance3D).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	for section: Vector2 in generator.definition.guardrail_sections:
+		for s: int in range(int(section.x),int(section.y),4):
+			var angle := route.tangent_at(s).signed_angle_to(route.tangent_at(s+8),Vector3.UP)
+			if absf(angle)<0.025: continue
+			var lateral := signf(angle)*(route.width_at(s)*0.5+1.1)
+			var a := ground_at(s,lateral)+Vector3.UP*0.62
+			var b := ground_at(s+4,lateral)+Vector3.UP*0.62
+			var rotation := Basis.looking_at((b-a).normalized()).get_euler()*180/PI
+			var rail := GrayboxGeometry.box(dressing,"Guardrail",Vector3(0.12,0.18,a.distance_to(b)+0.1),(a+b)*0.5,Color("929b8d"),false,rotation)
+			(rail.get_child(0) as MeshInstance3D).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			var collision := CollisionShape3D.new()
+			var shape := BoxShape3D.new()
+			shape.size = Vector3(0.12,0.18,a.distance_to(b)+0.1)
+			collision.shape = shape
+			collision.position = (a+b)*0.5
+			collision.rotation_degrees = rotation
+			body.add_child(collision)
+			var post := GrayboxGeometry.box(dressing,"RailPost",Vector3(0.11,0.70,0.11),a-Vector3.UP*0.3,Color("5e6b60"))
+			(post.get_child(0) as MeshInstance3D).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	if body.get_child_count()>0:
 		add_child(body)
 		obstacles.append(body)

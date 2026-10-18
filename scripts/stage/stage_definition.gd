@@ -20,16 +20,40 @@ extends Resource
 ])
 
 
+@export var stage_version: String = "1"
+@export_enum("autumn", "coast", "highland") var environment_id: String = "autumn"
+@export var subtitle: String = "秋日山林 · 混合路面"
+@export var surface_sections := PackedVector3Array([Vector3(1150,1650,2),Vector3(1650,2100,0)])
+@export var default_surface: int = 1
+@export var width_sections := PackedVector3Array([Vector3(1150,1650,-0.5)])
+@export var water_sections := PackedVector3Array([Vector3(1270,1290,0.07),Vector3(1480,1508,0.11)])
+@export var crests := PackedVector3Array([Vector3(2650,1.3,7)])
+@export var hazard_notes: Array[Dictionary] = [{"s":1150.0,"code":"MUD_NARROW"},{"s":1270.0,"code":"WATER"},{"s":1480.0,"code":"WATER"},{"s":1650.0,"code":"ASPHALT"},{"s":2100.0,"code":"GRAVEL"},{"s":2650.0,"code":"CREST_JUMP"}]
+@export var culverts := PackedFloat32Array([1420])
+@export var guardrail_sections := PackedVector2Array([Vector2(1680,2080)])
+@export var spectators := PackedFloat32Array([80,503,1880,2970])
+@export var landmarks: Array[Dictionary] = [{"s":480.0,"kind":"cabin","side":-1.0}]
+@export var split_fractions := PackedFloat32Array([0.333333,0.666667,1.0])
+
+
 func surface_id(distance: float) -> int:
-	if distance >= 1150 and distance < 1650: return 2
-	if distance >= 1650 and distance < 2100: return 0
-	return 1
+	for section: Vector3 in surface_sections:
+		if distance>=section.x and distance<section.y: return int(section.z)
+	return default_surface
+
+
+func width_at(distance: float) -> float:
+	var width := road_width
+	for section: Vector3 in width_sections:
+		width += section.z*smoothstep(section.x-20,section.x+20,distance)*(1-smoothstep(section.y-30,section.y+10,distance))
+	return width
 
 
 func water_depth(distance: float, lateral: float) -> float:
 	var depth := 0.0
-	for pool: Vector3 in [Vector3(1270, 1290, 0.07), Vector3(1480, 1508, 0.11)]:
+	for pool: Vector3 in water_sections:
 		if distance > pool.x and distance < pool.y:
-			var edge := minf(distance - pool.x, pool.y - distance)
-			depth = maxf(depth, pool.z * smoothstep(0, 1.5, edge) * (1.0 - smoothstep(2.0, 2.8, absf(lateral))))
+			var edge := minf(distance-pool.x,pool.y-distance)
+			var half := 2.8
+			depth = maxf(depth,pool.z*smoothstep(0,1.5,edge)*(1-smoothstep(half-0.8,half,absf(lateral))))
 	return depth

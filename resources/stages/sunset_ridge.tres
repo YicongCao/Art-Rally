@@ -3,3 +3,4 @@
 [resource]
 script = ExtResource("1")
 stage_id = "sunset_ridge"
+title = "夕照松岭"

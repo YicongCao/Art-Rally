@@ -32,7 +32,7 @@ func _ready() -> void:
 	collision_mask = 5
 	var collision := CollisionShape3D.new()
 	var shape := BoxShape3D.new()
-	shape.size = Vector3(1.65, 0.44, 3.7)
+	shape.size = config.body_size
 	collision.shape = shape
 	add_child(collision)
 	GrayboxGeometry.box(self, "Body", Vector3(1.72, 0.48, 3.85), Vector3.ZERO, Color("d16b36"))
