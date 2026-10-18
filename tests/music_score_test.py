@@ -3,6 +3,13 @@ from pathlib import Path
 import array, json, struct, unittest, wave
 ROOT=Path(__file__).resolve().parents[1]/'assets/audio/music'
 class Scores(unittest.TestCase):
+    def test_stage_arrangements_use_distinct_genres_and_note_densities(self):
+        reports={x['theme']:x for x in json.loads((ROOT/'scores.json').read_text())}
+        stages=[reports[k] for k in ['autumn','coast','highland']]
+        self.assertEqual(len({s['genre'] for s in stages}),3)
+        self.assertGreater(stages[0]['notes'],stages[2]['notes']*2)
+        self.assertGreater(stages[0]['bpm']-stages[2]['bpm'],25)
+
     def test_four_editable_scores_match_rendered_loop_grid(self):
         reports=json.loads((ROOT/'scores.json').read_text())
         self.assertEqual(len(reports),4)

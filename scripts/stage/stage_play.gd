@@ -180,6 +180,7 @@ func _process(dt: float) -> void:
 		game_hud_clock = 0
 		var data := RallyHUD.data_for(vehicle,session,get_tree().paused)
 		data["stage_title"] = generator.definition.title
+		data["show_fps"] = preferences.values.show_fps
 		data["vehicle_title"] = vehicle_definition.vehicle_id if vehicle_definition!=null else vehicle.drivetrain.config.drive_layout
 		data["camera_mode"] = camera_mode
 		data["reverse_remaining"] = reverse_assist.remaining()

@@ -22,6 +22,7 @@ var note_s: float = 0
 var practice: bool = false
 var reset_count: int = 0
 var split_times: Array[float] = []
+var gate_times: Array[float] = []
 var split_gates: Array[int] = []
 
 
@@ -52,6 +53,7 @@ func restart() -> Transform3D:
 	progress = 8
 	reset_count = 0
 	split_times.clear()
+	gate_times.clear()
 	var pose := route.pose_at(8)
 	previous = pose.origin
 	previous_basis = pose.basis
@@ -78,6 +80,7 @@ func step(position: Vector3, speed: float, dt: float, body_basis: Basis = Basis.
 		var center := route.position_at(s)
 		var forward := route.tangent_at(s)
 		if _body_crosses(previous,position,previous_basis,body_basis,body_size*.5,center,forward,route.rights[route.index_at(s)],route.width_at(s)*.5+1.09):
+			gate_times.append(total_time())
 			if next_gate in split_gates: split_times.append(total_time())
 			next_gate += 1
 			if phase == Phase.ARMED: phase = Phase.RUNNING

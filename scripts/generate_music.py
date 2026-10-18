@@ -11,11 +11,11 @@ SR, PPQ = 22050, 480
 SCORES = {
     'menu': dict(title='Ignition / Grid Lights', bpm=126, roots=[45,45,41,43,45,48,41,43],
                  melody=[12,15,19,22,19,15,10,7,12,19,24,22,19,15,10,7], pattern=[0,7,12,15,7,12,19,10], program=81, lead=30),
-    'autumn': dict(title='Redline Through Amber', bpm=140, roots=[40,40,43,45,40,47,43,38],
+    'autumn': dict(title='Amber Gravel / Garage Rock', genre='garage-rock', bpm=144, roots=[40,40,43,45,40,47,43,38],
                    melody=[12,15,19,24,22,19,15,10,12,19,22,24,19,15,10,7], pattern=[0,12,7,15,0,7,12,19], program=30, lead=81),
-    'coast': dict(title='Cliffside Overdrive', bpm=148, roots=[45,48,41,43,45,52,48,43],
+    'coast': dict(title='Golden Wake / Electro House', genre='electro-house', bpm=128, roots=[45,48,41,43,45,52,48,43],
                   melody=[12,19,24,27,24,22,19,15,12,15,19,22,24,19,15,10], pattern=[0,7,12,19,15,7,10,12], program=81, lead=80),
-    'highland': dict(title='Summit Pressure', bpm=136, roots=[38,38,41,36,38,45,41,36],
+    'highland': dict(title='Stone and Thunder / Mountain Drums', genre='cinematic-percussion', bpm=110, roots=[38,38,41,36,38,45,41,36],
                      melody=[12,19,22,24,19,15,12,10,7,12,15,19,22,19,15,10], pattern=[0,12,7,10,0,12,15,7], program=80, lead=30),
 }
 
@@ -55,11 +55,21 @@ def voice(program,pitch,duration):
             return np.sin(phase)*np.exp(-t*14)+noise*np.exp(-t*140)*.2
         if pitch==38:
             return (noise*.85+np.sin(2*np.pi*180*t)*.22)*attack*np.exp(-t*22)
+        if pitch in [41,45,47]:
+            return (np.sin(2*np.pi*(55+(pitch-41)*7)*t)+noise*.17)*attack*np.exp(-t*9)
         high=noise-np.roll(noise,1)
         return high*attack*np.exp(-t*(60 if pitch==42 else 13))*.32
     if program==38:
         raw=np.sin(2*np.pi*hz*t)+.3*np.sin(2*np.pi*hz*2*t)+.12*np.sin(2*np.pi*hz*3*t)
         return np.tanh(raw*1.7)*attack*release*np.exp(-t*2.5)
+    if program==10:  # Glassy FM mallets, no piano envelope or samples.
+        return np.sin(2*np.pi*hz*t+2.1*np.sin(2*np.pi*hz*3*t)*np.exp(-t*10))*attack*release*np.exp(-t*4)
+    if program==48:
+        return (np.sin(2*np.pi*hz*t)+.3*np.sin(2*np.pi*hz*1.004*t)+.12*np.sin(2*np.pi*hz*3*t))*np.minimum(t/.12,1)*release*.6
+    if program==60:
+        return (np.sin(2*np.pi*hz*t)+.44*np.sin(2*np.pi*hz*2*t)+.15*np.sin(2*np.pi*hz*3*t))*np.minimum(t/.07,1)*release*.7
+    if program==29:
+        return np.tanh((np.sin(2*np.pi*hz*t)+.22*np.sin(2*np.pi*hz*3*t))*1.4)*attack*release*np.exp(-t*3)
     harmonics=range(1,min(15,int(SR*.46/hz))+1)
     raw=sum(np.sin(2*np.pi*hz*k*t)*((1/k) if program!=80 or k%2 else 0) for k in harmonics)
     if program==30:
@@ -68,7 +78,7 @@ def voice(program,pitch,duration):
         raw+=.16*np.sin(2*np.pi*hz*1.003*t)
     return raw*attack*release*np.exp(-t*(6 if program==30 else 4))*.65
 
-def compose(config):
+def compose_motor(config):
     pulse=[]; bass=[]; lead=[]; drums=[]
     for bar in range(16):
         root=config['roots'][(bar//2)%8]
@@ -86,6 +96,43 @@ def compose(config):
             for i in [0,.25,.5,.75]: drums.append((bar*4+3+i,.10,38,50+int(i*42)))
         if bar in [0,8]: drums.append((bar*4,.6,49,70))
     return [('Pulse',config['program'],pulse),('Bass',38,bass),('Lead',config['lead'],lead),('Drums',128,drums)]
+
+def compose(config):
+    genre=config.get('genre','menu')
+    if genre=='menu': return compose_motor(config)
+    pulse=[];bass=[];lead=[];drums=[]
+    for bar in range(16):
+        root=config['roots'][(bar//2)%8]
+        if genre=='garage-rock':
+            for beat in [0,.75,1.5,2,2.75,3.5]:
+                for interval in [0,7,12]: pulse.append((bar*4+beat,.18,root+interval,72))
+                bass.append((bar*4+beat,.28,root-12,90))
+            if bar%4>=2:
+                for i in range(4): lead.append((bar*4+i*.75,.42,root+24+[0,3,7,10][i],82))
+            for beat in [0,2,2.5]: drums.append((bar*4+beat,.23,36,108))
+            for beat in [1,3]: drums.append((bar*4+beat,.2,38,104))
+            for i in range(8): drums.append((bar*4+i*.5+(0.08 if i%2 else 0),.09,42,60))
+        elif genre=='electro-house':
+            root=[48,55,53,50][(bar//2)%4]
+            for beat in [.5,1.5,2.5,3.5]:
+                for interval in [0,4,7,11]: pulse.append((bar*4+beat,.28,root+12+interval,65))
+                bass.append((bar*4+beat,.36,root-12,90))
+            for i,interval in enumerate([12,19,24,23,19,16,14,19]):
+                if bar%4!=3 or i<4: lead.append((bar*4+i*.5,.17,root+interval,65))
+            for beat in range(4): drums.append((bar*4+beat,.24,36,105))
+            for beat in [1,3]: drums.append((bar*4+beat,.12,38,65))
+            for beat in [.5,1.5,2.5,3.5]: drums.append((bar*4+beat,.12,46,65))
+        else:
+            root=[38,36,41,38][(bar//4)%4]
+            for interval in [0,7]: pulse.append((bar*4,3.8,root+12+interval,65))
+            for beat in [0,1.5,3]: bass.append((bar*4+beat,.55,root-12,85))
+            if bar%4 in [1,3]:
+                for i,interval in enumerate([12,19,15]): lead.append((bar*4+i*1.25,.95,root+interval,78))
+            for beat,pitch in [(0,41),(.75,45),(1.5,41),(2.5,47),(3,45),(3.5,41)]: drums.append((bar*4+beat,.34,pitch,100 if beat in [0,1.5] else 70))
+            if bar%4==3:
+                for beat in [2,2.25,2.5,2.75,3,3.25,3.5,3.75]: drums.append((bar*4+beat,.18,45,65+int(beat*7)))
+    programs={'garage-rock':(30,29),'electro-house':(10,81),'cinematic-percussion':(48,60)}[genre]
+    return [('Pulse',programs[0],pulse),('Bass',38,bass),('Lead',programs[1],lead),('Drums',128,drums)]
 
 def generate():
     ROOT.mkdir(parents=True,exist_ok=True)
@@ -111,7 +158,7 @@ def generate():
         with wave.open(str(ROOT/f'theme_{key}.wav'),'wb') as f:
             f.setnchannels(1);f.setsampwidth(2);f.setframerate(SR);f.writeframes(pcm.tobytes())
         midi(ROOT/f'theme_{key}.mid',config,tracks,64)
-        report.append(dict(theme=key,title=config['title'],bpm=config['bpm'],bars=16,seconds=duration,notes=sum(len(t[2]) for t in tracks),peak=float(np.max(np.abs(audio))),rms=float(np.sqrt(np.mean(audio**2))),seam_jump=float(abs(audio[0]-audio[-1]))))
+        report.append(dict(theme=key,title=config['title'],genre=config.get('genre','synth-rock'),bpm=config['bpm'],bars=16,seconds=duration,notes=sum(len(t[2]) for t in tracks),peak=float(np.max(np.abs(audio))),rms=float(np.sqrt(np.mean(audio**2))),seam_jump=float(abs(audio[0]-audio[-1]))))
     (ROOT/'scores.json').write_text(json.dumps(report,indent=2)+'\n')
     print(json.dumps(report,indent=2))
 

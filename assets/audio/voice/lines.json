@@ -1,0 +1,184 @@
+[
+  {
+    "voice": "female",
+    "speaker": "zf_001",
+    "code": "LEFT_MEDIUM",
+    "text": "左三。",
+    "seconds": 0.5290416666666666
+  },
+  {
+    "voice": "female",
+    "speaker": "zf_001",
+    "code": "RIGHT_MEDIUM",
+    "text": "右三。",
+    "seconds": 0.568375
+  },
+  {
+    "voice": "female",
+    "speaker": "zf_001",
+    "code": "LEFT_TIGHT",
+    "text": "左急弯。",
+    "seconds": 0.711
+  },
+  {
+    "voice": "female",
+    "speaker": "zf_001",
+    "code": "RIGHT_TIGHT",
+    "text": "右急弯。",
+    "seconds": 0.7165833333333333
+  },
+  {
+    "voice": "female",
+    "speaker": "zf_001",
+    "code": "CAUTION_NARROW",
+    "text": "注意收窄，不要切弯。",
+    "seconds": 1.750375
+  },
+  {
+    "voice": "female",
+    "speaker": "zf_001",
+    "code": "CUT",
+    "text": "可以小切。",
+    "seconds": 0.9339583333333333
+  },
+  {
+    "voice": "female",
+    "speaker": "zf_001",
+    "code": "MUD_NARROW",
+    "text": "泥地收窄。",
+    "seconds": 0.9169583333333333
+  },
+  {
+    "voice": "female",
+    "speaker": "zf_001",
+    "code": "WATER",
+    "text": "前方积水。",
+    "seconds": 1.0581666666666667
+  },
+  {
+    "voice": "female",
+    "speaker": "zf_001",
+    "code": "ASPHALT",
+    "text": "进入柏油。",
+    "seconds": 0.9566666666666667
+  },
+  {
+    "voice": "female",
+    "speaker": "zf_001",
+    "code": "GRAVEL",
+    "text": "进入砂石。",
+    "seconds": 1.0093333333333334
+  },
+  {
+    "voice": "female",
+    "speaker": "zf_001",
+    "code": "CREST_JUMP",
+    "text": "坡顶，准备跳跃。",
+    "seconds": 1.504
+  },
+  {
+    "voice": "female",
+    "speaker": "zf_001",
+    "code": "FINISH",
+    "text": "前方终点。",
+    "seconds": 1.04275
+  },
+  {
+    "voice": "female",
+    "speaker": "zf_001",
+    "code": "preview",
+    "text": "准备好了吗？左三，接右三。",
+    "seconds": 2.25075
+  },
+  {
+    "voice": "male",
+    "speaker": "zm_010",
+    "code": "LEFT_MEDIUM",
+    "text": "左三。",
+    "seconds": 0.6242083333333334
+  },
+  {
+    "voice": "male",
+    "speaker": "zm_010",
+    "code": "RIGHT_MEDIUM",
+    "text": "右三。",
+    "seconds": 0.5898333333333333
+  },
+  {
+    "voice": "male",
+    "speaker": "zm_010",
+    "code": "LEFT_TIGHT",
+    "text": "左急弯。",
+    "seconds": 0.8429583333333334
+  },
+  {
+    "voice": "male",
+    "speaker": "zm_010",
+    "code": "RIGHT_TIGHT",
+    "text": "右急弯。",
+    "seconds": 0.8607083333333333
+  },
+  {
+    "voice": "male",
+    "speaker": "zm_010",
+    "code": "CAUTION_NARROW",
+    "text": "注意收窄，不要切弯。",
+    "seconds": 1.9552916666666667
+  },
+  {
+    "voice": "male",
+    "speaker": "zm_010",
+    "code": "CUT",
+    "text": "可以小切。",
+    "seconds": 1.0241666666666667
+  },
+  {
+    "voice": "male",
+    "speaker": "zm_010",
+    "code": "MUD_NARROW",
+    "text": "泥地收窄。",
+    "seconds": 1.0865
+  },
+  {
+    "voice": "male",
+    "speaker": "zm_010",
+    "code": "WATER",
+    "text": "前方积水。",
+    "seconds": 1.2257916666666666
+  },
+  {
+    "voice": "male",
+    "speaker": "zm_010",
+    "code": "ASPHALT",
+    "text": "进入柏油。",
+    "seconds": 1.0968333333333333
+  },
+  {
+    "voice": "male",
+    "speaker": "zm_010",
+    "code": "GRAVEL",
+    "text": "进入砂石。",
+    "seconds": 1.0969583333333333
+  },
+  {
+    "voice": "male",
+    "speaker": "zm_010",
+    "code": "CREST_JUMP",
+    "text": "坡顶，准备跳跃。",
+    "seconds": 1.577375
+  },
+  {
+    "voice": "male",
+    "speaker": "zm_010",
+    "code": "FINISH",
+    "text": "前方终点。",
+    "seconds": 1.1612083333333334
+  },
+  {
+    "voice": "male",
+    "speaker": "zm_010",
+    "code": "preview",
+    "text": "准备好了吗？左三，接右三。",
+    "seconds": 2.4059583333333334
+  }
+]

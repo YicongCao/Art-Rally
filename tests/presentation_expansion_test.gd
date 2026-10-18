@@ -27,7 +27,7 @@ func _run() -> void:
 		app.chosen_stage = id
 		await app.start_race()
 		check(app.race.presentation.sky_life.balloons.size() in range(7,16),id+" has a visible authored balloon group")
-		check(app.race.presentation.sky_life.birds.size()==(0 if id=="sunset_ridge" else 10),id+" distant seabird population is correct")
+		check((app.race.presentation.sky_life.birds.is_empty() if id=="sunset_ridge" else app.race.presentation.sky_life.birds.size() in range(15,19)),id+" distant seabird population is correct")
 		for crossing: Vector3 in stage.river_crossings:
 			check(app.race.presentation.scenery.dressing.has_node("RiverBridge%d"%crossing.x),id+" river and bridge geometry loads")
 		if id=="sunlit_cape": check(app.race.presentation.scenery.sailboats.size()==4,"Coastal sailing boats are present and animated")

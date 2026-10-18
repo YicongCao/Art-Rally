@@ -87,17 +87,17 @@ func scene_checks() -> void:
 	await ticks(240)
 	check(not scene.debug_panel.visible, "Visual debugger is hidden on launch")
 	var key := InputEventKey.new()
-	key.physical_keycode = KEY_F9
+	key.physical_keycode = KEY_T
 	key.pressed = true
 	scene.controls.active_device = 7
 	scene.controls.axes[JOY_AXIS_TRIGGER_RIGHT] = 0.5
 	scene.controls._unhandled_input(key)
 	await ticks(30)
-	check(scene.debug_panel.visible and not scene.game_hud.visible and scene.debug_visual.visible, "F9 opens graphical diagnostics, replaces HUD, and enables force vectors")
+	check(scene.debug_panel.visible and not scene.game_hud.visible and scene.debug_visual.visible, "T opens graphical diagnostics, replaces HUD, and enables force vectors")
 	check(scene.controls.active_device == 7 and scene.controls.axes[JOY_AXIS_TRIGGER_RIGHT] == 0.5, "Debug shortcut does not steal gamepad focus or clear held axes")
 	key.echo = true
 	scene.controls._unhandled_input(key)
-	check(scene.debug_panel.visible, "Held F9 repeat cannot flicker the debug panel")
+	check(scene.debug_panel.visible, "Held T repeat cannot flicker the debug panel")
 	key.echo = false
 	for i: int in range(RallyDebugPanel.MAX_SAMPLES + 50): scene.debug_panel.append_sample(Vector2(i, i * 10))
 	check(scene.debug_panel.history.size() == RallyDebugPanel.MAX_SAMPLES, "Six-second history has a bounded sample count")
@@ -106,15 +106,15 @@ func scene_checks() -> void:
 	await ticks(30)
 	check(scene.debug_panel.history.size() == count and scene.debug_panel.torque_history.size() == count, "Pause freezes both engine and chassis histories while leaving diagnostics visible")
 	scene.controls._unhandled_input(key)
-	check(not scene.debug_panel.visible, "F9 can hide frozen diagnostics while paused")
+	check(not scene.debug_panel.visible, "T can hide frozen diagnostics while paused")
 	scene._toggle_pause()
 	scene.controls._unhandled_input(key)
 	scene.controls.clear()
 	await ticks(30)
 	scene._toggle_telemetry()
-	check(scene.telemetry_visible and not scene.debug_panel.visible, "Raw T telemetry and visual debugging are mutually exclusive")
+	check(not scene.telemetry_visible and not scene.debug_panel.visible, "T closes the single diagnostics view")
 	scene._toggle_debug()
-	check(scene.debug_panel.visible and not scene.telemetry_visible, "Visual debugging replaces raw telemetry without stacking panels")
+	check(scene.debug_panel.visible and not scene.telemetry_visible, "Both entry points share one diagnostics panel")
 	scene._restart()
 	await ticks(3)
 	check(scene.debug_panel.history.size() < 3, "Vehicle reset clears history and acceleration discontinuities")

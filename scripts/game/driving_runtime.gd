@@ -103,7 +103,7 @@ func _build_hud() -> void:
 	details.add_theme_font_size_override("font_size", 15)
 	column.add_child(details)
 	notice = Label.new()
-	notice.text = "W/S throttle/brake | A/D steer | SPACE handbrake\nQ/E shift (1 > N > R at rest) | R reset | C camera | T telemetry\nF9 visual debug | F2 keyboard assist | F8 export | ESC pause"
+	notice.text = "W/S throttle/brake | A/D steer | SPACE handbrake\nQ/E shift (1 > N > R at rest) | R reset | C camera | T telemetry / debug\nF2 keyboard assist | F8 export | ESC pause"
 	notice.add_theme_font_size_override("font_size", 15)
 	column.add_child(notice)
 
@@ -155,8 +155,7 @@ func _toggle_debug() -> void:
 
 
 func _toggle_telemetry() -> void:
-	telemetry_visible = not telemetry_visible
-	if telemetry_visible: debug_panel.set_enabled(false)
+	_toggle_debug()
 
 
 func _draw_forces() -> void:

@@ -53,15 +53,15 @@ func capture(station: float, mode: int, target: float, filename: String, debug: 
 		await physics_frame
 	if debug:
 		var key := InputEventKey.new()
-		key.physical_keycode = KEY_F9
-		key.keycode = KEY_F9
+		key.physical_keycode = KEY_T
+		key.keycode = KEY_T
 		key.pressed = true
 		Input.parse_input_event(key)
 		for i: int in range(3): await process_frame
 		var release: InputEventKey = key.duplicate()
 		release.pressed = false
 		Input.parse_input_event(release)
-		check(scene.debug_panel.visible, "Real F9 input opens visual debugging")
+		check(scene.debug_panel.visible, "Real T input opens visual debugging")
 		if not scene.debug_panel.visible: return
 	hint = route.index_at(station)
 	scene.vehicle.command_source = driver

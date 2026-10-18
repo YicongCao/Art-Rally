@@ -14,6 +14,12 @@ func _run() -> void:
 	var challenge := RallyContentCatalog.challenge("sunset_ridge","F160")
 	var key := challenge.key()
 	var recording := ghost(key)
+	var timed := result()
+	timed.gate_times = [0.0,25.0,100.0]
+	check(RallyProfileStore.valid_result(timed),"Checkpoint clocks are optional and valid within the result timeline")
+	for bad: Array in [[-0.5,100.0],[0.0,NAN],[0.0,30.0,20.0],[0.0,101.0]]:
+		timed.gate_times = bad
+		check(not RallyProfileStore.valid_result(timed),"Corrupt checkpoint clocks cannot enter saved bests")
 	check(RallyGhostRecording.valid(recording,key),"Finite versioned trajectory accepted")
 	check(not RallyGhostRecording.valid(recording,key+"changed"),"Ghost rejects wrong challenge or calibration version")
 	var middle := RallyGhostRecording.sample(recording,50)

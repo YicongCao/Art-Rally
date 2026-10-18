@@ -166,6 +166,12 @@ static func valid_result(value: Variant) -> bool:
 	for split: Variant in splits:
 		if not RallyGhostRecording.numeric(split) or float(split)<previous or float(split)>float(value.total_time)+0.01: return false
 		previous = float(split)
+	if value.has("gate_times"):
+		if value.gate_times is not Array or value.gate_times.size()>128: return false
+		var last := -1.0
+		for checkpoint: Variant in value.gate_times:
+			if not RallyGhostRecording.numeric(checkpoint) or float(checkpoint)<0 or float(checkpoint)<last or float(checkpoint)>float(value.total_time)+.01: return false
+			last = float(checkpoint)
 	return absf(previous-float(value.total_time))<0.01
 
 

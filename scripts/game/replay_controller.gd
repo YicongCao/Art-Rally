@@ -1,7 +1,7 @@
 class_name RallyReplayController
 extends Node
 
-const CAMERA_NAMES := ["电视跟随","直升机","追尾","路旁机位"]
+const CAMERA_NAMES := ["电视跟随","直升机","追尾","侧面跟随"]
 var scene: Node3D
 var actor := RallyGhostPlayer.new()
 var recording: Dictionary = {}
@@ -15,6 +15,8 @@ var framing_offset: float = 4.2
 var broadcast_side: float = 1.0
 var canopies: Array[Vector4] = []
 var streaks := RallyTailStreaks.new()
+var surface_fx := RallyReplaySurfaceFX.new()
+var camera_lift: float = 0
 
 func begin(owner_scene: Node3D,data: Dictionary,plate: String) -> bool:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -40,6 +42,8 @@ func begin(owner_scene: Node3D,data: Dictionary,plate: String) -> bool:
 	RallyVehiclePlate.attach(actor.get_child(0),scene.challenge.vehicle,plate)
 	streaks.build(scene,scene.challenge.vehicle.body_size,scene.challenge.vehicle.vehicle_id)
 	streaks.visual.name = "ReplayTailStreaks"
+	surface_fx.build(scene)
+	scene.presentation.tire_marks.visual.hide()
 	scene.vehicle.visible = false
 	scene.ghost.visible = false
 	scene.game_hud.visible = false
@@ -57,6 +61,8 @@ func begin(owner_scene: Node3D,data: Dictionary,plate: String) -> bool:
 
 func stop() -> void:
 	active = false
+	surface_fx.dispose()
+	if is_instance_valid(scene): scene.presentation.tire_marks.visual.show()
 	if is_instance_valid(actor): actor.queue_free()
 	if is_instance_valid(streaks.visual): streaks.visual.queue_free()
 	if is_instance_valid(scene):
@@ -70,6 +76,7 @@ func stop() -> void:
 
 func seek(seconds: float) -> void:
 	clock = clampf(seconds,0,duration)
+	surface_fx.clear()
 	snap = true
 	streaks.clear()
 	_render(0)
@@ -85,6 +92,7 @@ func _process(dt: float) -> void:
 		clock+=dt
 		if clock>duration:
 			clock = float(recording.frames[0][0])
+			surface_fx.clear()
 			snap = true
 			streaks.clear()
 	_render(dt if playing else 0)
@@ -94,6 +102,7 @@ func _render(dt: float) -> void:
 	if not active: return
 	actor.update(clock,Vector3.ZERO,true)
 	if not actor.visible:
+		surface_fx.clear()
 		snap = true
 		streaks.clear()
 		return
@@ -113,45 +122,45 @@ func _render(dt: float) -> void:
 			eye = target-forward*7+Vector3.UP*2.6
 			scene.camera.fov = 62
 		3:
-			var station_time := minf(duration,floorf(clock/5)*5+2.5)
-			var station := RallyGhostRecording.sample(recording,station_time)
-			if not station.is_empty():
-				var at: Transform3D = station.pose
-				eye = at.origin+at.basis.x*12+Vector3.UP*3
-			else: eye = target+right*12+Vector3.UP*3
+			eye = target+right*16+Vector3.UP*2.8
 			scene.camera.fov = 52
 	var ground: float = scene.presentation.scenery.height_at(eye.x,eye.z)
 	eye.y = maxf(eye.y,ground+2)
+	# Keep the chosen side. Trees may lift the camera, never trigger left/right cuts.
+	var required_lift := 0.0
 	if not clear_view(target,eye):
-		if mode==0:
-			var opposite := target-right*11*broadcast_side-forward*13+Vector3.UP*5.5
-			opposite.y = maxf(opposite.y,scene.presentation.scenery.height_at(opposite.x,opposite.z)+2)
-			if clear_view(target,opposite):
-				broadcast_side *= -1
-				eye = opposite
-		if not clear_view(target,eye):
-			for lift: float in [7,14,22]:
-				var raised := eye+Vector3.UP*lift
-				if clear_view(target,raised):
-					eye = raised
-					break
-		if not clear_view(target,eye): eye = target-forward*4+Vector3.UP*1.5
-	if snap or mode==3: scene.camera.global_position = eye
+		for lift: float in [7,14,22,32]:
+			required_lift = lift
+			if clear_view(target,eye+Vector3.UP*lift): break
+	camera_lift = required_lift if snap else lerpf(camera_lift,required_lift,1-exp(-3*dt))
+	eye += Vector3.UP*camera_lift
+	if snap: scene.camera.global_position = eye
 	else: scene.camera.global_position = scene.camera.global_position.lerp(eye,1-exp(-5*dt))
-	if not clear_view(target,scene.camera.global_position): scene.camera.global_position = eye
 	var screen_right := (target-eye).normalized().cross(Vector3.UP).normalized()
 	var framed_target := target-screen_right*framing_offset
 	if scene.camera.global_position.distance_squared_to(framed_target)>.01: scene.camera.look_at(framed_target)
 	snap = false
-	var future := RallyGhostRecording.sample(recording,minf(duration,clock+.05))
+	var sample := RallyGhostRecording.sample(recording,clock)
+	var future_time := minf(duration,clock+.04)
+	var previous_time := maxf(float(recording.frames[0][0]),clock-.04)
+	var future := RallyGhostRecording.sample(recording,future_time)
+	var past := RallyGhostRecording.sample(recording,previous_time)
 	var speed := 0.0
-	if not future.is_empty(): speed = pose.origin.distance_to(future.pose.origin)/.05
+	if not future.is_empty() and not past.is_empty() and RallyGhostRecording._continuous(recording,previous_time,future_time):
+		var span := maxf(future_time-previous_time,.001)
+		var velocity: Vector3 = (future.pose.origin-past.pose.origin)/span
+		var spins: Array = []
+		for i: int in range(4): spins.append((future.spins[i]-past.spins[i])/span if recording.get("unwrapped_spins",false) else wrapf(future.spins[i]-past.spins[i],-PI,PI)/span)
+		speed = velocity.length()
+		surface_fx.update(sample,velocity,spins,dt)
+	else: surface_fx.clear()
 	if dt>0: streaks.update(pose,speed,dt,scene.camera)
 
 
 func _exit_tree() -> void:
 	# A short/aborted run can have no usable replay frames.
 	if is_instance_valid(actor) and actor.get_parent()==null: actor.free()
+	if is_instance_valid(surface_fx.marks.visual) and surface_fx.marks.visual.get_parent()==null: surface_fx.marks.visual.free()
 	if is_instance_valid(streaks.visual) and streaks.visual.get_parent()==null: streaks.visual.free()
 
 

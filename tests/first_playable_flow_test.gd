@@ -28,7 +28,7 @@ func _run() -> void:
 	check(app.race.vehicle.config.body_mass==1000,"Selected mass applied")
 	check(app.race.session.split_gates.size()==3,"Three splits configured")
 	app.race._setting_changed("brake_bias",0.69)
-	check(is_equal_approx(app.race.vehicle.config.front_brake_bias,0.62),"Official challenge locks mechanical tuning")
+	check(is_equal_approx(app.race.vehicle.config.front_brake_bias,app.race.challenge.vehicle.physics_config().front_brake_bias),"Official challenge locks mechanical tuning")
 	app.race._toggle_mode()
 	check(not app.race.session.practice,"Practice cannot be toggled into an eligible run")
 	app.race._toggle_pause()

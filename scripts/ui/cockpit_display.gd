@@ -26,7 +26,7 @@ func refresh(car: RallyVehicle) -> void:
 	throttle = car.command.throttle
 	automatic = car.drivetrain.automatic
 	drive_layout = car.drivetrain.config.drive_layout
-	drive_status = "SYNC DOWN" if car.drivetrain.auto_shift_cut else ("WHEELSPIN" if car.drivetrain.wheelspin > car.drivetrain.config.max_upshift_slip and throttle > 0.2 and car.drivetrain.gear > 0 else "")
+	drive_status = "SYNC DOWN" if car.drivetrain.auto_shift_cut else ""
 	queue_redraw()
 
 

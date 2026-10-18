@@ -14,7 +14,7 @@ var power_tier: int = 0
 @export var accent := Color("e8bf4d")
 @export var paint := Color("245caa")
 @export var number: int = 44
-@export var revision: String = "fp1"
+@export var revision: String = "fp2"
 @export var model_path: String = "res://assets/vehicles/A240.glb"
 @export var cockpit_offset := Vector3(0,0.74,-0.80)
 @export var hood_offset := Vector3(0,0.72,-1.40)
@@ -29,6 +29,9 @@ func physics_config() -> RallyVehicleConfig:
 	result.body_inertia = Vector3(650,1750,1850)*(mass_kg/1250.0)
 	result.body_inertia.y *= pow(wheelbase/2.6,2)
 	result.body_inertia.z *= pow(track_width/1.6,2)
+	result.corner_brake_balance = true
+	result.front_brake_bias = {"FWD":.60,"RWD":.61,"AWD":.61}[drive_layout]
+	result.rear_anti_roll = {"FWD":5600.0,"RWD":4800.0,"AWD":5200.0}[drive_layout]
 	result.contact_envelope = true
 	return result
 

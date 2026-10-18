@@ -219,6 +219,7 @@ S / ↓　制动，停稳按住 0.6 秒倒车
 A D / ← →　转向
 空格　手刹　　R　恢复
 C　镜头　　Q E　换挡
+T　遥测与调试
 Esc　暂停"],["手柄","右 / 左扳机　加速 / 制动
 左摇杆　转向
 A　手刹　　Y　恢复
@@ -234,7 +235,7 @@ Esc　退出沉浸模式"]]:
 			var legend := VBoxContainer.new()
 			legend.add_theme_constant_override("separation",6)
 			card.add_child(legend)
-			for item: Array in [["wheel_slip","滑移"],["handbrake","手刹"],["shift","换挡"]]:
+			for item: Array in [["handbrake","手刹"],["shift","换挡"]]:
 				var pair := _row(legend)
 				pair.add_theme_constant_override("separation",4)
 				var icon := TextureRect.new()
@@ -835,44 +836,29 @@ func show_tutorial() -> void:
 
 
 func show_settings() -> void:
-	_page("让驾驶适合你","设置保存在本机；比赛中也可按 Esc 调整操作与画面。","settings")
+	_page("设置","", "settings")
 	var identity := _row(column)
 	var current_plate := RallyPlatePreview.new()
 	current_plate.text = str(profile.data.get("plate",""))
-	current_plate.custom_minimum_size = Vector2(260,52)
+	current_plate.custom_minimum_size = Vector2(240,48)
 	identity.add_child(current_plate)
 	_button(identity,"修改车牌",func(): show_plate_setup(false))
-	var row := _row(column)
-	var left := _card(row)
-	var right := _card(row)
-	for entry: Array in [["volume","主音量"],["engine_volume","发动机"],["road_volume","轮胎与路面"],["environment_volume","环境"],["interface_volume","界面与路书"],["music_volume","背景音乐"]]:
-		var line := _row(left)
-		var label := _label(line,entry[1],17)
-		label.custom_minimum_size.x = 140
-		var slider := HSlider.new()
-		slider.min_value = 0
-		slider.max_value = 1
-		slider.step = .01
-		slider.value = prefs.values[entry[0]]
-		slider.custom_minimum_size.x = 200
-		line.add_child(slider)
-		slider.value_changed.connect(func(value: float): prefs.set_value(entry[0],value); audio.apply_settings(prefs); _save())
-	_button(left,"试听提示音",func(): audio.cue("start"))
-	_label(left,audio.diagnostic(),14)
+	_button(identity,"按键映射",show_bindings)
+	var categories := RallySettingsPanel.new()
+	column.add_child(categories)
+	categories.build(prefs,350)
+	categories.setting_changed.connect(func(key: String,value: Variant): prefs.set_value(key,value); audio.apply_settings(prefs); _save())
+	categories.voice_preview.connect(func(): audio.speak_note("preview",true))
+	var footer := _row(column)
 	var outputs := OptionButton.new()
+	outputs.tooltip_text = "音频输出设备"
 	for device: String in AudioServer.get_output_device_list():
 		outputs.add_item(device)
 		if device==AudioServer.output_device: outputs.select(outputs.item_count-1)
 	outputs.item_selected.connect(func(index: int): AudioServer.output_device=outputs.get_item_text(index); profile.data["output_device"]=AudioServer.output_device; _save())
-	left.add_child(outputs)
-	for entry: Array in [["ghost","显示个人幽灵"],["automatic","自动换挡"],["keyboard_light","键盘轻辅助"],["low_detail","降低草簇与散石密度"],["camera_motion","驾驶舱震动"],["lens_flare","镜头光斑"],["vibration","手柄震动"]]:
-		var check := CheckButton.new()
-		check.text = entry[1]
-		check.button_pressed = prefs.values[entry[0]]
-		check.toggled.connect(func(value: bool): prefs.set_value(entry[0],value); _save())
-		right.add_child(check)
-	_button(column,"键盘按键映射",show_bindings)
-	_button(column,"恢复默认设置",func(): prefs.reset(); profile.data.bindings={}; audio.apply_settings(prefs); _save(); show_settings())
+	footer.add_child(outputs)
+	_button(footer,"试听提示音",func(): audio.cue("start"))
+	_button(footer,"恢复默认",func(): prefs.reset(); profile.data.bindings={}; audio.apply_settings(prefs); _save(); show_settings())
 	_actions("← 主菜单",show_home,"完成设置",show_home)
 
 
@@ -1000,7 +986,8 @@ func _input(event: InputEvent) -> void:
 
 func show_credits() -> void:
 	_page("沿途的创作者","Art Rally / 原创复古计时拉力","credits")
-	_label(column,"引擎：Godot Engine / Jolt Physics\n车辆、风景、涂装：Art Rally 原创低多边形设计\n音效与音乐：项目内原创程序合成，全部离线打包\n字体与依赖许可：见随包 ASSET_CREDITS.md\n\n感谢每一位试驾并留下反馈的玩家。",24)
+	_label(column,"引擎：Godot Engine / Jolt Physics\n车辆、风景、涂装：Art Rally 原创低多边形设计\n音效与音乐：项目原创合成
+中文领航：Kokoro 合成语音，全部离线打包\n字体与依赖许可：见随包 ASSET_CREDITS.md\n\n感谢每一位试驾并留下反馈的玩家。",24)
 	_label(column,"试玩版 · 奖牌阈值待真人标定。Windows 与实体手柄需在对应设备完成验收。",16)
 	_actions("← 主菜单",show_home)
 

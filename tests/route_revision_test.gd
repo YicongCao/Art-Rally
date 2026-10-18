@@ -6,7 +6,7 @@ func _run() -> void:
 		var route := RallyStageRoute.new()
 		route.build(definition)
 		check(route.validate().is_empty(),id+" has no crossing, unsafe grade or discontinuous frames")
-		check(definition.stage_version=="4",id+" isolates old scores and ghosts after geometry changes")
+		check(definition.stage_version=="5",id+" isolates old scores and ghosts after geometry changes")
 		var min_width := 100.0
 		var max_width := 0.0
 		var largest_step := 0.0
@@ -18,8 +18,11 @@ func _run() -> void:
 			min_width = minf(min_width,route.width_at(s))
 			max_width = maxf(max_width,route.width_at(s))
 			largest_step = maxf(largest_step,absf(route.width_at(s)-route.width_at(s-route.spacing)))
-			if id=="sunlit_cape": direction_ok = direction_ok and route.points[i].y<route.points[i-1].y
-			if id=="misty_highlands": direction_ok = direction_ok and route.points[i].y>route.points[i-1].y
+			var bridge_approach := false
+			for river: Vector3 in definition.river_crossings:
+				if absf(s-river.x)<river.y*.5+20: bridge_approach=true
+			if id=="sunlit_cape" and not bridge_approach: direction_ok = direction_ok and route.points[i].y<route.points[i-1].y
+			if id=="misty_highlands" and not bridge_approach: direction_ok = direction_ok and route.points[i].y>route.points[i-1].y
 			if i>15 and i<route.points.size()-15:
 				var angle := absf(route.tangents[i-15].signed_angle_to(route.tangents[i+15],Vector3.UP))
 				if angle>1.3 and s-last_hairpin>150:

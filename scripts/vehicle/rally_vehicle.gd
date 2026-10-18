@@ -100,6 +100,7 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 		wheel.lateral_speed = velocity.dot(wheel.right)
 		var brake_share := config.front_brake_bias if i < 2 else 1.0 - config.front_brake_bias
 		var brake_torque := command.brake * config.total_brake_torque * brake_share * 0.5
+		brake_torque = RallyBrakeBalance.service_torque(brake_torque,wheel,i<2,command.steer,state.linear_velocity.length(),drivetrain.config.drive_layout,config,tire)
 		if i >= 2: brake_torque += command.handbrake * config.handbrake_torque
 		brake_torques.append(brake_torque)
 	var forces: Array[Vector2] = [Vector2.ZERO, Vector2.ZERO, Vector2.ZERO, Vector2.ZERO]

@@ -60,9 +60,9 @@ macOS 首次安装：`brew install --cask godot`。Homebrew 跟随新版发布�
 ./scripts/dev.sh m5-render-check # 真实图形/音频后端、驾驶舱、暂停和菜单布局检查
 ./scripts/dev.sh autopilot-render-check # 真实窗口检查自动驾驶 HUD 与调试面板
 ./scripts/dev.sh result-render-check # 真实窗口检查完赛时间、罚时与最佳成绩
-./scripts/dev.sh m6-perf # 1080p 跟车/驾驶舱/F9 三次完整性能与内存长跑
+./scripts/dev.sh m6-perf # 1080p 跟车/驾驶舱/T 三次完整性能与内存长跑
 ./scripts/dev.sh m6-release-check # 内置字体、1080p HUD、最小窗口与完赛流程检查
-./scripts/dev.sh v02-tire-render-check # 真实窗口检查轮胎形变、动态接触斑与 F9 数据
+./scripts/dev.sh v02-tire-render-check # 真实窗口检查轮胎形变、动态接触斑与 T 数据
 ./scripts/dev.sh autumn-capture # 自动驾驶采集砂石、泥地、驾驶舱三张秋日实机图
 ./scripts/dev.sh pacenote-render-check # 渲染左右普通弯、急弯四张实际路书卡片
 ./scripts/dev.sh first-playable-matrix # 27 个赛道 × 车型 × 动力组合完整自动驾驶回归
@@ -81,7 +81,7 @@ macOS 首次安装：`brew install --cask godot`。Homebrew 跟随新版发布�
 
 `check` 验证环境、输入、轮胎、车辆动态、多路面、水阻、道路几何、赛段会话及恢复；长距离完整物理试跑独立为 `stage-check`，避免每次改动都等待完整跑段。日志存入忽略版本控制的 `logs/`。真实手柄连接与新增驾驶体验需人工验收。
 
-`m6-perf` 需要真实 Metal 窗口并耗时约 12 分钟；它以生产自动驾驶连续跑三次，分别覆盖默认跟车、驾驶舱和 F9 调试面板，输出原始帧间隔、60 帧节奏 P95/P99、Godot 总物理、车辆回调、draw call、三角元及内存趋势到 `logs/m6_performance.json`。性能报告与测量限制见 [M6 验收记录](docs/M6_VALIDATION.zh-CN.md)。
+`m6-perf` 需要真实 Metal 窗口并耗时约 12 分钟；它以生产自动驾驶连续跑三次，分别覆盖默认跟车、驾驶舱和 T 调试面板，输出原始帧间隔、60 帧节奏 P95/P99、Godot 总物理、车辆回调、draw call、三角元及内存趋势到 `logs/m6_performance.json`。性能报告与测量限制见 [M6 验收记录](docs/M6_VALIDATION.zh-CN.md)。
 
 macOS 导出要求安装与 `.godot-version` 完全一致的 4.7.2 模板；`doctor` 会显示模板状态。产物位于忽略版本控制的 `builds/macos/Art Rally.app` 和 `Art-Rally-macos-universal.zip`。当前包使用本机可验证的 ad-hoc 签名，不是 Developer ID 正式签名，也没有 Apple 公证；从网络下载或传到其他 Mac 后仍可能触发 Gatekeeper 提示。
 
@@ -119,8 +119,7 @@ Windows x86_64 包可由同一台 Mac 使用官方 4.7.2 模板交叉导出，�
 | 升挡 / 降挡 | E / Q | RB / LB |
 | 恢复车辆（计时赛段 +5s） | R | Y / 顶部面键 |
 | 跟车 / 引擎盖 / 简化驾驶舱 | C | X / 左侧面键 |
-| 切换遥测 | T | 未预设 |
-| 显示 / 隐藏实时可视化调试 | F9 | 未预设 |
+| 遥测与可视化调试（合并面板） | T | 未预设 |
 | 关闭 / 虚拟键盘 / 虚拟手柄自动驾驶 | F10 | 暂停菜单 |
 | 自动/手动换挡 | M | 未预设 |
 | Legacy 单射线/包络调试（v0.2 模型不使用） | F3 | 未预设 |
@@ -137,7 +136,7 @@ Esc 打开暂停/设置，Enter 或手柄 Start 明确恢复；失焦和活动�
 
 F8 暂停并导出最近最多 120 秒遥测至 `user://telemetry/`。T 在正式 HUD 和四轮开发遥测之间切换。主 HUD 显示转速弧、速度、挡位、踏板条、路面、路线图、计时和路书；驾驶舱模式使用舱内数字仪表，避免叠加两套大仪表。
 
-**F9** 切换实时可视化调试面板（赛段、测试场和样板均可用）：四个轮胎独立展示接地/驱动状态、法向载荷、悬架行程、纵向滑移、侧偏角、轮速、材质、水深、水阻和摩擦圆；发动机面板只显示最近 6 秒的绿色净扭矩曲线（纵轴 Nm），随驾驶向左滚动，右侧持续更新最新值，并显示功率、离合传递扭矩及实际有效油门；转速历史仍保留在右下角的转速/车速小图，另有红色 G 值球、车身姿态和载荷分配。绿色摩擦圆向量横轴为 Fy、纵轴为 Fx，载荷条中线为单轮静态载荷。历史以 20 Hz 采样，暂停冻结，复位/开关清空，不改变驾驶物理或抢走手柄输入；T 与 F9 的面板互斥。图表轴超出范围时只裁剪标记，数值仍显示原值。
+**T** 切换遥测与实时可视化调试面板（赛段、测试场和样板均可用）：四个轮胎独立展示接地/驱动状态、法向载荷、悬架行程、纵向滑移、侧偏角、轮速、材质、水深、水阻和摩擦圆；发动机面板只显示最近 6 秒的绿色净扭矩曲线（纵轴 Nm），随驾驶向左滚动，右侧持续更新最新值，并显示功率、离合传递扭矩及实际有效油门；转速历史仍保留在右下角的转速/车速小图，另有红色 G 值球、车身姿态和载荷分配。绿色摩擦圆向量横轴为 Fy、纵轴为 Fx，载荷条中线为单轮静态载荷。历史以 20 Hz 采样，暂停冻结，复位/开关清空，不改变驾驶物理或抢走手柄输入；遥测与调试共用同一个面板。图表轴超出范围时只裁剪标记，数值仍显示原值。
 
 读数定义、验证和截图更新命令见 [实时可视化调试说明](docs/DEBUG_PANEL.zh-CN.md)。
 
@@ -209,6 +208,8 @@ v0.2 轮胎模型已按 [技术方案](docs/V0.2_TIRE_CONTACT_DEFORMATION.zh-CN.
 
 执行顺序与验收标准见 [开发计划](docs/DEVELOPMENT_PLAN.zh-CN.md)。手柄优先标定，键盘通过输入平滑与车速相关转向辅助降低难度，两者共享相同车辆物理。
 
-最新赛道与选车改动见 [赛道第二版更新](docs/ROUTE_V2_UPDATE.zh-CN.md)。当前运行版本为 `0.3.0-rc.4`；路线版本 4 的桥梁缓坡与旧版成绩、幽灵隔离。页面动效、回放与音乐调整见 [体验打磨更新](docs/CINEMATIC_POLISH.zh-CN.md)。
+最新赛道与选车改动见 [赛道第二版更新](docs/ROUTE_V2_UPDATE.zh-CN.md)。当前运行版本为 `0.3.0-rc.4`；当前路线版本 5、车辆标定 fp2，与旧版成绩、幽灵隔离。页面动效、回放与音乐调整见 [体验打磨更新](docs/CINEMATIC_POLISH.zh-CN.md)。
 
 本轮界面、混合路面与窄桥、回放、航拍相册和四主题 MIDI 配乐见 [玩家体验更新](docs/PLAYER_EXPERIENCE_UPDATE.zh-CN.md)。
+
+最新驾驶与回放更新：固定回放观察侧、实时扬尘胎痕、检查点秒差、分类设置、中文男女领航及三种独立曲风，见 [更新与验证说明](docs/DRIVING_EXPERIENCE_2026-10-18.zh-CN.md)。

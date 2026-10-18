@@ -16,6 +16,7 @@ extends Resource
 @export var rebound_damping: float = 3400.0
 @export var bump_stiffness: float = 180000.0
 @export var max_steer_radians: float = 0.55
+@export var corner_brake_balance: bool = false
 @export var front_brake_bias: float = 0.62
 @export var total_brake_torque: float = 6400.0
 @export var handbrake_torque: float = 2300.0

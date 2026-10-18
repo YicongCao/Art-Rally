@@ -94,8 +94,8 @@ func _unhandled_input(event: InputEvent) -> void:
 			pause_requested.emit()
 			return
 		# Presentation shortcuts must not switch away from a connected gamepad or clear its axes.
-		if code == KEY_F9:
-			if event.pressed: debug_requested.emit()
+		if code == KEY_T:
+			if event.pressed: telemetry_requested.emit()
 			return
 		if code == KEY_F10:
 			if event.pressed: autopilot_requested.emit()
@@ -124,7 +124,6 @@ func _unhandled_input(event: InputEvent) -> void:
 				KEY_Q: pending_shift = -1
 				KEY_R: reset_requested.emit()
 				KEY_C: camera_requested.emit()
-				KEY_T: telemetry_requested.emit()
 				KEY_M: transmission_requested.emit()
 				KEY_F2: profile_requested.emit()
 				KEY_F3: contact_requested.emit()

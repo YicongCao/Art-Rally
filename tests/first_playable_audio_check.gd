@@ -31,6 +31,37 @@ func _run() -> void:
 		for sample: Vector2 in capture.get_buffer(capture.get_frames_available()): measured=maxf(measured,maxf(absf(sample.x),absf(sample.y)))
 		check(measured>.0005 and measured<.99,"Theme "+audio.theme+" reaches the real output bus without clipping")
 		check(audio.music.stream.loop_end==roundi(audio.music.stream.get_length()*audio.music.stream.mix_rate),"Compressed music uses its full decoded loop length")
+	var voice_capture := AudioEffectCapture.new()
+	AudioServer.add_bus_effect(AudioServer.get_bus_index("Voice"),voice_capture)
+	for kind: String in ["female","male"]:
+		audio.settings.set_value("voice",kind)
+		audio.apply_settings(audio.settings)
+		voice_capture.clear_buffer()
+		audio.speak_note("preview",true)
+		await create_timer(1.0).timeout
+		var voice_peak := 0.0
+		for sample: Vector2 in voice_capture.get_buffer(voice_capture.get_frames_available()): voice_peak=maxf(voice_peak,maxf(absf(sample.x),absf(sample.y)))
+		check(voice_peak>.01 and voice_peak<.99,kind+" co-driver reaches the real audio mixer without clipping")
+	audio.voice.stop()
+	AudioServer.remove_bus_effect(AudioServer.get_bus_index("Voice"),0)
+	var space := Node3D.new()
+	root.add_child(space)
+	var camera := Camera3D.new()
+	space.add_child(camera)
+	camera.current = true
+	var source := AudioStreamPlayer3D.new()
+	source.position=Vector3(0,0,-8)
+	source.unit_size=20
+	source.volume_db=-12
+	space.add_child(source)
+	for kind: String in ["helicopter","river","hooves"]:
+		source.stream = RallyAudioDirector.asset(kind,true)
+		source.play()
+		capture.clear_buffer()
+		await create_timer(.6).timeout
+		check(source.playing and capture.get_frames_available()>0,kind+" spatial loop plays through CoreAudio")
+	source.stop()
+	space.free()
 	paused = true
 	await create_timer(.15,true).timeout
 	check(audio.music.stream_paused,"Driving music freezes with pause")

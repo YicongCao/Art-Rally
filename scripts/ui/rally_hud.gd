@@ -17,6 +17,10 @@ var map_scale: float = 1
 var ui_scale: float = 1
 var ui_offset := Vector2.ZERO
 var acrylic := RallyAcrylicPanels.new()
+var hint_alpha: float = 1
+var sector_clock: float = 99
+var seen_gates: int = 0
+var sector: Dictionary = {}
 
 
 func _ready() -> void:
@@ -56,11 +60,30 @@ static func data_for(car: RallyVehicle, session: RallyStageSession, paused: bool
 		"note_distance":maxf(0,session.note_s-session.progress),"phase":int(session.phase),"countdown":session.countdown,
 		"practice":session.practice,"paused":paused,"warning":warning,"surface":car.wheels[0].surface.surface_id,
 		"position":Vector2(car.position.x,car.position.z),"heading":Vector2(-car.basis.z.x,-car.basis.z.z),
-		"gate_number":gate+1,"gate_distance":car.position.distance_to(target),"gate_direction":Vector2(local.x,local.z).normalized()}
+		"gate_times":session.gate_times.duplicate(),"gate_number":gate+1,"gate_distance":car.position.distance_to(target),"gate_direction":Vector2(local.x,local.z).normalized()}
 
 
 func refresh(value: Dictionary) -> void:
+	var times: Array = value.get("gate_times",[])
+	if times.size()<seen_gates:
+		sector.clear()
+		sector_clock = 99
+	if times.size()>seen_gates and times.size()>=2:
+		var i := times.size()-1
+		sector = {"number":i,"seconds":float(times[i])-float(times[i-1])}
+		var best: Array = value.get("best_gate_times",[])
+		if best.size()>i:
+			sector["delta"] = sector.seconds-(float(best[i])-float(best[i-1]))
+		sector_clock = 0
+	seen_gates = times.size()
 	model = value
+	queue_redraw()
+
+
+func _process(dt: float) -> void:
+	if model.is_empty() or model.get("paused",false): return
+	sector_clock += dt
+	hint_alpha = move_toward(hint_alpha,1.0 if float(model.get("speed",0))<.8 else 0.0,dt/.14)
 	queue_redraw()
 
 
@@ -108,6 +131,8 @@ func _draw() -> void:
 	if best_time>=0: text("%s  %s"%[model.get("best_label","个人最佳"),time_text(best_time)],Vector2(988,103),12,MUTED,number_font)
 	draw_rect(Rect2(988,119,244,3),Color("3b5148"))
 	draw_rect(Rect2(988,119,244*clampf(model.progress/model.length,0,1),3),AMBER)
+	_draw_sector()
+	if model.get("show_fps",false): text("%d FPS"%Engine.get_frames_per_second(),Vector2(1170,155),13,MUTED,number_font)
 	_draw_note()
 	_draw_map()
 	if int(model.get("camera_mode",0))!=2: _draw_gauge()
@@ -124,8 +149,8 @@ func _draw() -> void:
 	if not str(model.warning).is_empty():
 		panel(Rect2(422,625,435,44),Color(0.15,0.08,0.05,0.94))
 		center_text(model.warning,Vector2(640,653),15,AMBER)
-	elif int(model.get("camera_mode",0))!=2:
-		center_text("Esc 暂停/设置    C 视角    F9 调试    F10 自动驾驶    T 遥测",Vector2(640,697),12,PAPER)
+	elif int(model.get("camera_mode",0))!=2 and hint_alpha>0:
+		center_text("Esc 设置    C 视角    T 遥测 / 调试    F10 自动驾驶",Vector2(640,697),12,Color(PAPER,hint_alpha))
 	if model.paused:
 		center_text("已暂停",Vector2(640,137),20,AMBER)
 	elif model.phase == RallyStageSession.Phase.COUNTDOWN and remaining<=0:
@@ -197,6 +222,11 @@ func _draw_map() -> void:
 		draw_polyline(points,Color("74877a"),2,true)
 		var completed := clampi(int((points.size()-1)*model.progress/model.length),1,points.size()-1)
 		draw_polyline(points.slice(0,completed+1),AMBER,3,true)
+		if model.has("ghost_position"):
+			var ghost_at: Vector2 = Vector2(82,541)+(model.ghost_position-map_min)*map_scale
+			draw_arc(ghost_at,5,0,TAU,16,Color("85dcdf"),2,true)
+			var ghost_end := clampi(int((points.size()-1)*float(model.ghost_progress)/float(model.length)),1,points.size()-1)
+			for n: int in range(0,ghost_end,3): draw_line(points[n],points[mini(n+1,ghost_end)],Color(.52,.86,.87,.7),1,true)
 		var position: Vector2 = Vector2(82,541)+(model.position-map_min)*map_scale
 		var forward: Vector2 = model.heading.normalized()
 		var side := Vector2(-forward.y,forward.x)
@@ -222,7 +252,7 @@ func _draw_gauge() -> void:
 	var surface: String = ["柏油","砂石","泥地","草土"][int(model.surface)]
 	text(surface,Vector2(1012,455),13,PAPER)
 	# Separate status rail above the RPM arc: never overlap speed or gear digits.
-	var status := "handbrake" if model.handbrake>.1 else ("shift" if model.get("shift_sync",false) else ("wheel_slip" if model.get("wheelspin",false) else ""))
+	var status := "handbrake" if model.handbrake>.1 else ("shift" if model.get("shift_sync",false) else "")
 	if not status.is_empty(): draw_texture_rect(load("res://assets/ui/icons/"+status+".svg"),Rect2(1115,437,20,20),false,RED if status=="handbrake" else AMBER)
 	draw_rect(Rect2(1020,672,93,4),Color("40574b"))
 	draw_rect(Rect2(1020,672,93*model.throttle,4),Color("86bd9a"))
@@ -235,7 +265,7 @@ func panel(rect: Rect2, color: Color = Color(0.035,0.09,0.075,0.90)) -> void:
 	var e := rect.end
 	var polygon := PackedVector2Array([p+Vector2(10,0),Vector2(e.x,p.y),Vector2(e.x,e.y-10),e-Vector2(10,0),Vector2(p.x,e.y),p+Vector2(0,10)])
 	var tint := color
-	tint.a = .58 if color.r > color.g else .34
+	tint.a = (.58 if color.r > color.g else .34)*color.a/.90
 	acrylic.regions.append({"shape":polygon,"tint":tint})
 	var border := polygon.duplicate()
 	border.append(polygon[0])
@@ -245,10 +275,22 @@ func panel(rect: Rect2, color: Color = Color(0.035,0.09,0.075,0.90)) -> void:
 
 func text(value: String, at: Vector2, font_size: int, color: Color = PAPER, font: Font = null) -> void:
 	var face := text_font if font==null else font
-	draw_string(face,at+Vector2(0,1.3),value,HORIZONTAL_ALIGNMENT_LEFT,-1,font_size,Color(0.015,.035,.03,.78))
+	draw_string(face,at+Vector2(0,1.3),value,HORIZONTAL_ALIGNMENT_LEFT,-1,font_size,Color(0.015,.035,.03,.78*color.a))
 	draw_string(face,at,value,HORIZONTAL_ALIGNMENT_LEFT,-1,font_size,color)
 
 
 func center_text(value: String, at: Vector2, font_size: int, color: Color = PAPER, font: Font = null) -> void:
 	var selected := text_font if font==null else font
 	text(value,at-Vector2(selected.get_string_size(value,HORIZONTAL_ALIGNMENT_LEFT,-1,font_size).x*0.5,0),font_size,color,selected)
+
+
+func _draw_sector() -> void:
+	if sector.is_empty() or sector_clock>3.3: return
+	# Two short flashes, then a steady readable hold and a crisp 200 ms fade.
+	if (sector_clock>.12 and sector_clock<.24) or (sector_clock>.36 and sector_clock<.48): return
+	var opacity := 1-smoothstep(3.1,3.3,sector_clock)
+	panel(Rect2(968,170,288,92 if sector.has("delta") else 62),Color(.035,.09,.075,.90*opacity))
+	draw_texture_rect(preload("res://assets/ui/icons/sector.svg"),Rect2(984,190,25,25),false,Color(AMBER,opacity))
+	text("%02d  %s"%[sector.number,time_text(sector.seconds)],Vector2(1020,205),20,Color(PAPER,opacity),number_font)
+	if sector.has("delta"):
+		text("%+.2f s"%sector.delta,Vector2(1020,242),23,Color(Color("91d5b2") if sector.delta<=0 else RED,opacity),number_font)

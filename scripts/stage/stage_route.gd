@@ -30,8 +30,7 @@ func build(settings: RallyStageDefinition) -> void:
 			point.y = lerpf(settings.elevation_profile.x,settings.elevation_profile.y,s/length)
 		point.y += settings.rolling_amplitude*sin(s*TAU/190)*sin(s*TAU/370)*smoothstep(50,120,s)*(1-smoothstep(length-180,length-60,s))
 		var roughness := 0.006 if settings.surface_id(s) == 0 else 0.025
-		# Engineered approaches are smoother than loose gravel. This also keeps the
-		# coastal bridge ramp descending rather than letting small bumps reverse its grade.
+		# Engineered bridge approaches suppress gravel chatter before the authored crest.
 		for bridge: Vector3 in settings.river_crossings:
 			var smooth_deck := 1-smoothstep(bridge.y*.5+24,bridge.y*.5+32,absf(s-bridge.x))
 			roughness = lerpf(roughness,.003,smooth_deck)
@@ -39,7 +38,9 @@ func build(settings: RallyStageDefinition) -> void:
 		for crest: Vector3 in settings.crests:
 			point.y += crest.y*exp(-pow((s-crest.x)/maxf(crest.z,0.1),2))
 		for bridge: Vector3 in settings.river_crossings:
-			point.y += .65*(1-smoothstep(bridge.y*.5,bridge.y*.5+24,absf(s-bridge.x)))
+			var rise := 1.65 if settings.environment_id=="highland" else 1.25
+			var approach := 14.0 if settings.environment_id=="highland" else 16.0
+			point.y += rise*(1-smoothstep(bridge.y*.5,bridge.y*.5+approach,absf(s-bridge.x)))
 		points.append(point)
 		distances.append(s)
 	for i: int in range(points.size()):

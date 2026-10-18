@@ -11,7 +11,7 @@ func _run() -> void:
 	var frames: Array = []
 	for i: int in range(181):
 		var time := i/30.0
-		var pose: Transform3D = scene.generator.route.pose_at(120+time*13)
+		var pose: Transform3D = scene.generator.route.pose_at(120+time*13,.68)
 		var q := pose.basis.get_rotation_quaternion()
 		var frame := [time,pose.origin.x,pose.origin.y,pose.origin.z,q.x,q.y,q.z,q.w,0.0]
 		for wheel: int in range(4): frame.append(time*30)
@@ -50,7 +50,15 @@ func _run() -> void:
 		cameras.append(scene.camera.position)
 	check(scene.replay.clear_view(scene.replay.actor.position+Vector3.UP*.7,scene.camera.position),"Replay camera keeps its sightline clear of scenery and tree crowns")
 	check(cameras[0].distance_to(cameras[1])>10 and cameras[1].distance_to(cameras[2])>10 and cameras[2].distance_to(cameras[3])>5,"Four replay camera positions differ")
+	scene.replay.set_camera(0)
+	scene.replay.seek(.2)
+	var side: float = scene.replay.broadcast_side
+	for i: int in range(35): scene.replay._process(1.0/60)
+	check(scene.replay.broadcast_side==side,"TV follow keeps its observation side instead of automatic cuts")
+	check(scene.replay.surface_fx.marks.count>0,"Replay reconstructs tire tracks on the physical road")
+	check(scene.replay.surface_fx.particles.any(func(entry: Dictionary): return entry.emitter.emitting),"Replay reconstructs wheel dust from ground contact")
 	scene.replay.seek(2.5)
+	check(scene.replay.surface_fx.marks.count==0 and scene.replay.surface_fx.particles.all(func(entry: Dictionary): return not entry.emitter.emitting),"Recovery/seek clears trails without a teleport streak")
 	check(not scene.replay.actor.visible and scene.replay.snap,"Recovery penalty gap hides replay car without interpolating a teleport")
 	scene.replay.seek(4.5)
 	check(scene.replay.actor.visible,"Car reappears after recovery gap")

@@ -18,6 +18,7 @@ var photographed: bool = false
 var capture_pending: bool = false
 var photos_enabled: bool = true
 var last_saved: String = ""
+var rotor_audio := AudioStreamPlayer3D.new()
 
 func build(owner_scene: Node3D,photo_album: RallyPhotoAlbum) -> void:
 	scene = owner_scene
@@ -25,6 +26,12 @@ func build(owner_scene: Node3D,photo_album: RallyPhotoAlbum) -> void:
 	name = "RallyBroadcastHelicopter"
 	add_child(airframe)
 	airframe.name = "OrangeWhiteNewsHelicopter"
+	rotor_audio.stream = RallyAudioDirector.asset("helicopter",true)
+	rotor_audio.bus = "Environment"
+	rotor_audio.unit_size = 55
+	rotor_audio.max_distance = 220
+	rotor_audio.volume_db = -7
+	airframe.add_child(rotor_audio)
 	var b := RallySampleMeshes.new()
 	b.ellipsoid(Vector3(1.7,1.4,3.0),Vector3(0,0,0),Color("e8e4d5"))
 	b.ellipsoid(Vector3(1.5,1.0,1.5),Vector3(0,0,-1.9),Color("426a73"))
@@ -83,6 +90,7 @@ func reset() -> void:
 	shot_count = 0
 	active_time = 0
 	airframe.visible = false
+	rotor_audio.stop()
 
 func advance(dt: float) -> void:
 	clock += dt
@@ -90,6 +98,7 @@ func advance(dt: float) -> void:
 	tail_rotor.rotation.x = fmod(clock*37,TAU)
 	if scene.session.phase!=RallyStageSession.Phase.RUNNING:
 		airframe.visible = false
+		rotor_audio.stop()
 		return
 	var progress: float = scene.session.progress/scene.generator.route.length
 	if clock>=next_allowed_time and active_time<=0 and next_pass<FRACTIONS.size() and progress>=FRACTIONS[next_pass]:
@@ -99,7 +108,11 @@ func advance(dt: float) -> void:
 		next_pass += 1
 	active_time = maxf(0,active_time-dt)
 	airframe.visible = active_time>0
-	if not airframe.visible: return
+	if not airframe.visible:
+		rotor_audio.stop()
+		return
+	if not rotor_audio.playing and DisplayServer.get_name()!="headless": rotor_audio.play()
+	rotor_audio.volume_linear = .5*smoothstep(0,2,active_time)*(1-smoothstep(10,12,active_time))
 	var pose: Transform3D = scene.vehicle.get_global_transform_interpolated()
 	var forward := -pose.basis.z
 	forward.y = 0

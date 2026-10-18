@@ -42,26 +42,33 @@ func build(land: RallyStageScenery) -> void:
 		RallyStageLandmarks._mesh(node,b)
 		balloons.append({"node":node,"origin":at,"phase":rng.randf_range(0,TAU)})
 	if land.generator.definition.environment_id=="autumn": return
-	for i: int in range(10):
-		var node := Node3D.new()
-		node.name = "DistantSeagull%d"%i
-		add_child(node)
-		var s := land.route.length*(.23 if i<5 else .73)
-		var at := land.route.position_at(s)+land.route.rights[land.route.index_at(s)]*(-160-i*8)+Vector3.UP*(35+i*3)
-		var body := RallySampleMeshes.new()
-		body.ellipsoid(Vector3(.26,.23,.8),Vector3.ZERO,Color("e8e7d8"))
-		body.cone(.12,0,.35,Vector3(0,0,-.85),Color("d5a64d"),5)
-		RallyStageLandmarks._mesh(node,body)
-		var wings: Array[Node3D] = []
-		for side: float in [-1,1]:
-			var pivot := Node3D.new()
-			node.add_child(pivot)
-			var b := RallySampleMeshes.new()
-			b.triangle(Vector3(0,.1,-.25),Vector3(side*2.4,0,.65),Vector3(side*.8,0,-.2),Color("e1e4da"))
-			b.triangle(Vector3(side*2.4,0,.65),Vector3(side*1.8,0,.4),Vector3(side*1.8,0,.8),Color("475f66"))
-			RallyStageLandmarks._mesh(pivot,b)
-			wings.append(pivot)
-		birds.append({"node":node,"origin":at,"wings":wings,"phase":rng.randf_range(0,TAU),"direction":land.route.rights[land.route.index_at(s)]})
+	# Shared group phase keeps each loose formation together, instead of unrelated solo birds.
+	for flock: int in range(3):
+		var s := land.route.length*(.18+flock*.31)
+		var group_phase := rng.randf_range(0,TAU)
+		var flock_size := rng.randi_range(5,6)
+		var origin := land.route.position_at(s)+land.route.rights[land.route.index_at(s)]*-160
+		origin.y = maxf(origin.y,land.height_at(origin.x,origin.z))+75
+		for i: int in range(flock_size):
+			var node := Node3D.new()
+			node.name = "SeagullFlock%d_%d"%[flock,i]
+			add_child(node)
+			var wings: Array[Node3D] = []
+			for side: float in [-1,1]:
+				var pivot := Node3D.new()
+				node.add_child(pivot)
+				var b := RallySampleMeshes.new()
+				# A pair of tapered brush strokes; no sculpted head, beak or bulky body.
+				b.triangle(Vector3(0,0,-.22),Vector3(side*.85,.42,.1),Vector3(0,0,.20),Color("58777b"))
+				b.triangle(Vector3(side*.85,.42,.1),Vector3(side*1.9,.10,.52),Vector3(side*.58,.30,.36),Color("496970"))
+				var mesh := RallyStageLandmarks._mesh(pivot,b)
+				var material := StandardMaterial3D.new()
+				material.vertex_color_use_as_albedo = true
+				material.cull_mode = BaseMaterial3D.CULL_DISABLED
+				mesh.material_override = material
+				wings.append(pivot)
+			var offset := Vector3((i%2*2-1)*(i/2+1)*4.5,i*.55,i*4.2)
+			birds.append({"node":node,"origin":origin+offset,"wings":wings,"phase":group_phase,"wing_phase":i*.65,"direction":land.route.rights[land.route.index_at(s)]})
 
 func advance(dt: float) -> void:
 	clock += dt
@@ -71,4 +78,4 @@ func advance(dt: float) -> void:
 		var phase: float = clock*.018+bird.phase
 		bird.node.position = bird.origin+bird.direction*sin(phase)*190+Vector3.UP*sin(clock*.4+bird.phase)*2
 		bird.node.rotation.y = atan2(-bird.direction.x,-bird.direction.z)+(0 if cos(phase)>0 else PI)
-		for i: int in range(2): bird.wings[i].rotation.z = sin(clock*3.4+bird.phase)*.26*(1 if i==0 else -1)
+		for i: int in range(2): bird.wings[i].rotation.z = sin(clock*2.8+bird.wing_phase)*.23*(1 if i==0 else -1)

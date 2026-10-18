@@ -16,6 +16,8 @@ var previous_phase_audio: int = -1
 var audio_director: RallyAudioDirector
 var replay: RallyReplayController
 var broadcast := RallyBroadcastHelicopter.new()
+var wildlife := RallyWildlife.new()
+var river_audio: Array[AudioStreamPlayer3D] = []
 var photo_album: RallyPhotoAlbum
 
 
@@ -35,6 +37,10 @@ func start() -> void:
 	pause_menu.actions.add_back("返回赛道选择",func(): return_requested.emit(),true)
 	pause_menu.message.text = "练习不计入奖牌与个人纪录" if session.practice else "正式挑战 · 机械调校固定 · 自动驾驶跑段不计成绩"
 	_build_spatial_ambience()
+	_build_river_audio()
+	add_child(wildlife)
+	wildlife.build(self)
+	pause_menu.voice_preview.connect(func(): if audio_director!=null: audio_director.speak_note("preview",true))
 	add_child(ghost)
 	ghost.build(challenge.vehicle,profile.load_ghost(challenge))
 	if photo_album==null:
@@ -81,10 +87,14 @@ func _process(dt: float) -> void:
 	if replay!=null and replay.active: return
 	super._process(dt)
 	if not is_instance_valid(vehicle): return
-	if not get_tree().paused: broadcast.advance(dt)
+	if not get_tree().paused:
+		broadcast.advance(dt)
+		wildlife.advance(dt)
+		_update_river_audio(dt)
 	ghost.update(session.total_time(),vehicle.position,preferences.values.ghost and session.phase==RallyStageSession.Phase.RUNNING)
 	if audio_director!=null:
 		if session.next_note!=previous_note:
+			audio_director.speak_note(session.current_note)
 			audio_director.cue("warning" if session.current_note in ["WATER","CREST_JUMP","MUD_NARROW","CAUTION_NARROW"] else "note")
 			previous_note = session.next_note
 		if int(session.phase)!=previous_phase_audio:
@@ -96,7 +106,7 @@ func _record_finish() -> void:
 	if finish_recorded: return
 	finish_recorded = true
 	trajectory.capture(session.total_time(),vehicle,true)
-	var result := {"elapsed":session.elapsed,"penalty":session.penalty,"total_time":session.total_time(),"splits":Array(session.split_times),"source":auto_driver.source_name(controls.active_device),"reset_count":session.reset_count,"practice":session.practice,"recorded_at":Time.get_unix_time_from_system()}
+	var result := {"elapsed":session.elapsed,"penalty":session.penalty,"total_time":session.total_time(),"splits":Array(session.split_times),"gate_times":session.gate_times.duplicate(),"source":auto_driver.source_name(controls.active_device),"reset_count":session.reset_count,"practice":session.practice,"recorded_at":Time.get_unix_time_from_system()}
 	var outcome := profile.record(challenge,result,trajectory.payload(challenge.key(),session.total_time()))
 	result["outcome"] = outcome
 	completed.emit.call_deferred(result)
@@ -114,6 +124,9 @@ func _restart() -> void:
 		replay.queue_free()
 		replay = null
 	broadcast.reset()
+	wildlife.reset()
+	previous_note = 0
+	if audio_director!=null: audio_director.voice.stop()
 	trajectory.reset()
 	super._restart()
 	ghost.recording = profile.load_ghost(challenge)
@@ -144,7 +157,7 @@ func _toggle_mode() -> void:
 
 
 func _toggle_debug() -> void:
-	if session.practice: super._toggle_debug()
+	super._toggle_debug()
 
 
 func _switch_scene(_path: String) -> void:
@@ -187,3 +200,35 @@ func _refresh_result_summary() -> void:
 func _safety_pause() -> void:
 	if replay!=null and replay.active: return
 	super._safety_pause()
+
+
+func _result_hud_data() -> Dictionary:
+	var data := super._result_hud_data()
+	var best: Dictionary = result_summary.get("human_best",{})
+	data["best_gate_times"] = best.get("gate_times",[])
+	var sample := RallyGhostRecording.sample(ghost.recording,minf(session.total_time(),float(ghost.recording.get("duration",0)))) if preferences.values.ghost else {}
+	if not sample.is_empty():
+		var at: Vector3 = sample.pose.origin
+		data["ghost_position"] = Vector2(at.x,at.z)
+		data["ghost_progress"] = generator.route.project(at).s
+	return data
+
+
+func _build_river_audio() -> void:
+	for crossing: Vector3 in challenge.stage.river_crossings:
+		var player := AudioStreamPlayer3D.new()
+		player.name = "RiverRush%d"%crossing.x
+		player.stream = RallyAudioDirector.asset("river",true)
+		player.bus = "Environment"
+		player.attenuation_model = AudioStreamPlayer3D.ATTENUATION_DISABLED
+		player.max_distance = 160
+		player.volume_db = -80
+		add_child(player)
+		player.position = generator.route.position_at(crossing.x)-Vector3.UP*2
+		river_audio.append(player)
+		if DisplayServer.get_name()!="headless": player.play()
+
+func _update_river_audio(dt: float) -> void:
+	for player: AudioStreamPlayer3D in river_audio:
+		var gain := .72*(1-smoothstep(18,145,vehicle.position.distance_to(player.position)))
+		player.volume_linear = lerpf(player.volume_linear,gain,1-exp(-dt*5))

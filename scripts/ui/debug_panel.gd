@@ -155,7 +155,7 @@ func _draw() -> void:
 	draw_set_transform(layout.offset, 0, Vector2.ONE * float(layout.scale))
 	panel(Rect2(24, 22, 1232, 74))
 	text("ART / RALLY  ·  DEBUG", Vector2(40, 48), 21, PAPER, title_font)
-	text("F9 显示/隐藏  ·  T 原始遥测  ·  F8 导出", Vector2(40, 76), 12, MUTED)
+	text("T 显示/隐藏 · 遥测与受力  ·  F8 导出", Vector2(40, 76), 12, MUTED)
 	var driver_label := str(model.get("label",""))
 	text("%03d KM/H   G%s   %04d RPM   %s%s" % [model.speed, model.gear, model.rpm, model.layout, "   "+driver_label if not driver_label.is_empty() else ""], Vector2(430, 48), 20, PAPER, number_font)
 	text("TICK %06d  /  %d Hz  /  %d FPS  /  PHYS %.2f ms" % [model.tick, Engine.physics_ticks_per_second, Engine.get_frames_per_second(), model.physics_ms], Vector2(430, 76), 12, MUTED, number_font)

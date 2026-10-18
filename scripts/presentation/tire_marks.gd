@@ -49,9 +49,13 @@ func clear() -> void:
 
 
 func update(car: RallyVehicle,dt: float) -> void:
+	update_wheels(car.wheels,dt)
+
+
+func update_wheels(wheels: Array[RallyWheelState],dt: float) -> void:
 	clock += dt
 	for i: int in range(4):
-		var wheel := car.wheels[i]
+		var wheel := wheels[i]
 		var id := wheel.surface.surface_id
 		var active := wheel.grounded and wheel.load>100 and wheel.normal.y>0.5 and wheel.surface.water_depth<0.008 and absf(wheel.longitudinal_speed)>0.6
 		if id==0: active = active and (absf(wheel.slip)>0.16 or absf(wheel.slip_angle)>0.12)
