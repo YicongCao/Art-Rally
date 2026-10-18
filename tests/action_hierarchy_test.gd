@@ -4,7 +4,7 @@ extends "res://tests/test_suite.gd"
 func _run() -> void:
 	var app: RallyGameApp = load("res://scenes/game/game.tscn").instantiate()
 	root.add_child(app)
-	var pages: Array[Callable] = [app.show_stages,app.show_vehicles,app.show_briefing,app.show_tutorial,app.show_settings,app.show_bindings,app.show_records,app.show_credits,app.show_plate_setup.bind(false)]
+	var pages: Array[Callable] = [app.show_stages,app.show_vehicles,app.show_tutorial,app.show_settings,app.show_bindings,app.show_records,app.show_credits,app.show_plate_setup.bind(false)]
 	for page: Callable in pages:
 		page.call()
 		for i: int in range(4): await process_frame

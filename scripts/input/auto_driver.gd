@@ -68,7 +68,7 @@ func sample(route: RallyStageRoute, vehicle: RallyVehicle, controls: RallyInputC
 	if mode == Mode.OFF:
 		return controls.sample(speed, dt)
 	var intent: DriverCommand = pilot.step(route, vehicle, speed, 10.0 if mode == Mode.VIRTUAL_KEYBOARD else 15.0)
-	raw_command = _encode(intent, controls, speed)
+	raw_command = _encode(intent, controls, speed,vehicle.drivetrain.config.power_multiplier)
 	filtered_command = controls.sample_virtual(raw_command, speed, dt, mode == Mode.VIRTUAL_KEYBOARD)
 	return filtered_command
 
@@ -101,16 +101,20 @@ func telemetry(active_device: int) -> Dictionary:
 	}
 
 
-func _encode(intent: DriverCommand, controls: RallyInputController, speed: float) -> DriverCommand:
+func _encode(intent: DriverCommand, controls: RallyInputController, speed: float,power_multiplier: float = 1.0) -> DriverCommand:
 	var raw := DriverCommand.new()
 	if mode == Mode.VIRTUAL_KEYBOARD:
 		var error := intent.steer - controls.filter.steering
 		raw.steer = signf(error) if absf(error) > 0.015 else 0.0
 		raw.throttle = 1.0 if speed < pilot.wanted_speed else 0.0
+		if power_multiplier>1.0:
+			# Close the loop around the shared asymmetric keyboard pedal ramp.
+			# Fast key-release filtering makes open-loop duty cycling too weak.
+			raw.throttle = 1.0 if controls.filter.throttle<raw.throttle/power_multiplier else 0.0
 		raw.brake = 1.0 if speed > pilot.wanted_speed + 0.7 else 0.0
 	else:
 		raw.steer = _stick_axis(intent.steer, controls.filter.profile)
-		raw.throttle = intent.throttle
+		raw.throttle = intent.throttle/maxf(1.0,power_multiplier)
 		raw.brake = intent.brake
 	return raw
 

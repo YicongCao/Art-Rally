@@ -18,7 +18,7 @@ func _run() -> void:
 	var markers := generator.get_node("RoadMarkers") as MultiMeshInstance3D
 	check(markers.multimesh.instance_count>200,"Roadside posts share one draw batch")
 	check(scenery.all_batches.size()<600,"Scenery uses bounded spatial batches instead of one draw object per placement")
-	check(scenery.foliage.animated_arms.size()==28,"Four visible spectator groups are built")
+	check(scenery.foliage.animated_arms.size()==generator.definition.spectators.size()*7,"All authored spectator groups are built")
 	check(scenery.obstacles.size()>0 and scenery.obstacles.size()<8,"Near-road obstacles retain shapes in a bounded number of static bodies")
 	var supported := true
 	for s: int in range(20,3000,50):

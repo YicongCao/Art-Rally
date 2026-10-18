@@ -2,6 +2,9 @@ class_name RallySampleDressing
 extends RefCounted
 
 const BATCH_LENGTH := 160.0
+const VISIBILITY_SCALE := 1.30
+const TREE_SWITCH := 180.0*VISIBILITY_SCALE
+const TREE_FADE := 16.0
 var biome: String = "autumn"
 var land: Node3D
 var range_start: float = 430
@@ -98,13 +101,14 @@ func _flush() -> void:
 		instance.position = center
 		instance.multimesh = multimesh
 		instance.visibility_range_end = default_visibility(key)
-		instance.visibility_range_end_margin = 15
+		instance.visibility_range_end_margin = 15*VISIBILITY_SCALE
+		instance.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
 		var tree := key.begins_with("pine") or key.begins_with("umbrella")
 		if tree or key.begins_with("grass") or key.begins_with("shrub") or key.begins_with("rock"):
 			instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		land.dressing.add_child(instance)
 		if tree:
-			instance.visibility_range_end_margin = 0
+			instance.visibility_range_end_margin = TREE_FADE
 			var distant := MultiMeshInstance3D.new()
 			distant.name = "far_"+key
 			distant.position = center
@@ -117,8 +121,11 @@ func _flush() -> void:
 				distant_mesh.set_instance_transform(i,multimesh.get_instance_transform(i))
 				distant_mesh.set_instance_color(i,multimesh.get_instance_color(i))
 			distant.multimesh = distant_mesh
-			distant.visibility_range_begin = 180
-			distant.visibility_range_end = 360
+			distant.visibility_range_begin = TREE_SWITCH
+			distant.visibility_range_begin_margin = TREE_FADE
+			distant.visibility_range_end = 360*VISIBILITY_SCALE
+			distant.visibility_range_end_margin = 24
+			distant.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
 			distant.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 			land.dressing.add_child(distant)
 			var shadow_multimesh := MultiMesh.new()
@@ -131,20 +138,20 @@ func _flush() -> void:
 			shadow.name = "shadow_"+key
 			shadow.position = center
 			shadow.multimesh = shadow_multimesh
-			shadow.visibility_range_end = 210
-			shadow.visibility_range_end_margin = 15
+			shadow.visibility_range_end = 210*VISIBILITY_SCALE
+			shadow.visibility_range_end_margin = 15*VISIBILITY_SCALE
 			shadow.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_SHADOWS_ONLY
 			land.dressing.add_child(shadow)
 
 
 static func default_visibility(key: String) -> float:
-	if key.begins_with("far_"): return 360
-	if key.begins_with("pine") or key.begins_with("umbrella"): return 180
-	if key.begins_with("shadow_"): return 210
-	if key.begins_with("grass"): return 105
-	if key.begins_with("shrub"): return 180
-	if key.begins_with("rock"): return 220
-	return 360
+	if key.begins_with("far_"): return 360*VISIBILITY_SCALE
+	if key.begins_with("pine") or key.begins_with("umbrella"): return 180*VISIBILITY_SCALE
+	if key.begins_with("shadow_"): return 210*VISIBILITY_SCALE
+	if key.begins_with("grass"): return 105*VISIBILITY_SCALE
+	if key.begins_with("shrub"): return 180*VISIBILITY_SCALE
+	if key.begins_with("rock"): return 220*VISIBILITY_SCALE
+	return 360*VISIBILITY_SCALE
 
 
 func _spectators(station: float) -> void:

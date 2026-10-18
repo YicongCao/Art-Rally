@@ -4,6 +4,7 @@ extends Resource
 @export var calibration_version: String = "200ps-v2-patch1"
 @export_enum("FWD", "AWD", "RWD") var drive_layout: String = "AWD"
 @export var rated_power_ps: float = 200.0
+@export var power_multiplier: float = 1.0
 @export var torque_rpms := PackedFloat64Array([950, 1800, 3000, 4500, 5500, 6500, 7600])
 @export var torque_values := PackedFloat64Array([90, 200, 250, 260, 250, 216, 155])
 

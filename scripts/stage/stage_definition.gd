@@ -31,7 +31,7 @@ extends Resource
 @export var hazard_notes: Array[Dictionary] = [{"s":1150.0,"code":"MUD_NARROW"},{"s":1270.0,"code":"WATER"},{"s":1480.0,"code":"WATER"},{"s":1650.0,"code":"ASPHALT"},{"s":2100.0,"code":"GRAVEL"},{"s":2650.0,"code":"CREST_JUMP"}]
 @export var culverts := PackedFloat32Array([1420])
 @export var guardrail_sections := PackedVector2Array([Vector2(1680,2080)])
-@export var spectators := PackedFloat32Array([80,503,1880,2970])
+@export var spectators := PackedFloat32Array([80,320,503,840,1150,1500,1880,2200,2560,2970])
 @export var landmarks: Array[Dictionary] = [{"s":480.0,"kind":"cabin","side":-1.0}]
 @export var split_fractions := PackedFloat32Array([0.333333,0.666667,1.0])
 

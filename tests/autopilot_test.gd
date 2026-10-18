@@ -18,6 +18,21 @@ func _run() -> void:
 	check(driver.mode_name()=="vgamepad" and driver.source(-1)==RallyAutoDriver.Source.AUTOPILOT_VGAMEPAD,"Automatic source identifies the selected virtual device")
 	check(driver.human_takeover() and driver.source(-1)==RallyAutoDriver.Source.MIXED_TAKEOVER,"Human takeover permanently marks a mixed run")
 	check(not driver.human_takeover(),"Repeated human input cannot count a second takeover after automation is off")
+	var intent := DriverCommand.new()
+	intent.throttle = .8
+	driver.set_mode(RallyAutoDriver.Mode.VIRTUAL_GAMEPAD)
+	check(is_equal_approx(driver._encode(intent,controls,0,2).throttle,.4),"Boosted autopilot scales its pedal, not the player's engine")
+	driver.set_mode(RallyAutoDriver.Mode.VIRTUAL_KEYBOARD)
+	driver.pilot.wanted_speed = 15
+	controls.clear()
+	var mean_pedal := 0.0
+	var binary := true
+	for i: int in range(240):
+		var keys := driver._encode(intent,controls,0,2)
+		binary = binary and keys.throttle in [0.0,1.0]
+		var pedal := controls.sample_virtual(keys,0,1.0/120,true)
+		if i>=120: mean_pedal+=pedal.throttle/120
+	check(binary and mean_pedal>.35 and mean_pedal<.55,"Boosted keyboard uses binary keys and regulates the actual filtered pedal near half throttle")
 	controls.queue_free()
 	await process_frame
 

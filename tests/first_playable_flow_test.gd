@@ -20,7 +20,9 @@ func _run() -> void:
 	app.show_records()
 	check(app.screen=="records","All front-end pages build")
 	app.chosen_vehicle = "F160"
-	await app.start_race()
+	app.start_race()
+	check(app.screen=="loading" and app.progress_bar!=null,"Vehicle confirmation opens briefing inside actual loading page")
+	while app.loading: await process_frame
 	check(app.screen=="race","Menu loads a complete playable challenge")
 	check(app.race.vehicle.drivetrain.config.drive_layout=="FWD","Selected vehicle physics survive settings application")
 	check(app.race.vehicle.config.body_mass==1000,"Selected mass applied")
@@ -35,6 +37,22 @@ func _run() -> void:
 	app.leave_race()
 	await process_frame
 	check(not paused and app.screen=="stages","Return frees race and resumes menu")
+	app.profile.data.unlocked_power_tier = 2
+	app.show_vehicles()
+	var options := app.ui.find_children("*","Button",true,false).filter(func(button: Button): return button.has_meta("power_tier"))
+	options[1].pressed.emit()
+	check(app.chosen_power_tier==1,"Manual +50% selection survives the page rebuild")
+	app.ui.find_children("*","Button",true,false).filter(func(button: Button): return button.has_meta("power_tier"))[2].pressed.emit()
+	check(app.chosen_power_tier==2,"Manual +100% selection survives the page rebuild")
+	await app.start_race()
+	check(app.race.vehicle.drivetrain.config.rated_power_ps==320 and app.race.challenge.vehicle.power_tier==2,"Selected +100% F160 actually loads 320 PS into gameplay")
+	check(app.profile.data.last_power_tier==2,"The loaded variant is the saved recent selection")
+	app.leave_race()
+	await process_frame
+	app.profile.data = RallyProfileStore.fresh()
+	app.show_vehicles()
+	options = app.ui.find_children("*","Button",true,false).filter(func(button: Button): return button.has_meta("power_tier"))
+	check(not options[0].disabled and options[1].disabled and options[2].disabled and app.chosen_power_tier==0,"Fresh profiles cannot select locked power, even after a previous boosted session")
 	app.free()
 	print("TEST RESULT: %d checks, %d failures"%[checks,failures])
 	quit(failures)

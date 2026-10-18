@@ -4,7 +4,7 @@ extends RefCounted
 
 static func run(scene: Node3D) -> void:
 	var failures := PackedStringArray()
-	if ProjectSettings.get_setting("application/config/version","")!="0.3.0-dev":
+	if ProjectSettings.get_setting("application/config/version","")!="0.3.0-rc.1":
 		failures.append("application version")
 	if scene.generator.route.length<3000 or scene.vehicle.wheels.size()!=4:
 		failures.append("main stage resources")
@@ -55,10 +55,12 @@ static func run_app(app: Node) -> void:
 	app.profile.path = "user://package-smoke/profile.json"
 	app.profile.data = RallyProfileStore.fresh()
 	if app.profile.set_plate("PACK-160") != OK: failures.append("player plate save")
+	if ProjectSettings.get_setting("application/config/version","")!="0.3.0-rc.1": failures.append("application version")
 	if app.screen!="home": failures.append("main menu")
 	for stage: String in RallyContentCatalog.STAGES:
 		for vehicle: String in RallyContentCatalog.VEHICLES:
-			if RallyContentCatalog.challenge(stage,vehicle)==null: failures.append("content catalog")
+			for tier: int in range(3):
+				if RallyContentCatalog.challenge(stage,vehicle,tier)==null: failures.append("content catalog")
 	for vehicle: String in RallyContentCatalog.VEHICLES:
 		if not ResourceLoader.exists(RallyContentCatalog.vehicle(vehicle).model_path): failures.append(vehicle+" model")
 		if RallyAudioDirector.asset(vehicle+"_mid").data.size()<1000: failures.append(vehicle+" audio")

@@ -2,9 +2,9 @@
 
 ## 简介
 
-低多边形、完全离线的计时拉力游戏。当前为 **0.3.0-dev 首个完整试玩候选版**：三条主题赛道、F160 / R200 / A240 三辆原创赛车、九个独立挑战、奖牌与分段计时、个人幽灵、本地档案、菜单、教学及声音。底层仍采用原有 120 Hz 车辆与轮胎系统。
+低多边形、完全离线的计时拉力游戏。当前为 **0.3.0-rc.1 首个完整试玩候选版**：三条主题赛道、F160 / R200 / A240 三辆原创赛车、三档动力的 27 个独立挑战、奖牌与分段计时、个人幽灵、本地档案、菜单、教学及声音。底层仍采用原有 120 Hz 车辆与轮胎系统。
 
-[实施计划](docs/FIRST_PLAYABLE_PLAN.zh-CN.md) · [实施状态与未通过项](docs/FIRST_PLAYABLE_STATUS.zh-CN.md) · [实测验收报告](docs/FIRST_PLAYABLE_VALIDATION.zh-CN.md) · [操作说明](docs/PLAY_GUIDE.zh-CN.md) · [素材名单](docs/ASSET_CREDITS.md)
+[0.3.0 候选版变化](docs/V0_3_0_RC.zh-CN.md) · [实施计划](docs/FIRST_PLAYABLE_PLAN.zh-CN.md) · [实施状态与未通过项](docs/FIRST_PLAYABLE_STATUS.zh-CN.md) · [实测验收报告](docs/FIRST_PLAYABLE_VALIDATION.zh-CN.md) · [操作说明](docs/PLAY_GUIDE.zh-CN.md) · [素材名单](docs/ASSET_CREDITS.md)
 
 当前奖牌为暂定阈值，真人标定、主观试听、真实 Windows、实体手柄及林地稳定 60 FPS 仍需验收；候选包不等于可公开发布版本。
 

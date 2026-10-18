@@ -5,6 +5,7 @@ extends Resource
 @export var title: String = "A240 / 四驱宽体赛车"
 @export var description: String = "牵引力充足 · 提前规划制动"
 @export var drive_layout: String = "AWD"
+var power_tier: int = 0
 @export var power_ps: float = 240
 @export var mass_kg: float = 1300
 @export var wheelbase: float = 2.6
@@ -36,6 +37,7 @@ func drivetrain_config() -> RallyDrivetrainConfig:
 	var result := RallyDrivetrainConfig.new()
 	result.drive_layout = drive_layout
 	result.rated_power_ps = power_ps
+	result.power_multiplier = RallyContentCatalog.POWER_MULTIPLIERS[power_tier]
 	result.calibration_version = vehicle_id+"-"+revision
 	for i: int in range(result.torque_values.size()): result.torque_values[i] *= power_ps/200.0
 	return result

@@ -1,6 +1,6 @@
 """Freeze medal baselines from three distinct clean HUMAN runs per current challenge.
 This checks recorded metadata; the release owner must also verify that the runs were skilled human play.
-Usage: python3 scripts/calibrate_medals.py --profile /path/to/player/profile.json --version time-trial-2 --output /tmp/proposed-targets.json
+Usage: python3 scripts/calibrate_medals.py --profile /path/to/player/profile.json --version time-trial-3 --output /tmp/proposed-targets.json
 Inspect the output before replacing resources/content/challenge_targets.json. This script never edits a player profile.
 """
 import argparse,json,math
@@ -11,7 +11,7 @@ def propose(profile,current,version):
     if profile.get('version')!=1:raise ValueError('Unsupported player profile version')
     output={'rules_version':version,'challenges':{}}
     for pair,target in current['challenges'].items():
-        stage,vehicle=pair.split('/')
+        stage,vehicle,*variant=pair.split('/')
         key=f"{stage}@{target['stage_version']}|{vehicle}@{target['vehicle_revision']}|{current['rules_version']}"
         runs=profile.get('challenges',{}).get(key,{}).get('recent',[])
         clean={}

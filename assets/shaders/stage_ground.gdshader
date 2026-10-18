@@ -48,7 +48,7 @@ void fragment() {
 	if (road_mesh) {
 		float half_width = UV2.x;
 		float on_road = 1.0 - smoothstep(half_width-0.15, half_width+0.1, abs(UV.x));
-		float shoulder = 1.0 - smoothstep(3.1, 4.2, abs(UV.x));
+		float shoulder = 1.0 - smoothstep(half_width, half_width+1.2, abs(UV.x));
 		vec3 gravel = mix(vec3(0.27, 0.26, 0.21), vec3(0.44, 0.40, 0.30), large * 0.45 + 0.35);
 		float tracks = exp(-pow((abs(UV.x) - 0.80) * 3.3, 2.0));
 		gravel *= 1.0 - tracks * (0.09 + noise(vec2(UV.y * 0.055, 0.0)) * 0.07);

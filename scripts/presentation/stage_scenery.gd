@@ -242,7 +242,7 @@ func _build_gravel() -> void:
 		visual.name = "Aggregate%d"%start
 		visual.position = center
 		visual.multimesh = mm
-		visual.visibility_range_end = 75
+		visual.visibility_range_end = 75*RallySampleDressing.VISIBILITY_SCALE
 		visual.visibility_range_end_margin = 12
 		visual.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
 		visual.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
@@ -296,7 +296,7 @@ func set_quality(low: bool) -> void:
 	for batch: MultiMeshInstance3D in all_batches:
 		if str(batch.name).begins_with("Aggregate"): batch.visible = not low
 		elif not str(batch.name).begins_with("grass"):
-			batch.visibility_range_end = minf(220,RallySampleDressing.default_visibility(str(batch.name))) if low else RallySampleDressing.default_visibility(str(batch.name))
+			batch.visibility_range_end = minf(286,RallySampleDressing.default_visibility(str(batch.name))) if low else RallySampleDressing.default_visibility(str(batch.name))
 
 
 func _theme_ground(material: ShaderMaterial) -> void:

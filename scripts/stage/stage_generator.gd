@@ -2,6 +2,7 @@ class_name RallyStageGenerator
 extends Node3D
 
 @export var definition: RallyStageDefinition = preload("res://resources/stages/sunset_ridge.tres")
+const SHOULDER_WIDTH := 1.2
 var auto_build: bool = true
 var route := RallyStageRoute.new()
 var chunk_bodies: Array[StaticBody3D] = []
@@ -62,8 +63,15 @@ func surface_footprint(point: Vector3, forward: Vector3, right: Vector3, hint: i
 
 
 func _surface_at_coordinates(s: float, lateral: float) -> RallySurfaceSample:
-	var id := definition.surface_id(s) if absf(lateral) <= route.width_at(s) * 0.5 else 3
-	return RallySurfaceSample.from_profile(RallySurfaceQuery.PROFILES[id], definition.water_depth(s, lateral) if id != 3 else 0.0)
+	var id := definition.surface_id(s)
+	var road := RallySurfaceSample.from_profile(RallySurfaceQuery.PROFILES[id],definition.water_depth(s,lateral))
+	var outside := absf(lateral)-route.width_at(s)*0.5
+	if outside<=0: return road
+	var grass := RallySurfaceSample.from_profile(RallySurfaceQuery.PROFILES[3])
+	# Compacted shoulder occupies the same 1.2m strip as the visible earth edge.
+	# No discontinuity at either edge, including narrow and muddy sections.
+	var blend := smoothstep(0,SHOULDER_WIDTH,outside)
+	return RallySurfaceSample.weighted_average([road,grass],PackedFloat64Array([1.0-blend,blend]))
 
 
 func vertex_at(index: int, column: int) -> Vector3:

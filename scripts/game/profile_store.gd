@@ -10,7 +10,7 @@ var loaded_from_backup: bool = false
 
 
 static func fresh() -> Dictionary:
-	return {"version":VERSION,"settings":{},"bindings":{},"plate":"","tutorial_complete":false,"last_stage":"sunset_ridge","last_vehicle":"F160","challenges":{}}
+	return {"version":VERSION,"settings":{},"bindings":{},"plate":"","tutorial_complete":false,"last_stage":"sunset_ridge","last_vehicle":"F160","last_power_tier":0,"unlocked_power_tier":0,"challenges":{}}
 
 
 func load_file() -> Error:
@@ -58,6 +58,19 @@ func result_for(key: String) -> Dictionary:
 	return Dictionary(data.challenges.get(key,{})).duplicate(true)
 
 
+func unlocked_power_tier() -> int:
+	var unlocked := int(data.get("unlocked_power_tier",0))
+	# Earned gold from fp1 remains an unlock milestone after the shoulder/rules update.
+	# Only known content keys and valid human bests qualify, not arbitrary archived medals.
+	for stage_id: String in RallyContentCatalog.STAGES:
+		for car_id: String in RallyContentCatalog.VEHICLES:
+			var legacy_key := "%s@1|%s@fp1|time-trial-1"%[stage_id,car_id]
+			var bucket := result_for(legacy_key)
+			if int(bucket.get("medal",0))==3 and valid_result(bucket.get("best",null)):
+				unlocked = maxi(unlocked,1)
+	return unlocked
+
+
 func set_plate(value: String) -> Error:
 	value = value.strip_edges()
 	if not RallyPlateText.valid(value): return ERR_INVALID_PARAMETER
@@ -72,6 +85,9 @@ func record(challenge: RallyChallengeDefinition,result: Dictionary,ghost: Dictio
 	if result.get("practice",false) or result.get("source","") not in ["human_keyboard","human_gamepad"]:
 		return {"eligible":false,"saved":false,"new_best":false,"reason":"非正式玩家挑战"}
 	if not valid_result(result): return {"eligible":false,"saved":false,"reason":"成绩无效"}
+	if challenge.vehicle.power_tier>unlocked_power_tier():
+		return {"eligible":false,"saved":false,"reason":"动力版本尚未解锁"}
+	var previous_unlock := unlocked_power_tier()
 	var key := challenge.key()
 	var previous: Dictionary = data.challenges.get(key,{})
 	var old_best: Dictionary = previous.get("best",{})
@@ -98,6 +114,9 @@ func record(challenge: RallyChallengeDefinition,result: Dictionary,ghost: Dictio
 			return {"eligible":true,"saved":false,"new_best":false,"reason":"本次轨迹不完整，成绩与幽灵未写入，原纪录仍保留。"}
 		bucket.best = best
 	working.challenges[key] = bucket
+	var unlocked := previous_unlock
+	if earned==3 and challenge.vehicle.power_tier==previous_unlock: unlocked = mini(2,previous_unlock+1)
+	working["unlocked_power_tier"] = unlocked
 	var original := data
 	data = working
 	var error := save_file()
@@ -106,7 +125,7 @@ func record(challenge: RallyChallengeDefinition,result: Dictionary,ghost: Dictio
 		if not created_path.is_empty(): DirAccess.remove_absolute(created_path)
 		return {"eligible":true,"saved":false,"new_best":false,"reason":message}
 	_cleanup_ghosts()
-	return {"eligible":true,"saved":true,"new_best":new_best,"medal":earned,"previous_best":old_best.get("total_time",-1.0),"reason":ghost_warning}
+	return {"eligible":true,"saved":true,"new_best":new_best,"medal":earned,"previous_best":old_best.get("total_time",-1.0),"unlocked_tier":unlocked if unlocked>previous_unlock else -1,"reason":ghost_warning}
 
 
 func load_ghost(challenge: RallyChallengeDefinition) -> Dictionary:
@@ -156,6 +175,9 @@ static func valid(value: Variant) -> bool:
 	if not RallyPlateText.valid(value.get("plate",""),true): return false
 	for key: String in ["settings","bindings","challenges"]:
 		if value.get(key,null) is not Dictionary: return false
+	for field: String in ["last_power_tier","unlocked_power_tier"]:
+		var tier: Variant = value.get(field,0)
+		if not RallyGhostRecording.numeric(tier) or float(tier)!=floorf(float(tier)) or int(tier)<0 or int(tier)>2: return false
 	var mapped: Array[int] = []
 	for action: String in value.bindings:
 		var code: Variant = value.bindings[action]

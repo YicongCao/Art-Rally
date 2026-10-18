@@ -43,12 +43,14 @@ func _run() -> void:
 	app._submit_plate(false)
 	await settled()
 	check(app.screen == "settings" and app.profile.data.plate == "山野-160", "Editing saves the new identity and returns to settings")
-	app.show_briefing()
+	app._loading_page()
 	await settled()
 	var medal_icons := app.ui.find_children("*", "TextureRect", true, false).filter(func(icon: TextureRect): return icon.texture != null and icon.texture.resource_path.contains("/medal_"))
 	check(medal_icons.size() == 3, "Swiss briefing loads all three vector medal icons")
 	var clocks := app.ui.find_children("*", "Label", true, false).filter(func(label: Label): return label.text == app._time(RallyContentCatalog.challenge(app.chosen_stage,app.chosen_vehicle).thresholds()[2]))
 	check(not clocks.is_empty() and clocks[0].size.x > 100 and clocks[0].size.y < 60, "Medal times retain a readable horizontal layout")
+	var loading_text := " ".join(app.ui.find_children("*","Label",true,false).map(func(label: Label): return label.text))
+	check(not loading_text.contains("罚时") and not loading_text.contains("检查点") and not loading_text.contains("有效挑战"),"Loading retains essentials without rule explanations")
 	app.show_plate_setup(false)
 	app.profile.read_only = true
 	app.plate_input.text = "FAILED-160"

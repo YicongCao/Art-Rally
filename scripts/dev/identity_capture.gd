@@ -27,7 +27,7 @@ func _run() -> void:
 	app._submit_plate(true)
 	app.chosen_stage = "sunlit_cape"
 	app.chosen_vehicle = "R200"
-	app.show_briefing()
+	app._loading_page()
 	await capture("briefing")
 	app.show_settings()
 	await capture("settings")

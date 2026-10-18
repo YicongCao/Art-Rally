@@ -1,0 +1,121 @@
+{
+  "version": "0.3.0-rc.1",
+  "engine": "4.7.2",
+  "date": "2026-10-18",
+  "lod_sample": [
+    {
+      "average_fps": 67.6198155511752,
+      "frame_p95_ms": 23.258,
+      "frame_p99_ms": 24.462,
+      "mode": "old_distance_control",
+      "physics_p95_ms": 1.279,
+      "progress": 656.016609950963,
+      "recoveries": 0,
+      "render_frames": 900,
+      "renderer": "Apple M5 (Apple9)",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "sample_wall_seconds": 13.309708,
+      "stage": "sunset_ridge"
+    },
+    {
+      "average_fps": 61.1143758259777,
+      "frame_p95_ms": 20.614,
+      "frame_p99_ms": 23.313,
+      "mode": "distance_plus_30_percent_with_fade",
+      "physics_p95_ms": 2.409,
+      "progress": 656.016609950963,
+      "recoveries": 0,
+      "render_frames": 900,
+      "renderer": "Apple M5 (Apple9)",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "sample_wall_seconds": 14.726486,
+      "stage": "sunset_ridge"
+    },
+    {
+      "average_fps": 73.4394784034486,
+      "frame_p95_ms": 22.622,
+      "frame_p99_ms": 32.675,
+      "mode": "distance_plus_30_percent_with_fade",
+      "physics_p95_ms": 1.873,
+      "progress": 1546.993138321,
+      "recoveries": 0,
+      "render_frames": 900,
+      "renderer": "Apple M5 (Apple9)",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "sample_wall_seconds": 12.254989,
+      "stage": "sunlit_cape"
+    },
+    {
+      "average_fps": 59.9993960060802,
+      "frame_p95_ms": 17.876,
+      "frame_p99_ms": 22.348,
+      "mode": "distance_plus_30_percent_with_fade",
+      "physics_p95_ms": 1.295,
+      "progress": 1774.29830155194,
+      "recoveries": 0,
+      "render_frames": 900,
+      "renderer": "Apple M5 (Apple9)",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "sample_wall_seconds": 15.000151,
+      "stage": "misty_highlands"
+    }
+  ],
+  "sample_scope": "900 rendered frames after 120 warmup frames at fixed 60 FPS simulation; same forest camera/route A-B, not full-stage acceptance",
+  "offroad_slide": {
+    "initial_velocity_mps": [
+      6,
+      0,
+      -15
+    ],
+    "brake": 0.7,
+    "before": {
+      "max_lateral_m": 5.898886,
+      "total_displacement_m": 21.36891
+    },
+    "after": {
+      "max_lateral_m": 4.610662,
+      "total_displacement_m": 16.53514
+    }
+  },
+  "unit_validation": {
+    "gdscript_groups": 42,
+    "checks": 801,
+    "failures": 0,
+    "python_checks": 6
+  },
+  "scene_cycles": {
+    "cycles": 10,
+    "return_nodes": 52,
+    "orphans": 0,
+    "resources": 103,
+    "warm_memory_bytes": 186009976,
+    "final_memory_bytes": 186127204
+  },
+  "packages": {
+    "macos_runtime_smoke": "passed",
+    "windows_structure": "passed",
+    "windows_runtime": "not tested",
+    "assets": {
+      "Art-Rally-v0.3.0-rc.1-macos-universal.zip": {
+        "sha256": "6c73ece68fe77041d236cc9bd6d1f2765a92a391d0df3583753a756280d4ab21",
+        "bytes": 76289620
+      },
+      "Art-Rally-v0.3.0-rc.1-windows-x86_64.zip": {
+        "sha256": "1d18935adc0606f7c3b7463dbfd6a1e99abb65faedc8ba24f0460a6d1f3568cf",
+        "bytes": 53647920
+      }
+    }
+  }
+}

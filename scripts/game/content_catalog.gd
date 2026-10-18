@@ -3,6 +3,8 @@ extends RefCounted
 
 const STAGES := ["sunset_ridge","sunlit_cape","misty_highlands"]
 const VEHICLES := ["F160","R200","A240"]
+const POWER_MULTIPLIERS := [1.0,1.5,2.0]
+const POWER_LABELS := ["标准版","动力 +50%","动力 +100%"]
 
 
 static func stage(id: String) -> RallyStageDefinition:
@@ -10,20 +12,24 @@ static func stage(id: String) -> RallyStageDefinition:
 	return load("res://resources/stages/"+id+".tres").duplicate(true) as RallyStageDefinition
 
 
-static func vehicle(id: String) -> RallyVehicleDefinition:
-	if id not in VEHICLES: return null
-	return load("res://resources/content/"+id+".tres").duplicate(true) as RallyVehicleDefinition
+static func vehicle(id: String,tier: int = 0) -> RallyVehicleDefinition:
+	if id not in VEHICLES or tier<0 or tier>=POWER_MULTIPLIERS.size(): return null
+	var result := load("res://resources/content/"+id+".tres").duplicate(true) as RallyVehicleDefinition
+	result.power_tier = tier
+	result.power_ps *= POWER_MULTIPLIERS[tier]
+	if tier>0: result.revision += "-p%d"%int(POWER_MULTIPLIERS[tier]*100)
+	return result
 
 
-static func challenge(stage_id: String,vehicle_id: String) -> RallyChallengeDefinition:
+static func challenge(stage_id: String,vehicle_id: String,tier: int = 0) -> RallyChallengeDefinition:
 	var track := stage(stage_id)
-	var car := vehicle(vehicle_id)
+	var car := vehicle(vehicle_id,tier)
 	if track==null or car==null: return null
 	var result := RallyChallengeDefinition.new()
 	result.stage = track
 	result.vehicle = car
 	var targets: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://resources/content/challenge_targets.json"))
-	var target: Dictionary = targets.challenges[stage_id+"/"+vehicle_id]
+	var target: Dictionary = targets.challenges[stage_id+"/"+vehicle_id+("/p%d"%int(POWER_MULTIPLIERS[tier]*100) if tier>0 else "")]
 	assert(target.stage_version==track.stage_version and target.vehicle_revision==car.revision)
 	result.reference_seconds = float(target.reference_seconds)
 	result.human_calibrated = bool(target.human_calibrated)
