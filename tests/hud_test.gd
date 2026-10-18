@@ -2,6 +2,9 @@ extends "res://tests/test_suite.gd"
 
 
 func _run() -> void:
+	check(RallyHUD.GAUGE_RECT.position.x==RallyHUD.TIMER_RECT.position.x and RallyHUD.GAUGE_RECT.size.x==RallyHUD.TIMER_RECT.size.x,"Timer and speedometer panels share both side edges")
+	var font := RallyFonts.plate()
+	check(font.get_string_size("12:34.567",HORIZONTAL_ALIGNMENT_LEFT,-1,34).x<RallyHUD.TIMER_RECT.size.x-36,"Long race timer fits the narrower panel in the speedometer font")
 	for pair: Array in [[0,"00"],[7,"07"],[99,"99"],[100,"100"],[236,"236"]]:
 		check(RallyHUD.speed_text(pair[0])==pair[1],"Speed uses two digits below 100, three above: "+str(pair[0]))
 	var car := RallyVehicle.new()

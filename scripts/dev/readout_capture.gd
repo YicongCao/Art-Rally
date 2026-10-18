@@ -23,6 +23,9 @@ func _run() -> void:
 	scene.set_process(false)
 	var data: Dictionary=RallyHUD.data_for(scene.vehicle,scene.session,false)
 	data.stage_title="雾杉高地 · F160"
+	data.time=754.567
+	data.best_time=744.235
+	data.penalty=15
 	data.phase=RallyStageSession.Phase.RUNNING
 	data.gear="2"
 	data.rpm=4200
