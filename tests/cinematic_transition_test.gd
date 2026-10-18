@@ -24,6 +24,11 @@ func _run() -> void:
 	check(app.ui.position.x==0 and app.layer.get_child_count()==1,"Interrupted navigation retires stale pages and restores the latest page")
 	await app.transitions.cover(true)
 	check(app.transitions.wipe.visible and app.transitions.wipe.phase==1 and app.transitions.busy,"Chequered flag completely covers the scene at the swap point")
+	if DisplayServer.get_name()!="headless":
+		var wind_before := app.transitions.wipe.wind_time
+		create_timer(.08).timeout.connect(func():
+			check(app.transitions.wipe.phase==1 and app.transitions.busy,"Flag pauses at full coverage before exiting")
+			check(app.transitions.wipe.wind_time>wind_before,"Fabric keeps moving during the midpoint hold"))
 	await app.transitions.reveal(true)
 	check(not app.transitions.wipe.visible and not app.transitions.busy,"Flag exits and restores input")
 	await app.transitions.cover(false)

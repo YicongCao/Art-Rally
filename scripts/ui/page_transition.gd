@@ -1,29 +1,60 @@
 class_name RallyPageTransition
 extends CanvasLayer
 
+const FLAG_ENTER_SECONDS := 0.34
+const FLAG_HOLD_SECONDS := 0.18
+const FLAG_EXIT_SECONDS := 0.30
+
+# Render the shared title face once; the cloth shader bends ink and fabric together.
+class FlagWordmark extends Control:
+	func _draw() -> void:
+		var font := RallyFonts.DISPLAY
+		var text := "ART RALLY"
+		var font_size := 220
+		var width := font.get_string_size(text,HORIZONTAL_ALIGNMENT_LEFT,-1,font_size).x
+		draw_string(font,Vector2((size.x-width)*.5,198),text,HORIZONTAL_ALIGNMENT_LEFT,-1,font_size,Color.WHITE)
+
 # The overlay stays above both old and incoming pages and consumes input while moving.
 class Wipe extends Control:
+	var cloth := ShaderMaterial.new()
+	var wind_time: float = 0.0
 	var phase: float = 0:
 		set(value):
 			phase = value
+			cloth.set_shader_parameter("phase",value)
 			queue_redraw()
-	var black: bool = false
+	var black: bool = false:
+		set(value):
+			black = value
+			material = null if value else cloth
+			queue_redraw()
+
+	func _ready() -> void:
+		cloth.shader = preload("res://assets/shaders/flag_cloth.gdshader")
+		material = cloth
+		var ink := SubViewport.new()
+		ink.size = Vector2i(1536,256)
+		ink.transparent_bg = true
+		ink.disable_3d = true
+		ink.render_target_update_mode = SubViewport.UPDATE_ONCE
+		add_child(ink)
+		var wordmark := FlagWordmark.new()
+		wordmark.size = ink.size
+		ink.add_child(wordmark)
+		cloth.set_shader_parameter("wordmark",ink.get_texture())
+		resized.connect(_resize_cloth)
+		_resize_cloth()
+
+	func _resize_cloth() -> void:
+		cloth.set_shader_parameter("viewport_size",size)
+
+	func _process(delta: float) -> void:
+		if visible and not black:
+			wind_time += delta
+			cloth.set_shader_parameter("wind_time",wind_time)
+
 	func _draw() -> void:
-		if black:
-			draw_rect(Rect2(Vector2.ZERO,size),Color(0,0,0,phase))
-			return
-		var width := size.x+240
-		var left := -width-60+(size.x+180)*phase
-		var cells := 18
-		var cell := width/cells
-		for x: int in range(cells):
-			for y: int in range(-2,ceili(size.y/cell)+3):
-				var points := PackedVector2Array()
-				for corner: Vector2 in [Vector2(x,y),Vector2(x+1,y),Vector2(x+1,y+1),Vector2(x,y+1)]:
-					var wave := sin(corner.y*.65+phase*5+corner.x*.25)*22
-					points.append(Vector2(left+corner.x*cell+wave,corner.y*cell+sin(corner.x*.55+phase*6)*14))
-				var shade := .88+.10*sin(x*.5+phase*5)
-				draw_colored_polygon(points,Color(shade,shade*.99,shade*.94) if (x+y)%2==0 else Color(.035,.065,.065))
+		draw_rect(Rect2(Vector2.ZERO,size),Color(0,0,0,phase) if black else Color.WHITE)
 
 var wipe := Wipe.new()
 var sliding: Tween
@@ -78,11 +109,14 @@ func cover(flag: bool) -> void:
 	if DisplayServer.get_name()=="headless":
 		wipe.phase = 1
 		return
-	await create_tween().tween_property(wipe,"phase",1.0,.30 if flag else .16).set_trans(Tween.TRANS_SINE).finished
+	await create_tween().tween_property(wipe,"phase",1.0,FLAG_ENTER_SECONDS if flag else .16).set_trans(Tween.TRANS_CUBIC if flag else Tween.TRANS_SINE).set_ease(Tween.EASE_OUT if flag else Tween.EASE_IN_OUT).finished
 
 func reveal(flag: bool) -> void:
 	if DisplayServer.get_name()!="headless":
-		await create_tween().tween_property(wipe,"phase",2.0 if flag else 0.0,.30 if flag else .18).set_trans(Tween.TRANS_SINE).finished
+		if flag:
+			# Scene swap and cloth snap cue happen before this hold; wind never stops.
+			await get_tree().create_timer(FLAG_HOLD_SECONDS).timeout
+		await create_tween().tween_property(wipe,"phase",2.0 if flag else 0.0,FLAG_EXIT_SECONDS if flag else .18).set_trans(Tween.TRANS_CUBIC if flag else Tween.TRANS_SINE).set_ease(Tween.EASE_IN if flag else Tween.EASE_IN_OUT).finished
 	wipe.hide()
 	busy = false
 
