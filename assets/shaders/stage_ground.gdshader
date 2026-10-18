@@ -4,6 +4,9 @@ render_mode diffuse_burley;
 varying vec3 world;
 varying vec4 zone;
 uniform bool road_mesh = false;
+uniform bool alpine_terrain = false;
+uniform int mountain_section_count = 0;
+uniform vec3 mountain_sections[4];
 uniform vec3 grass_dark : source_color = vec3(0.60,0.49,0.26);
 uniform vec3 grass_light : source_color = vec3(0.81,0.69,0.40);
 
@@ -37,12 +40,29 @@ void vertex() {
 	zone = COLOR;
 }
 void fragment() {
+	if (road_mesh && mountain_section_count>0) {
+		float alpine = 0.0;
+		for (int i=0; i<min(mountain_section_count,4); i++) {
+			vec3 section = mountain_sections[i];
+			alpine = max(alpine,smoothstep(section.x-35.0,section.x,UV.y)*(1.0-smoothstep(section.y-35.0,section.y,UV.y)));
+		}
+		// Road chunks include a 44 m grass apron in their collision mesh. Hide
+		// its outer visual strips to reveal the alpine slopes, retaining the
+		// entire driveable road and its collision geometry unchanged.
+		if (abs(UV.x)>mix(22.0,UV2.x+3.5,alpine)) { discard; }
+	}
 	float large = noise(world.xz * 0.07);
 	float grit = mix(noise(world.xz * 16.0),0.5,clamp(length(fwidth(world.xz))*12.0,0.0,1.0));
 	float fleck = smoothstep(0.75, 0.93, noise(world.xz * 7.0));
 	vec3 grass = mix(grass_dark,grass_light,large);
 	vec3 earth = mix(vec3(0.26, 0.22, 0.14), vec3(0.39, 0.33, 0.21), noise(world.xz * 0.31));
 	vec3 color = mix(grass, earth, smoothstep(0.44, 0.8, noise(world.xz * 0.11)) * 0.25);
+	if (alpine_terrain) {
+		float slope = 1.0-abs((INV_VIEW_MATRIX*vec4(NORMAL,0.0)).y);
+		vec3 rock = mix(vec3(.26,.33,.36),vec3(.47,.52,.52),large);
+		rock *= .94+.06*sin(world.y*.7+noise(world.xz*.09)*2.0);
+		color = mix(color,rock,smoothstep(.16,.55,slope));
+	}
 	float road_bump = 0.0;
 	float stone_speckle = 1.0;
 	if (road_mesh) {

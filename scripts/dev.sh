@@ -44,6 +44,9 @@ prepare_runtime() {
   # A source checkout has no imported assets or global GDScript class cache.
   # Refresh both before running, including after pulling new scripts/assets.
   printf 'Preparing Art Rally project: %s\n' "$ROOT"
+  if command -v git >/dev/null 2>&1 && git -C "$ROOT" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    printf 'Source revision: %s (%s)\n' "$(git -C "$ROOT" rev-parse --short HEAD)" "$(git -C "$ROOT" branch --show-current)"
+  fi
   run_logged "$ROOT/logs/startup_import.log" --headless --path "$ROOT" --editor --import
 }
 

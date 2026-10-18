@@ -62,7 +62,21 @@ func _ground_point(distance: float,lateral: float) -> Vector3:
 	var route: RallyStageRoute = scene.generator.route
 	var pose := route.pose_at(distance,0)
 	var point: Vector3 = pose.origin+pose.basis.x*lateral
-	point.y = scene.presentation.scenery.height_at(point.x,point.z)
+	point.y = scene.presentation.scenery.rendered_height_at(point.x,point.z)
+	return point
+
+
+func position_at_weight(stone: MeshInstance3D,weight: float) -> Vector3:
+	var start: Vector3=stone.get_meta("start")
+	var finish: Vector3=stone.get_meta("finish")
+	var point := start.lerp(finish,weight)
+	var radius := maxf(stone.scale.x,maxf(stone.scale.y,stone.scale.z))
+	var floor_height := -INF
+	# A straight interpolation can cut through the newly steep mountainside.
+	# Keep the decorative trajectory above its actual rendered triangles.
+	for offset: Vector2 in [Vector2.ZERO,Vector2(radius,0),Vector2(-radius,0),Vector2(0,radius),Vector2(0,-radius)]:
+		floor_height=maxf(floor_height,scene.presentation.scenery.rendered_height_at(point.x+offset.x,point.z+offset.y))
+	point.y=maxf(point.y,floor_height+radius)
 	return point
 
 
@@ -86,12 +100,11 @@ func advance(dt: float) -> void:
 		event.elapsed = minf(ROCKFALL_DURATION,float(event.elapsed)+dt)
 		var weight := smoothstep(0,1,float(event.elapsed)/ROCKFALL_DURATION)
 		for stone: MeshInstance3D in event.items:
-			var start: Vector3 = stone.get_meta("start")
-			var finish: Vector3 = stone.get_meta("finish")
-			stone.global_position = start.lerp(finish,weight)
+			stone.global_position = position_at_weight(stone,weight)
 			var spin := float(stone.get_meta("spin"))*weight
 			stone.rotation = Vector3(spin*.45,spin,spin*.3)
-			if scene.vehicle.global_position.distance_to(stone.global_position)<2.8:
+			var clearance: float=stone.scale.length()+scene.vehicle.config.body_size.length()*.5+.5
+			if scene.vehicle.global_position.distance_to(stone.global_position)<clearance:
 				stone.hide()
 		if float(event.elapsed)>=ROCKFALL_DURATION:
 			for stone: MeshInstance3D in event.items: stone.hide()

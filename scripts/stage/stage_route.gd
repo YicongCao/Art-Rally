@@ -110,7 +110,9 @@ func _build_notes() -> void:
 	for note: Dictionary in hazards:
 		# Keep a clear announcement window around hazards rather than overwriting them with a bend.
 		notes = notes.filter(func(turn: Dictionary) -> bool: return absf(float(turn.s) - float(note.s)) > 55)
-		notes.append(note)
+	# Filter generated bends only. Appending hazards inside the loop allowed
+	# a later timber warning to delete the authored rockfall warning nearby.
+	notes.append_array(hazards)
 	notes.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return a.s < b.s)
 
 

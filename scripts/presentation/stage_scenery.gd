@@ -21,6 +21,7 @@ var utility_line := RallyUtilityLine.new()
 var terrain_start := Vector2.ZERO
 var terrain_count := Vector2i.ZERO
 var terrain_vertices := PackedVector3Array()
+var terrain_cell_size := 8.0
 var log_piles: Array[Node3D] = []
 
 
@@ -36,9 +37,6 @@ func build(stage: RallyStageGenerator) -> void:
 	bounds = AABB(route.points[0],Vector3.ZERO)
 	for i: int in range(0,route.points.size()-1,8):
 		bounds = bounds.expand(route.points[i])
-		var cell := Vector2i(floori(route.points[i].x/64),floori(route.points[i].z/64))
-		if not lookup.has(cell): lookup[cell] = []
-		lookup[cell].append(i)
 	for river: Vector3 in generator.definition.river_crossings:
 		var pose := route.pose_at(river.x,0)
 		river_frames.append({"origin":pose.origin,"right":pose.basis.x,"forward":-pose.basis.z,"span":river.y})
@@ -69,16 +67,40 @@ func build(stage: RallyStageGenerator) -> void:
 		if child.get_meta("prototype_marker", false): child.visible = false
 
 
-func nearest(point: Vector3) -> Dictionary:
+func _candidates_for_cell(cell: Vector2i) -> Array:
+	if lookup.has(cell): return lookup[cell]
+	var corner := Vector2(cell)*64.0
+	var cell_center := corner+Vector2(32,32)
+	var center_distance := INF
+	for i: int in range(0,route.points.size()-1,8):
+		var a := Vector2(route.points[i].x,route.points[i].z)
+		var end := mini(i+8,route.points.size()-1)
+		var b := Vector2(route.points[end].x,route.points[end].z)
+		var t := clampf((cell_center-a).dot(b-a)/maxf(a.distance_squared_to(b),.001),0,1)
+		center_distance=minf(center_distance,cell_center.distance_to(a.lerp(b,t)))
+	# A segment nearest the cell centre is at most another half-diagonal away
+	# from any point in the cell. Include every segment whose bounds could beat
+	# that bound, plus the 24 m neighbor blend. Cache this conservative superset.
+	# The old fixed 3x3 bucket query could drop the true closest segment as the
+	# query crossed a cell boundary, creating >100 m terrain height jumps.
+	var limit := pow(center_distance+sqrt(2.0)*32+24,2)
+	var candidates: Array=[]
+	for i: int in range(0,route.points.size()-1,8):
+		var a := Vector2(route.points[i].x,route.points[i].z)
+		var end := mini(i+8,route.points.size()-1)
+		var b := Vector2(route.points[end].x,route.points[end].z)
+		var gap := Vector2(maxf(maxf(corner.x-maxf(a.x,b.x),minf(a.x,b.x)-corner.x-64),0),maxf(maxf(corner.y-maxf(a.y,b.y),minf(a.y,b.y)-corner.y-64),0))
+		if gap.length_squared()<=limit: candidates.append(i)
+	lookup[cell]=candidates
+	return candidates
+
+
+func nearest(point: Vector3,include_neighbor: bool = false) -> Dictionary:
 	var cell := Vector2i(floori(point.x/64),floori(point.z/64))
-	var candidates: Array = []
-	for x: int in range(-1,2):
-		for z: int in range(-1,2):
-			candidates.append_array(lookup.get(cell+Vector2i(x,z),[]))
-	if candidates.is_empty():
-		for i: int in range(0,route.points.size()-1,24): candidates.append(i)
+	var candidates := _candidates_for_cell(cell)
 	var best := INF
 	var result := {"s":0.0,"distance":INF,"lateral":0.0,"point":Vector3.ZERO}
+	var samples: Array[Dictionary] = []
 	for raw: Variant in candidates:
 		var i := int(raw)
 		var end := mini(i+8,route.points.size()-1)
@@ -88,36 +110,55 @@ func nearest(point: Vector3) -> Dictionary:
 		var t := clampf(Vector2(point.x-a.x,point.z-a.z).dot(delta)/maxf(delta.length_squared(),0.001),0,1)
 		var at := a.lerp(b,t)
 		var distance := Vector2(point.x-at.x,point.z-at.z).length_squared()
+		if include_neighbor:
+			samples.append({"s":lerpf(route.distances[i],route.distances[end],t),"distance":sqrt(distance),"lateral":(point-at).dot(route.rights[i]),"point":at})
 		if distance < best:
 			best = distance
 			result = {"s":lerpf(route.distances[i],route.distances[end],t),"distance":sqrt(distance),"lateral":(point-at).dot(route.rights[i]),"point":at}
+	if include_neighbor:
+		var neighbor: Dictionary = {}
+		for sample: Dictionary in samples:
+			if absf(float(sample.s)-float(result.s))<60: continue
+			if neighbor.is_empty() or float(sample.distance)<float(neighbor.distance): neighbor=sample
+		if not neighbor.is_empty(): result["neighbor"]=neighbor
 	return result
 
 
 func height_at(x: float,z: float) -> float:
-	var p := nearest(Vector3(x,0,z))
+	var alpine := generator.definition.environment_id=="highland" and not generator.definition.mountain_cliff_sections.is_empty()
+	var p := nearest(Vector3(x,0,z),alpine)
+	var height := _height_for_frame(p,x,z)
+	if p.has("neighbor"):
+		var neighbor: Dictionary=p.neighbor
+		var half := route.width_at(p.s)*.5
+		var blend := .5*(1-smoothstep(0,24,float(neighbor.distance)-float(p.distance)))*smoothstep(half+1.2,half+3.5,float(p.distance))
+		# Neighboring switchbacks can demand opposite relief at the same point.
+		# Blend their influence instead of creating a vertical Voronoi wall when
+		# the nearest road branch changes. Keep the driving corridor protected.
+		if blend>0: height=lerpf(height,_height_for_frame(neighbor,x,z),blend)
+	return height
+
+
+func _height_for_frame(p: Dictionary,x: float,z: float) -> float:
 	var d: float = p.distance
 	var half := route.width_at(p.s)*0.5
 	var close: float = p.point.y-minf(maxf(d-half,0)*0.18,2.3)
 	close += smoothstep(1.5,10,d-half)*0.5*sin(float(p.s)*0.03+float(p.lateral)*0.2)
 	var far: float = p.point.y-6+terrain_noise.get_noise_2d(x,z)*58+signf(p.lateral)*minf(d*0.14,27)
-	if generator.definition.environment_id=="highland":
-		var mountain_side := generator.definition.mountain_side_at(float(p.s))
-		if absf(mountain_side)>0.001:
-			var across := float(p.lateral)*signf(mountain_side)
-			var shoulder := half+3.5
-			if across>shoulder:
-				var rise := smoothstep(shoulder,shoulder+24,across)
-				var ridge: float = float(p.point.y)+5+rise*45+terrain_noise.get_noise_2d(x*1.7,z*1.7)*4
-				far = lerpf(far,ridge,(1-smoothstep(52,108,across))*absf(mountain_side))
-			elif across < -shoulder:
-				var beyond_edge := -across-shoulder
-				var drop: float = float(p.point.y)-4-smoothstep(0,28,beyond_edge)*96+terrain_noise.get_noise_2d(x*1.3,z*1.3)*5
-				far = lerpf(far,drop,(1-smoothstep(58,118,-across))*absf(mountain_side))
 	if generator.definition.environment_id=="coast" and float(p.lateral)<0:
 		far = lerpf(p.point.y-12,-40,smoothstep(25,180,d))
 	var clearance := lerpf(2.5,.35,smoothstep(6,18,d))
 	var height := lerpf(close-clearance,far,smoothstep(21,110,d))
+	if generator.definition.environment_id=="highland":
+		var mountain_side := generator.definition.mountain_side_at(float(p.s))
+		var beyond_shoulder := maxf(0,d-half-3.5)
+		var alpine_weight := absf(mountain_side)*smoothstep(half+1.5,half+3.5,d)*(1-smoothstep(58,118,d))
+		if alpine_weight>0:
+			# Apply alpine relief after the generic distant-terrain blend. Applying
+			# it to `far` first attenuated it twice and left a broad flat roadside.
+			var relief := 45*smoothstep(0,24,beyond_shoulder) if float(p.lateral)*mountain_side>0 else -96*smoothstep(0,28,beyond_shoulder)
+			var rock_noise := terrain_noise.get_noise_2d(x*1.7,z*1.7)*4*smoothstep(0,10,beyond_shoulder)
+			height = lerpf(height,close-.35+relief+rock_noise,alpine_weight)
 	# Carve an actual sandy bay beneath the final overlook, so the beach props
 	# cannot be buried by the generic cliff/noise terrain.
 	if generator.definition.environment_id=="coast" and float(p.s)>route.length-160 and float(p.lateral)<-25:
@@ -150,7 +191,9 @@ func height_at(x: float,z: float) -> float:
 
 func ground_at(s: float,lateral: float) -> Vector3:
 	var at := route.position_at(s)+route.rights[route.index_at(s)]*lateral
-	if absf(lateral) < 21: return generator.surface_position_at(s,lateral)
+	var alpine := generator.definition.environment_id=="highland" and absf(generator.definition.mountain_side_at(s))>0.01
+	var road_apron := route.width_at(s)*.5+3.5 if alpine else 21.0
+	if absf(lateral) < road_apron: return generator.surface_position_at(s,lateral)
 	at.y = rendered_height_at(at.x,at.z)
 	return at
 
@@ -160,7 +203,9 @@ func allows_decoration(point: Vector3, kind: String, scale_factor: float) -> boo
 	var p := nearest(point)
 	# Vertical trunks on nearly vertical mesh faces still read as floating.
 	# Keep forest on plantable slopes; leave cliff faces bare.
-	if kind in ["pine","umbrella"] and absf(float(p.lateral))>=21 and terrain_slope_at(point)>0.78: return false
+	var alpine := generator.definition.environment_id=="highland" and absf(generator.definition.mountain_side_at(float(p.s)))>0.01
+	if kind in ["pine","umbrella"] and absf(float(p.lateral))>=(route.width_at(p.s)*.5+3.5 if alpine else 21.0) and terrain_slope_at(point)>(.78 if alpine else 1.15): return false
+	if alpine and kind in ["grass","shrub"] and absf(float(p.lateral))>route.width_at(p.s)*.5+3.5 and terrain_slope_at(point)>.65: return false
 	for station: float in generator.definition.log_pile_stations:
 		if absf(float(p.s)-station)<10 and float(p.distance)<11: return false
 	for river: Vector3 in generator.definition.river_crossings:
@@ -184,6 +229,9 @@ func _apply_materials() -> void:
 	var ground := ShaderMaterial.new()
 	ground.shader = preload("res://assets/shaders/stage_ground.gdshader")
 	ground.set_shader_parameter("road_mesh",true)
+	if not generator.definition.mountain_cliff_sections.is_empty():
+		ground.set_shader_parameter("mountain_section_count",generator.definition.mountain_cliff_sections.size())
+		ground.set_shader_parameter("mountain_sections",generator.definition.mountain_cliff_sections)
 	_theme_ground(ground)
 	for mesh: MeshInstance3D in generator.road_visuals: mesh.material_override = ground
 	var water := ShaderMaterial.new()
@@ -192,14 +240,17 @@ func _apply_materials() -> void:
 
 
 func _build_terrain() -> void:
+	# The near-road alpine slopes need a finer grid to avoid interpolating a
+	# tall mountainside through the road or floating foliage above a cliff.
+	terrain_cell_size = 4.0 if generator.definition.environment_id=="highland" else 8.0
 	var start := Vector2(bounds.position.x-400,bounds.position.z-400)
 	var extent := Vector2(bounds.size.x+800,bounds.size.z+800)
-	var count := Vector2i(ceili(extent.x/8),ceili(extent.y/8))
+	var count := Vector2i(ceili(extent.x/terrain_cell_size),ceili(extent.y/terrain_cell_size))
 	var vertices := PackedVector3Array()
 	for z: int in range(count.y+1):
 		for x: int in range(count.x+1):
-			var px := start.x+x*8
-			var pz := start.y+z*8
+			var px := start.x+x*terrain_cell_size
+			var pz := start.y+z*terrain_cell_size
 			vertices.append(Vector3(px,height_at(px,pz),pz))
 	terrain_start = start
 	terrain_count = count
@@ -218,6 +269,7 @@ func _build_terrain() -> void:
 	mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	var material := ShaderMaterial.new()
 	material.shader = preload("res://assets/shaders/stage_ground.gdshader")
+	material.set_shader_parameter("alpine_terrain",generator.definition.environment_id=="highland")
 	_theme_ground(material)
 	mesh.material_override = material
 	dressing.add_child(mesh)
@@ -268,10 +320,10 @@ func _build_highland_edges() -> void:
 		var mountain_side := signf(section.z)
 		var s := section.x+18.0
 		while s<section.y-14:
-			var half := route.width_at(s)*.5
-			var shoulder := ground_at(s,mountain_side*(half+15+rng.randf_range(-2,5)))
-			var along := rng.randf_range(-9,9)
-			var at := to_local(shoulder+route.tangent_at(s)*along)
+			var station := s+rng.randf_range(-9,9)
+			var half := route.width_at(station)*.5
+			var shoulder := ground_at(station,mountain_side*(half+15+rng.randf_range(-2,5)))
+			var at := to_local(shoulder)
 			var height := rng.randf_range(2.5,6.5)
 			var span := rng.randf_range(2.5,5.5)
 			var rock_color := Color("64767b").lerp(Color("879293"),rng.randf_range(0,0.55))
@@ -448,9 +500,9 @@ func _build_landmarks() -> void:
 
 func rendered_height_at(x: float,z: float) -> float:
 	# Interpolate the exact triangles used by StageTerrain, not the analytic
-	# noise function between 8m samples (which can float metres over slopes).
+	# noise function between grid samples (which can float metres over slopes).
 	if terrain_vertices.is_empty(): return height_at(x,z)
-	var cell := (Vector2(x,z)-terrain_start)/8.0
+	var cell := (Vector2(x,z)-terrain_start)/terrain_cell_size
 	var ix := clampi(floori(cell.x),0,terrain_count.x-1)
 	var iz := clampi(floori(cell.y),0,terrain_count.y-1)
 	var u := clampf(cell.x-ix,0,1)
