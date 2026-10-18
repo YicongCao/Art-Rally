@@ -35,11 +35,13 @@ func build(stage: RallyStageGenerator) -> void:
 	_apply_materials()
 	_build_terrain()
 	_build_mountains()
+	foliage.biome = generator.definition.environment_id
 	foliage.spectator_stations.assign(generator.definition.spectators)
 	foliage.build_range(self,12,route.length-35,0.58)
 	for station: float in foliage.spectator_stations:
 		spectator_zones.append(ground_at(station+5,8))
 		spectator_regions.append({"a":ground_at(station-1,8),"b":ground_at(station+13,8)})
+	_build_landmarks()
 	_build_obstacles()
 	_build_guardrails()
 	_build_gravel()
@@ -83,6 +85,8 @@ func height_at(x: float,z: float) -> float:
 	var close: float = p.point.y-minf(maxf(d-half,0)*0.18,2.3)
 	close += smoothstep(1.5,10,d-half)*0.5*sin(float(p.s)*0.03+float(p.lateral)*0.2)
 	var far: float = p.point.y-6+terrain_noise.get_noise_2d(x,z)*58+signf(p.lateral)*minf(d*0.14,27)
+	if generator.definition.environment_id=="coast" and float(p.lateral)<0:
+		far = lerpf(p.point.y-12,-40,smoothstep(25,180,d))
 	return lerpf(close-0.65,far,smoothstep(21,110,d))
 
 
@@ -98,6 +102,9 @@ func ground_at(s: float,lateral: float) -> Vector3:
 
 func allows_decoration(point: Vector3, kind: String, scale_factor: float) -> bool:
 	var p := nearest(point)
+	if generator.definition.environment_id=="coast" and (point.y < -18 or (float(p.lateral)<-18 and kind in ["pine","umbrella"])): return false
+	for landmark: Dictionary in generator.definition.landmarks:
+		if point.distance_to(ground_at(landmark.s,landmark.side*18))<12: return false
 	var radius := 2.8*scale_factor if kind in ["pine","umbrella"] else (1.4*scale_factor if kind == "rock" else 0.25)
 	if kind in ["pine","umbrella","rock"]:
 		for station: float in foliage.spectator_stations:
@@ -109,6 +116,7 @@ func _apply_materials() -> void:
 	var ground := ShaderMaterial.new()
 	ground.shader = preload("res://assets/shaders/stage_ground.gdshader")
 	ground.set_shader_parameter("road_mesh",true)
+	_theme_ground(ground)
 	for mesh: MeshInstance3D in generator.road_visuals: mesh.material_override = ground
 	var water := ShaderMaterial.new()
 	water.shader = preload("res://assets/shaders/stage_water.gdshader")
@@ -139,11 +147,25 @@ func _build_terrain() -> void:
 	mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	var material := ShaderMaterial.new()
 	material.shader = preload("res://assets/shaders/stage_ground.gdshader")
+	_theme_ground(material)
 	mesh.material_override = material
 	dressing.add_child(mesh)
 
 
 func _build_mountains() -> void:
+	if generator.definition.environment_id=="coast":
+		var sea := MeshInstance3D.new()
+		sea.name = "CoastalOcean"
+		var plane := PlaneMesh.new()
+		plane.size = Vector2(14000,14000)
+		sea.mesh = plane
+		sea.position = center
+		sea.position.y = -25
+		var material := ShaderMaterial.new()
+		material.shader = preload("res://assets/shaders/coastal_ocean.gdshader")
+		sea.material_override = material
+		dressing.add_child(sea)
+		return
 	# Reuse approved faceted silhouettes, expanding the background around the entire stage.
 	var sample := RallySampleLandscape.new()
 	sample.center = center
@@ -275,3 +297,45 @@ func set_quality(low: bool) -> void:
 		if str(batch.name).begins_with("Aggregate"): batch.visible = not low
 		elif not str(batch.name).begins_with("grass"):
 			batch.visibility_range_end = 220 if low else RallySampleDressing.default_visibility(str(batch.name))
+
+
+func _theme_ground(material: ShaderMaterial) -> void:
+	match generator.definition.environment_id:
+		"coast":
+			material.set_shader_parameter("grass_dark",Color("a8a785"))
+			material.set_shader_parameter("grass_light",Color("ddd8b6"))
+		"highland":
+			material.set_shader_parameter("grass_dark",Color("737e67"))
+			material.set_shader_parameter("grass_light",Color("c4be88"))
+
+
+func _build_landmarks() -> void:
+	for entry: Dictionary in generator.definition.landmarks:
+		var root := Node3D.new()
+		root.name = entry.kind.capitalize()
+		dressing.add_child(root)
+		root.position = ground_at(entry.s,entry.side*18)
+		root.rotation.y = route.pose_at(entry.s).basis.get_euler().y
+		var builder := RallySampleMeshes.new()
+		match entry.kind:
+			"lighthouse":
+				builder.cone(3,2.1,20,Vector3(0,10,0),Color("eee3c7"),12)
+				builder.cone(2.65,2.4,2,Vector3(0,8,0),Color("c45d3e"),12)
+				builder.cone(3.3,3.3,.4,Vector3(0,20,0),Color("4c6966"),12)
+				builder.cone(2.0,2.0,3,Vector3(0,21.5,0),Color("a6d2ce"),8)
+				builder.cone(3,0,2,Vector3(0,24,0),Color("c45d3e"),8)
+				builder.box(Vector3(1.3,2.5,.2),Vector3(0,1.25,2.9),Color("314f51"))
+			"stones":
+				for i: int in range(7):
+					var angle := i*TAU/7
+					builder.ellipsoid(Vector3(1.1,2.6+i%2,1.1),Vector3(sin(angle)*5,1.6,cos(angle)*5),Color("7e929c"))
+				builder.box(Vector3(3.2,.65,1.5),Vector3(0,.33,0),Color("a2b0ad"))
+			_:
+				builder.box(Vector3(8,5,6),Vector3(0,2.5,0),Color("a95132"))
+				for side: float in [-1,1]:
+					builder.box(Vector3(5.1,.25,7),Vector3(side*2,6,0),Color("594e45"),Vector3(0,0,-side*.65))
+				builder.box(Vector3(1.6,2.8,.15),Vector3(0,1.4,3.05),Color("e2b26b"))
+				for side: float in [-1,1]: builder.box(Vector3(1.4,1.5,.16),Vector3(side*2.4,2.8,3.05),Color("a9c8bc"))
+		var mesh := MeshInstance3D.new()
+		mesh.mesh = builder.finish()
+		root.add_child(mesh)

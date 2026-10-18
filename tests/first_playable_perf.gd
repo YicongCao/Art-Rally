@@ -1,0 +1,48 @@
+extends SceneTree
+var reports: Array = []
+func _initialize() -> void: _run.call_deferred()
+func _run() -> void:
+	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
+	root.size = Vector2i(1920,1080)
+	DisplayServer.window_set_size(Vector2i(1920,1080))
+	var app: RallyGameApp = load("res://scenes/game/game.tscn").instantiate()
+	root.add_child(app)
+	AudioServer.set_bus_mute(0,true)
+	app.profile.path = "user://performance-test/profile.json"
+	app.profile.data = RallyProfileStore.fresh()
+	for stage: String in RallyContentCatalog.STAGES:
+		app.chosen_stage = stage
+		app.chosen_vehicle = "A240"
+		await app.start_race()
+		app.race._set_autopilot_mode_name("vgamepad")
+		var frames: Array[float] = []
+		var physics: Array[float] = []
+		var elapsed := 0.0
+		var previous := Time.get_ticks_usec()
+		while app.race.session.phase!=RallyStageSession.Phase.FINISHED and elapsed<650:
+			await process_frame
+			if paused or app.race.controls.blocked:
+				paused = false
+				app.race.controls.resume()
+			app.race.pause_menu.visible = false
+			var now := Time.get_ticks_usec()
+			var ms := (now-previous)/1000.0
+			previous = now
+			elapsed+=ms/1000
+			if elapsed>5:
+				frames.append(ms)
+				physics.append(app.race.vehicle.physics_usec/1000.0)
+		frames.sort()
+		physics.sort()
+		var sum := 0.0
+		for ms: float in frames: sum+=ms
+		var report := {"stage":stage,"vehicle":"A240","resolution":[1920,1080],"finished":app.race.session.phase==RallyStageSession.Phase.FINISHED,"elapsed":app.race.session.elapsed,"wall_seconds":elapsed,"frames":frames.size(),"average_fps":1000.0*frames.size()/sum,"frame_p95_ms":frames[int(frames.size()*.95)],"frame_p99_ms":frames[int(frames.size()*.99)],"physics_p95_ms":physics[int(physics.size()*.95)],"renderer":RenderingServer.get_video_adapter_name()}
+		reports.append(report)
+		print("FULL STAGE PERFORMANCE: ",JSON.stringify(report))
+		var file := FileAccess.open("res://logs/first_playable_performance.json",FileAccess.WRITE)
+		file.store_string(JSON.stringify(reports,"\t"))
+		app.leave_race()
+		await process_frame
+	app.queue_free()
+	await process_frame
+	quit()

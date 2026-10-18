@@ -9,7 +9,7 @@ const RED := Color("e56b4f")
 const NOTE_TEXT := {"LEFT_MEDIUM":"左弯 3", "RIGHT_MEDIUM":"右弯 3", "LEFT_TIGHT":"左急弯", "RIGHT_TIGHT":"右急弯", "MUD_NARROW":"泥地 · 收窄", "WATER":"积水 · 减速", "ASPHALT":"进入柏油", "GRAVEL":"进入砂石", "CREST_JUMP":"坡顶 · 跳跃", "FINISH":"终点"}
 var title_font: Font = RallyFonts.bold()
 var number_font: Font = RallyFonts.mono_bold()
-var text_font: Font = RallyFonts.TEXT
+var text_font: Font = RallyFonts.regular()
 var model: Dictionary = {}
 var route_map := PackedVector2Array()
 var map_min := Vector2.ZERO
@@ -80,7 +80,7 @@ func _draw() -> void:
 	panel(Rect2(24,22,260,74))
 	draw_colored_polygon(PackedVector2Array([Vector2(37,38),Vector2(51,38),Vector2(43,64),Vector2(29,64)]),AMBER)
 	text("ART / RALLY",Vector2(63,52),20,PAPER,title_font)
-	text("夕照松岭 / 16:00 · %s"%model.get("drive_layout","AWD"),Vector2(63,78),12,MUTED)
+	text("%s · %s"%[model.get("stage_title","夕照松岭"),model.get("vehicle_title",model.get("drive_layout","AWD"))],Vector2(63,78),12,MUTED)
 	var auto_label := str(model.get("label",""))
 	if not auto_label.is_empty():
 		panel(Rect2(300,22,150,74))
@@ -130,7 +130,7 @@ func _draw() -> void:
 	elif model.phase == RallyStageSession.Phase.FINISHED:
 		panel(Rect2(400,205,480,270))
 		center_text("STAGE COMPLETE",Vector2(640,248),25,AMBER,title_font)
-		center_text("夕照松岭 · 完赛",Vector2(640,280),17,PAPER)
+		center_text(str(model.get("stage_title","夕照松岭"))+" · 完赛",Vector2(640,280),17,PAPER)
 		center_text(time_text(model.time),Vector2(640,336),42,PAPER,number_font)
 		center_text("行驶 %s  + 罚时 %ds  /  检查点 %d/%d"%[time_text(float(model.get("elapsed",model.time-model.penalty))),model.penalty,model.gates,model.total_gates],Vector2(640,374),14,MUTED)
 		var result_line := str(model.get("best_label","个人最佳"))

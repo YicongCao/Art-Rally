@@ -2,6 +2,12 @@ class_name RallyVehicleFeedback
 extends RefCounted
 
 var players: Dictionary = {}
+var engine_layers: Dictionary = {}
+var last_gear: int = 0
+var engine_vehicle: String = ""
+var one_shot: AudioStreamPlayer
+var collision_cooldown: float = 0
+var was_braking: bool = false
 var particles: Array[Dictionary] = []
 var elapsed: float = 0
 var impact_cooldown: float = 0
@@ -13,9 +19,32 @@ var is_paused: bool = false
 
 
 func build(parent: Node3D) -> void:
+	if parent.get("vehicle_definition")!=null:
+		engine_vehicle = parent.vehicle_definition.vehicle_id
+		for layer: String in ["idle","low","mid","high","lift"]:
+			var player := AudioStreamPlayer.new()
+			player.stream = RallyAudioDirector.asset(engine_vehicle+"_"+layer,true)
+			player.bus = "Engine"
+			player.volume_db = -80
+			player.process_mode = Node.PROCESS_MODE_ALWAYS
+			parent.add_child(player)
+			if DisplayServer.get_name()!="headless": player.play()
+			engine_layers[layer] = player
+		one_shot = AudioStreamPlayer.new()
+		one_shot.bus = "Road"
+		parent.add_child(one_shot)
+		parent.vehicle.contact_monitor = true
+		parent.vehicle.max_contacts_reported = 4
+		parent.vehicle.body_entered.connect(func(_body: Node):
+			if collision_cooldown<=0 and parent.vehicle.linear_velocity.length()>2:
+				one_shot.stream = RallyAudioDirector.asset("collision")
+				one_shot.volume_db = linear_to_db(clampf(parent.vehicle.linear_velocity.length()/35,0.05,0.7))
+				one_shot.play()
+				collision_cooldown = 0.3)
 	for kind: String in ["engine","load","asphalt","gravel","mud","water","impact"]:
 		var player := AudioStreamPlayer.new()
 		player.name = "RallyAudio_"+kind
+		if not engine_vehicle.is_empty(): player.bus = "Engine" if kind in ["engine","load"] else "Road"
 		player.stream = RallySynthAudio.stream(kind)
 		player.volume_db = -80
 		player.process_mode = Node.PROCESS_MODE_ALWAYS
@@ -49,17 +78,38 @@ static func mix_for(car: RallyVehicle) -> Dictionary:
 
 func update(car: RallyVehicle, settings: RallyGameSettings, controls: RallyInputController, paused: bool, dt: float) -> void:
 	is_paused = paused
+	collision_cooldown = maxf(0,collision_cooldown-dt)
+	for player: AudioStreamPlayer in engine_layers.values(): player.stream_paused = paused
 	for player: AudioStreamPlayer in players.values(): player.stream_paused = paused
 	if paused:
 		for entry: Dictionary in particles: entry.emitter.emitting = false
 		stop_rumble()
 		return
 	elapsed += dt
+	if not engine_layers.is_empty():
+		var rpm := car.drivetrain.rpm()
+		var load_value := car.command.throttle
+		var mix := {"idle":1-smoothstep(900,1800,rpm),"low":maxf(0,1-absf(rpm-2100)/1700)*load_value,"mid":maxf(0,1-absf(rpm-3800)/2200)*load_value,"high":smoothstep(4000,6500,rpm)*load_value,"lift":(1-load_value)*smoothstep(1000,2200,rpm)}
+		for kind: String in engine_layers:
+			var player: AudioStreamPlayer = engine_layers[kind]
+			player.pitch_scale = clampf(rpm/3000,0.28,2.65)
+			player.volume_db = lerpf(player.volume_db,linear_to_db(maxf(0.0001,mix[kind]*0.5)),1-exp(-dt*14))
+		var braking := car.command.brake>0.4 and car.linear_velocity.length()>5
+		if braking and not was_braking:
+			one_shot.stream = RallyAudioDirector.asset("brake")
+			one_shot.volume_db = -26
+			one_shot.play()
+		was_braking = braking
+		if last_gear!=car.drivetrain.gear:
+			one_shot.stream = RallyAudioDirector.asset("shift")
+			one_shot.volume_db = -15
+			one_shot.play()
+			last_gear = car.drivetrain.gear
 	impact_cooldown = maxf(0,impact_cooldown-dt)
 	last_mix = mix_for(car)
 	for key: String in ["engine","load","asphalt","gravel","mud","water"]:
 		var player: AudioStreamPlayer = players[key]
-		var target := linear_to_db(maxf(float(last_mix[key])*float(settings.values.volume),0.0001))
+		var target := linear_to_db(maxf(float(last_mix[key])*(float(settings.values.volume) if engine_layers.is_empty() else (0.0 if key in ["engine","load"] else 1.0)),0.0001))
 		player.volume_db = lerpf(player.volume_db,target,1-exp(-dt*12))
 		if key in ["engine","load"]: player.pitch_scale = clampf(car.drivetrain.rpm()/3000,0.28,2.65)
 		else: player.pitch_scale = 0.8+minf(car.linear_velocity.length()/50,0.55)
@@ -104,6 +154,8 @@ func stop_rumble() -> void:
 
 func dispose() -> void:
 	stop_rumble()
+	for player: AudioStreamPlayer in engine_layers.values():
+		if is_instance_valid(player): player.stop()
 	for player: AudioStreamPlayer in players.values():
 		if is_instance_valid(player):
 			player.stream_paused = false

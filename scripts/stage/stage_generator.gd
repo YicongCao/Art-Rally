@@ -2,6 +2,7 @@ class_name RallyStageGenerator
 extends Node3D
 
 @export var definition: RallyStageDefinition = preload("res://resources/stages/sunset_ridge.tres")
+var auto_build: bool = true
 var route := RallyStageRoute.new()
 var chunk_bodies: Array[StaticBody3D] = []
 var decoration_positions := PackedVector3Array()
@@ -10,7 +11,7 @@ var water_visuals: Array[MeshInstance3D] = []
 
 
 func _ready() -> void:
-	build()
+	if auto_build: build()
 
 
 func build() -> void:
@@ -186,3 +187,17 @@ func _build_marker_batch(transforms: Array[Transform3D]) -> void:
 	visual.multimesh = multimesh
 	visual.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(visual)
+
+
+func build_incremental(progress: Callable) -> void:
+	route.build(definition)
+	assert(route.validate().is_empty())
+	var count := route.points.size()-1
+	for start: int in range(0,count,20):
+		_build_chunk(start,mini(start+20,count))
+		if start%200==0:
+			progress.call(0.1+0.55*float(start)/count,"铺设道路与碰撞")
+			await get_tree().process_frame
+	_build_markers()
+	_build_culvert()
+	_build_runout()

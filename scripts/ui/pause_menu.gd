@@ -89,7 +89,7 @@ func build(settings: RallyGameSettings) -> void:
 	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	list.add_theme_constant_override("separation",8)
 	scroll.add_child(list)
-	for entry: Array in [["volume","声音音量"],["steering_response","键盘转向响应"],["return_rate","键盘回正速度"],["throttle_rise","油门建立时间"],["brake_rise","制动建立时间"],["stick_deadzone","手柄摇杆死区"],["brake_bias","前轮制动比例"],["spring_scale","悬架弹簧倍率"],["tire_visual_gain","轮胎形变显示倍率"]]:
+	for entry: Array in [["volume","声音音量"],["engine_volume","发动机"],["road_volume","路面"],["environment_volume","环境"],["interface_volume","界面提示"],["music_volume","菜单音乐"],["steering_response","键盘转向响应"],["return_rate","键盘回正速度"],["throttle_rise","油门建立时间"],["brake_rise","制动建立时间"],["stick_deadzone","手柄摇杆死区"],["brake_bias","前轮制动比例"],["spring_scale","悬架弹簧倍率"],["tire_visual_gain","轮胎形变显示倍率"]]:
 		var row := HBoxContainer.new()
 		list.add_child(row)
 		var label := Label.new()
@@ -109,7 +109,7 @@ func build(settings: RallyGameSettings) -> void:
 		row.add_child(value)
 		slider.value_changed.connect(_slider_changed.bind(entry[0],value))
 		widgets[entry[0]] = slider
-	for entry: Array in [["lens_flare","镜头光斑"],["camera_motion","驾驶舱轻微震动"],["automatic","自动换挡"],["reverse_assist","停稳刹车 3 秒自动挂倒挡"],["keyboard_light","键盘轻辅助（更直接）"],["vibration","手柄震动"],["low_detail","低细节（减少草簇和散石）"]]:
+	for entry: Array in [["ghost","个人幽灵"],["lens_flare","镜头光斑"],["camera_motion","驾驶舱轻微震动"],["automatic","自动换挡"],["reverse_assist","停稳刹车 3 秒自动挂倒挡"],["keyboard_light","键盘轻辅助（更直接）"],["vibration","手柄震动"],["low_detail","低细节（减少草簇和散石）"]]:
 		var toggle := CheckButton.new()
 		toggle.text = entry[1]
 		toggle.button_pressed = prefs.values[entry[0]]

@@ -24,6 +24,8 @@ var active_device: int = -1
 var blocked: bool = false
 var pending_shift: int = 0
 var keys: Dictionary = {}
+var bindings: Dictionary = {}
+var allow_mechanical_shortcuts: bool = true
 var buttons: Dictionary = {}
 var axes: Dictionary = {}
 var last_raw := DriverCommand.new()
@@ -80,6 +82,14 @@ func _unhandled_input(event: InputEvent) -> void:
 		if event.echo:
 			return
 		var code: int = event.physical_keycode
+		var remapped := false
+		for original: String in bindings:
+			if int(bindings[original])==event.physical_keycode:
+				code = int(original)
+				remapped = true
+				break
+		if not remapped and bindings.has(str(code)) and int(bindings[str(code)])!=code: return
+		if not allow_mechanical_shortcuts and code==KEY_F3: return
 		if event.pressed and code in [KEY_ESCAPE, KEY_ENTER]:
 			pause_requested.emit()
 			return

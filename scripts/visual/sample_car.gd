@@ -8,7 +8,10 @@ var original_hubs: Array[Node3D] = []
 var styled_hubs: Array[Node3D] = []
 
 
-func build(car: RallyVehicle) -> void:
+func build(car: RallyVehicle, definition: RallyVehicleDefinition = null) -> void:
+	if definition!=null and ResourceLoader.exists(definition.model_path):
+		_build_model(car,definition)
+		return
 	body.name = "PreviewBodywork"
 	car.add_child(body)
 	for node_name: String in ["Body","Cabin","HoodStripe"]:
@@ -102,3 +105,32 @@ func set_style(enabled: bool) -> void:
 	for node: Node3D in original_visuals: node.visible = not enabled
 	for node: Node3D in original_hubs: node.visible = not enabled
 	for node: Node3D in styled_hubs: node.visible = enabled
+
+
+func _build_model(car: RallyVehicle, definition: RallyVehicleDefinition) -> void:
+	body.free()
+	body = load(definition.model_path).instantiate()
+	body.name = definition.vehicle_id+"Bodywork"
+	car.add_child(body)
+	for node_name: String in ["Body","Cabin","HoodStripe"]:
+		var original: Node3D = car.get_node(node_name)
+		original_visuals.append(original)
+		original.visible = false
+	brake_material.albedo_color = Color("95261e")
+	brake_material.emission_enabled = true
+	brake_material.emission = Color("f45a36")
+	_bind_lamps(body)
+	var rim := StandardMaterial3D.new()
+	rim.albedo_color = {"F160":Color("eee4cb"),"R200":Color("41494a"),"A240":Color("d8a143")}[definition.vehicle_id]
+	rim.metallic = .35
+	rim.roughness = .45
+	for pivot: Node3D in car.wheel_visuals:
+		for index: int in [1,2]:
+			var hub: Node3D = pivot.get_child(index)
+			for mesh: Node in hub.get_children():
+				if mesh is MeshInstance3D: mesh.material_override = rim
+
+
+func _bind_lamps(node: Node) -> void:
+	if node is MeshInstance3D and str(node.name).begins_with("BrakeLamp"): node.material_override = brake_material
+	for child: Node in node.get_children(): _bind_lamps(child)

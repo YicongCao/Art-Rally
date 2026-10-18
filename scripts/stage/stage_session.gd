@@ -20,6 +20,8 @@ var note_remaining: float = 0
 var note_s: float = 0
 var practice: bool = false
 var reset_count: int = 0
+var split_times: Array[float] = []
+var split_gates: Array[int] = []
 
 
 func setup(stage_route: RallyStageRoute, free_practice: bool = false) -> void:
@@ -28,6 +30,12 @@ func setup(stage_route: RallyStageRoute, free_practice: bool = false) -> void:
 	gates.clear()
 	for s: int in range(20, int(route.length - 60), 100): gates.append(s)
 	gates.append(route.length - 30)
+	split_gates.clear()
+	for fraction: float in route.definition.split_fractions:
+		var nearest := 0
+		for i: int in range(gates.size()):
+			if absf(gates[i]-fraction*gates[-1])<absf(gates[nearest]-fraction*gates[-1]): nearest = i
+		split_gates.append(nearest)
 	restart()
 
 
@@ -42,6 +50,7 @@ func restart() -> Transform3D:
 	note_remaining = 0
 	progress = 8
 	reset_count = 0
+	split_times.clear()
 	var pose := route.pose_at(8)
 	previous = pose.origin
 	projection_hint = route.index_at(8)
@@ -71,6 +80,7 @@ func step(position: Vector3, speed: float, dt: float) -> void:
 			var at := previous.lerp(position, -before / maxf(after - before, 0.0001))
 			var lateral := absf((at - center).dot(route.rights[route.index_at(s)]))
 			if lateral <= route.width_at(s) * 0.5 + 0.8 and absf(at.y - center.y) < 3:
+				if next_gate in split_gates: split_times.append(total_time())
 				next_gate += 1
 				if phase == Phase.ARMED: phase = Phase.RUNNING
 				if next_gate == gates.size(): phase = Phase.FINISHED

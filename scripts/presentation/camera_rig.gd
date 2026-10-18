@@ -1,6 +1,7 @@
 class_name RallyCameraRig
 extends RefCounted
 
+var definition: RallyVehicleDefinition
 var dashboard := Node3D.new()
 var steering_wheel := Node3D.new()
 var display: Label3D
@@ -18,7 +19,7 @@ func build(camera: Camera3D) -> void:
 	dashboard.name = "SimplifiedCockpit"
 	dashboard.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
 	camera.add_child(dashboard)
-	GrayboxGeometry.box(dashboard,"Dash",Vector3(1.5,0.22,0.16),Vector3(0,-0.43,-0.76),Color("1b2925"))
+	GrayboxGeometry.box(dashboard,"Dash",Vector3(1.5,0.22,0.16),Vector3(0,-0.43,-0.76),definition.paint.darkened(.7) if definition!=null else Color("1b2925"))
 	GrayboxGeometry.box(dashboard,"InstrumentBezel",Vector3(0.50,0.22,0.035),Vector3(0.17,-0.285,-0.65),Color("111c20"))
 	steering_wheel.position = Vector3(-0.24,-0.27,-0.55)
 	dashboard.add_child(steering_wheel)
@@ -97,6 +98,7 @@ func update(camera: Camera3D,car: RallyVehicle,mode: int,motion: bool,paused: bo
 		history_valid = true
 	else:
 		var offset := Vector3(0,0.74,-0.80) if mode==2 else Vector3(0,0.72,-1.40)
+		if definition!=null: offset = definition.cockpit_offset if mode==2 else definition.hood_offset
 		if motion: offset.y += sin(elapsed*37)*minf(car.linear_velocity.length()/20,1)*0.005
 		camera.position = pose*offset
 		camera.look_at(camera.position-pose.basis.z*40,pose.basis.y)

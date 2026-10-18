@@ -2,6 +2,7 @@ class_name RallySampleDressing
 extends RefCounted
 
 const BATCH_LENGTH := 160.0
+var biome: String = "autumn"
 var land: Node3D
 var range_start: float = 430
 var range_end: float = 630
@@ -31,13 +32,16 @@ func build_range(landscape: Node3D, start: float, end: float, density: float = 1
 		meshes["rock%d"%variant] = RallySampleMeshes.rock(variant+30)
 		meshes["shrub%d"%variant] = RallySampleMeshes.shrub(variant+50)
 		meshes["grass%d"%variant] = RallySampleMeshes.grass(variant+70)
-	for i: int in range(int(240*multiplier)):
+	if biome!="autumn":
+		for key: String in meshes:
+			if not key.begins_with("shadow"): meshes[key] = _biome_mesh(meshes[key],key)
+	for i: int in range(int(240*multiplier*(0.25 if biome=="coast" else 1.0))):
 		var s := rng.randf_range(range_start,range_end)
 		var side := -1.0 if rng.randf() < 0.5 else 1.0
 		var lateral := side*rng.randf_range(7.0,95.0)
 		# Open up a sightline on the valley side; cluster trees instead of wallpaper spacing.
 		if side < 0 and s > 470 and s < 540 and absf(lateral) < 35: continue
-		var kind := "umbrella" if rng.randf() < 0.55 else "pine"
+		var kind := "umbrella" if rng.randf() < (0.55 if biome=="autumn" else 0.03) else "pine"
 		place(kind, s,lateral,rng.randf_range(0.72,1.45))
 	for i: int in range(int(600*multiplier)):
 		var s := rng.randf_range(range_start,range_end)
@@ -182,3 +186,21 @@ func _road_signs() -> void:
 		text.pixel_size = 0.004
 		text.position = Vector3(0,1.25,0.045)
 		root.add_child(text)
+
+
+func _biome_mesh(source: ArrayMesh,kind: String) -> ArrayMesh:
+	var arrays := source.surface_get_arrays(0)
+	var colors: PackedColorArray = arrays[Mesh.ARRAY_COLOR]
+	var palette := {"pine":Color("2e5148"),"umbrella":Color("68825a"),"rock":Color("7f94a5"),"shrub":Color("737c50"),"grass":Color("c5c083")}
+	if biome=="coast": palette = {"pine":Color("315f4a"),"umbrella":Color("4e7250"),"rock":Color("dfdbc4"),"shrub":Color("7b8a5a"),"grass":Color("cbc486")}
+	var base := Color.WHITE
+	for key: String in palette:
+		if kind.begins_with(key): base = palette[key].srgb_to_linear()
+	for i: int in range(colors.size()):
+		var shade := clampf(colors[i].get_luminance()*1.5+.40,.40,1.2)
+		colors[i] = Color(base.r*shade,base.g*shade,base.b*shade)
+	arrays[Mesh.ARRAY_COLOR] = colors
+	var mesh := ArrayMesh.new()
+	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES,arrays)
+	mesh.surface_set_material(0,source.surface_get_material(0))
+	return mesh

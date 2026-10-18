@@ -8,6 +8,8 @@ const NOTE_TEXT := {
 	"FINISH": "终点 · 通过后减速",
 }
 
+var managed_flow: bool = false
+var vehicle_definition: RallyVehicleDefinition
 var generator: RallyStageGenerator
 var session := RallyStageSession.new()
 var game_hud: RallyHUD
@@ -35,6 +37,11 @@ var result_persistence_enabled: bool = false
 
 
 func _ready() -> void:
+	if managed_flow: return
+	initialize_gameplay()
+
+
+func initialize_gameplay() -> void:
 	generator = $Stage
 	session.setup(generator.route)
 	super._ready()
@@ -63,7 +70,7 @@ func _ready() -> void:
 	checkpoint_visual.mesh = mesh
 	add_child(checkpoint_visual)
 	presentation.build(self)
-	if DisplayServer.get_name()!="headless" and not "--test-defaults" in OS.get_cmdline_user_args(): preferences.load_file()
+	if not managed_flow and DisplayServer.get_name()!="headless" and not "--test-defaults" in OS.get_cmdline_user_args(): preferences.load_file()
 	pause_menu = RallyPauseMenu.new()
 	add_child(pause_menu)
 	pause_menu.build(preferences)
@@ -76,7 +83,7 @@ func _ready() -> void:
 	pause_menu.defaults_requested.connect(_reset_preferences)
 	controls.transmission_requested.connect(func(): preferences.set_value("automatic",vehicle.drivetrain.automatic); _save_preferences())
 	_apply_preferences()
-	vehicle.drivetrain.config.drive_layout = preferences.values.drive_layout
+	if not managed_flow: vehicle.drivetrain.config.drive_layout = preferences.values.drive_layout
 	feedback.build(self)
 	vehicle.reset_completed.connect(feedback.reset)
 	vehicle.reset_completed.connect(reverse_assist.reset)
@@ -88,15 +95,15 @@ func _ready() -> void:
 	vehicle_selector.cancelled.connect(_cancel_vehicle_selection)
 	auto_driver.begin_run(generator.route,vehicle.position)
 	pause_menu.set_autopilot_mode(auto_driver.mode_name())
-	result_persistence_enabled = DisplayServer.get_name()!="headless" and not "--test-defaults" in OS.get_cmdline_user_args()
+	result_persistence_enabled = not managed_flow and DisplayServer.get_name()!="headless" and not "--test-defaults" in OS.get_cmdline_user_args()
 	if result_persistence_enabled:
 		var result_error := result_store.load_file()
 		if result_error!=OK: pause_menu.message.text = "成绩读取失败，本次仍可驾驶"
 	_refresh_result_summary()
 	if get_tree().paused: pause_menu.show_menu(true)
 	# Physics tests and capture tools deliberately bypass the front-end, using defaults.
-	if DisplayServer.get_name()!="headless" and not "--test-defaults" in OS.get_cmdline_user_args(): _open_vehicle_selection()
-	if "--package-smoke" in OS.get_cmdline_user_args(): _run_package_smoke.call_deferred()
+	if not managed_flow and DisplayServer.get_name()!="headless" and not "--test-defaults" in OS.get_cmdline_user_args(): _open_vehicle_selection()
+	if not managed_flow and "--package-smoke" in OS.get_cmdline_user_args(): _run_package_smoke.call_deferred()
 
 
 func _run_package_smoke() -> void:
@@ -128,7 +135,7 @@ func _driver_command(speed: float, dt: float) -> DriverCommand:
 
 
 func _physics_process(dt: float) -> void:
-	if get_tree().paused or selecting_vehicle: return
+	if not is_instance_valid(vehicle) or get_tree().paused or selecting_vehicle: return
 	recorder.capture(vehicle,auto_driver.telemetry(controls.active_device))
 	if respawn_wait: return
 	presentation.tire_marks.update(vehicle,dt)
@@ -152,6 +159,7 @@ func _physics_process(dt: float) -> void:
 
 
 func _process(dt: float) -> void:
+	if not is_instance_valid(vehicle): return
 	super._process(dt)
 	if not is_instance_valid(game_hud): return
 	readout.get_parent().get_parent().visible = telemetry_visible
@@ -164,6 +172,8 @@ func _process(dt: float) -> void:
 	if game_hud_clock >= 0.05:
 		game_hud_clock = 0
 		var data := RallyHUD.data_for(vehicle,session,get_tree().paused)
+		data["stage_title"] = generator.definition.title
+		data["vehicle_title"] = vehicle_definition.vehicle_id if vehicle_definition!=null else vehicle.drivetrain.config.drive_layout
 		data["camera_mode"] = camera_mode
 		data["reverse_remaining"] = reverse_assist.remaining()
 		data["returning_forward"] = reverse_assist.returning_forward
@@ -422,3 +432,9 @@ func _cancel_vehicle_selection() -> void:
 	selecting_vehicle = false
 	vehicle_selector.close()
 	pause_menu.show_menu(true)
+
+
+func _configure_vehicle(car: RallyVehicle) -> void:
+	if vehicle_definition==null: return
+	car.config = vehicle_definition.physics_config()
+	car.drivetrain.config = vehicle_definition.drivetrain_config()

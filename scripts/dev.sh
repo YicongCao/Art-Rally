@@ -168,7 +168,9 @@ case "$MODE" in
     rm -rf "$ROOT/builds/macos/Art Rally.app" "$ROOT/builds/macos/Art-Rally-macos-universal.zip"
     run_logged "$ROOT/logs/export_macos.log" --headless --path "$ROOT" --export-release "macOS" "$ROOT/builds/macos/Art Rally.app"
     test -x "$ROOT/builds/macos/Art Rally.app/Contents/MacOS/Art Rally"
+    cp "$ROOT/docs/PLAY_GUIDE.zh-CN.md" "$ROOT/docs/ASSET_CREDITS.md" "$ROOT/assets/licenses/Godot-LICENSE.txt" "$ROOT/assets/licenses/Godot-THIRD-PARTY.json" "$ROOT/builds/macos/"
     ditto -c -k --sequesterRsrc --keepParent "$ROOT/builds/macos/Art Rally.app" "$ROOT/builds/macos/Art-Rally-macos-universal.zip"
+    (cd "$ROOT/builds/macos" && /usr/bin/zip -q "Art-Rally-macos-universal.zip" PLAY_GUIDE.zh-CN.md ASSET_CREDITS.md Godot-LICENSE.txt Godot-THIRD-PARTY.json)
     (cd "$ROOT/builds/macos" && shasum -a 256 "Art-Rally-macos-universal.zip" > "Art-Rally-macos-universal.zip.sha256")
     ;;
   macos-app-check)
@@ -192,6 +194,7 @@ case "$MODE" in
     mkdir -p "$ROOT/builds/windows/Art Rally"
     run_logged "$ROOT/logs/export_windows.log" --headless --path "$ROOT" --export-release "Windows Desktop" "$ROOT/builds/windows/Art Rally/Art Rally.exe"
     test -f "$ROOT/builds/windows/Art Rally/Art Rally.exe"
+    cp "$ROOT/docs/PLAY_GUIDE.zh-CN.md" "$ROOT/docs/ASSET_CREDITS.md" "$ROOT/assets/licenses/Godot-LICENSE.txt" "$ROOT/assets/licenses/Godot-THIRD-PARTY.json" "$ROOT/builds/windows/Art Rally/"
     (cd "$ROOT/builds/windows" && /usr/bin/zip -r -9 -X "Art-Rally-windows-x86_64.zip" "Art Rally")
     (cd "$ROOT/builds/windows" && shasum -a 256 "Art-Rally-windows-x86_64.zip" > "Art-Rally-windows-x86_64.zip.sha256")
     ;;
