@@ -20,3 +20,5 @@ a3041811a78c361b1de50f953c805e0244951c21c5bd412f7232ef0d899af0da  NotoSansSC-Var
 1c05c68c34f9708415aada51f17e1b0092d2cea709bf4a94cd38114f9e73d7d9  OFL-NotoSansSC.txt
 cee9892f9f0cc8fe882c9e9537ee6a89621d86ee7ceaf70b02e2b2b1c25c061a  OFL-NotoSansMono.txt
 ```
+
+`ChakraPetch-Bold.ttf` supplies the angular Latin lettering for plates and the title wordmark. Chinese falls back to Noto Sans SC; plate entry, preview and vehicle share the same FontVariation. Upstream: https://github.com/google/fonts/tree/main/ofl/chakrapetch . Original SIL OFL 1.1 is included as `OFL-ChakraPetch.txt`.

@@ -11,6 +11,7 @@ var penalty: float = 0.0
 var next_gate: int = 0
 var gates := PackedFloat64Array()
 var previous := Vector3.ZERO
+var previous_basis := Basis.IDENTITY
 var progress: float = 0.0
 var projection: Dictionary = {}
 var projection_hint: int = -1
@@ -53,17 +54,19 @@ func restart() -> Transform3D:
 	split_times.clear()
 	var pose := route.pose_at(8)
 	previous = pose.origin
+	previous_basis = pose.basis
 	projection_hint = route.index_at(8)
 	projection = route.project(previous, projection_hint)
 	return pose
 
 
-func step(position: Vector3, speed: float, dt: float) -> void:
+func step(position: Vector3, speed: float, dt: float, body_basis: Basis = Basis.IDENTITY, body_size: Vector3 = Vector3.ZERO) -> void:
 	if phase == Phase.FINISHED: return
 	if phase == Phase.COUNTDOWN:
 		countdown = maxf(0, countdown - dt)
 		if countdown <= 0: phase = Phase.ARMED
 		previous = position
+		previous_basis = body_basis
 		return
 	if phase == Phase.RUNNING: elapsed += dt
 	projection = route.project(position, projection_hint, 45)
@@ -74,16 +77,11 @@ func step(position: Vector3, speed: float, dt: float) -> void:
 		var s := gates[next_gate]
 		var center := route.position_at(s)
 		var forward := route.tangent_at(s)
-		var before := (previous - center).dot(forward)
-		var after := (position - center).dot(forward)
-		if before < 0 and after >= 0:
-			var at := previous.lerp(position, -before / maxf(after - before, 0.0001))
-			var lateral := absf((at - center).dot(route.rights[route.index_at(s)]))
-			if lateral <= route.width_at(s) * 0.5 + 0.8 and absf(at.y - center.y) < 3:
-				if next_gate in split_gates: split_times.append(total_time())
-				next_gate += 1
-				if phase == Phase.ARMED: phase = Phase.RUNNING
-				if next_gate == gates.size(): phase = Phase.FINISHED
+		if _body_crosses(previous,position,previous_basis,body_basis,body_size*.5,center,forward,route.rights[route.index_at(s)],route.width_at(s)*.5+1.09):
+			if next_gate in split_gates: split_times.append(total_time())
+			next_gate += 1
+			if phase == Phase.ARMED: phase = Phase.RUNNING
+			if next_gate == gates.size(): phase = Phase.FINISHED
 	progress = clampf(projection.s, 0, gates[mini(next_gate, gates.size() - 1)])
 	note_remaining = maxf(0, note_remaining - dt)
 	if next_gate > 0 and phase != Phase.FINISHED:
@@ -97,6 +95,7 @@ func step(position: Vector3, speed: float, dt: float) -> void:
 			note_remaining = 5
 			next_note += 1
 	previous = position
+	previous_basis = body_basis
 
 
 func recover(penalty_seconds: float = 5.0) -> Transform3D:
@@ -107,6 +106,7 @@ func recover(penalty_seconds: float = 5.0) -> Transform3D:
 	var s := 8.0 if next_gate == 0 else maxf(8, gates[next_gate - 1] - 6)
 	var pose := route.pose_at(s)
 	previous = pose.origin
+	previous_basis = pose.basis
 	projection_hint = route.index_at(s)
 	projection = route.project(previous, projection_hint)
 	progress = s
@@ -122,3 +122,39 @@ func total_time() -> float:
 
 func accepts_input() -> bool:
 	return phase in [Phase.ARMED, Phase.RUNNING]
+
+
+static func _body_crosses(from: Vector3,to: Vector3,old_basis: Basis,new_basis: Basis,half: Vector3,center: Vector3,forward: Vector3,right: Vector3,opening: float) -> bool:
+	if (to-from).dot(forward)<=.00001: return false
+	var reach := half.length()
+	var before := (from-center).dot(forward)
+	var after := (to-center).dot(forward)
+	if maxf(before,after)<-reach or minf(before,after)>reach: return false
+	# Intersect the swept OBB corners and the present OBB edges with the gate plane.
+	# This credits the first tiny body overlap, including a rotated front corner.
+	var old: Array[Vector3] = []
+	var now: Array[Vector3] = []
+	for i: int in range(8):
+		var local := Vector3(half.x*(1 if i&1 else -1),half.y*(1 if i&2 else -1),half.z*(1 if i&4 else -1))
+		old.append(from+old_basis*local)
+		now.append(to+new_basis*local)
+	var hits: Array[Vector3] = []
+	for i: int in range(8):
+		_plane_hit(old[i],now[i],center,forward,hits)
+		for bit: int in [1,2,4]:
+			if not i&bit: _plane_hit(now[i],now[i|bit],center,forward,hits)
+	var left := INF
+	var rightmost := -INF
+	for at: Vector3 in hits:
+		if absf(at.y-center.y)>3: continue
+		var across := (at-center).dot(right)
+		left = minf(left,across)
+		rightmost = maxf(rightmost,across)
+	return left<=opening and rightmost>=-opening
+
+
+static func _plane_hit(a: Vector3,b: Vector3,center: Vector3,normal: Vector3,hits: Array[Vector3]) -> void:
+	var da := (a-center).dot(normal)
+	var db := (b-center).dot(normal)
+	if absf(da)<.00001: hits.append(a)
+	if da*db<=0 and absf(db-da)>.000001: hits.append(a.lerp(b,clampf(-da/(db-da),0,1)))

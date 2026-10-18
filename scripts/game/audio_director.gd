@@ -8,6 +8,8 @@ var cues: Array[AudioStreamPlayer] = []
 var settings := RallyGameSettings.new()
 var duck: float = 0
 var driving: bool = false
+var playback: bool = false
+var theme: String = ""
 
 
 func _ready() -> void:
@@ -18,7 +20,8 @@ func _ready() -> void:
 			AudioServer.set_bus_name(AudioServer.bus_count-1,bus)
 			AudioServer.set_bus_send(AudioServer.bus_count-1,"Master")
 	music.bus = "Music"
-	music.stream = asset("menu_music",true)
+	music.stream = music_asset("menu")
+	theme = "menu"
 	add_child(music)
 	ambience.bus = "Environment"
 	add_child(ambience)
@@ -38,7 +41,7 @@ static func asset(kind: String, loop: bool = false) -> AudioStreamWAV:
 	if loop:
 		audio.loop_mode = AudioStreamWAV.LOOP_FORWARD
 		audio.loop_begin = 0
-		audio.loop_end = audio.data.size()/2
+		audio.loop_end = roundi(audio.get_length()*audio.mix_rate)
 	return audio
 
 
@@ -52,7 +55,13 @@ func apply_settings(prefs: RallyGameSettings) -> void:
 
 func set_scene(environment_id: String = "") -> void:
 	driving = not environment_id.is_empty()
-	music.stream_paused = driving
+	var next_theme := environment_id if driving else "menu"
+	if theme!=next_theme:
+		theme = next_theme
+		music.stream = music_asset(theme)
+		if DisplayServer.get_name()!="headless": music.play()
+	music.volume_db = -5 if driving else -3
+	music.stream_paused = false
 	ambience.stop()
 	if driving:
 		ambience.stream = asset({"autumn":"forest","coast":"coast","highland":"highland"}.get(environment_id,"forest"),true)
@@ -75,6 +84,7 @@ func cue(kind: String) -> void:
 func _process(dt: float) -> void:
 	duck = maxf(0,duck-dt)
 	ambience.stream_paused = get_tree().paused and driving
+	music.stream_paused = get_tree().paused and driving and not playback
 	for pair: Array in [["Environment","environment_volume"],["Music","music_volume"]]:
 		var value: float = settings.values[pair[1]]*(0.55 if duck>0 else 1.0)
 		AudioServer.set_bus_volume_db(AudioServer.get_bus_index(pair[0]),linear_to_db(maxf(0.0001,value)))
@@ -89,3 +99,11 @@ func _exit_tree() -> void:
 		if child is AudioStreamPlayer:
 			child.stop()
 			child.stream = null
+
+
+static func music_asset(kind: String) -> AudioStreamWAV:
+	var audio: AudioStreamWAV = load("res://assets/audio/music/theme_"+kind+".wav").duplicate()
+	audio.loop_mode = AudioStreamWAV.LOOP_FORWARD
+	audio.loop_begin = 0
+	audio.loop_end = roundi(audio.get_length()*audio.mix_rate)
+	return audio

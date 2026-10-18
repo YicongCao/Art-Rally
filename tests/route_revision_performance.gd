@@ -12,13 +12,17 @@ func _run() -> void:
 	app.chosen_power_tier = 0
 	AudioServer.set_bus_mute(0,true)
 	var reports: Array = []
+	var stage_filter := ""
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--stage="): stage_filter = arg.trim_prefix("--stage=")
 	for scenario: int in range(3):
 		app.chosen_stage = ["sunset_ridge","sunlit_cape","misty_highlands"][scenario]
+		if not stage_filter.is_empty() and app.chosen_stage!=stage_filter: continue
 		app.chosen_vehicle = "A240"
 		await app.start_race()
 		var scene: Node3D = app.race
 		var route: RallyStageRoute = scene.generator.route
-		var station: float = [1510,2680,3020][scenario]
+		var station: float = [1510,2550,2900][scenario]
 		var pose := route.pose_at(station)
 		scene.session.projection_hint = route.index_at(station)
 		scene.session.previous = pose.origin
@@ -32,14 +36,14 @@ func _run() -> void:
 		var frames: Array[float] = []
 		var physics: Array[float] = []
 		var previous := Time.get_ticks_usec()
-		for frame: int in range(120+360):
+		for frame: int in range(240+600):
 			if paused or scene.controls.blocked:
 				paused = false
 				scene.controls.resume()
 				scene.pause_menu.visible = false
 			await process_frame
 			var now := Time.get_ticks_usec()
-			if frame>=120:
+			if frame>=240:
 				frames.append((now-previous)/1000.0)
 				physics.append(scene.vehicle.physics_usec/1000.0)
 			previous = now
@@ -47,7 +51,7 @@ func _run() -> void:
 		physics.sort()
 		var sum := 0.0
 		for ms: float in frames: sum+=ms
-		var report := {"stage":app.chosen_stage,"mode":"route_revision_2","resolution":[1920,1080],"render_frames":frames.size(),"sample_wall_seconds":sum/1000,"average_fps":1000.0*frames.size()/sum,"frame_p95_ms":frames[int(frames.size()*.95)],"frame_p99_ms":frames[int(frames.size()*.99)],"physics_p95_ms":physics[int(physics.size()*.95)],"progress":scene.session.progress,"recoveries":scene.session.reset_count,"renderer":RenderingServer.get_video_adapter_name()}
+		var report := {"stage":app.chosen_stage,"station":station,"phase":int(scene.session.phase),"mode":"player_experience_rc3","resolution":[1920,1080],"render_frames":frames.size(),"sample_wall_seconds":sum/1000,"average_fps":1000.0*frames.size()/sum,"frame_p95_ms":frames[int(frames.size()*.95)],"frame_p99_ms":frames[int(frames.size()*.99)],"physics_p95_ms":physics[int(physics.size()*.95)],"progress":scene.session.progress,"recoveries":scene.session.reset_count,"renderer":RenderingServer.get_video_adapter_name()}
 		reports.append(report)
 		print("ROUTE PERFORMANCE: ",JSON.stringify(report))
 		var file := FileAccess.open("res://logs/route_revision_performance.json",FileAccess.WRITE)

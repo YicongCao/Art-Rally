@@ -89,6 +89,7 @@ case "$MODE" in
       grep -q '^TEST RESULT: .* 0 failures$' "$ROOT/logs/$(basename "$test" .gd).log"
     done
     python3 "$ROOT/tests/calibrate_medals_test.py"
+    python3 "$ROOT/tests/music_score_test.py"
     ;;
   regression)
     "$ROOT/scripts/dev.sh" check

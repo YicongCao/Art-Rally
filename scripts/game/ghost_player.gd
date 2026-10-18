@@ -5,9 +5,11 @@ var recording: Dictionary = {}
 var wheels: Array[Node3D] = []
 var material := StandardMaterial3D.new()
 var definition: RallyVehicleDefinition
+var solid: bool = false
 
 
-func build(vehicle: RallyVehicleDefinition, data: Dictionary) -> void:
+func build(vehicle: RallyVehicleDefinition, data: Dictionary,translucent: bool = true) -> void:
+	solid = not translucent
 	definition = vehicle
 	recording = data
 	material.albedo_color = Color(0.48,0.92,0.96,0.27)
@@ -23,7 +25,7 @@ func build(vehicle: RallyVehicleDefinition, data: Dictionary) -> void:
 		box.mesh = mesh
 		body = box
 	add_child(body)
-	_tint(body)
+	if not solid: _tint(body)
 	for i: int in range(4):
 		var pivot := Node3D.new()
 		add_child(pivot)
@@ -36,7 +38,11 @@ func build(vehicle: RallyVehicleDefinition, data: Dictionary) -> void:
 		tire.mesh = mesh
 		tire.rotation.z = PI/2
 		pivot.add_child(tire)
-		_tint(tire)
+		if not solid: _tint(tire)
+		else:
+			var rubber := StandardMaterial3D.new()
+			rubber.albedo_color = Color("273632")
+			tire.material_override = rubber
 	visible = false
 
 
@@ -53,8 +59,9 @@ func update(time: float, player_position: Vector3, enabled: bool) -> void:
 	if not visible: return
 	transform = sample.pose
 	var distance := position.distance_to(player_position)
-	material.albedo_color.a = 0.27*smoothstep(2,7,distance)
-	visible = distance>2
+	if not solid:
+		material.albedo_color.a = 0.27*smoothstep(2,7,distance)
+		visible = distance>2
 	for i: int in range(4):
 		wheels[i].position = Vector3((-0.5 if i%2==0 else 0.5)*definition.track_width,-sample.lengths[i],(-0.5 if i<2 else 0.5)*definition.wheelbase)
 		wheels[i].rotation.y = sample.steer if i<2 else 0

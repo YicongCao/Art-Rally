@@ -1,0 +1,46 @@
+[
+  {
+    "theme": "menu",
+    "title": "Long Way Home",
+    "bpm": 84,
+    "bars": 16,
+    "seconds": 45.714285714285715,
+    "notes": 248,
+    "peak": 0.4085438177894409,
+    "rms": 0.08266750819811604,
+    "seam_jump": 0.0
+  },
+  {
+    "theme": "autumn",
+    "title": "Amber Switchbacks",
+    "bpm": 112,
+    "bars": 16,
+    "seconds": 34.285714285714285,
+    "notes": 248,
+    "peak": 0.4105030240235022,
+    "rms": 0.08913565761055453,
+    "seam_jump": 0.0
+  },
+  {
+    "theme": "coast",
+    "title": "Sails in the Sun",
+    "bpm": 120,
+    "bars": 16,
+    "seconds": 32.0,
+    "notes": 248,
+    "peak": 0.4685625218263394,
+    "rms": 0.10632999517654734,
+    "seam_jump": 0.0
+  },
+  {
+    "theme": "highland",
+    "title": "Above the Morning Mist",
+    "bpm": 76,
+    "bars": 16,
+    "seconds": 50.526315789473685,
+    "notes": 152,
+    "peak": 0.4458929526922467,
+    "rms": 0.0983580239403078,
+    "seam_jump": 0.0
+  }
+]

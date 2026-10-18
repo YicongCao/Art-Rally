@@ -28,12 +28,20 @@ var test_mode: bool = false
 var plate_input: LineEdit
 var plate_preview: RallyPlatePreview
 var plate_error: Label
+var album := RallyPhotoAlbum.new()
+var gallery_photos: Array = []
+var immersive_ui: Control
+var replay_sliders: Array[HSlider] = []
+var replay_clocks: Array[Label] = []
+var replay_buttons: Array[Button] = []
+var replay_cameras: Array[OptionButton] = []
+var immersive_idle: float = 0
 
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	test_mode = "--test-defaults" in OS.get_cmdline_user_args()
-	if test_mode: profile.path = "user://test-session/profile.json"
+	if test_mode and profile.path=="user://player/profile.json": profile.path = "user://test-session/profile.json"
 	profile.load_file()
 	for key: String in profile.data.settings: prefs.set_value(key,profile.data.settings[key])
 	chosen_stage = profile.data.last_stage
@@ -107,9 +115,9 @@ func _page(title: String, subtitle: String, name_id: String) -> void:
 	column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	column.add_theme_constant_override("separation",10 if name_id in ["stages","vehicles","loading"] else 14)
 	scroll.add_child(column)
-	_label(column,"ART / RALLY      —      " + ("DRIVER ID" if name_id == "plate" else "STAGE LOADING") if paper else "ART / RALLY     —     FIRST PLAYABLE",15,Color("ad4d36") if paper else Color("edbc75"))
-	_label(column,title,42)
-	_label(column,subtitle,17,Color("64716b") if paper else Color("c8d5c7"))
+	if name_id!="home":
+		_label(column,title,42)
+		if not subtitle.is_empty(): _label(column,subtitle,17,Color("64716b") if paper else Color("c8d5c7"))
 	if not profile.message.is_empty(): _label(column,profile.message,16,Color("ffd38b"))
 
 
@@ -171,27 +179,71 @@ func _card(parent: Node) -> VBoxContainer:
 
 func show_home() -> void:
 	audio.set_scene()
-	_page("穿过山野，追逐下一秒。","三条风景赛段 · 三种驾驶性格 · 你的最佳轨迹", "home")
+	_page("","", "home")
+	column.add_theme_constant_override("separation",0)
+	var logo := RallyTitleLogo.new()
+	logo.custom_minimum_size = Vector2(0,210)
+	column.add_child(logo)
 	var main := _row(column)
 	main.add_theme_constant_override("separation",12)
-	var challenge := _menu_tile(main,"开始计时挑战  →","3 条赛道 / 3 辆赛车 / 3 档动力","challenge",Color("e2b671"),func(): practice=false; tutorial=false; show_stages(),true)
-	challenge.size_flags_stretch_ratio = 2
-	challenge.custom_minimum_size.x = 340
+	var challenge := _menu_tile(main,"开始计时挑战","","challenge",Color("dfb372"),func(): practice=false; tutorial=false; show_stages(),true)
+	challenge.size_flags_stretch_ratio = 1.4
 	challenge.grab_focus()
-	_menu_tile(main,"自由练习","熟悉路线，找到你的节奏","practice",Color("346e63"),func(): practice=true; tutorial=false; show_stages(),true)
-	_menu_tile(main,"设置","操作 · 画面 · 声音","settings",Color("375463"),show_settings,true)
+	_menu_tile(main,"自由练习","","practice",Color("315b51"),func(): practice=true; tutorial=false; show_stages(),true)
+	_menu_tile(main,"设置","","settings",Color("2b464d"),show_settings,true)
+	var gap := Control.new()
+	gap.custom_minimum_size.y = 18
+	column.add_child(gap)
 	var secondary := _row(column)
-	secondary.add_theme_constant_override("separation",12)
-	_menu_tile(secondary,"退出游戏","","exit",Color("293a39"),func(): get_tree().quit(),false)
-	_menu_tile(secondary,"驾驶教学","约 2 分钟","learn",Color("263f3b"),show_tutorial,false)
-	_menu_tile(secondary,"成绩册","你的最佳轨迹","records",Color("263f3b"),show_records,false)
-	_menu_tile(secondary,"制作名单","幕后与鸣谢","credits",Color("263f3b"),show_credits,false)
-	_label(column,"W / S 加速制动    A / D 转向    空格 手刹    R 恢复    C 镜头    Esc 暂停\n手柄：左右扳机加速 / 制动，左摇杆转向，A 手刹，Y 恢复，X 镜头",15,Color("b4c6b8"))
+	secondary.add_theme_constant_override("separation",10)
+	_menu_tile(secondary,"相册","","gallery",Color("203b37"),show_gallery,false)
+	_menu_tile(secondary,"操作指南","","guide",Color("203b37"),show_guide,false)
+	_menu_tile(secondary,"驾驶教学","","learn",Color("203b37"),show_tutorial,false)
+	_menu_tile(secondary,"成绩册","","records",Color("203b37"),show_records,false)
+	_menu_tile(secondary,"制作名单","","credits",Color("203b37"),show_credits,false)
+	_menu_tile(secondary,"退出","","exit",Color("203b37"),func(): get_tree().quit(),false)
+
+
+func show_guide() -> void:
+	_page("操作指南","", "guide")
+	var row := _row(column)
+	for entry: Array in [["键盘","W / ↑　加速
+S / ↓　制动，停稳按住 1 秒倒车
+A D / ← →　转向
+空格　手刹　　R　恢复
+C　镜头　　Q E　换挡
+Esc　暂停"],["手柄","右 / 左扳机　加速 / 制动
+左摇杆　转向
+A　手刹　　Y　恢复
+X　镜头　　肩键　换挡
+Start　暂停"],["回放","空格　播放 / 暂停
+C　切换镜头
+← →　前后 5 秒
+Esc　退出沉浸模式"]]:
+		var card := _card(row)
+		_label(card,entry[0],26)
+		_label(card,entry[1],19)
+		if entry[0]=="回放":
+			var legend := VBoxContainer.new()
+			legend.add_theme_constant_override("separation",6)
+			card.add_child(legend)
+			for item: Array in [["wheel_slip","滑移"],["handbrake","手刹"],["shift","换挡"]]:
+				var pair := _row(legend)
+				pair.add_theme_constant_override("separation",4)
+				var icon := TextureRect.new()
+				icon.texture = load("res://assets/ui/icons/"+item[0]+".svg")
+				icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+				icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+				icon.custom_minimum_size = Vector2(20,20)
+				pair.add_child(icon)
+				var label := _label(pair,item[1],16)
+				label.autowrap_mode = TextServer.AUTOWRAP_OFF
+	_actions("← 主菜单",show_home)
 
 
 func _menu_tile(parent: Node,title: String,caption: String,icon: String,color: Color,action: Callable,large: bool) -> Button:
 	var tile := _button(parent,title,action)
-	tile.custom_minimum_size = Vector2(210,218) if large else Vector2(172,88)
+	tile.custom_minimum_size = Vector2(210,190) if large else Vector2(160,82)
 	tile.size_flags_horizontal = Control.SIZE_EXPAND_FILL if large else Control.SIZE_SHRINK_BEGIN
 	tile.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	tile.tooltip_text = title.replace("  →", "") + (" · " + caption if not caption.is_empty() else "")
@@ -231,12 +283,12 @@ func _menu_tile(parent: Node,title: String,caption: String,icon: String,color: C
 		space.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		content.add_child(space)
 	_label(content,title.replace("  →", ""),29 if large else 18,ink)
-	if large: _label(content,caption,15,ink.lightened(.06) if icon == "challenge" else Color("cad9d2"))
+	if large and not caption.is_empty(): _label(content,caption,15,ink.lightened(.06) if icon == "challenge" else Color("cad9d2"))
 	return tile
 
 
 func show_stages() -> void:
-	_page("选择一段旅途", "自由练习 · 不记录奖牌和个人最佳" if practice else "计时挑战 · "+RallyContentCatalog.POWER_LABELS[chosen_power_tier]+" · 三条赛道全开放", "stages")
+	_page("选择一段旅途", "自由练习 · 不记录奖牌和个人最佳" if practice else "计时挑战", "stages")
 	var row := _row(column)
 	for id: String in RallyContentCatalog.STAGES:
 		var definition := RallyContentCatalog.stage(id)
@@ -250,13 +302,14 @@ func show_stages() -> void:
 		card.add_child(preview)
 		_label(card,definition.title,26)
 		_label(card,definition.subtitle,16)
-		_label(card,"%.2f km · %s"%[definition.target_length/1000.0,{"autumn":"砂石 / 泥地 / 柏油","coast":"沿海柏油","highland":"砂石 / 泥地 / 浅水"}[definition.environment_id]],16)
+		_label(card,"%.2f km · %s"%[definition.target_length/1000.0,definition.surface_summary()],16)
 		var medals := ""
 		for vehicle_id: String in RallyContentCatalog.VEHICLES:
 			var challenge := RallyContentCatalog.challenge(id,vehicle_id,chosen_power_tier)
 			medals += vehicle_id+" "+MEDALS[int(profile.result_for(challenge.key()).get("medal",0))]+"\n"
 		_label(card,medals.strip_edges(),16,Color("e9bd78"))
-		_button(card,"已选择" if id == chosen_stage else "选择赛段",func(): chosen_stage=id; show_stages())
+		var select := _button(card,"选择赛段",func(): chosen_stage=id; show_stages())
+		RallySelectionStyle.apply(select,id==chosen_stage)
 	_actions("← 主菜单",show_home,"确认赛道 →",show_vehicles).primary_button.grab_focus()
 
 
@@ -280,16 +333,19 @@ func show_vehicles() -> void:
 		tiers.add_theme_constant_override("separation",6)
 		for tier: int in range(3):
 			var available := tier<=profile.unlocked_power_tier()
-			var caption: String = ["标准","+50%","+100%"][tier]
-			var option := _button(tiers,("● " if tier==selected_tier else "")+caption+(" 🔒" if not available else ""),_select_vehicle_variant.bind(id,tier))
+			var caption := RallyContentCatalog.power_label(id,tier)
+			var option := _button(tiers,caption,_select_vehicle_variant.bind(id,tier))
 			option.custom_minimum_size = Vector2(0,42)
-			option.add_theme_font_size_override("font_size",16)
+			option.add_theme_font_size_override("font_size",15)
+			RallySelectionStyle.apply(option,tier==selected_tier)
+			if not available: option.icon = load("res://assets/ui/icons/lock.svg")
 			option.disabled = not available
 			option.set_meta("power_tier",tier)
 			option.set_meta("vehicle_id",id)
-			option.tooltip_text = "标准版金牌解锁全车系 +50%" if tier==1 else ("+50% 版金牌解锁全车系 +100%" if tier==2 else "标准动力")
-		_button(card,("已选择 " if id == chosen_vehicle else "选择 ")+id,_select_vehicle_variant.bind(id,selected_tier))
-	_actions("← 选择赛道",show_stages,"驾驶 %s · %s →"%[chosen_vehicle,["标准","+50%","+100%"][chosen_power_tier]],start_race).primary_button.grab_focus()
+			option.tooltip_text = "原厂组金牌解锁" if tier==1 else ("进阶组金牌解锁" if tier==2 else "原厂动力")
+		var select := _button(card,"选择 "+id,_select_vehicle_variant.bind(id,selected_tier))
+		RallySelectionStyle.apply(select,id==chosen_vehicle)
+	_actions("← 选择赛道",show_stages,"驾驶 %s · %s →"%[chosen_vehicle,RallyContentCatalog.power_label(chosen_vehicle,chosen_power_tier)],start_race).primary_button.grab_focus()
 
 
 func _select_vehicle_variant(id: String,tier: int) -> void:
@@ -351,7 +407,7 @@ func _vehicle_preview(parent: Node,definition: RallyVehicleDefinition) -> void:
 
 func _loading_page() -> void:
 	var challenge := RallyContentCatalog.challenge(chosen_stage,chosen_vehicle,chosen_power_tier)
-	_page(challenge.stage.title,("自由练习" if practice else "计时挑战")+" / "+RallyContentCatalog.POWER_LABELS[chosen_power_tier],"loading")
+	_page(challenge.stage.title,("自由练习" if practice else "计时挑战")+" / "+RallyContentCatalog.power_label(chosen_vehicle,chosen_power_tier),"loading")
 	status_label = _label(column,"正在加载",18)
 	progress_bar = ProgressBar.new()
 	progress_bar.custom_minimum_size.y = 18
@@ -424,6 +480,8 @@ func start_race() -> void:
 	race.free_practice = practice
 	race.tutorial = tutorial
 	race.audio_director = audio
+	album.directory = profile.path.get_base_dir()+"/gallery"
+	race.photo_album = album
 	var generator: RallyStageGenerator = race.get_node("Stage")
 	generator.auto_build = false
 	generator.definition = race.challenge.stage
@@ -456,6 +514,8 @@ func _loading_progress(value: float,_description: String) -> void:
 
 
 func leave_race() -> void:
+	_close_immersive()
+	audio.playback = false
 	if is_instance_valid(race):
 		race.controls.suspend()
 		for key: String in profile.data.settings: prefs.set_value(key,profile.data.settings[key])
@@ -469,6 +529,8 @@ func leave_race() -> void:
 
 
 func retry() -> void:
+	_close_immersive()
+	audio.playback = false
 	if is_instance_valid(race):
 		race._restart()
 		ui.visible = false
@@ -481,42 +543,246 @@ func show_results(result: Dictionary) -> void:
 	get_tree().paused = true
 	race.pause_menu.visible = false
 	ui.visible = true
-	audio.set_scene()
+	if race.replay!=null:
+		race.replay.stop()
+		race.replay.queue_free()
+	race.replay = RallyReplayController.new()
+	race.add_child(race.replay)
+	var replaying: bool = race.replay.begin(race,race.trajectory.payload(race.challenge.key(),result.total_time),RallyPlateText.display(profile.data.get("plate","")))
+	audio.playback = replaying
+	audio.set_scene(race.challenge.stage.environment_id if replaying else "")
 	var outcome: Dictionary = result.outcome
-	_page("新的个人纪录！" if outcome.get("new_best",false) else "抵达终点",race.challenge.stage.title+" / "+chosen_vehicle+" / "+RallyContentCatalog.POWER_LABELS[chosen_power_tier],"results")
+	_page("新的个人纪录" if outcome.get("new_best",false) else "抵达终点",race.challenge.stage.title+" / "+chosen_vehicle+" / "+RallyContentCatalog.power_label(chosen_vehicle,chosen_power_tier),"results")
+	if replaying:
+		backdrop.visible = false
+		var wash := TextureRect.new()
+		wash.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		wash.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		var texture := GradientTexture2D.new()
+		var gradient := Gradient.new()
+		gradient.colors = PackedColorArray([Color(.02,.06,.055,.82),Color(.02,.06,.055,.18)])
+		texture.gradient = gradient
+		texture.fill_to = Vector2(1,0)
+		wash.texture = texture
+		ui.add_child(wash)
+		ui.move_child(wash,1)
 	audio.cue("record" if outcome.get("new_best",false) else ("medal" if outcome.get("medal",0)>0 else "finish"))
-	_label(column,_time(result.total_time),64,Color("efbf6e"))
-	_label(column,"行驶 %s   +   罚时 %.0f 秒"%[_time(result.elapsed),result.penalty],21)
+	var body := _row(column)
+	var info := _card(body)
+	info.get_parent().custom_minimum_size.x = 430
+	info.get_parent().size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	_label(info,_time(result.total_time),52,Color("efbf6e"))
+	_label(info,"行驶 %s   /   +%.0f s"%[_time(result.elapsed),result.penalty],17)
 	var cumulative := 0.0
-	var split_text := ""
+	var splits := _row(info)
 	for i: int in range(result.splits.size()):
-		split_text += "第 %d 段  %s     "%[i+1,_time(result.splits[i]-cumulative)]
+		var split := VBoxContainer.new()
+		split.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		splits.add_child(split)
+		_label(split,"%02d"%[i+1],13,Color("b8c7b8"))
+		_label(split,_time(result.splits[i]-cumulative),22)
 		cumulative = result.splits[i]
-	_label(column,split_text,21)
 	if outcome.get("eligible",false):
-		_label(column,MEDALS[int(outcome.get("medal",0))],28)
+		var badge := _row(info)
+		var earned := int(outcome.get("medal",0))
+		if earned>0:
+			var icon := TextureRect.new()
+			icon.texture = load("res://assets/ui/icons/medal_"+["bronze","silver","gold"][earned-1]+".svg")
+			icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			icon.custom_minimum_size = Vector2(30,38)
+			badge.add_child(icon)
+		_label(badge,MEDALS[earned],23)
 		var previous := float(outcome.get("previous_best",-1))
-		if previous>0: _label(column,"对比上次最佳：%+.2f 秒"%(result.total_time-previous),20)
+		if previous>0: _label(info,"PB  %+.2f s"%(result.total_time-previous),20)
 		var target: float = race.challenge.next_target(result.total_time)
-		_label(column,"已达到金牌目标" if target<0 else "距离下一级奖牌还需快 %.2f 秒"%maxf(0,result.total_time-target),20)
-		if int(outcome.get("unlocked_tier",-1))>0: _label(column,"全车系已解锁："+RallyContentCatalog.POWER_LABELS[int(outcome.unlocked_tier)]+" · 更换车辆时切换",23,Color("efbf6e"))
-		if not outcome.get("saved",false): _label(column,"成绩尚未保存："+str(outcome.get("reason","")),20,Color("ffba80"))
-	else: _label(column,"练习 / 自动驾驶 / 混合接管成绩 · 不计奖牌与个人纪录",20)
-	if not str(outcome.get("reason","")).is_empty(): _label(column,outcome.reason,17)
+		if target>0: _label(info,"下枚奖牌  −%.2f s"%maxf(0,result.total_time-target),17)
+		if int(outcome.get("unlocked_tier",-1))>0: _label(info,"更高马力已解锁",20,Color("efbf6e"))
+		if not outcome.get("saved",false): _label(info,"保存失败 · "+str(outcome.get("reason","")),16,Color("ffba80"))
+	else: _label(info,"练习 / 自动驾驶",17)
+	var view := Control.new()
+	view.custom_minimum_size = Vector2(420,260)
+	view.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	body.add_child(view)
+	if replaying: _replay_controls(column)
 	var actions := _actions("返回赛道选择",leave_race,"再跑一次",retry)
 	var change := _button(actions,"更换车辆",func(): leave_race(); show_vehicles())
 	change.custom_minimum_size = Vector2(180,40)
 	change.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	change.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	actions.move_child(change,1)
+	actions.primary_button.icon = load("res://assets/ui/icons/replay.svg")
 	actions.primary_button.grab_focus()
+	if outcome.get("new_best",false):
+		var confetti := RallyRecordConfetti.new()
+		confetti.position = Vector2(48,16)
+		confetti.size = Vector2(600,220)
+		ui.add_child(confetti)
+
+
+func _replay_controls(parent: Node,immersive: bool = false) -> void:
+	var controls := _row(parent)
+	controls.add_theme_constant_override("separation",10)
+	if immersive:
+		var back := _button(controls,"← 成绩",func(): _set_immersive(false))
+		back.custom_minimum_size = Vector2(96,40)
+	var play := _button(controls,"",func(): race.replay.playing = not race.replay.playing)
+	play.custom_minimum_size = Vector2(48,44)
+	for state: String in ["normal","hover","pressed","focus"]:
+		var style := play.get_theme_stylebox(state).duplicate() as StyleBoxFlat
+		style.content_margin_left = 8
+		style.content_margin_right = 8
+		play.add_theme_stylebox_override(state,style)
+	play.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	play.tooltip_text = "播放 / 暂停 · 空格"
+	play.icon = load("res://assets/ui/icons/pause.svg")
+	play.expand_icon = true
+	play.add_theme_constant_override("icon_max_width",22)
+	replay_buttons.append(play)
+	var camera := OptionButton.new()
+	for title: String in RallyReplayController.CAMERA_NAMES: camera.add_icon_item(load("res://assets/ui/icons/camera.svg"),title)
+	camera.expand_icon = true
+	camera.add_theme_constant_override("icon_max_width",20)
+	camera.select(race.replay.mode)
+	camera.custom_minimum_size = Vector2(152,44)
+	camera.item_selected.connect(func(index: int): race.replay.set_camera(index))
+	controls.add_child(camera)
+	replay_cameras.append(camera)
+	var slider := HSlider.new()
+	slider.min_value = 0
+	slider.max_value = race.replay.duration
+	slider.step = .01
+	slider.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	slider.custom_minimum_size.x = 180
+	slider.value_changed.connect(func(value: float): race.replay.seek(value))
+	controls.add_child(slider)
+	replay_sliders.append(slider)
+	var clock := _label(controls,"00:00 / 00:00",15)
+	clock.custom_minimum_size.x = 160
+	clock.size_flags_horizontal = Control.SIZE_SHRINK_END
+	replay_clocks.append(clock)
+	if not immersive:
+		var full := _button(controls,"沉浸回放",func(): _set_immersive(true))
+		full.icon = load("res://assets/ui/icons/expand.svg")
+		full.expand_icon = true
+		full.add_theme_constant_override("icon_max_width",20)
+		full.custom_minimum_size = Vector2(170,44)
+		full.size_flags_horizontal = Control.SIZE_SHRINK_END
+
+
+func _set_immersive(enabled: bool) -> void:
+	if not is_instance_valid(race) or race.replay==null or not race.replay.active: return
+	ui.visible = not enabled
+	immersive_idle = 0
+	race.replay.framing_offset = 0 if enabled else 4.2
+	race.replay.snap = true
+	if enabled and not is_instance_valid(immersive_ui):
+		immersive_ui = Control.new()
+		immersive_ui.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		immersive_ui.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		immersive_ui.theme = _theme()
+		layer.add_child(immersive_ui)
+		var panel := PanelContainer.new()
+		panel.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
+		panel.offset_top = -68
+		panel.offset_left = 24
+		panel.offset_right = -24
+		panel.offset_bottom = -16
+		var style := StyleBoxFlat.new()
+		style.bg_color = Color(.035,.08,.075,.72)
+		style.content_margin_left = 12
+		style.content_margin_right = 12
+		panel.add_theme_stylebox_override("panel",style)
+		immersive_ui.add_child(panel)
+		_replay_controls(panel,true)
+	if is_instance_valid(immersive_ui): immersive_ui.visible = enabled
+	screen = "replay" if enabled else "results"
+
+
+func _close_immersive() -> void:
+	if is_instance_valid(immersive_ui): immersive_ui.queue_free()
+	immersive_ui = null
+	replay_sliders.clear()
+	replay_clocks.clear()
+	replay_buttons.clear()
+	replay_cameras.clear()
+
+
+func _process(dt: float) -> void:
+	if screen=="replay" and is_instance_valid(immersive_ui):
+		immersive_idle+=dt
+		var near_bar := get_viewport().get_mouse_position().y>get_viewport().get_visible_rect().size.y-110
+		immersive_ui.get_child(0).visible = immersive_idle<3 or near_bar
+	if not is_instance_valid(race) or race.replay==null or not race.replay.active: return
+	for selector: OptionButton in replay_cameras:
+		if is_instance_valid(selector) and selector.selected!=race.replay.mode: selector.select(race.replay.mode)
+	for slider: HSlider in replay_sliders:
+		if is_instance_valid(slider): slider.set_value_no_signal(race.replay.clock)
+	for label: Label in replay_clocks:
+		if is_instance_valid(label): label.text = _time(race.replay.clock)+" / "+_time(race.replay.duration)
+	for button: Button in replay_buttons:
+		if is_instance_valid(button): button.icon = load("res://assets/ui/icons/pause.svg" if race.replay.playing else "res://assets/ui/icons/play.svg")
+
+
+func show_gallery() -> void:
+	_page("沿途影像","自动保留最近 64 张航拍", "gallery")
+	album.directory = profile.path.get_base_dir()+"/gallery"
+	gallery_photos = album.entries()
+	if gallery_photos.is_empty(): _label(column,"比赛途中，直播直升机会为你留下航拍照片。",22)
+	var gallery_scroll := ScrollContainer.new()
+	gallery_scroll.custom_minimum_size.y = 440
+	gallery_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	column.add_child(gallery_scroll)
+	var grid := GridContainer.new()
+	grid.columns = 3
+	grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	grid.add_theme_constant_override("h_separation",16)
+	grid.add_theme_constant_override("v_separation",16)
+	gallery_scroll.add_child(grid)
+	for i: int in range(gallery_photos.size()):
+		var entry: Dictionary = gallery_photos[i]
+		var card := _card(grid)
+		var image := TextureRect.new()
+		image.texture = album.texture(entry,true)
+		image.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		image.custom_minimum_size = Vector2(330,186)
+		card.add_child(image)
+		_button(card,_photo_caption(entry),show_photo.bind(i))
+	_actions("← 主菜单",show_home)
+
+
+func _photo_caption(entry: Dictionary) -> String:
+	var stage := RallyContentCatalog.stage(str(entry.get("stage","sunset_ridge")))
+	return (stage.title if stage!=null else "赛道")+" / %s · %d PS"%[entry.get("vehicle",""),entry.get("power_ps",0)]
+
+
+func show_photo(index: int) -> void:
+	if gallery_photos.is_empty():
+		show_gallery()
+		return
+	index = posmod(index,gallery_photos.size())
+	var entry: Dictionary = gallery_photos[index]
+	_page("%02d / %02d"%[index+1,gallery_photos.size()],_photo_caption(entry), "photo")
+	var image := TextureRect.new()
+	image.texture = album.texture(entry)
+	image.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	image.custom_minimum_size = Vector2(800,430)
+	column.add_child(image)
+	var actions := _actions("← 相册",show_gallery,"下一张 →",show_photo.bind(index+1))
+	var previous := _button(actions,"上一张",show_photo.bind(index-1))
+	previous.custom_minimum_size = Vector2(130,40)
+	previous.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	actions.move_child(previous,1)
 
 
 func show_records() -> void:
 	_page("你的山野足迹",RallyContentCatalog.POWER_LABELS[chosen_power_tier]+" · 每个赛道、车型和动力版本分别保存纪录与幽灵。","records")
 	var tiers := _row(column)
 	for tier: int in range(profile.unlocked_power_tier()+1):
-		_button(tiers,RallyContentCatalog.POWER_LABELS[tier],func(): chosen_power_tier=tier; show_records())
+		var option := _button(tiers,RallyContentCatalog.POWER_LABELS[tier],func(): chosen_power_tier=tier; show_records())
+		RallySelectionStyle.apply(option,tier==chosen_power_tier)
 	var bronze := 0
 	var gold := 0
 	for id: String in RallyContentCatalog.STAGES:
@@ -529,7 +795,7 @@ func show_records() -> void:
 			if medal>0: bronze+=1
 			if medal==3: gold+=1
 			var card := _card(row)
-			_label(card,car+" · "+MEDALS[medal],20)
+			_label(card,car+" / "+RallyContentCatalog.power_label(car,chosen_power_tier)+" · "+MEDALS[medal],20)
 			_label(card,_time(result.best.total_time) if result.has("best") else "等待你的第一条轨迹",18)
 	_label(column,"全金达成 · 每一段旅途都留下了金色轨迹！" if gold==9 else ("基础挑战完成 · 九枚奖牌，九段旅途。" if bronze==9 else "基础挑战 %d / 9    金牌 %d / 9"%[bronze,gold]),21,Color("efbf6e"))
 	_actions("← 主菜单",show_home)
@@ -557,7 +823,7 @@ func show_settings() -> void:
 	var row := _row(column)
 	var left := _card(row)
 	var right := _card(row)
-	for entry: Array in [["volume","主音量"],["engine_volume","发动机"],["road_volume","轮胎与路面"],["environment_volume","环境"],["interface_volume","界面与路书"],["music_volume","菜单音乐"]]:
+	for entry: Array in [["volume","主音量"],["engine_volume","发动机"],["road_volume","轮胎与路面"],["environment_volume","环境"],["interface_volume","界面与路书"],["music_volume","背景音乐"]]:
 		var line := _row(left)
 		var label := _label(line,entry[1],17)
 		label.custom_minimum_size.x = 140
@@ -680,6 +946,18 @@ func show_bindings() -> void:
 
 
 func _input(event: InputEvent) -> void:
+	if screen=="replay" and event is InputEventMouseMotion: immersive_idle = 0
+	if screen in ["results","replay"] and is_instance_valid(race) and race.replay!=null and race.replay.active and event is InputEventKey and event.pressed and not event.echo:
+		immersive_idle = 0
+		match event.physical_keycode:
+			KEY_SPACE: race.replay.playing = not race.replay.playing
+			KEY_C: race.replay.set_camera(race.replay.mode+1)
+			KEY_LEFT: race.replay.seek(race.replay.clock-5)
+			KEY_RIGHT: race.replay.seek(race.replay.clock+5)
+			KEY_ESCAPE: _set_immersive(screen!="replay")
+			_: return
+		get_viewport().set_input_as_handled()
+		return
 	if binding_wait.is_empty() or event is not InputEventKey or not event.pressed: return
 	if event.physical_keycode!=KEY_ESCAPE:
 		var reserved := [KEY_ENTER,KEY_F2,KEY_F3,KEY_F4,KEY_F5,KEY_F6,KEY_F7,KEY_F8,KEY_F9,KEY_F10,KEY_M,KEY_T,KEY_L,KEY_UP,KEY_DOWN,KEY_LEFT,KEY_RIGHT]

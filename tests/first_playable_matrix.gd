@@ -50,6 +50,9 @@ func _run() -> void:
 				costs.sort()
 				var report := {"stage":stage_id,"vehicle":vehicle_id,"power_tier":tier,"input":input_mode,"finished":scene.session.phase==RallyStageSession.Phase.FINISHED,"elapsed":scene.session.elapsed,"recoveries":scene.session.reset_count,"progress":scene.session.progress,"max_lateral":max_lateral,"physics_p95_ms":costs[int(costs.size()*.95)]/1000.0,"splits":scene.session.split_times}
 				reports.append(report)
+				if "--save-replays" in OS.get_cmdline_user_args() and tier==0 and vehicle_id=="A240":
+					var saved := FileAccess.open("res://logs/route-replay-"+stage_id+".json",FileAccess.WRITE)
+					saved.store_string(JSON.stringify({"recording":scene.trajectory.payload(scene.challenge.key(),scene.session.total_time()),"result":report}))
 				print("CHALLENGE DRIVE: ",JSON.stringify(report))
 				check(report.finished,stage_id+" / "+vehicle_id+" completes every checkpoint")
 				check(report.recoveries==0,stage_id+" / "+vehicle_id+" needs no recovery")

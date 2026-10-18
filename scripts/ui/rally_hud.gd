@@ -221,9 +221,9 @@ func _draw_gauge() -> void:
 	text("AUTO" if model.automatic else "SEQ",Vector2(1191,455),11,MUTED,title_font)
 	var surface: String = ["柏油","砂石","泥地","草土"][int(model.surface)]
 	text(surface,Vector2(1012,455),13,PAPER)
-	if model.handbrake>0.1: center_text("手刹",Vector2(1125,480),12,RED)
-	elif model.get("shift_sync",false): center_text("同步降挡",Vector2(1125,480),12,AMBER)
-	elif model.get("wheelspin",false): center_text("驱动轮空转",Vector2(1125,480),12,AMBER)
+	# Separate status rail above the RPM arc: never overlap speed or gear digits.
+	var status := "handbrake" if model.handbrake>.1 else ("shift" if model.get("shift_sync",false) else ("wheel_slip" if model.get("wheelspin",false) else ""))
+	if not status.is_empty(): draw_texture_rect(load("res://assets/ui/icons/"+status+".svg"),Rect2(1115,437,20,20),false,RED if status=="handbrake" else AMBER)
 	draw_rect(Rect2(1020,672,93,4),Color("40574b"))
 	draw_rect(Rect2(1020,672,93*model.throttle,4),Color("86bd9a"))
 	draw_rect(Rect2(1134,672,93,4),Color("40574b"))

@@ -22,7 +22,7 @@ extends Resource
 ])
 
 
-@export var stage_version: String = "2"
+@export var stage_version: String = "3"
 @export_enum("autumn", "coast", "highland") var environment_id: String = "autumn"
 @export var subtitle: String = "秋日山林 · 混合路面"
 @export var surface_sections := PackedVector3Array([Vector3(1150,1650,2),Vector3(1650,2100,0)])
@@ -31,6 +31,7 @@ extends Resource
 @export var water_sections := PackedVector3Array([Vector3(1270,1290,0.07),Vector3(1480,1508,0.11)])
 @export var crests := PackedVector3Array([Vector3(360,1.3,7),Vector3(850,1.45,8),Vector3(1430,1.4,7),Vector3(2230,1.5,8),Vector3(2650,1.3,7)])
 @export var hazard_notes: Array[Dictionary] = [{"s":1150.0,"code":"MUD_NARROW"},{"s":1270.0,"code":"WATER"},{"s":1480.0,"code":"WATER"},{"s":1650.0,"code":"ASPHALT"},{"s":2100.0,"code":"GRAVEL"},{"s":2650.0,"code":"CREST_JUMP"}]
+@export var river_crossings := PackedVector3Array([Vector3(590,16,4.2),Vector3(1840,18,4.2)])
 @export var culverts := PackedFloat32Array([1420])
 @export var guardrail_sections := PackedVector2Array([Vector2(1680,2080)])
 @export var spectators := PackedFloat32Array([80,320,503,840,1150,1500,1880,2200,2560,2970])
@@ -48,6 +49,9 @@ func width_at(distance: float) -> float:
 	var width := road_width
 	for section: Vector3 in width_sections:
 		width += section.z*smoothstep(section.x-20,section.x+20,distance)*(1-smoothstep(section.y-30,section.y+10,distance))
+	for river: Vector3 in river_crossings:
+		var blend := 1-smoothstep(river.y*.5,river.y*.5+24,absf(distance-river.x))
+		width = lerpf(width,minf(width,river.z),blend)
 	return width
 
 
@@ -59,3 +63,45 @@ func water_depth(distance: float, lateral: float) -> float:
 			var half := 2.8
 			depth = maxf(depth,pool.z*smoothstep(0,1.5,edge)*(1-smoothstep(half-0.8,half,absf(lateral))))
 	return depth
+
+
+func surface_weights(distance: float,lateral: float = 0) -> Vector3:
+	var weights := Vector3.ZERO
+	weights[default_surface] = 1
+	# Twelve metres of dragged gravel, worn asphalt and mud, rather than a hard seam.
+	var worn_s := distance+sin(lateral*2.3+distance*.11)*1.6+sin(lateral*5.1)*.6
+	for section: Vector3 in surface_sections:
+		var amount := smoothstep(section.x-6,section.x+6,worn_s)*(1-smoothstep(section.y-6,section.y+6,worn_s))
+		var next := Vector3.ZERO
+		next[int(section.z)] = 1
+		weights = weights.lerp(next,amount)
+	return weights
+
+
+func wetness(distance: float,lateral: float) -> float:
+	var wet := 0.0
+	for pool: Vector3 in water_sections:
+		var along := smoothstep(pool.x-10,pool.x+2,distance)*(1-smoothstep(pool.y-2,pool.y+10,distance))
+		wet = maxf(wet,along*(1-smoothstep(width_at(distance)*.35,width_at(distance)*.6,absf(lateral))))
+	return wet
+
+
+func surface_proportions() -> Vector3:
+	var totals := Vector3.ZERO
+	for i: int in range(int(ceilf(target_length))): totals[surface_id(float(i)+.5)]+=1
+	return totals/float(ceilf(target_length))
+
+
+func surface_summary() -> String:
+	var weights := surface_proportions()
+	var bits: Array[String] = []
+	var remaining := 100
+	var present: Array[int] = []
+	for i: int in range(3):
+		if weights[i]>.001: present.append(i)
+	for n: int in range(present.size()):
+		var i := present[n]
+		var percent := remaining if n==present.size()-1 else roundi(weights[i]*100)
+		remaining-=percent
+		bits.append("%s %d%%"%[["柏油","砂石","泥地"][i],percent])
+	return " / ".join(bits)

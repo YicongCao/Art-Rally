@@ -14,6 +14,9 @@ var tutorial_label: Label
 var previous_note: int = 0
 var previous_phase_audio: int = -1
 var audio_director: RallyAudioDirector
+var replay: RallyReplayController
+var broadcast := RallyBroadcastHelicopter.new()
+var photo_album: RallyPhotoAlbum
 
 
 func start() -> void:
@@ -34,6 +37,11 @@ func start() -> void:
 	_build_spatial_ambience()
 	add_child(ghost)
 	ghost.build(challenge.vehicle,profile.load_ghost(challenge))
+	if photo_album==null:
+		photo_album = RallyPhotoAlbum.new()
+		photo_album.directory = profile.path.get_base_dir()+"/gallery"
+	add_child(broadcast)
+	broadcast.build(self,photo_album)
 	var bucket := profile.result_for(challenge.key())
 	result_summary = {"human_best":bucket.get("best",{})}
 	if not profile.message.is_empty():
@@ -70,8 +78,10 @@ func _physics_process(dt: float) -> void:
 
 
 func _process(dt: float) -> void:
+	if replay!=null and replay.active: return
 	super._process(dt)
 	if not is_instance_valid(vehicle): return
+	if not get_tree().paused: broadcast.advance(dt)
 	ghost.update(session.total_time(),vehicle.position,preferences.values.ghost and session.phase==RallyStageSession.Phase.RUNNING)
 	if audio_director!=null:
 		if session.next_note!=previous_note:
@@ -99,6 +109,11 @@ func _recover(seconds: float,reason: String) -> void:
 
 
 func _restart() -> void:
+	if replay!=null:
+		replay.stop()
+		replay.queue_free()
+		replay = null
+	broadcast.reset()
 	trajectory.reset()
 	super._restart()
 	ghost.recording = profile.load_ghost(challenge)
@@ -167,3 +182,8 @@ func _build_spatial_ambience() -> void:
 
 func _refresh_result_summary() -> void:
 	if profile!=null and challenge!=null: result_summary = {"human_best":profile.result_for(challenge.key()).get("best",{})}
+
+
+func _safety_pause() -> void:
+	if replay!=null and replay.active: return
+	super._safety_pause()

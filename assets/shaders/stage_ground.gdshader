@@ -62,24 +62,31 @@ void fragment() {
 		color = mix(color, earth * 1.09, shoulder);
 		// Irregular, compacted edges and dragged material break up the straight join.
 		float worn_s = UV.y+(noise(vec2(UV.x*1.8,UV.y*0.35))-0.5)*4.5+sin(UV.x*3.1)*0.8;
-		float mud = clamp(1.0-abs(UV2.y-2.0),0.0,1.0);
-		float asphalt = 1.0-clamp(UV2.y,0.0,1.0);
+		float breakup = (noise(vec2(UV.x*1.7,UV.y*.6))-.5)*.18;
+		float mud = clamp(zone.b+breakup*4.0*zone.b*(1.0-zone.b),0.0,1.0);
+		float asphalt = clamp(zone.r+breakup*4.0*zone.r*(1.0-zone.r),0.0,1.0);
 		stone_speckle = mix(1.0,mix(0.15,0.07,asphalt),max(mud,asphalt)*on_road);
 		vec3 mud_color = mix(vec3(0.075,0.044,0.021),vec3(0.17,0.10,0.045),noise(world.xz*0.4));
 		mud_color *= 1.0-tracks*0.25;
 		vec3 tarmac = vec3(0.042,0.047,0.051)*(0.9+grit*0.2);
 		float edge_mark = smoothstep(half_width-0.32,half_width-0.25,abs(UV.x))*(1.0-smoothstep(half_width-0.17,half_width-0.10,abs(UV.x)));
-		tarmac = mix(tarmac,vec3(0.56,0.53,0.43),edge_mark);
+		// Faded paint, repaired asphalt islands and the occasional fine crack.
+		float crack = 1.0-smoothstep(.013,.04,abs(sin(UV.y*.38+noise(world.xz*.6)*5.0+UV.x*1.2)));
+		tarmac *= 1.0-crack*.25;
+		tarmac *= mix(.82,1.16,smoothstep(.35,.7,noise(world.xz*.7)));
+		tarmac = mix(tarmac,vec3(0.56,0.53,0.43),edge_mark*(.45+.55*noise(world.xz*1.4)));
 		gravel = mix(mix(gravel,mud_color,mud),tarmac,asphalt);
 		road_bump *= 1.0-asphalt*0.93;
 		color = mix(color, gravel, on_road);
 	}
+	float wet = road_mesh ? clamp(zone.a*(.75+.25*noise(world.xz*1.8)),0.0,1.0) : 0.0;
+	color *= 1.0-wet*.35;
 	color *= 0.92 + grit * 0.14;
 	color += vec3(fleck * 0.012 * stone_speckle);
 	ALBEDO = color;
-	bool muddy_lane = road_mesh && UV2.y>1.5 && UV2.y<2.5 && abs(UV.x)<UV2.x;
-	ROUGHNESS = muddy_lane ? 0.76 : 0.96;
-	SPECULAR = muddy_lane ? 0.12 : 0.08;
+	float muddy_lane = road_mesh && abs(UV.x)<UV2.x ? clamp(zone.b,0.0,1.0) : 0.0;
+	ROUGHNESS = mix(mix(0.96,0.76,muddy_lane),0.28,wet);
+	SPECULAR = mix(mix(0.08,0.12,muddy_lane),0.38,wet);
 	vec2 bumps = vec2(dFdx(road_bump),dFdy(road_bump));
 	NORMAL_MAP = vec3(vec2(0.5)+clamp(-bumps*0.55,vec2(-0.20),vec2(0.20)) + vec2(grit-0.5)*0.08,1.0);
 	NORMAL_MAP_DEPTH = 0.4;

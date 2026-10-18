@@ -63,9 +63,18 @@ func surface_footprint(point: Vector3, forward: Vector3, right: Vector3, hint: i
 
 
 func _surface_at_coordinates(s: float, lateral: float) -> RallySurfaceSample:
-	var id := definition.surface_id(s)
-	var road := RallySurfaceSample.from_profile(RallySurfaceQuery.PROFILES[id],definition.water_depth(s,lateral))
-	var outside := absf(lateral)-route.width_at(s)*0.5
+	var half := route.width_at(s)*.5
+	var lane_lateral := clampf(lateral,-half,half)
+	var depth := definition.water_depth(s,lane_lateral)
+	var weights := definition.surface_weights(s,lane_lateral)
+	var samples: Array[RallySurfaceSample] = []
+	var amounts := PackedFloat64Array()
+	for surface: int in range(3):
+		if weights[surface]>.0001:
+			samples.append(RallySurfaceSample.from_profile(RallySurfaceQuery.PROFILES[surface],depth))
+			amounts.append(weights[surface])
+	var road := samples[0] if samples.size()==1 else RallySurfaceSample.weighted_average(samples,amounts)
+	var outside := absf(lateral)-half
 	if outside<=0: return road
 	var grass := RallySurfaceSample.from_profile(RallySurfaceQuery.PROFILES[3])
 	# Compacted shoulder occupies the same 1.2m strip as the visible earth edge.
@@ -84,6 +93,9 @@ func vertex_at(index: int, column: int) -> Vector3:
 		var edge_distance := absf(lateral) - half
 		point.y -= minf(edge_distance * 0.18, 2.3)
 		point.y += smoothstep(1.5, 10, edge_distance) * 0.5 * sin(s * 0.03 + lateral * 0.2)
+	for river: Vector3 in definition.river_crossings:
+		if absf(s-river.x)<river.y*.5+5 and absf(lateral)>half+1.1:
+			point.y-=3.5*(1-smoothstep(river.y*.5,river.y*.5+5,absf(s-river.x)))*smoothstep(half+1.1,half+4,absf(lateral))
 	return point
 
 
@@ -92,13 +104,14 @@ func _build_chunk(start: int, end: int) -> void:
 	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
 	for i: int in range(start, end):
 		for col: int in range(8):
-			var color := RallySurfaceQuery.PROFILES[definition.surface_id(route.distances[i])].color if col in [3, 4] else Color("59633a")
-			if col in [2, 5]: color = Color("73664b")
 			for corner: Vector2i in [Vector2i(i,col),Vector2i(i+1,col),Vector2i(i,col+1),Vector2i(i,col+1),Vector2i(i+1,col),Vector2i(i+1,col+1)]:
 				var vertex := vertex_at(corner.x,corner.y)
 				tool.set_uv(Vector2((vertex-route.points[corner.x]).dot(route.rights[corner.x]),route.distances[corner.x]))
 				tool.set_uv2(Vector2(route.width_at(route.distances[corner.x])*0.5,definition.surface_id(route.distances[corner.x])))
-				tool.set_color(color)
+				var station := route.distances[corner.x]
+				var lateral := (vertex_at(corner.x,corner.y)-route.points[corner.x]).dot(route.rights[corner.x])
+				var weights := definition.surface_weights(station,lateral)
+				tool.set_color(Color(weights.x,weights.y,weights.z,definition.wetness(station,lateral)))
 				tool.add_vertex(vertex)
 	tool.generate_normals()
 	var mesh := tool.commit()
@@ -137,6 +150,8 @@ func _build_water(start: int, end: int) -> void:
 		for index: int in range(6):
 			var row := i+1 if index in [1,4,5] else i
 			tool.set_uv(Vector2(-2.65 if index in [0,1,4] else 2.65,route.distances[row]))
+			for pool: Vector3 in definition.water_sections:
+				if route.distances[i]+1>pool.x and route.distances[i]+1<pool.y: tool.set_uv2(Vector2(pool.x,pool.y))
 			tool.add_vertex([a,b,c,c,b,d][index])
 		vertices += 6
 	if vertices == 0: return

@@ -6,7 +6,7 @@ func _run() -> void:
 		var route := RallyStageRoute.new()
 		route.build(definition)
 		check(route.validate().is_empty(),id+" has no crossing, unsafe grade or discontinuous frames")
-		check(definition.stage_version=="2",id+" isolates old scores and ghosts after geometry changes")
+		check(definition.stage_version=="3",id+" isolates old scores and ghosts after geometry changes")
 		var min_width := 100.0
 		var max_width := 0.0
 		var largest_step := 0.0
@@ -26,7 +26,7 @@ func _run() -> void:
 					hairpin_groups+=1
 					last_hairpin=s
 		check(direction_ok,id+" follows its authored climb/descent")
-		check(min_width>=4.3 and max_width-min_width>1.6 and largest_step<.25,id+" width changes are visible and continuous")
+		check(min_width>=RallyContentCatalog.vehicle("A240").body_size.x+2.0 and max_width-min_width>1.6 and largest_step<.25,id+" width changes are visible and continuous")
 		check(hairpin_groups>=2,id+" contains several distinct switchbacks")
 		for note: Dictionary in definition.hazard_notes:
 			if note.code=="CAUTION_NARROW": check(route.width_at(note.s)<definition.road_width-.5,id+" caution call corresponds to an actual constriction")

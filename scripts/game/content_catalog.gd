@@ -4,7 +4,7 @@ extends RefCounted
 const STAGES := ["sunset_ridge","sunlit_cape","misty_highlands"]
 const VEHICLES := ["F160","R200","A240"]
 const POWER_MULTIPLIERS := [1.0,1.5,2.0]
-const POWER_LABELS := ["标准版","动力 +50%","动力 +100%"]
+const POWER_LABELS := ["原厂组","进阶组","极限组"]
 
 
 static func stage(id: String) -> RallyStageDefinition:
@@ -35,3 +35,7 @@ static func challenge(stage_id: String,vehicle_id: String,tier: int = 0) -> Rall
 	result.human_calibrated = bool(target.human_calibrated)
 	result.rules_version = str(targets.rules_version)
 	return result
+
+
+static func power_label(id: String,tier: int) -> String:
+	return "%d PS"%vehicle(id,tier).power_ps

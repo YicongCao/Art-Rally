@@ -139,15 +139,15 @@ static func _coast(land: RallyStageScenery) -> void:
 		figure.position = Vector3(-.5,.27,.75)
 	# Sailing out across the bay; autonomous decorative motion, no racing interaction.
 	for i: int in range(4):
-		var boat := _root(land,"DepartingSailboat%d"%i,s+15,-150-i*95)
+		var boat := _root(land,"DepartingSailboat%d"%i,s+15,-95-i*65)
 		boat.position.y = -24.6
 		boat.position += -deck.basis.z*float(i*65-50)
 		boat.rotation.y += .4+i*.2
 		var sail := RallySampleMeshes.new()
-		sail.ellipsoid(Vector3(2.5,.65,6),Vector3.ZERO,Color("f2dfb0"))
-		sail.beam(Vector3(0,.3,0),Vector3(0,13,0),.1,Color("9e7d52"))
-		sail.triangle(Vector3(.1,12.6,0),Vector3(.1,1,-5),Vector3(.1,1,0),Color("fff4d5"))
-		sail.triangle(Vector3(-.1,10,0),Vector3(-.1,1,0),Vector3(-.1,1,5),Color("df9d68"))
+		sail.ellipsoid(Vector3(3.2,.8,8),Vector3.ZERO,Color("f2dfb0"))
+		sail.beam(Vector3(0,.3,0),Vector3(0,18,0),.1,Color("9e7d52"))
+		sail.triangle(Vector3(.1,17.6,0),Vector3(.1,1,-7),Vector3(.1,1,0),Color("fff4d5"))
+		sail.triangle(Vector3(-.1,14,0),Vector3(-.1,1,0),Vector3(-.1,1,7),Color("df9d68"))
 		_mesh(boat,sail)
 		land.sailboats.append({"node":boat,"origin":boat.position,"direction":-boat.basis.z})
 

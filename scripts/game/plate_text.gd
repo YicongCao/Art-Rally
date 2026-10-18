@@ -6,7 +6,7 @@ const DEFAULT_TEXT := "ART-RALLY"
 
 
 static func font() -> Font:
-	return RallyFonts.bold()
+	return RallyFonts.plate()
 
 
 static func valid(value: Variant, allow_empty: bool = false) -> bool:

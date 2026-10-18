@@ -13,9 +13,9 @@ seed_value = 24681
 environment_id = "coast"
 default_surface = 0
 control_points = PackedVector3Array(0,0,0,0,0,-160,100,0,-280,250,0,-360,350,0,-310,355,0,-245,430,0,-200,530,0,-280,550,0,-440,410,0,-580,270,0,-660,180,0,-600,170,0,-525,105,0,-485,30,0,-570,50,0,-780,230,0,-900,390,0,-970,470,0,-910,475,0,-840,550,0,-800,630,0,-920,620,0,-1090,430,0,-1240,250,0,-1320,160,0,-1260,150,0,-1190,80,0,-1145,0,0,-1240,-30,0,-1430,-130,0,-1560,-280,0,-1610)
-surface_sections = PackedVector3Array()
+surface_sections = PackedVector3Array(680,900,1,2040,2290,1)
 width_sections = PackedVector3Array(400,490,-1.2,1000,1140,1.2,1630,1760,-1.1,2290,2430,1.3,2550,2780,1.2)
-water_sections = PackedVector3Array()
+water_sections = PackedVector3Array(810,825,0.035,2180,2194,0.03)
 crests = PackedVector3Array()
 hazard_notes = Array[Dictionary]([{"s":450,"code":"CAUTION_NARROW"},{"s":1070,"code":"CUT"},{"s":1700,"code":"CAUTION_NARROW"},{"s":2370,"code":"CUT"}])
 culverts = PackedFloat32Array()
@@ -24,3 +24,5 @@ spectators = PackedFloat32Array(80,360,640,900,1200,1500,1800,2110,2400,2670)
 landmarks = Array[Dictionary]([{"s": 1450.0, "kind": "lighthouse", "side": -1.0}])
 
 elevation_profile = Vector2(125, -10)
+
+river_crossings = PackedVector3Array(770,16,4.6,2120,18,4.5)

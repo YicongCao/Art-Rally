@@ -4,7 +4,7 @@ extends RefCounted
 
 static func run(scene: Node3D) -> void:
 	var failures := PackedStringArray()
-	if ProjectSettings.get_setting("application/config/version","")!="0.3.0-rc.2":
+	if ProjectSettings.get_setting("application/config/version","")!="0.3.0-rc.3":
 		failures.append("application version")
 	if scene.generator.route.length<3000 or scene.vehicle.wheels.size()!=4:
 		failures.append("main stage resources")
@@ -55,7 +55,7 @@ static func run_app(app: Node) -> void:
 	app.profile.path = "user://package-smoke/profile.json"
 	app.profile.data = RallyProfileStore.fresh()
 	if app.profile.set_plate("PACK-160") != OK: failures.append("player plate save")
-	if ProjectSettings.get_setting("application/config/version","")!="0.3.0-rc.2": failures.append("application version")
+	if ProjectSettings.get_setting("application/config/version","")!="0.3.0-rc.3": failures.append("application version")
 	if app.screen!="home": failures.append("main menu")
 	for stage: String in RallyContentCatalog.STAGES:
 		for vehicle: String in RallyContentCatalog.VEHICLES:
@@ -65,6 +65,10 @@ static func run_app(app: Node) -> void:
 		if not ResourceLoader.exists(RallyContentCatalog.vehicle(vehicle).model_path): failures.append(vehicle+" model")
 		if RallyAudioDirector.asset(vehicle+"_mid").data.size()<1000: failures.append(vehicle+" audio")
 	if not RallyFonts.TEXT.has_char("驶".unicode_at(0)): failures.append("bundled Chinese font")
+	for kind: String in ["menu","autumn","coast","highland"]:
+		if RallyAudioDirector.music_asset(kind).data.size()<1000: failures.append(kind+" score")
+		if not FileAccess.file_exists("res://assets/audio/music/theme_"+kind+".mid"): failures.append(kind+" MIDI source")
+	if not RallyPlateText.font().has_char("沪".unicode_at(0)): failures.append("plate font fallback")
 	app.chosen_stage = "sunset_ridge"
 	app.chosen_vehicle = "F160"
 	await app.start_race()

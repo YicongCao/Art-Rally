@@ -84,13 +84,14 @@ func build() -> void:
 
 func _select(layout: String) -> void:
 	selected = layout
+	for id: String in cards: RallySelectionStyle.apply(cards[id],id==layout)
 	start_button.grab_focus()
 
 
 func open(layout: String,can_cancel: bool = false) -> void:
 	selected = layout if layout in ["FWD","AWD","RWD"] else "AWD"
 	allow_cancel = can_cancel
-	cards[selected].set_pressed_no_signal(true)
+	for id: String in cards: RallySelectionStyle.apply(cards[id],id==selected)
 	cancel_button.visible = can_cancel
 	visible = true
 	start_button.grab_focus()

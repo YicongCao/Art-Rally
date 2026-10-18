@@ -1,15 +1,18 @@
 shader_type spatial;
-render_mode depth_draw_opaque;
+render_mode cull_disabled, depth_draw_opaque;
 varying vec3 world;
+uniform bool river = false;
 void vertex() { world = (MODEL_MATRIX*vec4(VERTEX,1.0)).xyz; }
+float hash(vec2 p) { return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453); }
 void fragment() {
-	float ripple = sin(world.x*6.0+TIME*1.3)*sin(world.z*5.0-TIME*0.9);
-	float edge = 1.0-smoothstep(2.15,2.65,abs(UV.x));
-	float along = max(smoothstep(1270.0,1272.0,UV.y)*(1.0-smoothstep(1288.0,1290.0,UV.y)),smoothstep(1480.0,1482.0,UV.y)*(1.0-smoothstep(1506.0,1508.0,UV.y)));
-	ALBEDO = mix(vec3(0.10,0.105,0.065),vec3(0.12,0.23,0.25),edge);
-	ROUGHNESS = 0.37+ripple*0.02;
-	METALLIC = 0.0;
-	SPECULAR = 0.22;
-	NORMAL_MAP = vec3(0.5+sin(world.x*5.0+TIME)*0.015,0.5+cos(world.z*7.0-TIME)*0.012,1.0);
-	ALPHA = edge*along*0.90;
+	float ripple = sin(world.x*5.0+TIME*1.9)*sin(world.z*3.0-TIME*1.1);
+	float rough_edge = sin(UV.y*1.8+UV.x*3.7)*.11+sin(UV.y*4.3)*.07;
+	float edge = 1.0-smoothstep(2.05+rough_edge,2.65,abs(UV.x));
+	float along = smoothstep(UV2.x,UV2.x+1.6,UV.y)*(1.0-smoothstep(UV2.y-1.6,UV2.y,UV.y));
+	float foam = river ? pow(max(0.0,sin(world.x*.9+world.z*.3-TIME*2.3)),18.0)*.10 : 0.0;
+	ALBEDO = mix(vec3(.09,.13,.10),vec3(.16,.35,.35),river ? .8 : edge)+vec3(foam);
+	ROUGHNESS = .28+ripple*.035;
+	SPECULAR = .4;
+	NORMAL_MAP = vec3(.5+sin(world.x*3.0+TIME*2.0)*.035,.5+cos(world.z*5.0-TIME*1.8)*.025,1.0);
+	ALPHA = river ? 1.0-smoothstep(108.0,120.0,abs(UV.x)) : edge*along*.82;
 }

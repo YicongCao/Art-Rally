@@ -209,4 +209,6 @@ v0.2 轮胎模型已按 [技术方案](docs/V0.2_TIRE_CONTACT_DEFORMATION.zh-CN.
 
 执行顺序与验收标准见 [开发计划](docs/DEVELOPMENT_PLAN.zh-CN.md)。手柄优先标定，键盘通过输入平滑与车速相关转向辅助降低难度，两者共享相同车辆物理。
 
-最新赛道与选车改动见 [赛道第二版更新](docs/ROUTE_V2_UPDATE.zh-CN.md)。当前运行版本为 `0.3.0-rc.2`；路线版本 2 的成绩与旧版隔离。
+最新赛道与选车改动见 [赛道第二版更新](docs/ROUTE_V2_UPDATE.zh-CN.md)。当前运行版本为 `0.3.0-rc.3`；路线版本 3 的成绩与旧版隔离。
+
+本轮界面、混合路面与窄桥、回放、航拍相册和四主题 MIDI 配乐见 [玩家体验更新](docs/PLAYER_EXPERIENCE_UPDATE.zh-CN.md)。

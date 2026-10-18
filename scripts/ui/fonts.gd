@@ -3,6 +3,8 @@ extends RefCounted
 
 const TEXT: FontFile = preload("res://assets/fonts/NotoSansSC-Variable.ttf")
 const MONO: FontFile = preload("res://assets/fonts/NotoSansMono-Variable.ttf")
+const DISPLAY: FontFile = preload("res://assets/fonts/ChakraPetch-Bold.ttf")
+static var _plate: FontVariation
 static var _regular: FontVariation
 static var _bold: FontVariation
 static var _mono_bold: FontVariation
@@ -30,3 +32,11 @@ static func regular() -> FontVariation:
 		_regular.base_font = TEXT
 		_regular.variation_opentype = {2003265652:450}
 	return _regular
+
+
+static func plate() -> FontVariation:
+	if _plate==null:
+		_plate = FontVariation.new()
+		_plate.base_font = DISPLAY
+		_plate.fallbacks = [bold()]
+	return _plate

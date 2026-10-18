@@ -13,17 +13,23 @@ var elapsed: float = 0
 var camera_rig := RallyCameraRig.new()
 var checkpoints := RallyCheckpointMarkers.new()
 var tire_marks := RallyTireMarks.new()
+var sky_life := RallySkyLife.new()
+var tail_streaks := RallyTailStreaks.new()
 
 
 func build(owner_scene: Node3D) -> void:
 	scene = owner_scene
 	scene.add_child(scenery)
 	scenery.build(scene.generator)
+	scene.add_child(sky_life)
+	sky_life.build(scenery)
 	checkpoints.build(scene,scenery.route,scene.session.gates)
 	tire_marks.build(scene)
 	scene.vehicle.reset_completed.connect(tire_marks.break_trails)
 	atmosphere.build_at(scenery.dressing,scenery.route,scenery.center,scene.get_node("Sun"),1.8)
 	car_style.build(scene.vehicle,scene.vehicle_definition)
+	tail_streaks.build(scene,scene.vehicle.config.body_size)
+	scene.vehicle.reset_completed.connect(tail_streaks.clear)
 	camera_rig.definition = scene.vehicle_definition
 	camera_rig.build(scene.camera)
 	scene.vehicle.reset_completed.connect(camera_rig.reset)
@@ -61,7 +67,10 @@ func build(owner_scene: Node3D) -> void:
 
 func update(dt: float) -> void:
 	checkpoints.update(scene.session.next_gate)
-	if not scene.get_tree().paused: elapsed += dt
+	if not scene.get_tree().paused:
+		elapsed += dt
+		sky_life.advance(dt)
+		tail_streaks.update(scene.vehicle.get_global_transform_interpolated(),scene.vehicle.linear_velocity.length(),dt,scene.camera)
 	camera_rig.update(scene.camera,scene.vehicle,scene.camera_mode,scene.preferences.values.camera_motion,scene.get_tree().paused,dt)
 	for i: int in range(scenery.foliage.animated_arms.size()):
 		scenery.foliage.animated_arms[i].rotation.z = sin(elapsed*2.4+i)*0.2

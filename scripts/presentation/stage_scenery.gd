@@ -16,6 +16,7 @@ var all_batches: Array[MultiMeshInstance3D] = []
 var gravel_batches: int = 0
 var bounds := AABB()
 var sailboats: Array[Dictionary] = []
+var river_frames: Array[Dictionary] = []
 
 
 func build(stage: RallyStageGenerator) -> void:
@@ -33,6 +34,9 @@ func build(stage: RallyStageGenerator) -> void:
 		var cell := Vector2i(floori(route.points[i].x/64),floori(route.points[i].z/64))
 		if not lookup.has(cell): lookup[cell] = []
 		lookup[cell].append(i)
+	for river: Vector3 in generator.definition.river_crossings:
+		var pose := route.pose_at(river.x,0)
+		river_frames.append({"origin":pose.origin,"right":pose.basis.x,"forward":-pose.basis.z,"span":river.y})
 	_apply_materials()
 	_build_terrain()
 	_build_mountains()
@@ -44,6 +48,7 @@ func build(stage: RallyStageGenerator) -> void:
 		spectator_regions.append({"a":ground_at(station-1,8),"b":ground_at(station+13,8)})
 	_build_landmarks()
 	RallyStageLandmarks.build(self)
+	RallyRiverBridges.build(self)
 	_build_obstacles()
 	_build_guardrails()
 	_build_gravel()
@@ -107,6 +112,17 @@ func height_at(x: float,z: float) -> float:
 	if generator.definition.environment_id=="highland" and float(p.s)>route.length-200:
 		var drop := smoothstep(route.length-200,route.length-80,float(p.s))*smoothstep(32,180,d)
 		height = lerpf(height,p.point.y-130+terrain_noise.get_noise_2d(x,z)*35,drop)
+	for river: Dictionary in river_frames:
+		var origin: Vector3 = river.origin
+		var delta := Vector3(x,origin.y,z)-origin
+		var across := delta.dot(river.right)
+		var along := delta.dot(river.forward)
+		if absf(across)>125: continue
+		var meander := sin(across*.04)*2+sin(across*.11)*.6
+		var half_channel: float = river.span*.45+sin(across*.07)*1.2
+		var channel := (1-smoothstep(half_channel,half_channel+7,absf(along-meander)))*(1-smoothstep(100,125,absf(across)))
+		var bed := origin.y-4.1-across*.006
+		height = lerpf(height,minf(height,bed),channel)
 	return height
 
 
@@ -122,6 +138,8 @@ func ground_at(s: float,lateral: float) -> Vector3:
 
 func allows_decoration(point: Vector3, kind: String, scale_factor: float) -> bool:
 	var p := nearest(point)
+	for river: Vector3 in generator.definition.river_crossings:
+		if absf(float(p.s)-river.x)<river.y*.5+10 and absf(float(p.lateral))<125: return false
 	if absf(float(p.s)-route.length*.51)<22 and float(p.lateral)>5 and float(p.lateral)<19: return false
 	if float(p.s)>route.length-140 and kind in ["pine","umbrella","rock"]: return false
 	if float(p.s)>route.length-75 and float(p.lateral)<-7 and float(p.lateral)>-100: return false

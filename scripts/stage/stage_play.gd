@@ -153,7 +153,7 @@ func _physics_process(dt: float) -> void:
 		else: _recover(10,"越界复位")
 		return
 	var previous_phase := session.phase
-	session.step(vehicle.position, vehicle.linear_velocity.length(), dt)
+	session.step(vehicle.position, vehicle.linear_velocity.length(), dt,vehicle.global_basis,vehicle.config.body_size)
 	if previous_phase!=RallyStageSession.Phase.FINISHED and session.phase==RallyStageSession.Phase.FINISHED:
 		_record_finish()
 	if session.phase == RallyStageSession.Phase.FINISHED:
