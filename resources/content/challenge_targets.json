@@ -1,5 +1,5 @@
 {
-  "rules_version": "time-trial-3",
+  "rules_version": "time-trial-4",
   "challenges": {
     "sunset_ridge/F160": {
       "reference_seconds": 265,

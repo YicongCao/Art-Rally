@@ -55,7 +55,7 @@ func apply_settings(prefs: RallyGameSettings) -> void:
 	if settings.values.voice=="off" or (voice.has_meta("kind") and voice.get_meta("kind")!=settings.values.voice): voice.stop()
 	for pair: Array in [["Voice","voice_volume"],["Engine","engine_volume"],["Road","road_volume"],["Environment","environment_volume"],["Interface","interface_volume"],["Music","music_volume"]]:
 		var index := AudioServer.get_bus_index(pair[0])
-		if index>=0: AudioServer.set_bus_volume_db(index,linear_to_db(maxf(0.0001,settings.values[pair[1]])))
+		if index>=0: AudioServer.set_bus_volume_db(index,linear_to_db(maxf(0.0001,settings.values[pair[1]]*(.6 if pair[0]=="Road" else 1.0))))
 	AudioServer.set_bus_volume_db(0,linear_to_db(maxf(0.0001,settings.values.volume)))
 
 

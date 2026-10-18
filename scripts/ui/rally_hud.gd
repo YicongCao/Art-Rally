@@ -52,7 +52,7 @@ static func data_for(car: RallyVehicle, session: RallyStageSession, paused: bool
 	var target := session.route.position_at(session.gates[gate])
 	var local := car.basis.inverse()*(target-car.position)
 	if session.phase == RallyStageSession.Phase.RUNNING:
-		if float(session.projection.get("s",0)) > session.gates[session.next_gate]+10: warning = "漏过检查点 %02d · 返回金色气柱，或 R 恢复"%(gate+1)
+		if session.miss_notice_remaining>0: warning = "漏过检查点 · +5 s" if not session.practice else "漏过检查点"
 		elif car.linear_velocity.dot(session.route.tangent_at(session.progress)) < -2: warning = "逆行 · 请掉头"
 	return {"speed":car.linear_velocity.length()*3.6,"rpm":car.drivetrain.rpm(),"redline":car.drivetrain.config.redline_rpm,
 		"gear":"R" if car.drivetrain.gear<0 else ("N" if car.drivetrain.gear==0 else str(car.drivetrain.gear)),"drive_layout":car.drivetrain.config.drive_layout,

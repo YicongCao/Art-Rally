@@ -6,6 +6,7 @@ var symbols: Array[Sprite3D] = []
 var root := Node3D.new()
 var last_gate: int = -1
 var tube_multimesh := MultiMesh.new()
+var tube_gate_indices := PackedInt32Array()
 
 
 func build(parent: Node3D,route: RallyStageRoute,gates: PackedFloat64Array) -> void:
@@ -13,15 +14,19 @@ func build(parent: Node3D,route: RallyStageRoute,gates: PackedFloat64Array) -> v
 	parent.add_child(root)
 	var material := ShaderMaterial.new()
 	material.shader = preload("res://assets/shaders/checkpoint_air.gdshader")
+	var wordmark := RallyFinishArch.logo_texture(root)
 	var tube_transforms: Array[Transform3D] = []
 	var blower_transforms: Array[Transform3D] = []
 	for i: int in range(gates.size()):
 		var pose := route.pose_at(gates[i],0)
 		materials.append(material)
+		tube_gate_indices.append(tube_transforms.size() if i>0 and i<gates.size()-1 else -1)
 		for side: float in [-1,1]:
 			var anchor := pose.origin+pose.basis.x*side*(route.width_at(gates[i])*0.5+0.85)-Vector3.UP*0.15
 			blower_transforms.append(Transform3D(Basis.IDENTITY,anchor+Vector3.UP*0.14))
-			tube_transforms.append(Transform3D(Basis.IDENTITY,anchor+Vector3.UP*0.28))
+			if i>0 and i<gates.size()-1: tube_transforms.append(Transform3D(Basis.IDENTITY,anchor+Vector3.UP*0.28))
+		if i==0 or i==gates.size()-1:
+			RallyFinishArch.build(root,route,gates[i],wordmark,"StartArch" if i==0 else "FinishArch")
 		var kind := "start" if i == 0 else ("finish" if i == gates.size()-1 else "checkpoint")
 		symbols.append(RallyGateSymbols.create(root,kind,pose.origin+Vector3.UP*4.4))
 	_build_blowers(blower_transforms)
@@ -43,8 +48,8 @@ func update(next_gate: int) -> void:
 	last_gate = next_gate
 	for i: int in range(materials.size()):
 		var color := Color("eab45c") if i==next_gate else (Color("42695a") if i<next_gate else Color("547e85"))
-		for side: int in range(2):
-			tube_multimesh.set_instance_color(i*2+side,color)
+		if tube_gate_indices[i]>=0:
+			for side: int in range(2): tube_multimesh.set_instance_color(tube_gate_indices[i]+side,color)
 		symbols[i].visible = i == next_gate
 		symbols[i].modulate = Color("ffe2a3")
 

@@ -48,7 +48,7 @@ func _run() -> void:
 	check(scene.vehicle.position.distance_to(route.pose_at(414).origin)<1,"Boundary recovery occurs within a few physics ticks, before falling")
 	scene.presentation.checkpoints.update(5)
 	check(scene.presentation.checkpoints.symbols[5].visible and not scene.presentation.checkpoints.symbols[4].visible and scene.presentation.checkpoints.materials.size()==31,"Paired checkpoint markers highlight only the required symbol")
-	check(scene.presentation.checkpoints.tube_multimesh.instance_count==62,"Inflatable checkpoint tubes share one instanced draw batch")
+	check(scene.presentation.checkpoints.tube_multimesh.instance_count==58,"Intermediate checkpoint tubes share one instanced draw batch; timing boundaries use arches")
 	check(scene.presentation.checkpoints.tube_multimesh.use_colors,"Batched checkpoint tubes carry per-instance highlight colors")
 	var data := RallyHUD.data_for(scene.vehicle,scene.session,false)
 	check(data.gate_number==6 and data.gate_distance>0,"HUD identifies the required checkpoint and distance after recovery")

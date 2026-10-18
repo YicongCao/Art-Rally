@@ -1,7 +1,7 @@
 class_name RallyChallengeDefinition
 extends RefCounted
 
-const RULES_VERSION := "time-trial-3"
+const RULES_VERSION := "time-trial-4"
 var rules_version: String = RULES_VERSION
 var stage: RallyStageDefinition
 var vehicle: RallyVehicleDefinition

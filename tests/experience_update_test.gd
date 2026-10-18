@@ -38,7 +38,9 @@ func _run() -> void:
 	scene.wildlife.advance(.1)
 	check(scene.wildlife.active and scene.wildlife.deer.visible,"Crossing animal appears with adequate advance distance")
 	scene.wildlife.advance(8)
-	check(not scene.wildlife.active and not scene.wildlife.deer.visible,"Animal and hoof loop retire after crossing")
+	check(scene.wildlife.active and scene.wildlife.deer.visible,"Animal remains visible through the middle of its crossing")
+	scene.wildlife.advance(16)
+	check(not scene.wildlife.active and not scene.wildlife.deer.visible and scene.wildlife.fade==1,"Animal fully fades only after departing far beyond the road")
 	scene.vehicle.position = scene.river_audio[0].position+Vector3.UP*3
 	scene._update_river_audio(1)
 	var near_gain: float = scene.river_audio[0].volume_linear

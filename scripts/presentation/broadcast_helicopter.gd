@@ -30,7 +30,7 @@ func build(owner_scene: Node3D,photo_album: RallyPhotoAlbum) -> void:
 	rotor_audio.bus = "Environment"
 	rotor_audio.unit_size = 55
 	rotor_audio.max_distance = 220
-	rotor_audio.volume_db = -7
+	rotor_audio.volume_linear = .75
 	airframe.add_child(rotor_audio)
 	var b := RallySampleMeshes.new()
 	b.ellipsoid(Vector3(1.7,1.4,3.0),Vector3(0,0,0),Color("e8e4d5"))
@@ -43,16 +43,28 @@ func build(owner_scene: Node3D,photo_album: RallyPhotoAlbum) -> void:
 	for side: float in [-1,1]:
 		b.beam(Vector3(side*1.9,-1.9,-2.8),Vector3(side*1.9,-1.9,2.7),.10,Color("495a5b"))
 		for z: float in [-1.4,1.4]: b.beam(Vector3(side*.9,-.8,z),Vector3(side*1.9,-1.9,z),.07,Color("6f7a72"))
-	# Open side door: a visible shoulder-mounted camera and reporter.
-	b.box(Vector3(.08,1.5,1.8),Vector3(1.55,.1,.9),Color("294b54"))
-	b.cone(.20,.24,.6,Vector3(1.65,.2,.2),Color("c9b66b"),6)
-	b.ellipsoid(Vector3(.17,.20,.17),Vector3(1.65,.78,.2),Color("c99270"))
-	for side: float in [-1,1]:
-		b.beam(Vector3(1.65+side*.13,-.1,.2),Vector3(1.65+side*.17,-.85,.25),.085,Color("334b50"))
-		b.beam(Vector3(1.65+side*.22,.45,.2),Vector3(1.9+side*.15,.3,-.1),.065,Color("c99270"))
-		b.beam(Vector3(1.9+side*.15,.3,-.1),Vector3(2.05+side*.2,.50,-.45),.065,Color("c99270"))
-	b.box(Vector3(.6,.4,.85),Vector3(2.05,.55,-.25),Color("283c40"))
-	b.ellipsoid(Vector3(.26,.26,.25),Vector3(2.05,.55,-.78),Color("90b1b6"))
+	# The aircraft flies to the player's right: expose the LEFT door and operator.
+	# Everything projects beyond the fuselage silhouette, not inside its solid shell.
+	b.box(Vector3(.12,1.65,2.0),Vector3(-1.65,.05,.65),Color("19363d"))
+	b.box(Vector3(.9,.15,1.7),Vector3(-1.98,-.85,.65),Color("52605a"))
+	b.cone(.30,.34,.85,Vector3(-2.02,.12,.65),Color("efb54e"),6)
+	b.box(Vector3(.08,.5,.48),Vector3(-2.35,.2,.68),Color("f2e9cd"))
+	b.ellipsoid(Vector3(.25,.28,.24),Vector3(-2.05,1.16,.65),Color("d49b76"))
+	b.ellipsoid(Vector3(.27,.13,.25),Vector3(-2.05,1.38,.65),Color("3c3432"))
+	b.beam(Vector3(-2.05,.48,.65),Vector3(-2.05,1.02,.65),.12,Color("d49b76"))
+	for z: float in [.40,.88]:
+		b.beam(Vector3(-2.0,-.22,z),Vector3(-2.38,-.65,z+.1),.12,Color("334b50"))
+		b.beam(Vector3(-2.38,-.65,z+.1),Vector3(-2.3,-1.25,z+.2),.10,Color("334b50"))
+		b.box(Vector3(.38,.16,.22),Vector3(-2.42,-1.27,z+.2),Color("263b3c"))
+		b.beam(Vector3(-2.05,.5,z),Vector3(-2.52,.25,z),.09,Color("d49b76"))
+		b.beam(Vector3(-2.52,.25,z),Vector3(-2.75,.68,z+.45),.09,Color("d49b76"))
+	# Oversized shoulder camera, forward lens hood, eyepiece and red tally light.
+	b.box(Vector3(1.05,.45,.48),Vector3(-2.68,.78,1.25),Color("233a40"))
+	b.box(Vector3(.28,.60,.62),Vector3(-3.28,.78,1.25),Color("172b32"))
+	b.ellipsoid(Vector3(.03,.22,.22),Vector3(-3.44,.78,1.25),Color("78c8ca"))
+	b.box(Vector3(.42,.10,.10),Vector3(-2.55,1.05,1.25),Color("586b68"))
+	b.box(Vector3(.08,.08,.08),Vector3(-3.44,1.04,1.25),Color("f34c32"))
+
 	RallyStageLandmarks._mesh(airframe,b)
 	airframe.add_child(rotor)
 	rotor.position.y = 2.2
@@ -112,14 +124,14 @@ func advance(dt: float) -> void:
 		rotor_audio.stop()
 		return
 	if not rotor_audio.playing and DisplayServer.get_name()!="headless": rotor_audio.play()
-	rotor_audio.volume_linear = .5*smoothstep(0,2,active_time)*(1-smoothstep(10,12,active_time))
+	rotor_audio.volume_linear = .75*smoothstep(0,2,active_time)*(1-smoothstep(10,12,active_time))
 	var pose: Transform3D = scene.vehicle.get_global_transform_interpolated()
 	var forward := -pose.basis.z
 	forward.y = 0
 	forward = forward.normalized()
 	var right := forward.cross(Vector3.UP)
 	var departure := smoothstep(10,12,active_time)+(1-smoothstep(0,2,active_time))
-	airframe.global_position = pose.origin+forward*35+right*(21+departure*100+sin(clock*.4)*3)+Vector3.UP*(18+departure*8+sin(clock*.6))
+	airframe.global_position = pose.origin+forward*30+right*(14+departure*100+sin(clock*.4)*3)+Vector3.UP*(12+departure*8+sin(clock*.6))
 	airframe.look_at(pose.origin+forward*90,Vector3.UP)
 	airframe.rotation.z = -.07
 	if active_time<8 and not photographed:

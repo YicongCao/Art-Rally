@@ -25,6 +25,8 @@ func start() -> void:
 	vehicle_definition = challenge.vehicle
 	for key: String in profile.data.settings: preferences.set_value(key,profile.data.settings[key])
 	initialize_gameplay()
+	# Record penalty gaps immediately, including a skipped gate on the finish tick.
+	session.missed_checkpoint_penalty.connect(trajectory.recovery)
 	var plate := RallyPlateText.display(profile.data.get("plate",""))
 	RallyVehiclePlate.attach(presentation.car_style.body,challenge.vehicle,plate)
 	session.practice = free_practice or tutorial

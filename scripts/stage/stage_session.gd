@@ -1,6 +1,8 @@
 class_name RallyStageSession
 extends RefCounted
 
+signal missed_checkpoint_penalty(start: float, end: float)
+
 enum Phase { COUNTDOWN, ARMED, RUNNING, FINISHED }
 
 var route: RallyStageRoute
@@ -24,6 +26,8 @@ var reset_count: int = 0
 var split_times: Array[float] = []
 var gate_times: Array[float] = []
 var split_gates: Array[int] = []
+var missed_gates: Array[int] = []
+var miss_notice_remaining: float = 0
 
 
 func setup(stage_route: RallyStageRoute, free_practice: bool = false) -> void:
@@ -52,6 +56,8 @@ func restart() -> Transform3D:
 	note_remaining = 0
 	progress = 8
 	reset_count = 0
+	missed_gates.clear()
+	miss_notice_remaining = 0
 	split_times.clear()
 	gate_times.clear()
 	var pose := route.pose_at(8)
@@ -64,6 +70,7 @@ func restart() -> Transform3D:
 
 func step(position: Vector3, speed: float, dt: float, body_basis: Basis = Basis.IDENTITY, body_size: Vector3 = Vector3.ZERO) -> void:
 	if phase == Phase.FINISHED: return
+	miss_notice_remaining = maxf(0,miss_notice_remaining-dt)
 	if phase == Phase.COUNTDOWN:
 		countdown = maxf(0, countdown - dt)
 		if countdown <= 0: phase = Phase.ARMED
@@ -74,17 +81,27 @@ func step(position: Vector3, speed: float, dt: float, body_basis: Basis = Basis.
 	projection = route.project(position, projection_hint, 45)
 	if float(projection.distance) > 30: projection = route.project(position)
 	projection_hint = projection.index
-	# A gate requires a physical forward crossing, not proximity or projected progress alone.
-	if position.distance_to(previous) <= 15 and next_gate < gates.size():
-		var s := gates[next_gate]
-		var center := route.position_at(s)
-		var forward := route.tangent_at(s)
-		if _body_crosses(previous,position,previous_basis,body_basis,body_size*.5,center,forward,route.rights[route.index_at(s)],route.width_at(s)*.5+1.09):
+	# Start/finish require a physical crossing; ordinary missed gates cost five seconds.
+	# Only continuous forward motion can retire gates, never recovery/teleport or reversing.
+	if position.distance_to(previous)<=15:
+		while next_gate<gates.size():
+			var s := gates[next_gate]
+			var center := route.position_at(s)
+			var forward := route.tangent_at(s)
+			var crossed := _body_crosses(previous,position,previous_basis,body_basis,body_size*.5,center,forward,route.rights[route.index_at(s)],route.width_at(s)*.5+1.09)
+			var missed := phase==Phase.RUNNING and next_gate>0 and next_gate<gates.size()-1 and float(projection.s)>s+maxf(4,body_size.length()*.5) and (position-previous).dot(route.tangent_at(projection.s))>.00001
+			if not crossed and not missed: break
+			if not crossed:
+				missed_gates.append(next_gate)
+				if not practice:
+					penalty += 5
+					missed_checkpoint_penalty.emit(total_time()-5,total_time())
+				miss_notice_remaining = 2.5
 			gate_times.append(total_time())
 			if next_gate in split_gates: split_times.append(total_time())
 			next_gate += 1
-			if phase == Phase.ARMED: phase = Phase.RUNNING
-			if next_gate == gates.size(): phase = Phase.FINISHED
+			if phase==Phase.ARMED: phase=Phase.RUNNING
+			if next_gate==gates.size(): phase=Phase.FINISHED
 	progress = clampf(projection.s, 0, gates[mini(next_gate, gates.size() - 1)])
 	note_remaining = maxf(0, note_remaining - dt)
 	if next_gate > 0 and phase != Phase.FINISHED:

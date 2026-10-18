@@ -1,6 +1,8 @@
 class_name RallyTitleLogo
 extends Control
 
+var crop_bottom: bool = true
+
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	resized.connect(queue_redraw)
@@ -12,7 +14,7 @@ func _draw() -> void:
 	var face := RallyFonts.plate()
 	var font_size := mini(158,int(size.x/6.4))
 	# The next row is painted over the lower 26 px of the wordmark.
-	var baseline := size.y+24
+	var baseline := size.y+24 if crop_bottom else size.y-20
 	draw_set_transform(Vector2(-font_size*.065,0),0,Vector2.ONE)
 	material.set_shader_parameter("mark_start",face.get_string_size("ART RA",HORIZONTAL_ALIGNMENT_LEFT,-1,font_size).x-font_size*.065)
 	material.set_shader_parameter("baseline",baseline)

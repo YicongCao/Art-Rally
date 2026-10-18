@@ -1,0 +1,81 @@
+{
+  "date": "2026-10-18",
+  "engine": "Godot 4.7.2",
+  "native_renderer": "Metal / Apple M5",
+  "tests": [
+    {
+      "name": "stage_session_test",
+      "checks": 20,
+      "failures": 0
+    },
+    {
+      "name": "checkpoint_body_test",
+      "checks": 7,
+      "failures": 0
+    },
+    {
+      "name": "first_playable_rules_test",
+      "checks": 10,
+      "failures": 0
+    },
+    {
+      "name": "profile_ghost_test",
+      "checks": 31,
+      "failures": 0
+    },
+    {
+      "name": "replay_album_test",
+      "checks": 27,
+      "failures": 0
+    },
+    {
+      "name": "hud_test",
+      "checks": 20,
+      "failures": 0
+    },
+    {
+      "name": "feedback_test",
+      "checks": 12,
+      "failures": 0
+    },
+    {
+      "name": "experience_update_test",
+      "checks": 40,
+      "failures": 0
+    },
+    {
+      "name": "content_catalog_test",
+      "checks": 135,
+      "failures": 0
+    },
+    {
+      "name": "world_details_test",
+      "checks": 27,
+      "failures": 0
+    },
+    {
+      "name": "first_playable_flow_test",
+      "checks": 27,
+      "failures": 0
+    },
+    {
+      "name": "first_playable_lifecycle",
+      "checks": 3,
+      "failures": 0
+    },
+    {
+      "name": "audio-check",
+      "checks": 22,
+      "failures": 0
+    },
+    {
+      "name": "driving_polish_test",
+      "checks": 23,
+      "failures": 0
+    }
+  ],
+  "total_checks": 404,
+  "native_capture": "scripts/dev/world_details_capture.gd",
+  "audio": "CoreAudio automated output checks; no human listening acceptance claimed",
+  "lifecycle": "10 scene switches; 56 nodes, 0 orphans, 134 resources after warm-up"
+}
