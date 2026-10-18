@@ -65,7 +65,7 @@ macOS 首次安装：`brew install --cask godot`。Homebrew 跟随新版发布�
 ./scripts/dev.sh v02-tire-render-check # 真实窗口检查轮胎形变、动态接触斑与 F9 数据
 ./scripts/dev.sh autumn-capture # 自动驾驶采集砂石、泥地、驾驶舱三张秋日实机图
 ./scripts/dev.sh pacenote-render-check # 渲染左右普通弯、急弯四张实际路书卡片
-./scripts/dev.sh first-playable-matrix # 九个新挑战完整自动驾驶回归
+./scripts/dev.sh first-playable-matrix # 27 个赛道 × 车型 × 动力组合完整自动驾驶回归
 ./scripts/dev.sh first-playable-lifecycle # 连续十次场景切换
 ./scripts/dev.sh first-playable-audio # 真实声音输出总线检查
 ./scripts/dev.sh first-playable-capture # 新版菜单/车型/三赛道截图
