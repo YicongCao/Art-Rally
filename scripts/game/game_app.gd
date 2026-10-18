@@ -277,15 +277,30 @@ func _menu_tile(parent: Node,title: String,caption: String,icon: String,color: C
 	var ink := Color("183b34") if icon == "challenge" else Color("f4ead6")
 	for state: String in ["normal","hover","pressed","focus","disabled"]:
 		var style := StyleBoxFlat.new()
-		style.bg_color = color.lightened(.10) if state == "hover" else (color.darkened(.12) if state == "pressed" else color)
-		if state == "focus":
-			style.bg_color = Color.TRANSPARENT
-			style.border_color = ink
-			style.set_border_width_all(3)
-			style.border_blend = true
+		style.bg_color = Color.TRANSPARENT
+		style.border_color = Color(ink,0.94)
+		style.set_border_width_all(3 if state == "focus" else 0)
+		if state == "hover":
+			style.border_color = Color(ink,0.48)
+			style.set_border_width_all(1)
+		elif state == "pressed":
+			style.border_color = Color("efbd69",0.9)
+			style.border_width_bottom = 3
 		tile.add_theme_stylebox_override(state,style)
 		# Keep Button.text for accessibility and navigation; the child labels provide tile layout.
 		tile.add_theme_color_override("font_" + state + "_color" if state != "normal" else "font_color",Color.TRANSPARENT)
+	# Blur the live landscape behind the buttons while keeping icons and labels crisp.
+	# The strong dark tint gives the title tiles less transparency than the driving HUD.
+	var acrylic := ColorRect.new()
+	acrylic.name = "AcrylicSurface"
+	acrylic.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	acrylic.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	acrylic.color = Color(color,0.94)
+	var glass := ShaderMaterial.new()
+	glass.shader = preload("res://assets/shaders/hud_acrylic.gdshader")
+	glass.set_shader_parameter("frost",0.58)
+	acrylic.material = glass
+	tile.add_child(acrylic)
 	var margins := MarginContainer.new()
 	margins.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	margins.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)

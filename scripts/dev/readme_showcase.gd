@@ -29,6 +29,11 @@ func _run() -> void:
 	AudioServer.set_bus_mute(0,true)
 	app.show_home()
 	await shot("home")
+	if "--home-only" in OS.get_cmdline_user_args():
+		app.free()
+		await process_frame
+		quit()
+		return
 	app.show_stages()
 	await shot("stages")
 	for index: int in range(3):
