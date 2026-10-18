@@ -41,7 +41,15 @@ extends Resource
 @export var rough_patches := PackedVector3Array()
 @export var bank_sections := PackedVector3Array()
 @export var log_pile_stations := PackedFloat32Array()
+@export var mountain_cliff_sections := PackedVector3Array()
 @export var split_fractions := PackedFloat32Array([0.333333,0.666667,1.0])
+
+
+func mountain_side_at(distance: float) -> float:
+	for section: Vector3 in mountain_cliff_sections:
+		if distance>=section.x-35 and distance<=section.y:
+			return section.z*(1-smoothstep(section.y-35,section.y,distance))*smoothstep(section.x-35,section.x,distance)
+	return 0.0
 
 
 func surface_id(distance: float) -> int:

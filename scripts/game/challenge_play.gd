@@ -17,6 +17,7 @@ var audio_director: RallyAudioDirector
 var replay: RallyReplayController
 var broadcast := RallyBroadcastHelicopter.new()
 var wildlife := RallyWildlife.new()
+var rockfall := RallyRockfall.new()
 var river_audio: Array[AudioStreamPlayer3D] = []
 var photo_album: RallyPhotoAlbum
 
@@ -42,6 +43,8 @@ func start() -> void:
 	_build_river_audio()
 	add_child(wildlife)
 	wildlife.build(self)
+	add_child(rockfall)
+	rockfall.build(self)
 	pause_menu.voice_preview.connect(func(): if audio_director!=null: audio_director.speak_note("preview",true))
 	add_child(ghost)
 	ghost.build(challenge.vehicle,profile.load_ghost(challenge))
@@ -92,12 +95,13 @@ func _process(dt: float) -> void:
 	if not get_tree().paused:
 		broadcast.advance(dt)
 		wildlife.advance(dt)
+		rockfall.advance(dt)
 		_update_river_audio(dt)
 	ghost.update(session.total_time(),vehicle.position,preferences.values.ghost and session.phase==RallyStageSession.Phase.RUNNING)
 	if audio_director!=null:
 		if session.next_note!=previous_note:
 			audio_director.speak_note(session.current_note)
-			audio_director.cue("warning" if session.current_note in ["WATER","CREST_JUMP","MUD_NARROW","CAUTION_NARROW","LOGS"] else "note")
+			audio_director.cue("warning" if session.current_note in ["WATER","CREST_JUMP","MUD_NARROW","CAUTION_NARROW","LOGS","ROCKFALL"] else "note")
 			previous_note = session.next_note
 		if int(session.phase)!=previous_phase_audio:
 			if session.phase==RallyStageSession.Phase.ARMED: audio_director.cue("start")
@@ -127,6 +131,7 @@ func _restart() -> void:
 		replay = null
 	broadcast.reset()
 	wildlife.reset()
+	rockfall.reset()
 	previous_note = 0
 	if audio_director!=null: audio_director.voice.stop()
 	trajectory.reset()

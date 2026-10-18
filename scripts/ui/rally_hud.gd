@@ -10,7 +10,7 @@ const GAUGE_RECT := Rect2(994,432,262,264)
 const TIMER_RECT := Rect2(994,22,262,112)
 const HANDBRAKE_ICON: Texture2D = preload("res://assets/ui/icons/handbrake.svg")
 const SHIFT_ICON: Texture2D = preload("res://assets/ui/icons/shift.svg")
-const NOTE_TEXT := {"LEFT_MEDIUM":"左弯 3", "RIGHT_MEDIUM":"右弯 3", "LEFT_TIGHT":"左急弯", "RIGHT_TIGHT":"右急弯", "LOGS":"圆木障碍 · 勿切", "CAUTION_NARROW":"注意 · 收窄勿切", "CUT":"弯心平整 · 可小切", "MUD_NARROW":"泥地 · 收窄", "WATER":"积水 · 减速", "ASPHALT":"进入柏油", "GRAVEL":"进入砂石", "CREST_JUMP":"坡顶 · 跳跃", "FINISH":"终点"}
+const NOTE_TEXT := {"LEFT_MEDIUM":"左弯 3", "RIGHT_MEDIUM":"右弯 3", "LEFT_TIGHT":"左急弯", "RIGHT_TIGHT":"右急弯", "LOGS":"圆木障碍 · 勿切", "ROCKFALL":"前方落石", "CAUTION_NARROW":"注意 · 收窄勿切", "CUT":"弯心平整 · 可小切", "MUD_NARROW":"泥地 · 收窄", "WATER":"积水 · 减速", "ASPHALT":"进入柏油", "GRAVEL":"进入砂石", "CREST_JUMP":"坡顶 · 跳跃", "FINISH":"终点"}
 var title_font: Font = RallyFonts.bold()
 var number_font: Font = RallyFonts.mono_bold()
 var text_font: Font = RallyFonts.regular()
@@ -222,6 +222,10 @@ func _draw_note() -> void:
 		draw_arc(at+Vector2(19,20),35,PI,PI*1.5,12,PAPER,2,true)
 	elif code == "WATER":
 		for y: int in range(3): draw_polyline(PackedVector2Array([at+Vector2(-22,y*9-9),at+Vector2(-8,y*9-14),at+Vector2(6,y*9-9),at+Vector2(20,y*9-14)]),Color("9fc9c5"),3,true)
+	elif code == "ROCKFALL":
+		draw_colored_polygon(PackedVector2Array([at+Vector2(-18,-12),at+Vector2(-4,-23),at+Vector2(15,-16),at+Vector2(22,5),at+Vector2(8,19),at+Vector2(-15,15)]),AMBER)
+		draw_polyline(PackedVector2Array([at+Vector2(-25,-24),at+Vector2(-16,-15),at+Vector2(-20,-7)]),PAPER,2,true)
+		draw_polyline(PackedVector2Array([at+Vector2(21,-28),at+Vector2(14,-19),at+Vector2(21,-12)]),PAPER,2,true)
 	else:
 		draw_colored_polygon(PackedVector2Array([at+Vector2(0,-23),at+Vector2(24,20),at+Vector2(-24,20)]),AMBER)
 		center_text("!",at+Vector2(0,13),27,INK,title_font)

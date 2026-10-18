@@ -19,7 +19,7 @@ var side: float = 1
 func build(owner_scene: Node3D) -> void:
 	scene = owner_scene
 	name = "CrossingWildlife"
-	if scene.challenge.stage.environment_id=="coast": return
+	if scene.challenge.stage.environment_id in ["coast","highland"]: return
 	var rng := RandomNumberGenerator.new()
 	rng.randomize()
 	var count := rng.randi_range(2,3)

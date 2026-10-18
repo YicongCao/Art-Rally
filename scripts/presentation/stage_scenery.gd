@@ -45,6 +45,7 @@ func build(stage: RallyStageGenerator) -> void:
 	_apply_materials()
 	_build_terrain()
 	_build_mountains()
+	_build_highland_edges()
 	utility_line.plan(self)
 	foliage.biome = generator.definition.environment_id
 	foliage.spectator_stations.assign(generator.definition.spectators)
@@ -100,6 +101,19 @@ func height_at(x: float,z: float) -> float:
 	var close: float = p.point.y-minf(maxf(d-half,0)*0.18,2.3)
 	close += smoothstep(1.5,10,d-half)*0.5*sin(float(p.s)*0.03+float(p.lateral)*0.2)
 	var far: float = p.point.y-6+terrain_noise.get_noise_2d(x,z)*58+signf(p.lateral)*minf(d*0.14,27)
+	if generator.definition.environment_id=="highland":
+		var mountain_side := generator.definition.mountain_side_at(float(p.s))
+		if absf(mountain_side)>0.001:
+			var across := float(p.lateral)*signf(mountain_side)
+			var shoulder := half+3.5
+			if across>shoulder:
+				var rise := smoothstep(shoulder,shoulder+24,across)
+				var ridge: float = float(p.point.y)+5+rise*45+terrain_noise.get_noise_2d(x*1.7,z*1.7)*4
+				far = lerpf(far,ridge,(1-smoothstep(52,108,across))*absf(mountain_side))
+			elif across < -shoulder:
+				var beyond_edge := -across-shoulder
+				var drop: float = float(p.point.y)-4-smoothstep(0,28,beyond_edge)*96+terrain_noise.get_noise_2d(x*1.3,z*1.3)*5
+				far = lerpf(far,drop,(1-smoothstep(58,118,-across))*absf(mountain_side))
 	if generator.definition.environment_id=="coast" and float(p.lateral)<0:
 		far = lerpf(p.point.y-12,-40,smoothstep(25,180,d))
 	var clearance := lerpf(2.5,.35,smoothstep(6,18,d))
@@ -146,7 +160,7 @@ func allows_decoration(point: Vector3, kind: String, scale_factor: float) -> boo
 	var p := nearest(point)
 	# Vertical trunks on nearly vertical mesh faces still read as floating.
 	# Keep forest on plantable slopes; leave cliff faces bare.
-	if kind in ["pine","umbrella"] and absf(float(p.lateral))>=21 and terrain_slope_at(point)>1.15: return false
+	if kind in ["pine","umbrella"] and absf(float(p.lateral))>=21 and terrain_slope_at(point)>0.78: return false
 	for station: float in generator.definition.log_pile_stations:
 		if absf(float(p.s)-station)<10 and float(p.distance)<11: return false
 	for river: Vector3 in generator.definition.river_crossings:
@@ -243,6 +257,35 @@ func _build_mountains() -> void:
 			child.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	sample.dressing = null
 	sample.free()
+
+
+func _build_highland_edges() -> void:
+	if generator.definition.environment_id!="highland": return
+	var rocks := RallySampleMeshes.new()
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(generator.definition.seed_value)
+	for section: Vector3 in generator.definition.mountain_cliff_sections:
+		var mountain_side := signf(section.z)
+		var s := section.x+18.0
+		while s<section.y-14:
+			var half := route.width_at(s)*.5
+			var shoulder := ground_at(s,mountain_side*(half+15+rng.randf_range(-2,5)))
+			var along := rng.randf_range(-9,9)
+			var at := to_local(shoulder+route.tangent_at(s)*along)
+			var height := rng.randf_range(2.5,6.5)
+			var span := rng.randf_range(2.5,5.5)
+			var rock_color := Color("64767b").lerp(Color("879293"),rng.randf_range(0,0.55))
+			rocks.ellipsoid(Vector3(span,height,span*rng.randf_range(.65,1.15)),at+Vector3.UP*height*.42,rock_color,Vector3(0,rng.randf_range(-PI,PI),rng.randf_range(-.12,.12)))
+			s += rng.randf_range(32,48)
+	var face := MeshInstance3D.new()
+	face.name = "HighlandRidgeOutcrops"
+	face.mesh = rocks.finish()
+	face.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
+	var material := StandardMaterial3D.new()
+	material.vertex_color_use_as_albedo = true
+	material.roughness = 1
+	face.material_override = material
+	dressing.add_child(face)
 
 
 func _build_obstacles() -> void:
