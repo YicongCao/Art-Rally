@@ -1,6 +1,7 @@
 # Art Rally — 素材与工具名单
 
 - 游戏与车辆设计、原创涂装、程序地景：Art Rally。没有汽车厂商标志、真实赞助商或第三方车型模型。
+- 主菜单七枚 SVG 图标与三主题矢量场景插画：项目原创，源文件位于 `assets/ui/icons/` 与 `scripts/game/menu_backdrop.gd`。
 - 车辆可编辑源：`art_source/vehicles/*.blend`，导出：`assets/vehicles/*.glb`，可用 `blender --background --python scripts/generate_vehicles.py` 重建。
 - 声音与菜单音乐：项目原创程序合成，生成脚本 `scripts/generate_audio.py`。没有外部录音、在线音源或 Kenney 资源混入包内。
 - Godot Engine：MIT，https://godotengine.org/license/ 。运行时许可与第三方依赖名单见随包 `Godot-LICENSE.txt`、`Godot-THIRD-PARTY.json`。

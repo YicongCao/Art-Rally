@@ -143,18 +143,67 @@ func _card(parent: Node) -> VBoxContainer:
 func show_home() -> void:
 	audio.set_scene()
 	_page("穿过山野，追逐下一秒。","三条风景赛段 · 三种驾驶性格 · 你的最佳轨迹", "home")
-	var left := VBoxContainer.new()
-	left.custom_minimum_size.x = 340
-	left.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	column.add_child(left)
-	_button(left,"开始计时挑战  →",func(): practice=false; tutorial=false; show_stages()).grab_focus()
-	_button(left,"自由练习",func(): practice=true; tutorial=false; show_stages())
-	_button(left,"驾驶教学 · 约 2 分钟",show_tutorial)
-	_button(left,"成绩册",show_records)
-	_button(left,"设置与声音试听",show_settings)
-	_button(left,"制作名单",show_credits)
-	_button(left,"退出游戏",func(): get_tree().quit())
+	var main := _row(column)
+	main.add_theme_constant_override("separation",12)
+	var challenge := _menu_tile(main,"开始计时挑战  →","3 条赛道 / 3 辆赛车 / 9 个挑战","challenge",Color("e2b671"),func(): practice=false; tutorial=false; show_stages(),true)
+	challenge.size_flags_stretch_ratio = 2
+	challenge.custom_minimum_size.x = 340
+	challenge.grab_focus()
+	_menu_tile(main,"自由练习","熟悉路线，找到你的节奏","practice",Color("346e63"),func(): practice=true; tutorial=false; show_stages(),true)
+	_menu_tile(main,"设置","操作 · 画面 · 声音","settings",Color("375463"),show_settings,true)
+	var secondary := _row(column)
+	secondary.add_theme_constant_override("separation",12)
+	_menu_tile(secondary,"驾驶教学","约 2 分钟","learn",Color("263f3b"),show_tutorial,false)
+	_menu_tile(secondary,"成绩册","你的最佳轨迹","records",Color("263f3b"),show_records,false)
+	_menu_tile(secondary,"制作名单","幕后与鸣谢","credits",Color("263f3b"),show_credits,false)
+	_menu_tile(secondary,"退出游戏","","exit",Color("293a39"),func(): get_tree().quit(),false)
 	_label(column,"W / S 加速制动    A / D 转向    空格 手刹    R 恢复    C 镜头    Esc 暂停\n手柄：左右扳机加速 / 制动，左摇杆转向，A 手刹，Y 恢复，X 镜头",15,Color("b4c6b8"))
+
+
+func _menu_tile(parent: Node,title: String,caption: String,icon: String,color: Color,action: Callable,large: bool) -> Button:
+	var tile := _button(parent,title,action)
+	tile.custom_minimum_size = Vector2(210,218) if large else Vector2(172,88)
+	tile.size_flags_horizontal = Control.SIZE_EXPAND_FILL if large else Control.SIZE_SHRINK_BEGIN
+	tile.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	tile.tooltip_text = title.replace("  →", "") + (" · " + caption if not caption.is_empty() else "")
+	var ink := Color("183b34") if icon == "challenge" else Color("f4ead6")
+	for state: String in ["normal","hover","pressed","focus","disabled"]:
+		var style := StyleBoxFlat.new()
+		style.bg_color = color.lightened(.10) if state == "hover" else (color.darkened(.12) if state == "pressed" else color)
+		if state == "focus":
+			style.bg_color = Color.TRANSPARENT
+			style.border_color = ink
+			style.set_border_width_all(3)
+			style.border_blend = true
+		tile.add_theme_stylebox_override(state,style)
+		# Keep Button.text for accessibility and navigation; the child labels provide tile layout.
+		tile.add_theme_color_override("font_" + state + "_color" if state != "normal" else "font_color",Color.TRANSPARENT)
+	var margins := MarginContainer.new()
+	margins.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	margins.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	for side: String in ["left","right","top","bottom"]: margins.add_theme_constant_override("margin_" + side,24 if large else 14)
+	tile.add_child(margins)
+	var content := VBoxContainer.new()
+	content.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	content.add_theme_constant_override("separation",5)
+	margins.add_child(content)
+	var glyph := TextureRect.new()
+	glyph.texture = load("res://assets/ui/icons/" + icon + ".svg")
+	glyph.custom_minimum_size = Vector2(54,54) if large else Vector2(26,26)
+	glyph.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	glyph.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	glyph.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	glyph.self_modulate = ink
+	glyph.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	content.add_child(glyph)
+	if large:
+		var space := Control.new()
+		space.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		space.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		content.add_child(space)
+	_label(content,title.replace("  →", ""),29 if large else 18,ink)
+	if large: _label(content,caption,15,ink.lightened(.06) if icon == "challenge" else Color("cad9d2"))
+	return tile
 
 
 func show_stages() -> void:
@@ -165,6 +214,7 @@ func show_stages() -> void:
 		var card := _card(row)
 		var preview := RallyMenuBackdrop.new()
 		preview.biome = definition.environment_id
+		preview.ink_wash = false
 		preview.custom_minimum_size = Vector2(260,155)
 		card.add_child(preview)
 		_label(card,definition.title,26)
