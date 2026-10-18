@@ -29,12 +29,6 @@ func build(settings: RallyStageDefinition) -> void:
 		if settings.elevation_profile!=Vector2.ZERO:
 			point.y = lerpf(settings.elevation_profile.x,settings.elevation_profile.y,s/length)
 		point.y += settings.rolling_amplitude*sin(s*TAU/190)*sin(s*TAU/370)*smoothstep(50,120,s)*(1-smoothstep(length-180,length-60,s))
-		var roughness := 0.006 if settings.surface_id(s) == 0 else 0.025
-		# Engineered bridge approaches suppress gravel chatter before the authored crest.
-		for bridge: Vector3 in settings.river_crossings:
-			var smooth_deck := 1-smoothstep(bridge.y*.5+24,bridge.y*.5+32,absf(s-bridge.x))
-			roughness = lerpf(roughness,.003,smooth_deck)
-		point.y += roughness * sin(s * 1.3) * sin(s * 0.17)
 		for crest: Vector3 in settings.crests:
 			point.y += crest.y*exp(-pow((s-crest.x)/maxf(crest.z,0.1),2))
 		for bridge: Vector3 in settings.river_crossings:
@@ -111,6 +105,7 @@ func _build_notes() -> void:
 			notes.append({"s": distances[i], "code": direction + "_" + severity})
 			last_turn = distances[i]
 	var hazards := definition.hazard_notes.duplicate(true)
+	for station: float in definition.log_pile_stations: hazards.append({"s":station,"code":"LOGS"})
 	hazards.append({"s":length-30.0,"code":"FINISH"})
 	for note: Dictionary in hazards:
 		# Keep a clear announcement window around hazards rather than overwriting them with a bend.
@@ -132,3 +127,16 @@ func validate() -> PackedStringArray:
 			if Vector2(points[i].x - points[j].x, points[i].z - points[j].z).length() < 14:
 				errors.append("Nonadjacent road overlap %d/%d" % [i, j])
 	return errors
+
+
+func road_relief(s: float,lateral: float) -> float:
+	var half := width_at(s)*.5
+	if absf(lateral)>=half+1.2: return 0.0
+	var bank := 0.0
+	for section: Vector3 in definition.bank_sections:
+		var amount := smoothstep(section.x,section.x+14,s)*(1-smoothstep(section.y-14,section.y,s))
+		if amount<=0: continue
+		var middle := (section.x+section.y)*.5
+		var outside := signf(tangent_at(middle-10).signed_angle_to(tangent_at(middle+10),Vector3.UP))
+		bank += section.z*outside*lateral/maxf(half,1)*amount*definition.relief_weight(s)
+	return (definition.bumps_at(s,lateral)+bank)*(1-smoothstep(half,half+1.2,absf(lateral)))

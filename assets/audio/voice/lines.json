@@ -180,5 +180,19 @@
     "code": "preview",
     "text": "准备好了吗？左三，接右三。",
     "seconds": 2.4059583333333334
+  },
+  {
+    "voice": "female",
+    "speaker": "zf_001",
+    "code": "LOGS",
+    "text": "圆木障碍，不要切弯。",
+    "seconds": 1.6905833333333333
+  },
+  {
+    "voice": "male",
+    "speaker": "zm_010",
+    "code": "LOGS",
+    "text": "圆木障碍，不要切弯。",
+    "seconds": 1.9536666666666667
   }
 ]

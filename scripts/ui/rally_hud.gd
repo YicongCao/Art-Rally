@@ -8,7 +8,7 @@ const MUTED := Color("ccd5ce")
 const RED := Color("e56b4f")
 const HANDBRAKE_ICON: Texture2D = preload("res://assets/ui/icons/handbrake.svg")
 const SHIFT_ICON: Texture2D = preload("res://assets/ui/icons/shift.svg")
-const NOTE_TEXT := {"LEFT_MEDIUM":"左弯 3", "RIGHT_MEDIUM":"右弯 3", "LEFT_TIGHT":"左急弯", "RIGHT_TIGHT":"右急弯", "CAUTION_NARROW":"注意 · 收窄勿切", "CUT":"弯心平整 · 可小切", "MUD_NARROW":"泥地 · 收窄", "WATER":"积水 · 减速", "ASPHALT":"进入柏油", "GRAVEL":"进入砂石", "CREST_JUMP":"坡顶 · 跳跃", "FINISH":"终点"}
+const NOTE_TEXT := {"LEFT_MEDIUM":"左弯 3", "RIGHT_MEDIUM":"右弯 3", "LEFT_TIGHT":"左急弯", "RIGHT_TIGHT":"右急弯", "LOGS":"圆木障碍 · 勿切", "CAUTION_NARROW":"注意 · 收窄勿切", "CUT":"弯心平整 · 可小切", "MUD_NARROW":"泥地 · 收窄", "WATER":"积水 · 减速", "ASPHALT":"进入柏油", "GRAVEL":"进入砂石", "CREST_JUMP":"坡顶 · 跳跃", "FINISH":"终点"}
 var title_font: Font = RallyFonts.bold()
 var number_font: Font = RallyFonts.mono_bold()
 var text_font: Font = RallyFonts.regular()
@@ -208,6 +208,13 @@ func _draw_note() -> void:
 		draw_texture_rect(RallyGateSymbols.texture("finish"),Rect2(at-Vector2(25,25),Vector2(50,50)),false)
 	elif code == "CREST_JUMP":
 		draw_polyline(PackedVector2Array([at+Vector2(-24,14),at+Vector2(-8,-3),at+Vector2(7,-3),at+Vector2(25,14)]),AMBER,4,true)
+	elif code == "LOGS":
+		for row: int in range(3):
+			for col: int in range(3-row):
+				var center := at+Vector2((col-(2-row)*.5)*15,12-row*13)
+				draw_circle(center,6.5,AMBER,false,2,true)
+				draw_circle(center,2.8,PAPER,false,1,true)
+		draw_line(at+Vector2(-24,24),at+Vector2(24,-24),RED,3,true)
 	elif code == "CUT":
 		draw_polyline(PackedVector2Array([at+Vector2(-20,22),at+Vector2(12,-18),at+Vector2(22,-18)]),Color("9fc9c5"),4,true)
 		draw_arc(at+Vector2(19,20),35,PI,PI*1.5,12,PAPER,2,true)

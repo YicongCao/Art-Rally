@@ -22,7 +22,7 @@ extends Resource
 ])
 
 
-@export var stage_version: String = "5"
+@export var stage_version: String = "6"
 @export_enum("autumn", "coast", "highland") var environment_id: String = "autumn"
 @export var subtitle: String = "秋日山林 · 混合路面"
 @export var surface_sections := PackedVector3Array([Vector3(1150,1650,2),Vector3(1650,2100,0)])
@@ -36,6 +36,11 @@ extends Resource
 @export var guardrail_sections := PackedVector2Array([Vector2(1680,2080)])
 @export var spectators := PackedFloat32Array([80,320,503,840,1150,1500,1880,2200,2560,2970])
 @export var landmarks: Array[Dictionary] = [{"s":480.0,"kind":"cabin","side":-1.0}]
+# Authored sparse relief: centre, length, amplitude in metres. Banking stores
+# start, end and outside-edge elevation; negative values are adverse camber.
+@export var rough_patches := PackedVector3Array()
+@export var bank_sections := PackedVector3Array()
+@export var log_pile_stations := PackedFloat32Array()
 @export var split_fractions := PackedFloat32Array([0.333333,0.666667,1.0])
 
 
@@ -105,3 +110,23 @@ func surface_summary() -> String:
 		remaining-=percent
 		bits.append("%s %d%%"%[["柏油","砂石","泥地"][i],percent])
 	return " / ".join(bits)
+
+
+func relief_weight(s: float) -> float:
+	var weight := (1-surface_weights(s).x)*smoothstep(50,80,s)*(1-smoothstep(target_length-100,target_length-50,s))
+	for bridge: Vector3 in river_crossings:
+		weight *= smoothstep(bridge.y*.5+24,bridge.y*.5+36,absf(s-bridge.x))
+	for crest: Vector3 in crests:
+		weight *= smoothstep(crest.z*2,crest.z*3,absf(s-crest.x))
+	return weight
+
+
+func bumps_at(s: float,lateral: float) -> float:
+	var height := 0.0
+	for patch: Vector3 in rough_patches:
+		var envelope := 1-smoothstep(patch.y*.3,patch.y*.5,absf(s-patch.x))
+		if envelope<=0: continue
+		# Long enough wavelengths for the 2m collision samples; lateral phase
+		# gives left/right wheels different motion instead of uniform pitching.
+		height += patch.z*envelope*sin((s-patch.x)*TAU/10+lateral*.7)*(.7+.3*cos(lateral*1.3))
+	return height*relief_weight(s)

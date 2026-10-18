@@ -25,7 +25,7 @@ func _run() -> void:
 		app.audio.apply_settings(app.prefs)
 		for code: String in RallyHUD.NOTE_TEXT:
 			app.audio.speak_note(code)
-			check(app.audio.voice.stream!=null and app.audio.voice.stream.get_length()>.2,voice+" has a bundled "+code+" call")
+			check(app.audio.last_note==code and app.audio.voice.stream!=null and app.audio.voice.stream.resource_path=="res://assets/audio/voice/%s/%s.wav"%[voice,code] and app.audio.voice.stream.get_length()>.2,voice+" has a bundled "+code+" call")
 	app.prefs.set_value("voice","off")
 	app.audio.apply_settings(app.prefs)
 	app.audio.speak_note("LEFT_MEDIUM")

@@ -15,7 +15,7 @@ func _run() -> void:
 	for i: int in range(0, route.points.size(), 10):
 		for lateral: float in [-2.2, 0, 2.2]:
 			# Avoid exact triangle vertices where ray/edge ownership is numerically ambiguous.
-			var p := route.points[i] + route.rights[i] * lateral + route.tangents[i] * 0.01
+			var p := generator.surface_position_at(route.distances[i],lateral) + route.tangents[i] * 0.01
 			var hit := space.intersect_ray(PhysicsRayQueryParameters3D.create(p + Vector3.UP * 5, p - Vector3.UP * 5, 1))
 			if hit.is_empty(): misses += 1
 			elif absf(hit.position.y - p.y) > 0.02 or hit.normal.y < 0.8: bad_height += 1

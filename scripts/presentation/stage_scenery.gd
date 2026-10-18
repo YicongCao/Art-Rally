@@ -18,6 +18,10 @@ var bounds := AABB()
 var sailboats: Array[Dictionary] = []
 var river_frames: Array[Dictionary] = []
 var utility_line := RallyUtilityLine.new()
+var terrain_start := Vector2.ZERO
+var terrain_count := Vector2i.ZERO
+var terrain_vertices := PackedVector3Array()
+var log_piles: Array[Node3D] = []
 
 
 func build(stage: RallyStageGenerator) -> void:
@@ -52,6 +56,7 @@ func build(stage: RallyStageGenerator) -> void:
 	RallyStageLandmarks.build(self)
 	RallyRiverBridges.build(self)
 	utility_line.build(self)
+	RallyLogPiles.build(self)
 	_build_obstacles()
 	_build_guardrails()
 	_build_gravel()
@@ -131,17 +136,19 @@ func height_at(x: float,z: float) -> float:
 
 func ground_at(s: float,lateral: float) -> Vector3:
 	var at := route.position_at(s)+route.rights[route.index_at(s)]*lateral
-	if absf(lateral) < 21:
-		var d := absf(lateral)-route.width_at(s)*0.5
-		at.y -= minf(maxf(d,0)*0.18,2.3)
-		at.y += smoothstep(1.5,10,d)*0.5*sin(s*0.03+lateral*0.2)
-	else: at.y = height_at(at.x,at.z)
+	if absf(lateral) < 21: return generator.surface_position_at(s,lateral)
+	at.y = rendered_height_at(at.x,at.z)
 	return at
 
 
 func allows_decoration(point: Vector3, kind: String, scale_factor: float) -> bool:
 	if kind in ["pine","umbrella","rock"] and not utility_line.allows_tree(point): return false
 	var p := nearest(point)
+	# Vertical trunks on nearly vertical mesh faces still read as floating.
+	# Keep forest on plantable slopes; leave cliff faces bare.
+	if kind in ["pine","umbrella"] and absf(float(p.lateral))>=21 and terrain_slope_at(point)>1.15: return false
+	for station: float in generator.definition.log_pile_stations:
+		if absf(float(p.s)-station)<10 and float(p.distance)<11: return false
 	for river: Vector3 in generator.definition.river_crossings:
 		if absf(float(p.s)-river.x)<river.y*.5+10 and absf(float(p.lateral))<125: return false
 	if absf(float(p.s)-route.length*.51)<22 and float(p.lateral)>5 and float(p.lateral)<19: return false
@@ -180,6 +187,9 @@ func _build_terrain() -> void:
 			var px := start.x+x*8
 			var pz := start.y+z*8
 			vertices.append(Vector3(px,height_at(px,pz),pz))
+	terrain_start = start
+	terrain_count = count
+	terrain_vertices = vertices
 	var tool := SurfaceTool.new()
 	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
 	for z: int in range(count.y):
@@ -391,3 +401,24 @@ func _build_landmarks() -> void:
 		var mesh := MeshInstance3D.new()
 		mesh.mesh = builder.finish()
 		root.add_child(mesh)
+
+
+func rendered_height_at(x: float,z: float) -> float:
+	# Interpolate the exact triangles used by StageTerrain, not the analytic
+	# noise function between 8m samples (which can float metres over slopes).
+	if terrain_vertices.is_empty(): return height_at(x,z)
+	var cell := (Vector2(x,z)-terrain_start)/8.0
+	var ix := clampi(floori(cell.x),0,terrain_count.x-1)
+	var iz := clampi(floori(cell.y),0,terrain_count.y-1)
+	var u := clampf(cell.x-ix,0,1)
+	var v := clampf(cell.y-iz,0,1)
+	var a := iz*(terrain_count.x+1)+ix
+	var b := a+terrain_count.x+1
+	if u>=v: return terrain_vertices[a].y*(1-u)+terrain_vertices[a+1].y*(u-v)+terrain_vertices[b+1].y*v
+	return terrain_vertices[a].y*(1-v)+terrain_vertices[b+1].y*u+terrain_vertices[b].y*(v-u)
+
+
+func terrain_slope_at(point: Vector3) -> float:
+	var dx := (rendered_height_at(point.x+.5,point.z)-rendered_height_at(point.x-.5,point.z))
+	var dz := (rendered_height_at(point.x,point.z+.5)-rendered_height_at(point.x,point.z-.5))
+	return Vector2(dx,dz).length()

@@ -3,7 +3,7 @@ extends RallyDrivingRuntime
 const NOTE_TEXT := {
 	"LEFT_MEDIUM": "左弯 3", "RIGHT_MEDIUM": "右弯 3",
 	"LEFT_TIGHT": "左急弯 / 减速", "RIGHT_TIGHT": "右急弯 / 减速",
-	"CAUTION_NARROW":"注意 · 收窄勿切", "CUT":"弯心平整 · 可小切", "MUD_NARROW": "泥地 · 路面收窄", "WATER": "前方积水 · 减速直行",
+	"LOGS":"圆木障碍 · 勿切", "CAUTION_NARROW":"注意 · 收窄勿切", "CUT":"弯心平整 · 可小切", "MUD_NARROW": "泥地 · 路面收窄", "WATER": "前方积水 · 减速直行",
 	"ASPHALT": "进入柏油", "GRAVEL": "进入砂石", "CREST_JUMP": "坡顶跳跃 · 保持直线",
 	"FINISH": "终点 · 通过后减速",
 }

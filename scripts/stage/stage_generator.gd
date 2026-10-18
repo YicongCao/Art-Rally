@@ -93,6 +93,7 @@ func vertex_at(index: int, column: int) -> Vector3:
 		var edge_distance := absf(lateral) - half
 		point.y -= minf(edge_distance * 0.18, 2.3)
 		point.y += smoothstep(1.5, 10, edge_distance) * 0.5 * sin(s * 0.03 + lateral * 0.2)
+	point.y += route.road_relief(s,lateral)
 	for river: Vector3 in definition.river_crossings:
 		if absf(s-river.x)<river.y*.5+5 and absf(lateral)>half+1.1:
 			point.y-=3.5*(1-smoothstep(river.y*.5,river.y*.5+5,absf(s-river.x)))*smoothstep(half+1.1,half+4,absf(lateral))
@@ -224,3 +225,21 @@ func build_incremental(progress: Callable) -> void:
 	_build_markers()
 	_build_culvert()
 	_build_runout()
+
+
+func surface_position_at(s: float,lateral: float) -> Vector3:
+	# Same barycentric interpolation as the road triangles. Decorations follow
+	# the rendered/colliding surface, including bumps and banking.
+	var i := route.index_at(s)
+	var half := route.width_at(s)*.5
+	var offsets := PackedFloat64Array([-22,-12,-half-1.2,-half,0,half,half+1.2,12,22])
+	var column := 0
+	while column<7 and lateral>offsets[column+1]: column+=1
+	var u := clampf((s-route.distances[i])/route.spacing,0,1)
+	var v := clampf((lateral-offsets[column])/(offsets[column+1]-offsets[column]),0,1)
+	var a := vertex_at(i,column)
+	var b := vertex_at(i+1,column)
+	var c := vertex_at(i,column+1)
+	var d := vertex_at(i+1,column+1)
+	if u+v<=1: return a*(1-u-v)+b*u+c*v
+	return c*(1-u)+b*(1-v)+d*(u+v-1)
