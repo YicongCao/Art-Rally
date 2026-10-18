@@ -65,26 +65,81 @@ func finish() -> ArrayMesh:
 	return mesh
 
 
+# Shared geometry stays inside the existing tree clearance envelope. The named
+# "umbrella" placement now carries an autumn broadleaf crown, keeping placement
+# seeds and collision bodies stable while changing the visual silhouette.
 static func pine(seed_value: int, umbrella: bool) -> ArrayMesh:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = seed_value
 	var builder := RallySampleMeshes.new()
-	var bark := Color("685440")
-	builder.cone(0.21,0.08,6.2,Vector3(0,3.1,0),bark)
+	var bark := Color("78717c") if umbrella else Color("685047")
+	builder.cone(0.19,0.045,7.4,Vector3(0,3.7,0),bark,7)
 	if umbrella:
-		for i: int in range(8):
-			var a := i*TAU/8+0.3
-			var at := Vector3(cos(a)*rng.randf_range(0.7,1.8),rng.randf_range(4.5,6.0),sin(a)*rng.randf_range(0.7,1.8))
-			builder.beam(Vector3(0,3.2,0),at,0.10,bark)
-			builder.ellipsoid(Vector3(rng.randf_range(1.0,1.6),0.7,rng.randf_range(0.9,1.6)),at,Color("3b5533").lightened(rng.randf_range(0,0.13)))
-		builder.ellipsoid(Vector3(1.7,0.85,1.5),Vector3(0,6.3,0),Color("52633a"))
+		var palette: Array[Color] = [Color("e97428"),Color("d7a833"),Color("cb533f")]
+		var crown_color := palette[posmod(seed_value / 19,3)]
+		for i: int in range(16):
+			var angle := i*2.39996
+			var radius := rng.randf_range(0.6,1.55)
+			var at := Vector3(cos(angle)*radius,rng.randf_range(4.8,7.3),sin(angle)*radius)
+			builder.beam(Vector3(0,2.7+i*0.16,0),at,0.065,bark)
+			# Small, intersecting opaque leaves give the crown a broken edge without
+			# alpha overdraw or camera-facing billboards.
+			for leaf: int in range(60):
+				var offset := Vector3(rng.randf_range(-1,1),rng.randf_range(-0.85,0.85),rng.randf_range(-1,1))
+				if offset.length_squared()>1.25: offset *= 0.65
+				var center := at+offset
+				var rotation := Basis.from_euler(Vector3(rng.randf_range(-1.1,1.1),rng.randf()*TAU,rng.randf_range(-0.8,0.8)))
+				var across := rotation*Vector3(rng.randf_range(0.12,0.22),0,0)
+				var up := rotation*Vector3(0,rng.randf_range(0.16,0.30),0)
+				var color := crown_color.darkened(rng.randf_range(0,0.22)).lightened(rng.randf_range(0,0.10))
+				builder.leaf(center,across,up,color)
 	else:
-		for i: int in range(6):
-			var y := 2.0+i*0.82
-			var radius := 1.9-i*0.25
-			var offset := Vector3(rng.randf_range(-0.18,0.18),y,rng.randf_range(-0.18,0.18))
-			builder.cone(radius,0.07,2.3-i*0.12,offset,Color("254638").lightened(rng.randf_range(0.0,0.09)),9)
-	return builder.finish()
+		var palette: Array[Color] = [Color("397b56"),Color("356c68"),Color("cfaa35")]
+		var needles := palette[posmod(seed_value / 39,3)]
+		for tier: int in range(18):
+			var y := 1.5+tier*0.36
+			var radius := (2.1-tier*0.108)*rng.randf_range(0.88,1.08)
+			for branch: int in range(7):
+				var angle := branch*TAU/7+tier*1.31
+				var outward := Vector3(cos(angle),0,sin(angle))
+				var side := Vector3(-sin(angle),0,cos(angle))
+				var start := Vector3(0,y+0.30,0)
+				var color := needles.lightened(rng.randf_range(0,0.12)).darkened(rng.randf_range(0,0.12))
+				# Serrated branch fans replace stacked solid cones. Each fan has a
+				# raised spine and drooping, alternating needle tips.
+				for segment: int in range(5):
+					var t0 := segment/5.0
+					var t1 := (segment+1)/5.0
+					var c0 := start+outward*radius*t0-Vector3.UP*t0*t0*0.72
+					var c1 := start+outward*radius*t1-Vector3.UP*t1*t1*0.72
+					var width := radius*0.46*(1.0-t0)
+					for sign_value: float in [-1,1]:
+						var tooth := c0+side*width*sign_value+outward*radius*0.20-Vector3.UP*0.13
+						var next_edge := c1+side*radius*0.34*(1.0-t1)*sign_value-Vector3.UP*0.10
+						builder.triangle(c0,tooth,c1,color)
+						builder.triangle(tooth,next_edge,c1,color.darkened(0.04))
+		builder.cone(0.27,0,1.15,Vector3(0,8.0,0),needles,7)
+	var mesh := builder.finish()
+	mesh.surface_set_material(0,foliage_material(false))
+	return mesh
+
+
+func triangle(a: Vector3,b: Vector3,c: Vector3,color: Color) -> void:
+	tool.set_color(color.srgb_to_linear())
+	tool.set_smooth_group(-1)
+	for point: Vector3 in [a,b,c]: tool.add_vertex(point)
+
+
+func leaf(center: Vector3,across: Vector3,up: Vector3,color: Color) -> void:
+	triangle(center-up,center-across,center+up,color)
+	triangle(center-up,center+up,center+across,color.lightened(0.04))
+
+
+static func foliage_material(grass_blades: bool) -> ShaderMaterial:
+	var material := ShaderMaterial.new()
+	material.shader = preload("res://assets/shaders/autumn_foliage.gdshader")
+	material.set_shader_parameter("grass_blades",grass_blades)
+	return material
 
 
 static func tree_shadow(umbrella: bool) -> ArrayMesh:
@@ -101,8 +156,8 @@ static func rock(seed_value: int) -> ArrayMesh:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = seed_value
 	var builder := RallySampleMeshes.new()
-	builder.ellipsoid(Vector3(1,0.8,0.9),Vector3(0,0.45,0),Color("86836c"),Vector3(0.2,rng.randf()*TAU,0.25))
-	builder.ellipsoid(Vector3(0.7,0.55,0.7),Vector3(0.55,0.25,0.1),Color("999079"),Vector3(0.3,0.7,0.15))
+	builder.ellipsoid(Vector3(1,0.8,0.9),Vector3(0,0.45,0),Color("929eaa"),Vector3(0.2,rng.randf()*TAU,0.25))
+	builder.ellipsoid(Vector3(0.7,0.55,0.7),Vector3(0.55,0.25,0.1),Color("aab3bd"),Vector3(0.3,0.7,0.15))
 	return builder.finish()
 
 
@@ -110,22 +165,32 @@ static func shrub(seed_value: int) -> ArrayMesh:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = seed_value
 	var builder := RallySampleMeshes.new()
-	for i: int in range(5):
-		builder.ellipsoid(Vector3(0.5,0.42,0.45),Vector3(rng.randf_range(-0.4,0.4),rng.randf_range(0.3,0.65),rng.randf_range(-0.4,0.4)),Color("626d37").darkened(rng.randf_range(0,0.25)))
-	return builder.finish()
+	var palette: Array[Color] = [Color("bd6444"),Color("b7a443"),Color("698460")]
+	var color := palette[posmod(seed_value,3)]
+	for i: int in range(90):
+		var angle := rng.randf()*TAU
+		var at := Vector3(cos(angle)*rng.randf_range(0.1,0.55),rng.randf_range(0.2,0.85),sin(angle)*rng.randf_range(0.1,0.55))
+		builder.leaf(at,Vector3(cos(angle)*0.10,0,sin(angle)*0.10),Vector3(0,0.14,0),color.darkened(rng.randf_range(0,0.2)))
+	var mesh := builder.finish()
+	mesh.surface_set_material(0,foliage_material(false))
+	return mesh
 
 
 static func grass(seed_value: int) -> ArrayMesh:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = seed_value
 	var builder := RallySampleMeshes.new()
-	for i: int in range(9):
+	for i: int in range(32):
 		var a := rng.randf()*TAU
-		var base := Vector3(cos(a),0,sin(a))*rng.randf_range(0.02,0.22)
-		var across := Vector3(-sin(a),0,cos(a))*0.045
-		var tip := base+Vector3(cos(a)*0.22,rng.randf_range(0.22,0.60),sin(a)*0.22)
-		var middle := base.lerp(tip,0.6)+Vector3.UP*0.05
+		var base := Vector3(cos(a),0,sin(a))*rng.randf_range(0.02,0.82)
+		var across := Vector3(-sin(a),0,cos(a))*rng.randf_range(0.018,0.035)
+		var tip := base+Vector3(cos(a)*0.20,rng.randf_range(0.32,0.78),sin(a)*0.20)
+		var middle := base.lerp(tip,0.6)+Vector3.UP*0.04
+		var shade := rng.randf_range(0,0.13)
 		for v: Vector3 in [base-across,middle+across,middle-across,base-across,base+across,middle+across,middle-across,middle+across,tip]:
-			builder.tool.set_color(Color("a2a064").lerp(Color("576335"),rng.randf()).srgb_to_linear())
+			var color := Color("b78b36").lerp(Color("f3cd65"),clampf(v.y/0.55,0,1)).darkened(shade)
+			builder.tool.set_color(color.srgb_to_linear())
 			builder.tool.add_vertex(v)
-	return builder.finish()
+	var mesh := builder.finish()
+	mesh.surface_set_material(0,foliage_material(true))
+	return mesh

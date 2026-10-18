@@ -11,8 +11,6 @@ void vertex() {
 
 void fragment() {
 	float light = clamp(dot(normalize(face_normal), sun_direction) * 0.5 + 0.5, 0.0, 1.0);
-	// Discrete values keep triangular planes readable instead of a soft noise cloud.
-	light = floor(light * 4.0 + 0.5) / 4.0;
-	vec3 shade = mix(vec3(0.48, 0.56, 0.66), vec3(1.0, 0.91, 0.75), light);
-	ALBEDO = mix(shade, vec3(0.66, 0.76, 0.83), distant_layer * 0.28);
+	vec3 shade = mix(vec3(0.56, 0.47, 0.61), vec3(1.0, 0.82, 0.63), light);
+	ALBEDO = mix(shade, vec3(0.80, 0.65, 0.71), distant_layer * 0.38);
 }

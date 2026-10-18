@@ -3,8 +3,8 @@ extends RefCounted
 
 # Art-directed 16:00 look, not an astronomical simulation without location/season.
 const SUN_ELEVATION_DEGREES := 24.0
-const SUN_COLOR := Color("ffdda5")
-const SUN_ENERGY := 1.10
+const SUN_COLOR := Color("ffe0b0")
+const SUN_ENERGY := 1.25
 var sun_direction := Vector3.UP
 var cloud_root := Node3D.new()
 var near_clouds: Array[MeshInstance3D] = []
@@ -63,7 +63,7 @@ static func cloud_mesh(seed_value: int, light: Vector3, layer: int) -> ArrayMesh
 		var at := Vector3((puff - 3) * 22.0, rng.randf_range(-3, 4), rng.randf_range(-15, 15))
 		var width := rng.randf_range(24, 40)
 		var depth := rng.randf_range(19, 32)
-		var height := rng.randf_range(16, 32)
+		var height := rng.randf_range(6, 12)
 		var rings: Array[PackedVector3Array] = []
 		for band: int in range(3):
 			var ring := PackedVector3Array()

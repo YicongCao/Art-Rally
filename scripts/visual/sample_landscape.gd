@@ -132,7 +132,7 @@ func _build_mountains() -> void:
 	var floor_mesh := PlaneMesh.new()
 	floor_mesh.size = Vector2(6000,6000)
 	var floor_material := StandardMaterial3D.new()
-	floor_material.albedo_color = Color("657969")
+	floor_material.albedo_color = Color("9ba4ba")
 	floor_material.roughness = 1
 	floor_material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	floor_mesh.material = floor_material
@@ -152,8 +152,8 @@ func _build_mountains() -> void:
 				var d := _mountain_point(ring,i+1,band+1)
 				for vertex: Vector3 in [a,c,b,b,c,d]:
 					var stone := smoothstep(30,140,vertex.y-center.y)
-					var base := Color("52684f").lerp(Color("a0a79e"),stone)
-					var color := base.lerp(Color("88acbd"),ring*0.26).darkened(0.09*sin(i*0.8+band))
+					var base := Color("8991ad").lerp(Color("b2bfd3"),stone)
+					var color := base.lerp(Color("b6cce1"),ring*0.26).darkened(0.035*sin(i*0.8+band))
 					tool.set_color(color.srgb_to_linear())
 					tool.set_smooth_group(-1)
 					tool.add_vertex(vertex)

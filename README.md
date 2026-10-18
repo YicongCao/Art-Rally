@@ -7,21 +7,21 @@
 <table>
   <tr>
     <td width="33%" align="center">
-      <a href="docs/previews/readme-gravel.jpg"><img src="docs/previews/readme-gravel.jpg" alt="砂石赛段实机画面：夕照山林、拉力赛车与驾驶 HUD" width="100%"></a><br>
-      <sub><b>夕照砂石 · 跟车视角</b></sub>
+      <a href="docs/previews/autumn-gravel.jpg"><img src="docs/previews/autumn-gravel.jpg" alt="砂石赛段实机画面：夕照山林、拉力赛车与驾驶 HUD" width="100%"></a><br>
+      <sub><b>秋日砂石 · 跟车视角</b></sub>
     </td>
     <td width="33%" align="center">
-      <a href="docs/previews/readme-debug.jpg"><img src="docs/previews/readme-debug.jpg" alt="实时调试实机画面：四轮状态、净扭矩滚动时间曲线、红色 G 值球与转速车速历史" width="100%"></a><br>
-      <sub><b>实时调试 · 四轮与动力可视化</b></sub>
+      <a href="docs/previews/autumn-mud.jpg"><img src="docs/previews/autumn-mud.jpg" alt="秋色泥地实机画面：金色草地、橙红树冠与自动驾驶 HUD" width="100%"></a><br>
+      <sub><b>秋色泥地 · 自动驾驶</b></sub>
     </td>
     <td width="33%" align="center">
-      <a href="docs/previews/readme-cockpit.jpg"><img src="docs/previews/readme-cockpit.jpg" alt="驾驶舱实机画面：赛车方向盘、数字仪表与柏油弯道" width="100%"></a><br>
+      <a href="docs/previews/autumn-cockpit.jpg"><img src="docs/previews/autumn-cockpit.jpg" alt="驾驶舱实机画面：赛车方向盘、数字仪表与柏油弯道" width="100%"></a><br>
       <sub><b>柏油弯道 · 赛车驾驶舱</b></sub>
     </td>
   </tr>
 </table>
 
-以上为当前版本的游戏实机截图，点击图片查看大图。
+以上为当前秋日视觉试作的自动驾驶实机截图，点击图片查看大图。画面采用金色草地、橙红阔叶林、细分枝叶松树、桃粉天空和蓝紫远山，设计说明与验证见 [秋日视觉方向](docs/ART_DIRECTION_AUTUMN.zh-CN.md)。
 
 ## 开发环境
 
@@ -57,6 +57,7 @@ macOS 首次安装：`brew install --cask godot`。Homebrew 跟随新版发布�
 ./scripts/dev.sh m6-perf # 1080p 跟车/驾驶舱/F9 三次完整性能与内存长跑
 ./scripts/dev.sh m6-release-check # 内置字体、1080p HUD、最小窗口与完赛流程检查
 ./scripts/dev.sh v02-tire-render-check # 真实窗口检查轮胎形变、动态接触斑与 F9 数据
+./scripts/dev.sh autumn-capture # 自动驾驶采集砂石、泥地、驾驶舱三张秋日实机图
 ./scripts/dev.sh controller-probe # 枚举当前真实手柄名称、GUID、映射与初始轴值
 ./scripts/dev.sh export-macos # 使用匹配模板生成 .app、ZIP 和 SHA-256
 ./scripts/dev.sh macos-app-check # 从导出包验证主场景、音频、字体、设置与成绩读写
@@ -74,7 +75,7 @@ macOS 导出要求安装与 `.godot-version` 完全一致的 4.7.2 模板；`doc
 
 Windows x86_64 包可由同一台 Mac 使用官方 4.7.2 模板交叉导出，不需要 Windows SDK。产物位于 `builds/windows/Art Rally/Art Rally.exe` 和 `Art-Rally-windows-x86_64.zip`，PCK 嵌入 EXE；目前没有 Authenticode 签名，可能触发 SmartScreen。macOS 只能校验 PE 结构和导出资源，不能运行 `.exe`；复制到 Windows 后执行 `powershell -ExecutionPolicy Bypass -File scripts/windows_smoke.ps1`，并重新完成 D3D12/Vulkan、镜头光斑、真实性能和手柄验收。
 
-简介区的三张实机截图可用 `godot --path . --max-fps 60 --script tests/readme_capture.gd -- --test-defaults` 批量更新，需要真实图形窗口；工具使用默认设置，不修改玩家的本机设置。
+简介区的三张实机截图可用 `./scripts/dev.sh autumn-capture` 批量更新，需要真实图形窗口；工具使用默认设置，不修改玩家的本机设置。
 
 ## 输入预设
 

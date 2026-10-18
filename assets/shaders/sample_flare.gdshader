@@ -46,7 +46,7 @@ void fragment() {
 		effect += exp(-dot(q,q) / 0.007) * vec3(0.30,0.16,0.055);
 		vec2 diagonal = vec2(q.x+q.y, q.y-q.x) * 0.70710678;
 		effect += exp(-abs(diagonal.x)*14.0-abs(diagonal.y)*420.0) * vec3(0.46,0.29,0.10);
-		effect *= visibility * strength;
+		effect *= visibility * strength * 0.24;
 	}
 	ALBEDO = effect;
 	EMISSION = vec3(0.0);

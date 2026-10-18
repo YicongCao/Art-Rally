@@ -49,9 +49,9 @@ func build_range(landscape: Node3D, start: float, end: float, density: float = 1
 		place("rock",s,lateral,rng.randf_range(0.18,0.65))
 	for i: int in range(int(60*multiplier)):
 		place("rock",rng.randf_range(range_start,range_end),rng.randf_range(8,24)*(-1 if i%2 else 1),rng.randf_range(0.7,2.7))
-	for i: int in range(int(3600*multiplier)):
+	for i: int in range(int(6400*multiplier)):
 		var s := rng.randf_range(range_start,range_end)
-		var lateral := rng.randf_range(3.0,16)*(-1 if i%2 else 1)
+		var lateral := rng.randf_range(4.05,22)*(-1 if i%2 else 1)
 		place("grass",s,lateral,rng.randf_range(0.65,1.4))
 	_flush()
 	for station: float in spectator_stations: _spectators(station)
@@ -116,7 +116,7 @@ func _flush() -> void:
 
 static func default_visibility(key: String) -> float:
 	if key.begins_with("shadow_"): return 210
-	if key.begins_with("grass"): return 80
+	if key.begins_with("grass"): return 105
 	if key.begins_with("shrub"): return 180
 	if key.begins_with("rock"): return 220
 	return 360
