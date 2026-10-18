@@ -23,6 +23,9 @@ var progress_bar: ProgressBar
 var binding_wait: String = ""
 var binding_button: Button
 var test_mode: bool = false
+var plate_input: LineEdit
+var plate_preview: RallyPlatePreview
+var plate_error: Label
 
 
 func _ready() -> void:
@@ -40,7 +43,8 @@ func _ready() -> void:
 	audio.apply_settings(prefs)
 	layer.layer = 40
 	add_child(layer)
-	show_home()
+	if not test_mode and str(profile.data.get("plate","")).is_empty(): show_plate_setup(true)
+	else: show_home()
 	if "--package-smoke" in OS.get_cmdline_user_args(): _package_check.call_deferred()
 
 
@@ -75,11 +79,20 @@ func _page(title: String, subtitle: String, name_id: String) -> void:
 	ui = Control.new()
 	ui.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	ui.theme = _theme()
+	var paper := name_id in ["briefing","plate"]
+	ui.set_meta("paper",paper)
 	layer.add_child(ui)
 	backdrop = RallyMenuBackdrop.new()
 	backdrop.biome = RallyContentCatalog.stage(chosen_stage).environment_id
 	backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	ui.add_child(backdrop)
+	if paper:
+		backdrop.visible = false
+		var ground := ColorRect.new()
+		ground.color = Color("f1f0e9")
+		ground.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		ground.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		ui.add_child(ground)
 	var margins := MarginContainer.new()
 	margins.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	for side: String in ["left","right"]: margins.add_theme_constant_override("margin_"+side,48)
@@ -91,9 +104,9 @@ func _page(title: String, subtitle: String, name_id: String) -> void:
 	column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	column.add_theme_constant_override("separation",14)
 	scroll.add_child(column)
-	_label(column,"ART / RALLY     —     FIRST PLAYABLE",15,Color("edbc75"))
+	_label(column,"ART / RALLY      —      " + ("DRIVER ID" if name_id == "plate" else "STAGE BRIEFING") if paper else "ART / RALLY     —     FIRST PLAYABLE",15,Color("ad4d36") if paper else Color("edbc75"))
 	_label(column,title,42)
-	_label(column,subtitle,17,Color("c8d5c7"))
+	_label(column,subtitle,17,Color("64716b") if paper else Color("c8d5c7"))
 	if not profile.message.is_empty(): _label(column,profile.message,16,Color("ffd38b"))
 
 
@@ -102,7 +115,7 @@ func _label(parent: Node,text: String,font_size: int = 18,color: Color = Color("
 	label.text = text
 	label.add_theme_font_size_override("font_size",font_size)
 	if font_size>=24: label.add_theme_font_override("font",RallyFonts.bold())
-	label.add_theme_color_override("font_color",color)
+	label.add_theme_color_override("font_color",Color("1c302b") if ui.get_meta("paper",false) and color == Color("f3ead2") else color)
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	parent.add_child(label)
@@ -257,7 +270,9 @@ func _vehicle_preview(parent: Node,definition: RallyVehicleDefinition) -> void:
 	container.add_child(viewport)
 	var body := Node3D.new()
 	viewport.add_child(body)
-	if ResourceLoader.exists(definition.model_path): body.add_child(load(definition.model_path).instantiate())
+	if ResourceLoader.exists(definition.model_path):
+		body.add_child(load(definition.model_path).instantiate())
+		RallyVehiclePlate.attach(body,definition,str(profile.data.get("plate","")))
 	for side: float in [-1,1]:
 		for axle: float in [-1,1]:
 			var wheel := MeshInstance3D.new()
@@ -292,14 +307,72 @@ func _vehicle_preview(parent: Node,definition: RallyVehicleDefinition) -> void:
 
 func show_briefing() -> void:
 	var challenge := RallyContentCatalog.challenge(chosen_stage,chosen_vehicle)
-	_page(challenge.stage.title,challenge.vehicle.title+" · "+("练习" if practice else "计时挑战"),"briefing")
-	_label(column,"完整通过检查点，三个分段合成一次旅程。\n手动恢复 +5 秒，越界恢复 +10 秒；成绩包含罚时。\n自动驾驶或中途接管的跑段不会获得奖牌，也不会覆盖你的最佳轨迹。",22)
+	_page(challenge.stage.title,"赛前准备 / " + ("自由练习" if practice else "计时挑战"),"briefing")
+	var layout := _row(column)
+	layout.add_theme_constant_override("separation",32)
+	var preview := RallyMenuBackdrop.new()
+	preview.biome = challenge.stage.environment_id
+	preview.ink_wash = false
+	preview.custom_minimum_size = Vector2(350,170)
+	preview.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	layout.add_child(preview)
+	var details := VBoxContainer.new()
+	details.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	details.size_flags_stretch_ratio = 1.4
+	details.add_theme_constant_override("separation",10)
+	layout.add_child(details)
+	_label(details,"01 / 本次驾驶",13,Color("65746c"))
+	_label(details,challenge.vehicle.title,27)
+	var facts := _row(details)
+	for entry: Array in [["赛段长度","%.2f km" % (challenge.stage.target_length/1000.0)],["计时分段","03"],["驱动形式",challenge.vehicle.drive_layout]]:
+		var fact := VBoxContainer.new()
+		fact.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		facts.add_child(fact)
+		_label(fact,entry[0],13,Color("65746c"))
+		_label(fact,entry[1],25)
+	var identity := RallyPlatePreview.new()
+	identity.text = str(profile.data.get("plate",""))
+	identity.custom_minimum_size = Vector2(208,38)
+	identity.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	details.add_child(identity)
+	_label(column,"02 / 奖牌目标",13,Color("65746c"))
 	var targets := challenge.thresholds()
-	_label(column,"金牌 %s    银牌 %s    铜牌 %s"%[_time(targets[2]),_time(targets[1]),_time(targets[0])],27,Color("edbc75"))
-	_label(column,"奖牌目标已按真人无恢复基准冻结。" if challenge.human_calibrated else "当前奖牌目标为试玩暂定值，真人标定后将更新挑战版本。",15)
-	_label(column,"首次驾驶建议使用自动换挡。提前减速、平稳转向，出弯后逐渐加大油门。",19)
-	_button(column,"驶向起点 →",start_race).grab_focus()
-	_button(column,"← 更换车辆",show_vehicles)
+	var medals := _row(column)
+	for i: int in range(3):
+		var panel := PanelContainer.new()
+		panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		var style := StyleBoxFlat.new()
+		style.bg_color = Color("e7e9e1")
+		style.content_margin_left = 18
+		style.content_margin_top = 12
+		style.content_margin_bottom = 12
+		panel.add_theme_stylebox_override("panel",style)
+		medals.add_child(panel)
+		var medal := _row(panel)
+		var glyph := TextureRect.new()
+		glyph.texture = load("res://assets/ui/icons/medal_" + ["gold","silver","bronze"][i] + ".svg")
+		glyph.self_modulate = [Color("a77828"),Color("657c89"),Color("a16140")][i]
+		glyph.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		glyph.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		glyph.custom_minimum_size = Vector2(56,70)
+		medal.add_child(glyph)
+		var text := VBoxContainer.new()
+		text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		text.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		medal.add_child(text)
+		_label(text,["金牌","银牌","铜牌"][i],15,Color("65746c"))
+		_label(text,_time(targets[2-i]),31)
+	_label(column,"练习不计奖牌与纪录。" if practice else ("目标已冻结。" if challenge.human_calibrated else "试玩目标 · 待真人标定。"),13,Color("65746c"))
+	var rules := _row(column)
+	for entry: Array in [["完整通过检查点","行驶时间 + 罚时 = 总成绩"],["恢复罚时","手动 +5 秒 / 越界 +10 秒"],["有效挑战","自动驾驶与接管不计纪录"]]:
+		var rule := VBoxContainer.new()
+		rule.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		rules.add_child(rule)
+		_label(rule,entry[0],16)
+		_label(rule,entry[1],14,Color("65746c"))
+	var actions := _row(column)
+	_button(actions,"驶向起点 →",start_race).grab_focus()
+	_button(actions,"← 更换车辆",show_vehicles)
 
 
 func start_race() -> void:
@@ -438,6 +511,12 @@ func show_tutorial() -> void:
 
 func show_settings() -> void:
 	_page("让驾驶适合你","设置保存在本机；比赛中也可按 Esc 调整操作与画面。","settings")
+	var identity := _row(column)
+	var current_plate := RallyPlatePreview.new()
+	current_plate.text = str(profile.data.get("plate",""))
+	current_plate.custom_minimum_size = Vector2(260,52)
+	identity.add_child(current_plate)
+	_button(identity,"修改车牌",func(): show_plate_setup(false))
 	var row := _row(column)
 	var left := _card(row)
 	var right := _card(row)
@@ -470,6 +549,86 @@ func show_settings() -> void:
 	_button(column,"键盘按键映射",show_bindings)
 	_button(column,"恢复默认设置",func(): prefs.reset(); profile.data.bindings={}; audio.apply_settings(prefs); _save(); show_settings())
 	_button(column,"← 主菜单",show_home)
+
+
+func show_plate_setup(first_use: bool = false) -> void:
+	_page("为你的赛车签个名。" if first_use else "你的专属车牌", "设置一次，驶向每一段旅程。" if first_use else "保存后应用到选车预览与之后的比赛。", "plate")
+	var row := _row(column)
+	row.add_theme_constant_override("separation",44)
+	var editor := VBoxContainer.new()
+	editor.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	editor.add_theme_constant_override("separation",14)
+	row.add_child(editor)
+	_label(editor,"01 / 车牌号码",15,Color("65746c"))
+	plate_input = LineEdit.new()
+	plate_input.max_length = RallyPlateText.MAX_LENGTH
+	plate_input.text = str(profile.data.get("plate",""))
+	plate_input.placeholder_text = "例如：沪A·RALLY"
+	plate_input.custom_minimum_size = Vector2(400,76)
+	plate_input.add_theme_font_override("font",RallyPlateText.font())
+	plate_input.add_theme_font_size_override("font_size",32)
+	plate_input.add_theme_color_override("font_color",Color("192d2b"))
+	plate_input.add_theme_color_override("font_placeholder_color",Color("84918a"))
+	plate_input.add_theme_color_override("caret_color",Color("ad4d36"))
+	for state: String in ["normal","focus"]:
+		var style := StyleBoxFlat.new()
+		style.bg_color = Color("faf9f3")
+		style.border_color = Color("ad4d36") if state == "focus" else Color("9ca79d")
+		style.set_border_width_all(2 if state == "focus" else 1)
+		style.content_margin_left = 18
+		style.content_margin_right = 18
+		plate_input.add_theme_stylebox_override(state,style)
+	editor.add_child(plate_input)
+	var counter := _label(editor,"",14,Color("65746c"))
+	_label(editor,"支持中文、字母和数字等可显示字符，最多 10 个。\n输入与实际车牌使用相同字体。",16,Color("65746c"))
+	plate_error = _label(editor,"",16,Color("a03f2e"))
+	var display := VBoxContainer.new()
+	display.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	display.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	display.add_theme_constant_override("separation",18)
+	row.add_child(display)
+	_label(display,"02 / 实际字样预览",15,Color("65746c"))
+	plate_preview = RallyPlatePreview.new()
+	plate_preview.custom_minimum_size = Vector2(400,112)
+	display.add_child(plate_preview)
+	var buttons := _row(column)
+	var submit := _button(buttons,"保存并进入游戏" if first_use else "保存车牌",func(): _submit_plate(first_use))
+	if not first_use: _button(buttons,"← 返回设置",show_settings)
+	var update := func(value: String):
+		counter.text = "%d / %d" % [value.length(),RallyPlateText.MAX_LENGTH]
+		var valid := RallyPlateText.valid(value.strip_edges())
+		plate_preview.text = value.strip_edges() if valid else RallyPlateText.DEFAULT_TEXT
+		plate_error.text = "请输入 1–10 个可显示字符。" if not valid and not value.is_empty() else ""
+		submit.disabled = not valid
+	plate_input.text_changed.connect(update)
+	plate_input.text_submitted.connect(func(_value: String): if not submit.disabled: _submit_plate(first_use))
+	update.call(plate_input.text)
+	plate_input.grab_focus()
+
+
+func _submit_plate(first_use: bool) -> void:
+	var value := plate_input.text.strip_edges()
+	if not RallyPlateText.valid(value):
+		plate_error.text = "请输入 1–10 个可显示字符。"
+		return
+	if profile.set_plate(value) != OK:
+		plate_error.text = "车牌保存失败，原设置已保留。请检查磁盘空间和权限。"
+		if first_use and not plate_error.has_meta("temporary_button"):
+			plate_error.set_meta("temporary_button",true)
+			_button(column,"先使用此车牌，继续游戏",_use_plate_temporarily)
+		return
+	if first_use: show_home()
+	else: show_settings()
+
+
+func _use_plate_temporarily() -> void:
+	var value := plate_input.text.strip_edges()
+	if not RallyPlateText.valid(value):
+		plate_error.text = "请输入 1–10 个可显示字符。"
+		return
+	profile.data["plate"] = value
+	profile.message = "车牌尚未保存，退出后可能需要重新设置。"
+	show_home()
 
 
 func show_bindings() -> void:

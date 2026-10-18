@@ -13,6 +13,8 @@ func _run() -> void:
 	if app == null:
 		finish()
 		return
+	# Onboarding itself is exercised with an isolated profile in plate_identity_test.
+	if app.screen == "plate": app.show_home()
 	await settled()
 	check(app.screen == "home" and app.ui.is_visible_in_tree(), "Player sees the title menu on normal startup")
 	check(visible_button("开始计时挑战  →") != null and visible_button("设置") != null, "Challenge and settings buttons occupy the visible viewport")

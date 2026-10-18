@@ -54,6 +54,7 @@ static func run_app(app: Node) -> void:
 	var failures: Array[String] = []
 	app.profile.path = "user://package-smoke/profile.json"
 	app.profile.data = RallyProfileStore.fresh()
+	if app.profile.set_plate("PACK-160") != OK: failures.append("player plate save")
 	if app.screen!="home": failures.append("main menu")
 	for stage: String in RallyContentCatalog.STAGES:
 		for vehicle: String in RallyContentCatalog.VEHICLES:
@@ -72,6 +73,8 @@ static func run_app(app: Node) -> void:
 			app.race.controls.resume()
 		await app.get_tree().process_frame
 	if app.race.vehicle.linear_velocity.length()<.5: failures.append("packaged physics driving")
+	var plates := app.race.presentation.car_style.body.get_node_or_null("PlayerLicensePlates") as RallyVehiclePlate
+	if plates == null or plates.plate_text != "PACK-160" or app.race.game_hud.player_plate != "PACK-160": failures.append("player plate in game")
 	if app.race.feedback.engine_layers.size()!=5: failures.append("layered engine playback")
 	if AudioServer.get_bus_peak_volume_left_db(AudioServer.get_bus_index("Engine"),0)<-70: failures.append("engine output signal")
 	if AudioServer.get_driver_name()=="Dummy": failures.append("real audio driver")

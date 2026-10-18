@@ -20,6 +20,9 @@ func start() -> void:
 	vehicle_definition = challenge.vehicle
 	for key: String in profile.data.settings: preferences.set_value(key,profile.data.settings[key])
 	initialize_gameplay()
+	var plate := RallyPlateText.display(profile.data.get("plate",""))
+	RallyVehiclePlate.attach(presentation.car_style.body,challenge.vehicle,plate)
+	game_hud.player_plate = plate
 	session.practice = free_practice or tutorial
 	_apply_preferences()
 	controls.allow_mechanical_shortcuts = session.practice

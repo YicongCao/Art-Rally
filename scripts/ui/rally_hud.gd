@@ -11,6 +11,7 @@ var title_font: Font = RallyFonts.bold()
 var number_font: Font = RallyFonts.mono_bold()
 var text_font: Font = RallyFonts.regular()
 var model: Dictionary = {}
+var player_plate: String = ""
 var route_map := PackedVector2Array()
 var map_min := Vector2.ZERO
 var map_scale: float = 1
@@ -119,6 +120,8 @@ func _draw() -> void:
 		center_text(model.warning,Vector2(640,653),15,AMBER)
 	elif int(model.get("camera_mode",0))!=2:
 		center_text("Esc 暂停/设置    C 视角    F9 调试    F10 自动驾驶    T 遥测",Vector2(640,697),12,PAPER)
+	if not player_plate.is_empty() and str(model.warning).is_empty():
+		RallyPlatePreview.draw_plate(self,Rect2(1082,152,150,24),player_plate)
 	if model.paused:
 		center_text("已暂停",Vector2(640,137),20,AMBER)
 	elif model.phase == RallyStageSession.Phase.COUNTDOWN and remaining<=0:

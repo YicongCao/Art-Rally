@@ -10,7 +10,7 @@ var loaded_from_backup: bool = false
 
 
 static func fresh() -> Dictionary:
-	return {"version":VERSION,"settings":{},"bindings":{},"tutorial_complete":false,"last_stage":"sunset_ridge","last_vehicle":"F160","challenges":{}}
+	return {"version":VERSION,"settings":{},"bindings":{},"plate":"","tutorial_complete":false,"last_stage":"sunset_ridge","last_vehicle":"F160","challenges":{}}
 
 
 func load_file() -> Error:
@@ -56,6 +56,16 @@ func save_file() -> Error:
 
 func result_for(key: String) -> Dictionary:
 	return Dictionary(data.challenges.get(key,{})).duplicate(true)
+
+
+func set_plate(value: String) -> Error:
+	value = value.strip_edges()
+	if not RallyPlateText.valid(value): return ERR_INVALID_PARAMETER
+	var original := data.duplicate(true)
+	data["plate"] = value
+	var error := save_file()
+	if error != OK: data = original
+	return error
 
 
 func record(challenge: RallyChallengeDefinition,result: Dictionary,ghost: Dictionary) -> Dictionary:
@@ -142,6 +152,8 @@ static func valid_result(value: Variant) -> bool:
 
 static func valid(value: Variant) -> bool:
 	if value is not Dictionary or value.get("version",0)!=VERSION: return false
+	# Optional additive field: existing profiles keep all results and request setup once.
+	if not RallyPlateText.valid(value.get("plate",""),true): return false
 	for key: String in ["settings","bindings","challenges"]:
 		if value.get(key,null) is not Dictionary: return false
 	var mapped: Array[int] = []

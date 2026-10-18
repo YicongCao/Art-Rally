@@ -11,6 +11,7 @@ func _run() -> void:
 	root.add_child(app)
 	app.profile.path = "user://flow-test/profile.json"
 	app.profile.data = RallyProfileStore.fresh()
+	app.show_home()
 	check(app.screen=="home","Game opens at main menu")
 	app.show_stages()
 	app.show_vehicles()
