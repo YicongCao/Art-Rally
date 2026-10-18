@@ -10,7 +10,10 @@ func _run() -> void:
 	AudioServer.set_bus_mute(0,true)
 	app.profile.path = "user://performance-test/profile.json"
 	app.profile.data = RallyProfileStore.fresh()
-	for stage: String in RallyContentCatalog.STAGES:
+	var stages: Array = Array(RallyContentCatalog.STAGES)
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--stage="): stages = [argument.trim_prefix("--stage=")]
+	for stage: String in stages:
 		app.chosen_stage = stage
 		app.chosen_vehicle = "A240"
 		await app.start_race()

@@ -160,7 +160,8 @@ func _build_markers() -> void:
 			var position := route.position_at(s) + route.rights[index] * rng.randf_range(10, 17)
 			position.y -= 1
 			decoration_positions.append(position)
-			GrayboxGeometry.box(self, "Landmark", Vector3(2, rng.randf_range(2, 5), 2), position, Color("424d38"))
+			var prototype := GrayboxGeometry.box(self, "Landmark", Vector3(2, rng.randf_range(2, 5), 2), position, Color("424d38"))
+			prototype.set_meta("prototype_marker", true)
 	for s: float in [20, route.length - 30]:
 		var at := route.position_at(s)
 		var right := route.rights[route.index_at(s)]

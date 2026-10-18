@@ -33,9 +33,10 @@ func _ready() -> void:
 	for key: String in profile.data.settings: prefs.set_value(key,profile.data.settings[key])
 	chosen_stage = profile.data.last_stage
 	chosen_vehicle = profile.data.last_vehicle
-	add_child(audio)
+	audio.settings = prefs
 	var output := str(profile.data.get("output_device","Default"))
 	if output in AudioServer.get_output_device_list(): AudioServer.output_device = output
+	add_child(audio)
 	audio.apply_settings(prefs)
 	layer.layer = 40
 	add_child(layer)
@@ -236,7 +237,7 @@ func _vehicle_preview(parent: Node,definition: RallyVehicleDefinition) -> void:
 	camera.position = Vector3(4,2.1,-5)
 	camera.look_at(Vector3(0,.3,0))
 	camera.projection = Camera3D.PROJECTION_ORTHOGONAL
-	camera.size = 5.8
+	camera.size = 4.2
 
 
 func show_briefing() -> void:
@@ -245,7 +246,7 @@ func show_briefing() -> void:
 	_label(column,"完整通过检查点，三个分段合成一次旅程。\n手动恢复 +5 秒，越界恢复 +10 秒；成绩包含罚时。\n自动驾驶或中途接管的跑段不会获得奖牌，也不会覆盖你的最佳轨迹。",22)
 	var targets := challenge.thresholds()
 	_label(column,"金牌 %s    银牌 %s    铜牌 %s"%[_time(targets[2]),_time(targets[1]),_time(targets[0])],27,Color("edbc75"))
-	_label(column,"当前奖牌目标为试玩暂定值，真人标定后将更新挑战版本。",15)
+	_label(column,"奖牌目标已按真人无恢复基准冻结。" if challenge.human_calibrated else "当前奖牌目标为试玩暂定值，真人标定后将更新挑战版本。",15)
 	_label(column,"首次驾驶建议使用自动换挡。提前减速、平稳转向，出弯后逐渐加大油门。",19)
 	_button(column,"驶向起点 →",start_race).grab_focus()
 	_button(column,"← 更换车辆",show_vehicles)

@@ -2,26 +2,30 @@
 
 ## 简介
 
-低多边形画面、驾驶物理优先的拉力游戏。**v0.2.0 prerelease** 在 v0.1.0 的 3.05 km“夕照松岭”、200 PS FWD/AWD/RWD、自动驾驶和成绩系统基础上，加入径向轮胎形变、动态椭圆接触斑、5/9/17 点自适应采样、接触斑刷子力、形变遥测和可视化。macOS / Windows 双平台包可独立运行；真实手柄、主观听感、六组真人跑段和真实 Windows 图形性能仍待正式验收。
+低多边形、完全离线的计时拉力游戏。当前为 **0.3.0-dev 首个完整试玩候选版**：三条主题赛道、F160 / R200 / A240 三辆原创赛车、九个独立挑战、奖牌与分段计时、个人幽灵、本地档案、菜单、教学及声音。底层仍采用原有 120 Hz 车辆与轮胎系统。
+
+[实施计划](docs/FIRST_PLAYABLE_PLAN.zh-CN.md) · [实施状态与未通过项](docs/FIRST_PLAYABLE_STATUS.zh-CN.md) · [实测验收报告](docs/FIRST_PLAYABLE_VALIDATION.zh-CN.md) · [操作说明](docs/PLAY_GUIDE.zh-CN.md) · [素材名单](docs/ASSET_CREDITS.md)
+
+当前奖牌为暂定阈值，真人标定、主观试听、真实 Windows、实体手柄及林地稳定 60 FPS 仍需验收；候选包不等于可公开发布版本。
 
 <table>
   <tr>
     <td width="33%" align="center">
-      <a href="docs/previews/autumn-gravel.jpg"><img src="docs/previews/autumn-gravel.jpg" alt="砂石赛段实机画面：夕照山林、拉力赛车与驾驶 HUD" width="100%"></a><br>
-      <sub><b>秋日砂石 · 跟车视角</b></sub>
+      <a href="docs/previews/first-playable-sunset_ridge.jpg"><img src="docs/previews/first-playable-sunset_ridge.jpg" alt="砂石赛段实机画面：夕照山林、拉力赛车与驾驶 HUD" width="100%"></a><br>
+      <sub><b>夕照松岭 · F160</b></sub>
     </td>
     <td width="33%" align="center">
-      <a href="docs/previews/autumn-mud.jpg"><img src="docs/previews/autumn-mud.jpg" alt="秋色泥地实机画面：金色草地、橙红树冠与自动驾驶 HUD" width="100%"></a><br>
-      <sub><b>秋色泥地 · 自动驾驶</b></sub>
+      <a href="docs/previews/first-playable-sunlit_cape.jpg"><img src="docs/previews/first-playable-sunlit_cape.jpg" alt="晴岬海岸实机画面：乳白灯塔、青蓝海面与红色后驱轿跑" width="100%"></a><br>
+      <sub><b>晴岬海岸 · R200</b></sub>
     </td>
     <td width="33%" align="center">
-      <a href="docs/previews/autumn-cockpit.jpg"><img src="docs/previews/autumn-cockpit.jpg" alt="驾驶舱实机画面：赛车方向盘、数字仪表与柏油弯道" width="100%"></a><br>
-      <sub><b>柏油弯道 · 赛车驾驶舱</b></sub>
+      <a href="docs/previews/first-playable-misty_highlands.jpg"><img src="docs/previews/first-playable-misty_highlands.jpg" alt="雾杉高地实机画面：蓝灰山石、墨绿针叶林与蓝色四驱赛车" width="100%"></a><br>
+      <sub><b>雾杉高地 · A240</b></sub>
     </td>
   </tr>
 </table>
 
-以上为当前秋日视觉试作的自动驾驶实机截图，点击图片查看大图。画面采用金色草地、橙红阔叶林、细分枝叶松树、桃粉天空和蓝紫远山，设计说明与验证见 [秋日视觉方向](docs/ART_DIRECTION_AUTUMN.zh-CN.md)。
+以上为三主题自动驾驶实机截图，点击查看大图。当前版本继承并扩展 [秋日视觉方向](docs/ART_DIRECTION_AUTUMN.zh-CN.md)。
 
 ## 开发环境
 
@@ -40,8 +44,8 @@ macOS 首次安装：`brew install --cask godot`。Homebrew 跟随新版发布�
 ```bash
 ./scripts/dev.sh doctor  # 查看引擎路径、版本和架构
 ./scripts/dev.sh editor  # 打开 Godot 项目编辑器
-./scripts/dev.sh run     # 启动夕照松岭赛段（默认入口）
-./scripts/dev.sh stage   # 明确启动赛段
+./scripts/dev.sh run     # 启动完整游戏主菜单
+./scripts/dev.sh stage   # 保留旧松岭开发入口
 ./scripts/dev.sh lab     # 保留原驾驶测试场，附多路面测试区
 ./scripts/dev.sh preview # 保留独立 200 米视觉样板用于对比
 ./scripts/dev.sh check   # 导入、全脚本解析、模型和场景测试
@@ -59,6 +63,11 @@ macOS 首次安装：`brew install --cask godot`。Homebrew 跟随新版发布�
 ./scripts/dev.sh v02-tire-render-check # 真实窗口检查轮胎形变、动态接触斑与 F9 数据
 ./scripts/dev.sh autumn-capture # 自动驾驶采集砂石、泥地、驾驶舱三张秋日实机图
 ./scripts/dev.sh pacenote-render-check # 渲染左右普通弯、急弯四张实际路书卡片
+./scripts/dev.sh first-playable-matrix # 九个新挑战完整自动驾驶回归
+./scripts/dev.sh first-playable-lifecycle # 连续十次场景切换
+./scripts/dev.sh first-playable-audio # 真实声音输出总线检查
+./scripts/dev.sh first-playable-capture # 新版菜单/车型/三赛道截图
+./scripts/dev.sh first-playable-perf # 三主题完整赛段 1080p 吞吐测试
 ./scripts/dev.sh controller-probe # 枚举当前真实手柄名称、GUID、映射与初始轴值
 ./scripts/dev.sh export-macos # 使用匹配模板生成 .app、ZIP 和 SHA-256
 ./scripts/dev.sh macos-app-check # 从导出包验证主场景、音频、字体、设置与成绩读写
@@ -66,7 +75,7 @@ macOS 首次安装：`brew install --cask godot`。Homebrew 跟随新版发布�
 ./scripts/dev.sh windows-package-check # 校验 PE32+ 架构、嵌入资源和 ZIP
 ```
 
-编辑器中按 **F5** 运行主赛段。进入游戏窗口后 F5 为重跑、F6 切到赛段、F7 切到原测试场；注意与编辑器快捷键的焦点区别。原测试场保留直道、25 m 定圆、蛇形、减速带和跳跃，并在远端 320–520 m 区域增加砂石、泥地、草土和水洼对比区。
+编辑器中按 **F5** 运行完整游戏。正式比赛窗口内 F5 为重跑；开发入口的 F6/F7 保留赛段/测试场切换，正式挑战中返回选关；注意与编辑器快捷键的焦点区别。原测试场保留直道、25 m 定圆、蛇形、减速带和跳跃，并在远端 320–520 m 区域增加砂石、泥地、草土和水洼对比区。
 
 `check` 验证环境、输入、轮胎、车辆动态、多路面、水阻、道路几何、赛段会话及恢复；长距离完整物理试跑独立为 `stage-check`，避免每次改动都等待完整跑段。日志存入忽略版本控制的 `logs/`。真实手柄连接与新增驾驶体验需人工验收。
 
@@ -76,11 +85,11 @@ macOS 导出要求安装与 `.godot-version` 完全一致的 4.7.2 模板；`doc
 
 Windows x86_64 包可由同一台 Mac 使用官方 4.7.2 模板交叉导出，不需要 Windows SDK。产物位于 `builds/windows/Art Rally/Art Rally.exe` 和 `Art-Rally-windows-x86_64.zip`，PCK 嵌入 EXE；目前没有 Authenticode 签名，可能触发 SmartScreen。macOS 只能校验 PE 结构和导出资源，不能运行 `.exe`；复制到 Windows 后执行 `powershell -ExecutionPolicy Bypass -File scripts/windows_smoke.ps1`，并重新完成 D3D12/Vulkan、镜头光斑、真实性能和手柄验收。
 
-简介区的三张实机截图可用 `./scripts/dev.sh autumn-capture` 批量更新，需要真实图形窗口；工具使用默认设置，不修改玩家的本机设置。
+简介区的三张实机截图可用 `./scripts/dev.sh first-playable-capture` 批量更新，需要真实图形窗口；工具使用默认设置，不修改玩家的本机设置。
 
 ## 输入预设
 
-进入主赛段前选择 FWD / AWD / RWD，首次默认 AWD，之后记住上次选择。三种版本共用车身、重心与动力参数，实际改变驱动轴、限滑分配和传动轴耦合。暂停菜单可更换车辆，确认后重开赛段，取消则保留当前赛段。
+进入比赛前选择 F160 前驱掀背、R200 后驱轿跑或 A240 四驱宽体车，分别为 160 / 200 / 240 PS，并采用独立质量、尺寸、模型和音色。正式挑战固定机械调校；练习模式可调整制动比例和弹簧。暂停菜单更换车辆会返回选关。旧开发入口仍保留共用基线车的 FWD/AWD/RWD 对比。
 
 键盘默认标准辅助；F2 切换轻辅助。默认自动换挡和自动离合，M 切换手动换挡。默认启用倒车辅助：停稳后持续按 S/↓（手柄 LT）3 秒，缩短的横条结束后自动挂 R；R 挡时同一按键变为倒车油门。按 W/↑（RT）切回前进；若车还在后退，会先制动停稳再挂一挡。松开制动、暂停、复位或手动换挡会取消倒计时，空中或仍在移动时不计时。
 
@@ -122,7 +131,7 @@ Windows x86_64 包可由同一台 Mac 使用官方 4.7.2 模板交叉导出，�
 
 M6 的 FWD/AWD/RWD × 真人键盘/真实手柄六组跑段、热插拔、震动和试听记录使用 [人工验收清单](docs/M6_MANUAL_ACCEPTANCE.zh-CN.md)。虚拟手柄自动跑段不能将这些硬件项标记为通过。
 
-Esc 打开暂停/设置，Enter 或手柄 Start 明确恢复；失焦和活动手柄断开也会暂停。菜单支持键盘方向键/手柄导航，可调整音量、光斑、驾驶舱轻微震动、轮胎形变显示倍率、画面细节、自动挡、键盘辅助、踏板平滑和手柄死区；少量制动平衡/弹簧调校保存在本机，随时可恢复默认。轮胎显示倍率只改变胎体网格，不参与接触或轮胎力计算。配置位置为 `user://driving_settings.cfg`，不会修改 Git 中的基线车辆资源。
+Esc 打开暂停/设置，Enter 或手柄 Start 明确恢复；失焦和活动手柄断开也会暂停。菜单支持键盘方向键/手柄导航，可调整音量、光斑、驾驶舱轻微震动、轮胎形变显示倍率、画面细节、自动挡、键盘辅助、踏板平滑和手柄死区；少量制动平衡/弹簧调校保存在本机，随时可恢复默认。轮胎显示倍率只改变胎体网格，不参与接触或轮胎力计算。完整游戏配置位于 `user://player/profile.json`（旧开发入口仍使用 `user://driving_settings.cfg`），不会修改 Git 中的基线车辆资源。
 
 F8 暂停并导出最近最多 120 秒遥测至 `user://telemetry/`。T 在正式 HUD 和四轮开发遥测之间切换。主 HUD 显示转速弧、速度、挡位、踏板条、路面、路线图、计时和路书；驾驶舱模式使用舱内数字仪表，避免叠加两套大仪表。
 
@@ -138,7 +147,9 @@ F8 暂停并导出最近最多 120 秒遥测至 `user://telemetry/`。T 在正�
 
 计时模式越过可驾驶区域边界会在掉出碰撞地形前自动复位，并罚 10 秒；手动 R 恢复仍罚 5 秒，练习模式不罚时。F5 重跑清空计时、罚时、检查点、路书及轮胎印。暂停不计时，完赛冻结结果。
 
-正式完赛记录保存在 `user://stage_results.cfg`，按赛段、FWD/AWD/RWD 和当前 `200ps-v2-patch1` 标定版本隔离。每条记录包含原始行驶时间、罚时、总时间、恢复次数和驾驶来源；练习模式不保存。真人个人最佳与虚拟键盘/虚拟手柄自动驾驶参考成绩分别统计，曾启用自动驾驶后再由真人接管的混合跑段只进入最近记录，不进入任何最佳榜。
+正式完赛记录保存在 `user://player/profile.json`，按赛道版本、车型标定版本及规则版本隔离，幽灵保存在同目录 `ghosts/`。每挑战独立保存最佳成绩、三个累计分段、奖牌和近期记录。练习、自动驾驶及混合接管均不写入玩家纪录。成绩与幽灵通过临时文件和备份一致提交，损坏会尝试恢复并提示。旧 `stage_results.cfg` 原型成绩另行归档。
+
+正式流程的操作、声音及存档说明见 [试玩指南](docs/PLAY_GUIDE.zh-CN.md)。下面的具体距离描述对应夕照松岭。
 
 道路以浅褐砂石为主，1150–1650 m 为深褐泥地（含两处积水），1650–2100 m 为炭灰柏油，之后恢复砂石；2650 m 附近有坡顶。全程有低多边形树林、岩石、分层远山、立体切面云和方向性光斑；柏油弯道有护栏，近路树干/大石块有简化碰撞。四组观众位于可见围绳后，驶入观众保护区会安全恢复。没有撞人玩法或隐形阻挡墙。
 
@@ -151,7 +162,13 @@ F8 暂停并导出最近最多 120 秒遥测至 `user://telemetry/`。T 在正�
 ```text
 project.godot              引擎、渲染、物理、输入与碰撞层配置
 scenes/dev/               环境验证与驾驶测试场场景
-scenes/stages/            夕照松岭可玩赛段
+scenes/game/              主菜单和通用挑战场景
+scenes/stages/            保留的松岭开发入口
+scripts/game/             内容目录、游戏流程、档案、幽灵、声音
+resources/content/        三车型资源
+resources/stages/         三赛道资源
+art_source/vehicles/      原创 Blender 可编辑源
+assets/vehicles/          GLB 运行时车身
 scripts/dev/              测试场会话、HUD 与镜头
 scripts/input/            统一命令、设备适配和键盘辅助
 scripts/vehicle/          车身、轮胎、悬架、传动与遥测

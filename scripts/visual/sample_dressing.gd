@@ -32,9 +32,11 @@ func build_range(landscape: Node3D, start: float, end: float, density: float = 1
 		meshes["rock%d"%variant] = RallySampleMeshes.rock(variant+30)
 		meshes["shrub%d"%variant] = RallySampleMeshes.shrub(variant+50)
 		meshes["grass%d"%variant] = RallySampleMeshes.grass(variant+70)
+		meshes["far_pine%d"%variant] = _distant_tree(variant,false)
+		meshes["far_umbrella%d"%variant] = _distant_tree(variant,true)
 	if biome!="autumn":
 		for key: String in meshes:
-			if not key.begins_with("shadow"): meshes[key] = _biome_mesh(meshes[key],key)
+			if not key.begins_with("shadow"): meshes[key] = _biome_mesh(meshes[key],key.trim_prefix("far_"))
 	for i: int in range(int(240*multiplier*(0.25 if biome=="coast" else 1.0))):
 		var s := rng.randf_range(range_start,range_end)
 		var side := -1.0 if rng.randf() < 0.5 else 1.0
@@ -102,6 +104,23 @@ func _flush() -> void:
 			instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		land.dressing.add_child(instance)
 		if tree:
+			instance.visibility_range_end_margin = 0
+			var distant := MultiMeshInstance3D.new()
+			distant.name = "far_"+key
+			distant.position = center
+			var distant_mesh := MultiMesh.new()
+			distant_mesh.transform_format = MultiMesh.TRANSFORM_3D
+			distant_mesh.use_colors = true
+			distant_mesh.mesh = meshes["far_"+str(batch.mesh)]
+			distant_mesh.instance_count = multimesh.instance_count
+			for i: int in range(multimesh.instance_count):
+				distant_mesh.set_instance_transform(i,multimesh.get_instance_transform(i))
+				distant_mesh.set_instance_color(i,multimesh.get_instance_color(i))
+			distant.multimesh = distant_mesh
+			distant.visibility_range_begin = 180
+			distant.visibility_range_end = 360
+			distant.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			land.dressing.add_child(distant)
 			var shadow_multimesh := MultiMesh.new()
 			shadow_multimesh.transform_format = MultiMesh.TRANSFORM_3D
 			shadow_multimesh.mesh = meshes["shadow_umbrella" if key.begins_with("umbrella") else "shadow_pine"]
@@ -119,6 +138,8 @@ func _flush() -> void:
 
 
 static func default_visibility(key: String) -> float:
+	if key.begins_with("far_"): return 360
+	if key.begins_with("pine") or key.begins_with("umbrella"): return 180
 	if key.begins_with("shadow_"): return 210
 	if key.begins_with("grass"): return 105
 	if key.begins_with("shrub"): return 180
@@ -204,3 +225,22 @@ func _biome_mesh(source: ArrayMesh,kind: String) -> ArrayMesh:
 	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES,arrays)
 	mesh.surface_set_material(0,source.surface_get_material(0))
 	return mesh
+
+
+static func _distant_tree(variant: int, broadleaf: bool) -> ArrayMesh:
+	# The same placement transforms and collision remain; only distant drawing is simplified.
+	var builder := RallySampleMeshes.new()
+	builder.cone(.19,.045,7.4,Vector3(0,3.7,0),Color("685047"),5)
+	if broadleaf:
+		var color: Color = [Color("e97428"),Color("d7a833"),Color("cb533f")][variant]
+		for i: int in range(13):
+			var angle := i*2.39996
+			var center := Vector3(cos(angle)*1.2,5.5+(i%4)*.44,sin(angle)*1.2)
+			var vertices: Array[Vector3] = [center+Vector3.UP*1.4,center+Vector3.DOWN*.9,center+Vector3.LEFT*1.1,center+Vector3.RIGHT*1.1,center+Vector3.FORWARD*1.1,center+Vector3.BACK*1.1]
+			for face: Vector3i in [Vector3i(0,2,4),Vector3i(0,4,3),Vector3i(0,3,5),Vector3i(0,5,2),Vector3i(1,4,2),Vector3i(1,3,4),Vector3i(1,5,3),Vector3i(1,2,5)]:
+				builder.triangle(vertices[face.x],vertices[face.y],vertices[face.z],color.darkened((i%3)*.035))
+	else:
+		var color: Color = [Color("397b56"),Color("356c68"),Color("cfaa35")][variant]
+		for tier: int in range(10):
+			builder.cone(2.05-tier*.19,0,1.65,Vector3(0,2.0+tier*.61,0),color.lightened((tier%3)*.025),7)
+	return builder.finish()

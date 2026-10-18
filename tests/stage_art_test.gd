@@ -8,6 +8,11 @@ func _run() -> void:
 	root.add_child(scenery)
 	scenery.build(generator)
 	await ticks(2)
+	var hidden_prototypes := 0
+	for child: Node in generator.get_children():
+		if child.get_meta("prototype_marker", false) and not child.visible:
+			hidden_prototypes += 1
+	check(hidden_prototypes > 20, "All prototype landmarks are hidden regardless of generated node names")
 	check(generator.road_visuals.size() == generator.chunk_bodies.size(),"Every physical road chunk has a styled counterpart")
 	check(scenery.foliage.placements.size()>20000 and scenery.gravel_batches>40,"Approved vegetation and gravel cover full stage")
 	var markers := generator.get_node("RoadMarkers") as MultiMeshInstance3D

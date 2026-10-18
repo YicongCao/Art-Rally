@@ -1,0 +1,137 @@
+[
+	{
+		"elapsed": 250.574999999936,
+		"finished": true,
+		"max_lateral": 0.529881715774536,
+		"physics_p95_ms": 1.05,
+		"progress": 3020.0009765625,
+		"recoveries": 0,
+		"splits": [
+			71.96666666667,
+			169.32500000001,
+			250.574999999936
+		],
+		"stage": "sunset_ridge",
+		"vehicle": "F160"
+	},
+	{
+		"elapsed": 244.066666666609,
+		"finished": true,
+		"max_lateral": 0.626442551612854,
+		"physics_p95_ms": 1.105,
+		"progress": 3020.0009765625,
+		"recoveries": 0,
+		"splits": [
+			70.2666666666687,
+			165.100000000014,
+			244.066666666609
+		],
+		"stage": "sunset_ridge",
+		"vehicle": "R200"
+	},
+	{
+		"elapsed": 236.399999999949,
+		"finished": true,
+		"max_lateral": 0.655545830726624,
+		"physics_p95_ms": 1.566,
+		"progress": 3020.0009765625,
+		"recoveries": 0,
+		"splits": [
+			69.4333333333347,
+			158.583333333353,
+			236.399999999949
+		],
+		"stage": "sunset_ridge",
+		"vehicle": "A240"
+	},
+	{
+		"elapsed": 221.299999999963,
+		"finished": true,
+		"max_lateral": 0.340127915143967,
+		"physics_p95_ms": 1.741,
+		"progress": 2769.99853515625,
+		"recoveries": 0,
+		"splits": [
+			67.7666666666667,
+			148.841666666696,
+			221.299999999963
+		],
+		"stage": "sunlit_cape",
+		"vehicle": "F160"
+	},
+	{
+		"elapsed": 216.799999999967,
+		"finished": true,
+		"max_lateral": 0.381787300109863,
+		"physics_p95_ms": 1.86,
+		"progress": 2769.99853515625,
+		"recoveries": 0,
+		"splits": [
+			65.9166666666652,
+			145.558333333365,
+			216.799999999967
+		],
+		"stage": "sunlit_cape",
+		"vehicle": "R200"
+	},
+	{
+		"elapsed": 215.116666666635,
+		"finished": true,
+		"max_lateral": 0.367077559232712,
+		"physics_p95_ms": 1.321,
+		"progress": 2769.99853515625,
+		"recoveries": 0,
+		"splits": [
+			65.3583333333314,
+			144.383333333366,
+			215.116666666635
+		],
+		"stage": "sunlit_cape",
+		"vehicle": "A240"
+	},
+	{
+		"elapsed": 264.424999999924,
+		"finished": true,
+		"max_lateral": 0.469870835542679,
+		"physics_p95_ms": 1.17,
+		"progress": 3170.00390625,
+		"recoveries": 0,
+		"splits": [
+			76.5666666666737,
+			176.533333333337,
+			264.424999999924
+		],
+		"stage": "misty_highlands",
+		"vehicle": "F160"
+	},
+	{
+		"elapsed": 256.049999999931,
+		"finished": true,
+		"max_lateral": 0.644415736198425,
+		"physics_p95_ms": 1.467,
+		"progress": 3170.00390625,
+		"recoveries": 0,
+		"splits": [
+			74.5000000000054,
+			171.466666666675,
+			256.049999999931
+		],
+		"stage": "misty_highlands",
+		"vehicle": "R200"
+	},
+	{
+		"elapsed": 244.341666666609,
+		"finished": true,
+		"max_lateral": 0.754166841506958,
+		"physics_p95_ms": 2.57,
+		"progress": 3170.00390625,
+		"recoveries": 0,
+		"splits": [
+			72.2000000000035,
+			165.500000000014,
+			244.341666666609
+		],
+		"stage": "misty_highlands",
+		"vehicle": "A240"
+	}
+]

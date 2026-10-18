@@ -144,6 +144,12 @@ static func valid(value: Variant) -> bool:
 	if value is not Dictionary or value.get("version",0)!=VERSION: return false
 	for key: String in ["settings","bindings","challenges"]:
 		if value.get(key,null) is not Dictionary: return false
+	var mapped: Array[int] = []
+	for action: String in value.bindings:
+		var code: Variant = value.bindings[action]
+		if int(action) not in [KEY_W,KEY_S,KEY_A,KEY_D,KEY_SPACE,KEY_R,KEY_C,KEY_Q,KEY_E]: return false
+		if not RallyGhostRecording.numeric(code) or float(code)!=floorf(float(code)) or int(code)<=0 or int(code) in mapped: return false
+		mapped.append(int(code))
 	if value.get("tutorial_complete",null) is not bool: return false
 	if value.get("last_stage","") not in RallyContentCatalog.STAGES or value.get("last_vehicle","") not in RallyContentCatalog.VEHICLES: return false
 	for key: Variant in value.challenges:

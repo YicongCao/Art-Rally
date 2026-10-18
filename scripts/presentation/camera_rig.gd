@@ -17,9 +17,19 @@ var elapsed: float = 0
 
 func build(camera: Camera3D) -> void:
 	dashboard.name = "SimplifiedCockpit"
+	if definition!=null and definition.vehicle_id=="R200": dashboard.position.y = .16
 	dashboard.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
 	camera.add_child(dashboard)
-	GrayboxGeometry.box(dashboard,"Dash",Vector3(1.5,0.22,0.16),Vector3(0,-0.43,-0.76),definition.paint.darkened(.7) if definition!=null else Color("1b2925"))
+	GrayboxGeometry.box(dashboard,"Dash",Vector3(definition.body_size.x*.88 if definition!=null else 1.5,0.16 if definition!=null and definition.vehicle_id=="R200" else .22,0.16),Vector3(0,-0.43,-0.76),definition.paint.darkened(.7) if definition!=null else Color("1b2925"))
+	if definition!=null:
+		GrayboxGeometry.box(dashboard,"CockpitAccent",Vector3(definition.body_size.x*.85,.025,.025),Vector3(0,-.31,-.67),definition.accent)
+		for side: float in [-1,1]:
+			var width := definition.body_size.x*.42
+			var pillar := RallySampleMeshes.new()
+			pillar.beam(Vector3(side*width,-.55,-.7),Vector3(side*width*.8,.52,-1.0),.035,definition.paint)
+			var visual := MeshInstance3D.new()
+			visual.mesh = pillar.finish()
+			dashboard.add_child(visual)
 	GrayboxGeometry.box(dashboard,"InstrumentBezel",Vector3(0.50,0.22,0.035),Vector3(0.17,-0.285,-0.65),Color("111c20"))
 	steering_wheel.position = Vector3(-0.24,-0.27,-0.55)
 	dashboard.add_child(steering_wheel)

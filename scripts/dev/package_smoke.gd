@@ -73,6 +73,7 @@ static func run_app(app: Node) -> void:
 		await app.get_tree().process_frame
 	if app.race.vehicle.linear_velocity.length()<.5: failures.append("packaged physics driving")
 	if app.race.feedback.engine_layers.size()!=5: failures.append("layered engine playback")
+	if AudioServer.get_bus_peak_volume_left_db(AudioServer.get_bus_index("Engine"),0)<-70: failures.append("engine output signal")
 	if AudioServer.get_driver_name()=="Dummy": failures.append("real audio driver")
 	if app.profile.save_file()!=OK: failures.append("profile write")
 	var restored := RallyProfileStore.new()
@@ -82,4 +83,4 @@ static func run_app(app: Node) -> void:
 	await app.get_tree().process_frame
 	if app.screen!="stages": failures.append("return flow")
 	print("PACKAGE SMOKE PASSED" if failures.is_empty() else "PACKAGE SMOKE FAILED: "+str(failures))
-	app.get_tree().quit(0 if failures.is_empty() else 1)
+	app.get_tree().quit.call_deferred(0 if failures.is_empty() else 1)

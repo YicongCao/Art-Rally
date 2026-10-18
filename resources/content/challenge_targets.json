@@ -1,0 +1,59 @@
+{
+  "rules_version": "time-trial-1",
+  "challenges": {
+    "sunset_ridge/F160": {
+      "reference_seconds": 265,
+      "human_calibrated": false,
+      "stage_version": "1",
+      "vehicle_revision": "fp1"
+    },
+    "sunset_ridge/R200": {
+      "reference_seconds": 260,
+      "human_calibrated": false,
+      "stage_version": "1",
+      "vehicle_revision": "fp1"
+    },
+    "sunset_ridge/A240": {
+      "reference_seconds": 240,
+      "human_calibrated": false,
+      "stage_version": "1",
+      "vehicle_revision": "fp1"
+    },
+    "sunlit_cape/F160": {
+      "reference_seconds": 220,
+      "human_calibrated": false,
+      "stage_version": "1",
+      "vehicle_revision": "fp1"
+    },
+    "sunlit_cape/R200": {
+      "reference_seconds": 215,
+      "human_calibrated": false,
+      "stage_version": "1",
+      "vehicle_revision": "fp1"
+    },
+    "sunlit_cape/A240": {
+      "reference_seconds": 205,
+      "human_calibrated": false,
+      "stage_version": "1",
+      "vehicle_revision": "fp1"
+    },
+    "misty_highlands/F160": {
+      "reference_seconds": 290,
+      "human_calibrated": false,
+      "stage_version": "1",
+      "vehicle_revision": "fp1"
+    },
+    "misty_highlands/R200": {
+      "reference_seconds": 285,
+      "human_calibrated": false,
+      "stage_version": "1",
+      "vehicle_revision": "fp1"
+    },
+    "misty_highlands/A240": {
+      "reference_seconds": 265,
+      "human_calibrated": false,
+      "stage_version": "1",
+      "vehicle_revision": "fp1"
+    }
+  }
+}

@@ -2,6 +2,7 @@ class_name RallyChallengeDefinition
 extends RefCounted
 
 const RULES_VERSION := "time-trial-1"
+var rules_version: String = RULES_VERSION
 var stage: RallyStageDefinition
 var vehicle: RallyVehicleDefinition
 var reference_seconds: float = 240
@@ -10,7 +11,7 @@ var human_calibrated: bool = false
 
 
 func key() -> String:
-	return "%s@%s|%s@%s|%s"%[stage.stage_id,stage.stage_version,vehicle.vehicle_id,vehicle.revision,RULES_VERSION]
+	return "%s@%s|%s@%s|%s"%[stage.stage_id,stage.stage_version,vehicle.vehicle_id,vehicle.revision,rules_version]
 
 
 func thresholds() -> Array[float]:

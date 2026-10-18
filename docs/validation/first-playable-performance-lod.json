@@ -1,0 +1,19 @@
+[
+	{
+		"average_fps": 69.1960720119175,
+		"elapsed": 236.399999999949,
+		"finished": true,
+		"frame_p95_ms": 20.866,
+		"frame_p99_ms": 24.048,
+		"frames": 14023,
+		"physics_p95_ms": 3.299,
+		"renderer": "Apple M5 (Apple9)",
+		"resolution": [
+			1920,
+			1080
+		],
+		"stage": "sunset_ridge",
+		"vehicle": "A240",
+		"wall_seconds": 207.653782999998
+	}
+]

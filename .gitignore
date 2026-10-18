@@ -5,3 +5,6 @@ logs/*
 !logs/.gdignore
 *.tmp
 *.blend1
+
+__pycache__/
+*.pyc

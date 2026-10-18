@@ -77,6 +77,9 @@ static func mix_for(car: RallyVehicle) -> Dictionary:
 
 
 func update(car: RallyVehicle, settings: RallyGameSettings, controls: RallyInputController, paused: bool, dt: float) -> void:
+	if is_paused and not paused:
+		for player: AudioStreamPlayer in players.values(): player.volume_db = -80
+		for player: AudioStreamPlayer in engine_layers.values(): player.volume_db = -80
 	is_paused = paused
 	collision_cooldown = maxf(0,collision_cooldown-dt)
 	for player: AudioStreamPlayer in engine_layers.values(): player.stream_paused = paused

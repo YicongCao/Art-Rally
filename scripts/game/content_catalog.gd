@@ -22,7 +22,10 @@ static func challenge(stage_id: String,vehicle_id: String) -> RallyChallengeDefi
 	var result := RallyChallengeDefinition.new()
 	result.stage = track
 	result.vehicle = car
-	# Replace only with documented, three-run human baselines at release calibration.
-	var references := {"sunset_ridge":[265.0,260.0,240.0],"sunlit_cape":[220.0,215.0,205.0],"misty_highlands":[290.0,285.0,265.0]}
-	result.reference_seconds = references[stage_id][VEHICLES.find(vehicle_id)]
+	var targets: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://resources/content/challenge_targets.json"))
+	var target: Dictionary = targets.challenges[stage_id+"/"+vehicle_id]
+	assert(target.stage_version==track.stage_version and target.vehicle_revision==car.revision)
+	result.reference_seconds = float(target.reference_seconds)
+	result.human_calibrated = bool(target.human_calibrated)
+	result.rules_version = str(targets.rules_version)
 	return result

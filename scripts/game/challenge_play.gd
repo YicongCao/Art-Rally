@@ -85,7 +85,7 @@ func _record_finish() -> void:
 	if finish_recorded: return
 	finish_recorded = true
 	trajectory.capture(session.total_time(),vehicle,true)
-	var result := {"elapsed":session.elapsed,"penalty":session.penalty,"total_time":session.total_time(),"splits":Array(session.split_times),"source":auto_driver.source_name(controls.active_device),"practice":session.practice,"recorded_at":Time.get_unix_time_from_system()}
+	var result := {"elapsed":session.elapsed,"penalty":session.penalty,"total_time":session.total_time(),"splits":Array(session.split_times),"source":auto_driver.source_name(controls.active_device),"reset_count":session.reset_count,"practice":session.practice,"recorded_at":Time.get_unix_time_from_system()}
 	var outcome := profile.record(challenge,result,trajectory.payload(challenge.key(),session.total_time()))
 	result["outcome"] = outcome
 	completed.emit.call_deferred(result)

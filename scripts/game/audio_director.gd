@@ -82,3 +82,10 @@ func _process(dt: float) -> void:
 
 func diagnostic() -> String:
 	return "驱动：%s · 输出：%s · 主音量：%d%%"%[AudioServer.get_driver_name(),AudioServer.output_device,int(settings.values.volume*100)]
+
+
+func _exit_tree() -> void:
+	for child: Node in get_children():
+		if child is AudioStreamPlayer:
+			child.stop()
+			child.stream = null

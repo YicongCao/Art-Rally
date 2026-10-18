@@ -1,0 +1,72 @@
+[
+	{
+		"cycle": 1,
+		"memory": 185639076,
+		"nodes": 49.0,
+		"orphans": 0.0,
+		"resources": 93.0
+	},
+	{
+		"cycle": 2,
+		"memory": 186543600,
+		"nodes": 49.0,
+		"orphans": 0.0,
+		"resources": 93.0
+	},
+	{
+		"cycle": 3,
+		"memory": 186544984,
+		"nodes": 49.0,
+		"orphans": 0.0,
+		"resources": 93.0
+	},
+	{
+		"cycle": 4,
+		"memory": 186561152,
+		"nodes": 49.0,
+		"orphans": 0.0,
+		"resources": 93.0
+	},
+	{
+		"cycle": 5,
+		"memory": 186562116,
+		"nodes": 49.0,
+		"orphans": 0.0,
+		"resources": 93.0
+	},
+	{
+		"cycle": 6,
+		"memory": 186562852,
+		"nodes": 49.0,
+		"orphans": 0.0,
+		"resources": 93.0
+	},
+	{
+		"cycle": 7,
+		"memory": 186594308,
+		"nodes": 49.0,
+		"orphans": 0.0,
+		"resources": 93.0
+	},
+	{
+		"cycle": 8,
+		"memory": 186595080,
+		"nodes": 49.0,
+		"orphans": 0.0,
+		"resources": 93.0
+	},
+	{
+		"cycle": 9,
+		"memory": 186595816,
+		"nodes": 49.0,
+		"orphans": 0.0,
+		"resources": 93.0
+	},
+	{
+		"cycle": 10,
+		"memory": 186596576,
+		"nodes": 49.0,
+		"orphans": 0.0,
+		"resources": 93.0
+	}
+]

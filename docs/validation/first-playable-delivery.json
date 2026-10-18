@@ -1,0 +1,23 @@
+{
+  "date": "2026-10-18",
+  "godot": "4.7.2",
+  "gdscript_suites": 36,
+  "gdscript_checks": 603,
+  "failures": 0,
+  "python_tests": 4,
+  "macos_package_smoke": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\nMetal 4.0 - Forward+ - Using Device #0: Apple - Apple M5 (Apple9)\n\nPACKAGE SMOKE PASSED",
+  "windows_package_structure": "WINDOWS PACKAGE STRUCTURE PASSED",
+  "sha256": [
+    "7f1d7ee701bffcc3ae1619bfc4161f2b5c929c7f8f94b39f44c82011a3559c94  Art-Rally-macos-universal.zip",
+    "3a92514edf6cec31e72c1c32aac894cb6a845707784137a21c9d765fd926694f  Art-Rally-windows-x86_64.zip"
+  ],
+  "release_ready": false,
+  "pending": [
+    "human driving and medal calibration",
+    "subjective headphone and speaker listening",
+    "real Windows",
+    "physical controller",
+    "new-player usability",
+    "forest stable 60 FPS"
+  ]
+}

@@ -42,6 +42,16 @@ run_external_logged() {
 MODE="${1:-editor}"
 if [[ $# -gt 0 ]]; then shift; fi
 case "$MODE" in
+  first-playable-matrix|first-playable-lifecycle|first-playable-audio|first-playable-capture|first-playable-perf)
+    mkdir -p "$ROOT/logs"
+    case "$MODE" in
+      first-playable-matrix) run_logged "$ROOT/logs/first_playable_matrix.log" --headless --path "$ROOT" --fixed-fps 120 --script res://tests/first_playable_matrix.gd -- --test-defaults ;;
+      first-playable-lifecycle) run_logged "$ROOT/logs/first_playable_lifecycle.log" --headless --path "$ROOT" --script res://tests/first_playable_lifecycle.gd -- --test-defaults ;;
+      first-playable-audio) run_logged "$ROOT/logs/first_playable_audio.log" --path "$ROOT" --script res://tests/first_playable_audio_check.gd -- --test-defaults ;;
+      first-playable-capture) run_logged "$ROOT/logs/first_playable_capture.log" --path "$ROOT" --script res://scripts/dev/first_playable_capture.gd -- --test-defaults ;;
+      first-playable-perf) run_logged "$ROOT/logs/first_playable_performance.log" --path "$ROOT" --fixed-fps 60 --script res://tests/first_playable_perf.gd -- --test-defaults ;;
+    esac
+    ;;
   doctor)
     TEMPLATE_DIR="$HOME/Library/Application Support/Godot/export_templates/$EXPECTED.stable"
     MACOS_TEMPLATE_STATUS="missing"
@@ -69,6 +79,7 @@ case "$MODE" in
       run_logged "$ROOT/logs/$(basename "$test" .gd).log" --headless --path "$ROOT" --fixed-fps 120 --script "$test"
       grep -q '^TEST RESULT: .* 0 failures$' "$ROOT/logs/$(basename "$test" .gd).log"
     done
+    python3 "$ROOT/tests/calibrate_medals_test.py"
     ;;
   regression)
     "$ROOT/scripts/dev.sh" check

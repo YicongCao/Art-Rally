@@ -50,7 +50,7 @@ func build(stage: RallyStageGenerator) -> void:
 			all_batches.append(node)
 			if str(node.name).begins_with("grass"): grass_batches.append(node)
 	for child: Node in generator.get_children():
-		if str(child.name).begins_with("Landmark"): child.visible = false
+		if child.get_meta("prototype_marker", false): child.visible = false
 
 
 func nearest(point: Vector3) -> Dictionary:
@@ -296,7 +296,7 @@ func set_quality(low: bool) -> void:
 	for batch: MultiMeshInstance3D in all_batches:
 		if str(batch.name).begins_with("Aggregate"): batch.visible = not low
 		elif not str(batch.name).begins_with("grass"):
-			batch.visibility_range_end = 220 if low else RallySampleDressing.default_visibility(str(batch.name))
+			batch.visibility_range_end = minf(220,RallySampleDressing.default_visibility(str(batch.name))) if low else RallySampleDressing.default_visibility(str(batch.name))
 
 
 func _theme_ground(material: ShaderMaterial) -> void:
