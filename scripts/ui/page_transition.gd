@@ -2,7 +2,7 @@ class_name RallyPageTransition
 extends CanvasLayer
 
 const FLAG_ENTER_SECONDS := 0.34
-const FLAG_HOLD_SECONDS := 0.18
+const FLAG_HOLD_SECONDS := 0.43
 const FLAG_EXIT_SECONDS := 0.30
 
 # Render the shared title face once; the cloth shader bends ink and fabric together.

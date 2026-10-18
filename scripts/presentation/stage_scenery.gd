@@ -17,6 +17,7 @@ var gravel_batches: int = 0
 var bounds := AABB()
 var sailboats: Array[Dictionary] = []
 var river_frames: Array[Dictionary] = []
+var utility_line := RallyUtilityLine.new()
 
 
 func build(stage: RallyStageGenerator) -> void:
@@ -40,6 +41,7 @@ func build(stage: RallyStageGenerator) -> void:
 	_apply_materials()
 	_build_terrain()
 	_build_mountains()
+	utility_line.plan(self)
 	foliage.biome = generator.definition.environment_id
 	foliage.spectator_stations.assign(generator.definition.spectators)
 	foliage.build_range(self,12,route.length-35,0.58)
@@ -49,6 +51,7 @@ func build(stage: RallyStageGenerator) -> void:
 	_build_landmarks()
 	RallyStageLandmarks.build(self)
 	RallyRiverBridges.build(self)
+	utility_line.build(self)
 	_build_obstacles()
 	_build_guardrails()
 	_build_gravel()
@@ -137,6 +140,7 @@ func ground_at(s: float,lateral: float) -> Vector3:
 
 
 func allows_decoration(point: Vector3, kind: String, scale_factor: float) -> bool:
+	if kind in ["pine","umbrella","rock"] and not utility_line.allows_tree(point): return false
 	var p := nearest(point)
 	for river: Vector3 in generator.definition.river_crossings:
 		if absf(float(p.s)-river.x)<river.y*.5+10 and absf(float(p.lateral))<125: return false

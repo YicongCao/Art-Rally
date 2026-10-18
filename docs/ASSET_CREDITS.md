@@ -13,7 +13,7 @@
 项目原创资产的分发遵循项目所有者许可；第三方字体和引擎保持原许可。
 
 - Chakra Petch Bold — Chakra Petch Project Authors, SIL OFL 1.1; `assets/fonts/OFL-ChakraPetch.txt`, https://github.com/google/fonts/tree/main/ofl/chakrapetch .
-- 直升机、记者、气球、海鸥、河流与桥梁均为项目原创程序网格；上述音效与配乐不使用第三方采样或 soundfont。
+- 直升机、记者、气球、海鸥、河流、桥梁、电线杆与架空线均为项目原创程序网格；上述音效与配乐不使用第三方采样或 soundfont。
 
 - 中文语音路书：使用 [hexgrad/Kokoro-82M-v1.1-zh](https://huggingface.co/hexgrad/Kokoro-82M-v1.1-zh) 的 `zf_001` / `zm_010` 合成，模型许可 Apache-2.0，许可文本见 `assets/audio/voice/LICENSE-Kokoro.txt`。模型卡说明中文训练数据由龙猫数据许可提供。生成脚本 `scripts/generate_pacenotes.py` 与逐句文本／声线清单 `assets/audio/voice/lines.json` 随仓库保存；游戏只打包 WAV，不包含模型或推理依赖，不需要联网。
 - 河流水声、旋翼声与蹄声：项目原创合成，脚本 `scripts/generate_world_audio.py`。
