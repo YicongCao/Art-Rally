@@ -1,0 +1,503 @@
+{
+  "version": "0.3.0-rc.4",
+  "stage_version": "4",
+  "engine": "Godot 4.7.2 / Jolt",
+  "date": "2026-10-18",
+  "automated": {
+    "groups": 50,
+    "checks": 997,
+    "failures": 0,
+    "results": [
+      {
+        "test": "action_hierarchy_test.gd",
+        "checks": 30,
+        "failures": 0
+      },
+      {
+        "test": "atmosphere_test.gd",
+        "checks": 8,
+        "failures": 0
+      },
+      {
+        "test": "autopilot_test.gd",
+        "checks": 15,
+        "failures": 0
+      },
+      {
+        "test": "camera_test.gd",
+        "checks": 5,
+        "failures": 0
+      },
+      {
+        "test": "checkpoint_body_test.gd",
+        "checks": 7,
+        "failures": 0
+      },
+      {
+        "test": "cinematic_polish_test.gd",
+        "checks": 26,
+        "failures": 0
+      },
+      {
+        "test": "cinematic_transition_test.gd",
+        "checks": 9,
+        "failures": 0
+      },
+      {
+        "test": "compliant_vehicle_test.gd",
+        "checks": 8,
+        "failures": 0
+      },
+      {
+        "test": "contact_test.gd",
+        "checks": 3,
+        "failures": 0
+      },
+      {
+        "test": "content_catalog_test.gd",
+        "checks": 133,
+        "failures": 0
+      },
+      {
+        "test": "debug_panel_test.gd",
+        "checks": 43,
+        "failures": 0
+      },
+      {
+        "test": "drive_modes_test.gd",
+        "checks": 33,
+        "failures": 0
+      },
+      {
+        "test": "drivetrain_test.gd",
+        "checks": 13,
+        "failures": 0
+      },
+      {
+        "test": "driving_polish_test.gd",
+        "checks": 23,
+        "failures": 0
+      },
+      {
+        "test": "dynamics_test.gd",
+        "checks": 15,
+        "failures": 0
+      },
+      {
+        "test": "feedback_test.gd",
+        "checks": 12,
+        "failures": 0
+      },
+      {
+        "test": "first_playable_entry_test.gd",
+        "checks": 12,
+        "failures": 0
+      },
+      {
+        "test": "first_playable_flow_test.gd",
+        "checks": 27,
+        "failures": 0
+      },
+      {
+        "test": "first_playable_rules_test.gd",
+        "checks": 10,
+        "failures": 0
+      },
+      {
+        "test": "flare_test.gd",
+        "checks": 6,
+        "failures": 0
+      },
+      {
+        "test": "gravel_test.gd",
+        "checks": 6,
+        "failures": 0
+      },
+      {
+        "test": "hud_test.gd",
+        "checks": 20,
+        "failures": 0
+      },
+      {
+        "test": "input_test.gd",
+        "checks": 11,
+        "failures": 0
+      },
+      {
+        "test": "patch_contact_test.gd",
+        "checks": 7,
+        "failures": 0
+      },
+      {
+        "test": "patch_substep_test.gd",
+        "checks": 2,
+        "failures": 0
+      },
+      {
+        "test": "patch_tire_test.gd",
+        "checks": 8,
+        "failures": 0
+      },
+      {
+        "test": "plate_identity_test.gd",
+        "checks": 30,
+        "failures": 0
+      },
+      {
+        "test": "power_gearing_test.gd",
+        "checks": 49,
+        "failures": 0
+      },
+      {
+        "test": "power_progression_test.gd",
+        "checks": 97,
+        "failures": 0
+      },
+      {
+        "test": "presentation_expansion_test.gd",
+        "checks": 43,
+        "failures": 0
+      },
+      {
+        "test": "presentation_theme_test.gd",
+        "checks": 11,
+        "failures": 0
+      },
+      {
+        "test": "profile_ghost_test.gd",
+        "checks": 26,
+        "failures": 0
+      },
+      {
+        "test": "replay_album_test.gd",
+        "checks": 23,
+        "failures": 0
+      },
+      {
+        "test": "route_jumps_test.gd",
+        "checks": 10,
+        "failures": 0
+      },
+      {
+        "test": "route_revision_test.gd",
+        "checks": 41,
+        "failures": 0
+      },
+      {
+        "test": "settings_test.gd",
+        "checks": 7,
+        "failures": 0
+      },
+      {
+        "test": "shoulder_lod_test.gd",
+        "checks": 10,
+        "failures": 0
+      },
+      {
+        "test": "stage_art_test.gd",
+        "checks": 12,
+        "failures": 0
+      },
+      {
+        "test": "stage_geometry_test.gd",
+        "checks": 16,
+        "failures": 0
+      },
+      {
+        "test": "stage_play_test.gd",
+        "checks": 13,
+        "failures": 0
+      },
+      {
+        "test": "stage_result_store_test.gd",
+        "checks": 11,
+        "failures": 0
+      },
+      {
+        "test": "stage_session_test.gd",
+        "checks": 15,
+        "failures": 0
+      },
+      {
+        "test": "surface_test.gd",
+        "checks": 17,
+        "failures": 0
+      },
+      {
+        "test": "tail_streaks_test.gd",
+        "checks": 5,
+        "failures": 0
+      },
+      {
+        "test": "tire_feedback_test.gd",
+        "checks": 5,
+        "failures": 0
+      },
+      {
+        "test": "tire_test.gd",
+        "checks": 12,
+        "failures": 0
+      },
+      {
+        "test": "tire_vertical_test.gd",
+        "checks": 11,
+        "failures": 0
+      },
+      {
+        "test": "vehicle_test.gd",
+        "checks": 11,
+        "failures": 0
+      },
+      {
+        "test": "visual_sample_test.gd",
+        "checks": 17,
+        "failures": 0
+      },
+      {
+        "test": "world_test.gd",
+        "checks": 13,
+        "failures": 0
+      }
+    ]
+  },
+  "python_tests": 7,
+  "real_window": {
+    "renderer": "Metal / Apple M5",
+    "resolution": [
+      1280,
+      720
+    ],
+    "entry_checks": 12,
+    "transition_checks": 9,
+    "replay_checks": 23,
+    "audio_checks": 17,
+    "audio_driver": "CoreAudio",
+    "all_passed": true
+  },
+  "full_drives": [
+    {
+      "elapsed": 216.016666666635,
+      "finished": true,
+      "input": "vgamepad",
+      "max_lateral": 0.559600353240967,
+      "power_tier": 0,
+      "progress": 2768.18376347363,
+      "recoveries": 0,
+      "splits": [
+        70.9666666666692,
+        143.066666666701,
+        216.016666666635
+      ],
+      "stage": "sunlit_cape",
+      "vehicle": "F160"
+    },
+    {
+      "elapsed": 211.924999999972,
+      "finished": true,
+      "input": "vgamepad",
+      "max_lateral": 0.646659851074219,
+      "power_tier": 0,
+      "progress": 2767.98957140086,
+      "recoveries": 0,
+      "splits": [
+        69.3416666666679,
+        140.18333333337,
+        211.924999999972
+      ],
+      "stage": "sunlit_cape",
+      "vehicle": "R200"
+    },
+    {
+      "elapsed": 210.01666666664,
+      "finished": true,
+      "input": "vgamepad",
+      "max_lateral": 0.596666097640991,
+      "power_tier": 0,
+      "progress": 2767.96834852515,
+      "recoveries": 0,
+      "splits": [
+        68.6166666666673,
+        138.891666666705,
+        210.01666666664
+      ],
+      "stage": "sunlit_cape",
+      "vehicle": "A240"
+    },
+    {
+      "elapsed": 307.583333333218,
+      "finished": true,
+      "input": "vgamepad",
+      "max_lateral": 0.539505898952484,
+      "power_tier": 0,
+      "progress": 3168.27340143658,
+      "recoveries": 0,
+      "splits": [
+        90.4666666666847,
+        199.499999999983,
+        307.583333333218
+      ],
+      "stage": "misty_highlands",
+      "vehicle": "F160"
+    },
+    {
+      "elapsed": 278.941666666577,
+      "finished": true,
+      "input": "vgamepad",
+      "max_lateral": 0.602940261363983,
+      "power_tier": 0,
+      "progress": 3167.97249267255,
+      "recoveries": 0,
+      "splits": [
+        84.4083333333466,
+        183.383333333331,
+        278.941666666577
+      ],
+      "stage": "misty_highlands",
+      "vehicle": "R200"
+    },
+    {
+      "elapsed": 254.299999999933,
+      "finished": true,
+      "input": "vgamepad",
+      "max_lateral": 0.670683264732361,
+      "power_tier": 0,
+      "progress": 3167.95290249288,
+      "recoveries": 0,
+      "splits": [
+        80.0500000000098,
+        171.808333333341,
+        254.299999999933
+      ],
+      "stage": "misty_highlands",
+      "vehicle": "A240"
+    },
+    {
+      "elapsed": 267.816666666587,
+      "finished": true,
+      "input": "vgamepad",
+      "max_lateral": 0.507455050945282,
+      "power_tier": 0,
+      "progress": 3018.18017331413,
+      "recoveries": 0,
+      "splits": [
+        77.1250000000074,
+        186.008333333328,
+        267.816666666587
+      ],
+      "stage": "sunset_ridge",
+      "vehicle": "F160"
+    },
+    {
+      "elapsed": 258.699999999929,
+      "finished": true,
+      "input": "vgamepad",
+      "max_lateral": 0.788301467895508,
+      "power_tier": 0,
+      "progress": 3018.02771108321,
+      "recoveries": 0,
+      "splits": [
+        74.858333333339,
+        179.341666666668,
+        258.699999999929
+      ],
+      "stage": "sunset_ridge",
+      "vehicle": "R200"
+    },
+    {
+      "elapsed": 247.141666666606,
+      "finished": true,
+      "input": "vgamepad",
+      "max_lateral": 0.744750440120697,
+      "power_tier": 0,
+      "progress": 3017.95563449341,
+      "recoveries": 0,
+      "splits": [
+        73.7583333333381,
+        168.750000000011,
+        247.141666666606
+      ],
+      "stage": "sunset_ridge",
+      "vehicle": "A240"
+    }
+  ],
+  "lifecycle": [
+    {
+      "cycle": 1,
+      "memory": 187893395,
+      "nodes": 53.0,
+      "orphans": 0.0,
+      "resources": 119.0
+    },
+    {
+      "cycle": 2,
+      "memory": 188808911,
+      "nodes": 53.0,
+      "orphans": 0.0,
+      "resources": 119.0
+    },
+    {
+      "cycle": 3,
+      "memory": 189062463,
+      "nodes": 53.0,
+      "orphans": 0.0,
+      "resources": 119.0
+    },
+    {
+      "cycle": 4,
+      "memory": 189059055,
+      "nodes": 53.0,
+      "orphans": 0.0,
+      "resources": 119.0
+    },
+    {
+      "cycle": 5,
+      "memory": 189060027,
+      "nodes": 53.0,
+      "orphans": 0.0,
+      "resources": 119.0
+    },
+    {
+      "cycle": 6,
+      "memory": 189095579,
+      "nodes": 53.0,
+      "orphans": 0.0,
+      "resources": 119.0
+    },
+    {
+      "cycle": 7,
+      "memory": 189093371,
+      "nodes": 53.0,
+      "orphans": 0.0,
+      "resources": 119.0
+    },
+    {
+      "cycle": 8,
+      "memory": 189094311,
+      "nodes": 53.0,
+      "orphans": 0.0,
+      "resources": 119.0
+    },
+    {
+      "cycle": 9,
+      "memory": 189099143,
+      "nodes": 53.0,
+      "orphans": 0.0,
+      "resources": 119.0
+    },
+    {
+      "cycle": 10,
+      "memory": 189095807,
+      "nodes": 53.0,
+      "orphans": 0.0,
+      "resources": 119.0
+    }
+  ],
+  "notes": [
+    "Full drives cover standard power for all nine stage/vehicle pairs. Boosted variants were not re-run as complete stages in this change.",
+    "Concurrent headless regression timings are not performance acceptance data.",
+    "Route descent test initially detected coastal approach ripple reversing local grade; smoother bridge approaches fixed it and all nine full drives were restarted on the final geometry.",
+    "Audio shutdown warning was traced to unclosed Road one-shots; explicit disposal and headless playback suppression resolved it. Final lifecycle and actual replay checks have no leak warnings.",
+    "Original MIDI/WAV: four 16-bar themes, percussion on channel 10, no piano patch, default music gain 0.45 to 0.585.",
+    "No Windows hardware or release-binary certification in this change."
+  ]
+}

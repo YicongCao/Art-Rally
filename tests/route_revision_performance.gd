@@ -56,7 +56,7 @@ func _run() -> void:
 		print("ROUTE PERFORMANCE: ",JSON.stringify(report))
 		var file := FileAccess.open("res://logs/route_revision_performance.json",FileAccess.WRITE)
 		file.store_string(JSON.stringify(reports,"\t"))
-		app.leave_race()
+		await app.leave_race()
 		await process_frame
 	app.queue_free()
 	await process_frame

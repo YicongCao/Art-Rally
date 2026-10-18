@@ -54,7 +54,7 @@ func _run() -> void:
 		app.race.camera_mode = 2
 		await capture(RallyContentCatalog.VEHICLES[i]+"-cockpit")
 		if i > 0: await capture_environment_detail(i)
-		app.leave_race()
+		await app.leave_race()
 		await process_frame
 	app.queue_free()
 	await process_frame

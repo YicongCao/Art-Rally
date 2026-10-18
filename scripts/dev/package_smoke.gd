@@ -88,7 +88,7 @@ static func run_app(app: Node) -> void:
 	var restored := RallyProfileStore.new()
 	restored.path = app.profile.path
 	if restored.load_file()!=OK: failures.append("profile read")
-	app.leave_race()
+	await app.leave_race()
 	await app.get_tree().process_frame
 	if app.screen!="stages": failures.append("return flow")
 	print("PACKAGE SMOKE PASSED" if failures.is_empty() else "PACKAGE SMOKE FAILED: "+str(failures))

@@ -21,7 +21,7 @@ func _run() -> void:
 	check(visible_button("开始计时挑战").size.y > visible_button("成绩册").size.y * 2, "Frequent actions have larger tiles than secondary actions")
 	var icons := app.ui.find_children("*", "TextureRect", true, false)
 	icons = icons.filter(func(icon: TextureRect): return icon.texture != null and icon.texture.resource_path.begins_with("res://assets/ui/icons/"))
-	check(icons.size() == 9, "All nine menu actions have loaded vector icons")
+	check(icons.size() == 8, "All eight menu actions have loaded vector icons")
 	check(not visible_button("开始计时挑战").get_global_rect().intersects(visible_button("设置").get_global_rect()), "Primary tiles have separate hit targets")
 	check(visible_button("开始计时挑战").position.x < visible_button("自由练习").position.x and visible_button("自由练习").position.x < visible_button("设置").position.x,"Primary menu order is challenge, practice, settings")
 	await capture("home")
@@ -48,6 +48,7 @@ func _run() -> void:
 
 
 func settled() -> void:
+	if DisplayServer.get_name()!="headless": await create_timer(.25).timeout
 	for i: int in range(4): await process_frame
 
 

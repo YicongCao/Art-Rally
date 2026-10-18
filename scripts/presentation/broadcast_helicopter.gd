@@ -13,6 +13,7 @@ var next_pass: int = 0
 var shot_count: int = 0
 var active_time: float = 0
 var clock: float = 0
+var next_allowed_time: float = 0
 var photographed: bool = false
 var capture_pending: bool = false
 var photos_enabled: bool = true
@@ -77,6 +78,8 @@ func build(owner_scene: Node3D,photo_album: RallyPhotoAlbum) -> void:
 
 func reset() -> void:
 	next_pass = 0
+	next_allowed_time = 0
+	clock = 0
 	shot_count = 0
 	active_time = 0
 	airframe.visible = false
@@ -89,7 +92,8 @@ func advance(dt: float) -> void:
 		airframe.visible = false
 		return
 	var progress: float = scene.session.progress/scene.generator.route.length
-	if active_time<=0 and next_pass<FRACTIONS.size() and progress>=FRACTIONS[next_pass]:
+	if clock>=next_allowed_time and active_time<=0 and next_pass<FRACTIONS.size() and progress>=FRACTIONS[next_pass]:
+		next_allowed_time = clock+47
 		active_time = 12
 		photographed = false
 		next_pass += 1

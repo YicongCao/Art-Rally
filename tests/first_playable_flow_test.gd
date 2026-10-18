@@ -34,7 +34,7 @@ func _run() -> void:
 	app.race._toggle_pause()
 	check(paused,"Pause works")
 	app.race._toggle_pause()
-	app.leave_race()
+	await app.leave_race()
 	await process_frame
 	check(not paused and app.screen=="stages","Return frees race and resumes menu")
 	app.profile.data.unlocked_power_tier = 2
@@ -53,7 +53,7 @@ func _run() -> void:
 	await app.start_race()
 	check(app.race.vehicle.drivetrain.config.rated_power_ps==320 and app.race.challenge.vehicle.power_tier==2,"Selected +100% F160 actually loads 320 PS into gameplay")
 	check(app.profile.data.last_power_tier==2,"The loaded variant is the saved recent selection")
-	app.leave_race()
+	await app.leave_race()
 	await process_frame
 	app.profile.data = RallyProfileStore.fresh()
 	app.show_vehicles()

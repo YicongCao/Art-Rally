@@ -9,7 +9,7 @@ func _run() -> void:
 		app.chosen_stage = RallyContentCatalog.STAGES[i%3]
 		app.chosen_vehicle = RallyContentCatalog.VEHICLES[i%3]
 		await app.start_race()
-		app.leave_race()
+		await app.leave_race()
 		for frame: int in range(3): await process_frame
 		reports.append({"cycle":i+1,"nodes":Performance.get_monitor(Performance.OBJECT_NODE_COUNT),"orphans":Performance.get_monitor(Performance.OBJECT_ORPHAN_NODE_COUNT),"resources":Performance.get_monitor(Performance.OBJECT_RESOURCE_COUNT),"memory":OS.get_static_memory_usage()})
 		print("SCENE CYCLE: ",reports[-1])

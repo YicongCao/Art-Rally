@@ -28,7 +28,7 @@ func build(owner_scene: Node3D) -> void:
 	scene.vehicle.reset_completed.connect(tire_marks.break_trails)
 	atmosphere.build_at(scenery.dressing,scenery.route,scenery.center,scene.get_node("Sun"),1.8)
 	car_style.build(scene.vehicle,scene.vehicle_definition)
-	tail_streaks.build(scene,scene.vehicle.config.body_size)
+	tail_streaks.build(scene,scene.vehicle.config.body_size,scene.vehicle_definition.vehicle_id if scene.vehicle_definition!=null else "A240")
 	scene.vehicle.reset_completed.connect(tail_streaks.clear)
 	camera_rig.definition = scene.vehicle_definition
 	camera_rig.build(scene.camera)

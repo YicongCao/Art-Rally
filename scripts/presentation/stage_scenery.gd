@@ -366,6 +366,7 @@ func _build_landmarks() -> void:
 		var builder := RallySampleMeshes.new()
 		match entry.kind:
 			"lighthouse":
+				root.add_child(RallyLighthouseBeacon.new())
 				builder.cone(3,2.1,20,Vector3(0,10,0),Color("eee3c7"),12)
 				builder.cone(2.65,2.4,2,Vector3(0,8,0),Color("c45d3e"),12)
 				builder.cone(3.3,3.3,.4,Vector3(0,20,0),Color("4c6966"),12)

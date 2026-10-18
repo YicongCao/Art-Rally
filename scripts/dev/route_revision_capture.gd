@@ -87,7 +87,7 @@ func _run() -> void:
 			app.race.camera.position = beach.to_global(Vector3(-12,8,-2))
 			app.race.camera.look_at(beach.to_global(Vector3(2,0,-16)))
 			await capture("beach-detail")
-		app.leave_race()
+		await app.leave_race()
 		await process_frame
 	app.queue_free()
 	await process_frame

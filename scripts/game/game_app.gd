@@ -36,6 +36,7 @@ var replay_clocks: Array[Label] = []
 var replay_buttons: Array[Button] = []
 var replay_cameras: Array[OptionButton] = []
 var immersive_idle: float = 0
+var transitions := RallyPageTransition.new()
 
 
 func _ready() -> void:
@@ -52,6 +53,7 @@ func _ready() -> void:
 	if output in AudioServer.get_output_device_list(): AudioServer.output_device = output
 	add_child(audio)
 	audio.apply_settings(prefs)
+	add_child(transitions)
 	layer.layer = 40
 	add_child(layer)
 	if not test_mode and str(profile.data.get("plate","")).is_empty(): show_plate_setup(true)
@@ -83,10 +85,10 @@ func _theme() -> Theme:
 
 
 func _page(title: String, subtitle: String, name_id: String) -> void:
+	var previous_screen := screen
+	var previous_ui := ui
+	transitions.finish_slide()
 	screen = name_id
-	if is_instance_valid(ui):
-		layer.remove_child(ui)
-		ui.queue_free()
 	ui = Control.new()
 	ui.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	ui.theme = _theme()
@@ -119,6 +121,12 @@ func _page(title: String, subtitle: String, name_id: String) -> void:
 		_label(column,title,42)
 		if not subtitle.is_empty(): _label(column,subtitle,17,Color("64716b") if paper else Color("c8d5c7"))
 	if not profile.message.is_empty(): _label(column,profile.message,16,Color("ffd38b"))
+	if is_instance_valid(previous_ui):
+		if previous_screen!=name_id and previous_screen not in ["race","results",""] and name_id!="results" and not transitions.busy:
+			var levels := {"home":0,"stages":1,"vehicles":2,"loading":3,"photo":2,"bindings":2,"plate":2}
+			var direction := -1.0 if int(levels.get(name_id,1))<int(levels.get(previous_screen,1)) else 1.0
+			transitions.slide(previous_ui,ui,direction)
+		else: previous_ui.queue_free()
 
 
 func _label(parent: Node,text: String,font_size: int = 18,color: Color = Color("f3ead2")) -> Label:
@@ -198,7 +206,6 @@ func show_home() -> void:
 	secondary.add_theme_constant_override("separation",10)
 	_menu_tile(secondary,"相册","","gallery",Color("203b37"),show_gallery,false)
 	_menu_tile(secondary,"操作指南","","guide",Color("203b37"),show_guide,false)
-	_menu_tile(secondary,"驾驶教学","","learn",Color("203b37"),show_tutorial,false)
 	_menu_tile(secondary,"成绩册","","records",Color("203b37"),show_records,false)
 	_menu_tile(secondary,"制作名单","","credits",Color("203b37"),show_credits,false)
 	_menu_tile(secondary,"退出","","exit",Color("203b37"),func(): get_tree().quit(),false)
@@ -208,7 +215,7 @@ func show_guide() -> void:
 	_page("操作指南","", "guide")
 	var row := _row(column)
 	for entry: Array in [["键盘","W / ↑　加速
-S / ↓　制动，停稳按住 1 秒倒车
+S / ↓　制动，停稳按住 0.6 秒倒车
 A D / ← →　转向
 空格　手刹　　R　恢复
 C　镜头　　Q E　换挡
@@ -468,6 +475,7 @@ func start_race() -> void:
 	loading = true
 	chosen_power_tier = mini(chosen_power_tier,profile.unlocked_power_tier())
 	_loading_page()
+	if transitions.sliding and transitions.sliding.is_running(): await transitions.sliding.finished
 	await get_tree().process_frame
 	profile.data.last_stage = chosen_stage
 	profile.data.last_vehicle = chosen_vehicle
@@ -492,6 +500,7 @@ func start_race() -> void:
 	_loading_progress(.70,"布置地貌、植被与车辆")
 	await get_tree().process_frame
 	race.start()
+	race.controls.suspend()
 	_loading_progress(.94,"检查起点、声音与个人幽灵")
 	race.completed.connect(show_results)
 	race.return_requested.connect(leave_race)
@@ -500,7 +509,11 @@ func start_race() -> void:
 	await get_tree().physics_frame
 	_loading_progress(1,"准备就绪")
 	await get_tree().process_frame
+	await transitions.cover(true)
+	audio.cue("flag_sweep")
 	ui.visible = false
+	screen = "race"
+	await transitions.reveal(true)
 	race.set_process(true)
 	race.set_physics_process(true)
 	race.controls.resume()
@@ -513,19 +526,28 @@ func _loading_progress(value: float,_description: String) -> void:
 	status_label.text = "正在加载" if value<.94 else "即将发车"
 
 
-func leave_race() -> void:
+func leave_race(destination: String = "stages") -> void:
+	if transitions.busy: return
+	if DisplayServer.get_name()!="headless": await transitions.cover(false)
+	_clear_race(destination)
+	if transitions.busy: await transitions.reveal(false)
+
+
+func _clear_race(destination: String) -> void:
 	_close_immersive()
 	audio.playback = false
 	if is_instance_valid(race):
 		race.controls.suspend()
 		for key: String in profile.data.settings: prefs.set_value(key,profile.data.settings[key])
+		race.feedback.dispose()
 		remove_child(race)
 		race.queue_free()
 		race = null
 	get_tree().paused = false
 	tutorial = false
 	audio.set_scene()
-	show_stages()
+	if destination=="vehicles": show_vehicles()
+	else: show_stages()
 
 
 func retry() -> void:
@@ -606,7 +628,7 @@ func show_results(result: Dictionary) -> void:
 	body.add_child(view)
 	if replaying: _replay_controls(column)
 	var actions := _actions("返回赛道选择",leave_race,"再跑一次",retry)
-	var change := _button(actions,"更换车辆",func(): leave_race(); show_vehicles())
+	var change := _button(actions,"更换车辆",leave_race.bind("vehicles"))
 	change.custom_minimum_size = Vector2(180,40)
 	change.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	change.size_flags_vertical = Control.SIZE_SHRINK_CENTER

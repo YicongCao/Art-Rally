@@ -21,6 +21,8 @@ func _run() -> void:
 			tiers = [selected]
 			suffix = "_tier_%d"%selected
 	if input_mode!="vgamepad": suffix += "_"+input_mode
+	if not stage_filter.is_empty(): suffix += "_"+stage_filter
+	if not vehicle_filter.is_empty(): suffix += "_"+vehicle_filter
 	for tier: int in tiers:
 		app.chosen_power_tier = tier
 		for stage_id: String in RallyContentCatalog.STAGES:
@@ -57,7 +59,7 @@ func _run() -> void:
 				check(report.finished,stage_id+" / "+vehicle_id+" completes every checkpoint")
 				check(report.recoveries==0,stage_id+" / "+vehicle_id+" needs no recovery")
 				check(app.profile.data.challenges.is_empty(),"Autopilot never writes player records")
-				app.leave_race()
+				await app.leave_race()
 				await process_frame
 	var file := FileAccess.open("res://logs/first_playable_matrix"+suffix+".json",FileAccess.WRITE)
 	file.store_string(JSON.stringify(reports,"\t"))

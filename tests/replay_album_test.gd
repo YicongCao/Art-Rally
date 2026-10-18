@@ -41,6 +41,7 @@ func _run() -> void:
 	check(app.screen=="results" and scene.replay.active and scene.replay.mode==0 and paused,"Result background starts TV-follow replay while physics stays paused")
 	check(scene.feedback.is_paused and scene.feedback.engine_layers.values().all(func(player: AudioStreamPlayer): return not player.playing or player.stream_paused),"Replay suspends the live engine loops and wheel feedback")
 	check(app.ui.find_children("*","RallyRecordConfetti",true,false).size()==1,"A saved personal record triggers its title confetti")
+	check(scene.replay.actor.physics_interpolation_mode==Node.PHYSICS_INTERPOLATION_MODE_OFF,"Render-time replay cannot receive a second physics interpolation pass")
 	var frozen: Transform3D = scene.vehicle.transform
 	var cameras: Array[Vector3] = []
 	for mode: int in range(4):
@@ -64,7 +65,7 @@ func _run() -> void:
 	check(app.screen=="results" and app.ui.visible,"Immersive replay returns to the existing result page")
 	app.retry()
 	check(app.screen=="race" and not paused and scene.replay==null and scene.vehicle.visible,"Retry removes replay and restores actual driving")
-	app.leave_race()
+	await app.leave_race()
 	await process_frame
 	var album := RallyPhotoAlbum.new()
 	album.directory = app.profile.path.get_base_dir()+"/gallery"

@@ -11,6 +11,7 @@ var frames: Array = []
 var gaps: Array = []
 var next_sample: float = 0
 var overflowed: bool = false
+var unwrapped_spins: bool = true
 
 
 func reset() -> void:
@@ -18,6 +19,7 @@ func reset() -> void:
 	gaps.clear()
 	next_sample = 0
 	overflowed = false
+	unwrapped_spins = true
 
 
 func capture(time: float,car: RallyVehicle,force: bool = false) -> void:
@@ -29,7 +31,11 @@ func capture(time: float,car: RallyVehicle,force: bool = false) -> void:
 	var p := car.global_position
 	var q := car.global_basis.get_rotation_quaternion()
 	var frame := [time,p.x,p.y,p.z,q.x,q.y,q.z,q.w,car.wheels[0].steer]
-	for wheel: RallyWheelState in car.wheels: frame.append(wheel.spin)
+	for i: int in range(car.wheels.size()):
+		var wheel: RallyWheelState = car.wheels[i]
+		var spin := wheel.spin
+		if not frames.is_empty(): spin = unwrap_spin(float(frames[-1][9+i]),spin,wheel.omega,time-float(frames[-1][0]))
+		frame.append(spin)
 	for wheel: RallyWheelState in car.wheels: frame.append(wheel.length)
 	frames.append(frame)
 	next_sample = time+SAMPLE_INTERVAL
@@ -42,7 +48,7 @@ func recovery(start: float,end: float) -> void:
 
 
 func payload(key: String,duration: float) -> Dictionary:
-	return {"version":VERSION,"key":key,"duration":duration,"frames":frames.duplicate(true),"gaps":gaps.duplicate(true),"complete":not overflowed}
+	return {"version":VERSION,"key":key,"duration":duration,"frames":frames.duplicate(true),"gaps":gaps.duplicate(true),"unwrapped_spins":unwrapped_spins,"complete":not overflowed}
 
 
 static func valid(value: Variant,key: String) -> bool:
@@ -96,6 +102,34 @@ static func sample(recording: Dictionary,time: float) -> Dictionary:
 	var spins: Array[float] = []
 	var lengths: Array[float] = []
 	for i: int in range(4):
-		spins.append(lerpf(float(a[9+i]),float(b[9+i]),weight))
+		spins.append(lerpf(float(a[9+i]),float(b[9+i]),weight) if recording.get("unwrapped_spins",false) else lerp_angle(float(a[9+i]),float(b[9+i]),weight))
 		lengths.append(lerpf(float(a[13+i]),float(b[13+i]),weight))
-	return {"pose":Transform3D(Basis(qa.slerp(qb,weight)),pa.lerp(pb,weight)),"steer":lerpf(float(a[8]),float(b[8]),weight),"spins":spins,"lengths":lengths}
+	# Time-aware Hermite tangents maintain velocity across 30 Hz sample boundaries.
+	# Never borrow a tangent from the other side of a recovery or a long dropout.
+	var previous: Array = samples[maxi(0,low-1)]
+	var following: Array = samples[mini(samples.size()-1,high+1)]
+	var span := float(b[0])-float(a[0])
+	var velocity_a := (pb-pa)/maxf(span,.00001)
+	var velocity_b := velocity_a
+	if low>0 and _continuous(recording,float(previous[0]),float(b[0])):
+		velocity_a = (pb-Vector3(previous[1],previous[2],previous[3]))/(float(b[0])-float(previous[0]))
+	if high+1<samples.size() and _continuous(recording,float(a[0]),float(following[0])):
+		velocity_b = (Vector3(following[1],following[2],following[3])-pa)/(float(following[0])-float(a[0]))
+	var t2 := weight*weight
+	var t3 := t2*weight
+	var position := pa*(2*t3-3*t2+1)+velocity_a*span*(t3-2*t2+weight)+pb*(-2*t3+3*t2)+velocity_b*span*(t3-t2)
+	return {"pose":Transform3D(Basis(qa.slerp(qb,weight)),position),"steer":lerpf(float(a[8]),float(b[8]),weight),"spins":spins,"lengths":lengths}
+
+
+static func _continuous(recording: Dictionary,start: float,end: float) -> bool:
+	if end-start>.2: return false
+	for gap: Array in recording.get("gaps",[]):
+		if start<=float(gap[1]) and end>=float(gap[0]): return false
+	return true
+
+
+static func unwrap_spin(previous: float,raw: float,omega: float,dt: float) -> float:
+	var delta := wrapf(raw-fposmod(previous,TAU),-PI,PI)
+	# Angular velocity disambiguates rotations above half a turn per 30 Hz sample.
+	delta += roundf((omega*dt-delta)/TAU)*TAU
+	return previous+delta

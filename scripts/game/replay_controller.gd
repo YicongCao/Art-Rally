@@ -34,9 +34,11 @@ func begin(owner_scene: Node3D,data: Dictionary,plate: String) -> bool:
 	if duration<=0: return false
 	scene.add_child(actor)
 	actor.name = "ReplayVehicle"
+	actor.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
+	scene.camera.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
 	actor.build(scene.challenge.vehicle,recording,false)
 	RallyVehiclePlate.attach(actor.get_child(0),scene.challenge.vehicle,plate)
-	streaks.build(scene,scene.challenge.vehicle.body_size)
+	streaks.build(scene,scene.challenge.vehicle.body_size,scene.challenge.vehicle.vehicle_id)
 	streaks.visual.name = "ReplayTailStreaks"
 	scene.vehicle.visible = false
 	scene.ghost.visible = false
@@ -62,6 +64,7 @@ func stop() -> void:
 		if scene.feedback.one_shot!=null: scene.feedback.one_shot.stream_paused = false
 		for particle: Dictionary in scene.feedback.particles: particle.emitter.visible = true
 		scene.controls.set_process_input(true)
+		scene.camera.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
 		scene.camera_snap = true
 		scene.presentation.camera_rig.reset()
 
@@ -133,7 +136,6 @@ func _render(dt: float) -> void:
 					eye = raised
 					break
 		if not clear_view(target,eye): eye = target-forward*4+Vector3.UP*1.5
-		snap = true
 	if snap or mode==3: scene.camera.global_position = eye
 	else: scene.camera.global_position = scene.camera.global_position.lerp(eye,1-exp(-5*dt))
 	if not clear_view(target,scene.camera.global_position): scene.camera.global_position = eye

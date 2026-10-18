@@ -9,15 +9,22 @@ func build(land: RallyStageScenery) -> void:
 	name = "LivingSky"
 	var rng := RandomNumberGenerator.new()
 	rng.seed = land.generator.definition.seed_value+883
-	var station := land.route.length*.69
 	var count := 12 if land.generator.definition.environment_id=="coast" else 9
 	for i: int in range(count):
 		var node := Node3D.new()
 		node.name = "Balloon%d"%i
 		add_child(node)
-		var at := land.route.position_at(station)+land.route.rights[land.route.index_at(station)]*rng.randf_range(-420,-220)
-		at += land.route.tangent_at(station)*rng.randf_range(-90,130)
-		at.y = maxf(land.height_at(at.x,at.z),land.route.position_at(station).y)+rng.randf_range(80,170)
+		var station := land.route.length*(.08+.84*float(i)/float(count-1))
+		var bank_side := -1.0 if i%2==0 else 1.0
+		var at := land.route.position_at(station)+land.route.rights[land.route.index_at(station)]*bank_side*rng.randf_range(330,650)
+		at += land.route.tangent_at(station)*rng.randf_range(-45,45)
+		at.y = maxf(land.height_at(at.x,at.z),land.route.position_at(station).y)+rng.randf_range(100,230)
+		for attempt: int in range(16):
+			var crowded := false
+			for existing: Dictionary in balloons:
+				if at.distance_to(existing.origin)<240: crowded = true
+			if not crowded: break
+			at += land.route.rights[land.route.index_at(station)]*bank_side*130+Vector3.UP*12
 		node.position = at
 		var b := RallySampleMeshes.new()
 		var ink: Color = [Color("c96b48"),Color("d6b665"),Color("528d92"),Color("a05e6e")][i%4]

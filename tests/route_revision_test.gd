@@ -6,7 +6,7 @@ func _run() -> void:
 		var route := RallyStageRoute.new()
 		route.build(definition)
 		check(route.validate().is_empty(),id+" has no crossing, unsafe grade or discontinuous frames")
-		check(definition.stage_version=="3",id+" isolates old scores and ghosts after geometry changes")
+		check(definition.stage_version=="4",id+" isolates old scores and ghosts after geometry changes")
 		var min_width := 100.0
 		var max_width := 0.0
 		var largest_step := 0.0
@@ -57,7 +57,7 @@ func _run() -> void:
 		if id=="sunlit_cape": check(land.sailboats.size()==4 and land.dressing.has_node("GoldenBeach") and land.dressing.has_node("GoldenCoastOverlook"),"Coastal finale includes sailing bay, beach and spectator overlook")
 		if id=="misty_highlands": check(land.dressing.has_node("SummitBelvedere") and app.race.presentation.environment.fog_density<.0008,"Summit and clear foreground morning light exist")
 		if id=="sunset_ridge": check(land.dressing.has_node("PineStoneArch"),"Forest has a natural stone arch")
-		app.leave_race()
+		await app.leave_race()
 		app.queue_free()
 		await process_frame
 	finish()

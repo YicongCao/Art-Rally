@@ -9,14 +9,14 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[1] / 'assets/audio/music'
 SR, PPQ = 22050, 480
 SCORES = {
-    'menu': dict(title='Long Way Home', bpm=84, roots=[50,55,57,54,50,59,55,57],
-                 melody=[2,6,9,14,9,6,4,2,0,4,7,11,7,4,2,0], pattern=[0,7,14,9,7,14,16,9], program=24, lead=11, mood='guitar'),
-    'autumn': dict(title='Amber Switchbacks', bpm=112, roots=[45,50,52,45,54,50,47,52],
-                   melody=[12,16,19,16,14,9,7,9,12,14,19,21,19,16,14,7], pattern=[0,12,7,16,0,7,12,19], program=10, lead=24, mood='mallet'),
-    'coast': dict(title='Sails in the Sun', bpm=120, roots=[52,57,54,59,56,57,52,59],
-                  melody=[7,11,14,16,14,11,9,4,7,9,11,19,16,14,11,9], pattern=[0,7,11,14,7,16,11,14], program=4, lead=11, mood='piano'),
-    'highland': dict(title='Above the Morning Mist', bpm=76, roots=[50,53,48,55,50,57,53,55],
-                     melody=[0,7,10,14,17,14,10,7,5,12,15,19,17,12,10,5], pattern=[0,7,10,14,0,7,17,14], program=88, lead=73, mood='pad'),
+    'menu': dict(title='Ignition / Grid Lights', bpm=126, roots=[45,45,41,43,45,48,41,43],
+                 melody=[12,15,19,22,19,15,10,7,12,19,24,22,19,15,10,7], pattern=[0,7,12,15,7,12,19,10], program=81, lead=30),
+    'autumn': dict(title='Redline Through Amber', bpm=140, roots=[40,40,43,45,40,47,43,38],
+                   melody=[12,15,19,24,22,19,15,10,12,19,22,24,19,15,10,7], pattern=[0,12,7,15,0,7,12,19], program=30, lead=81),
+    'coast': dict(title='Cliffside Overdrive', bpm=148, roots=[45,48,41,43,45,52,48,43],
+                  melody=[12,19,24,27,24,22,19,15,12,15,19,22,24,19,15,10], pattern=[0,7,12,19,15,7,10,12], program=81, lead=80),
+    'highland': dict(title='Summit Pressure', bpm=136, roots=[38,38,41,36,38,45,41,36],
+                     melody=[12,19,22,24,19,15,12,10,7,12,15,19,22,19,15,10], pattern=[0,12,7,10,0,12,15,7], program=80, lead=30),
 }
 
 def vlq(n):
@@ -30,8 +30,10 @@ def midi(path, config, tracks, total_beats):
     tempo=int(60_000_000/config['bpm'])
     conductor=b'\x00\xff\x51\x03'+tempo.to_bytes(3,'big')+b'\x00\xff\x58\x04\x04\x02\x18\x08'+vlq(total_beats*PPQ)+b'\xff\x2f\x00'
     output=chunk(b'MThd',struct.pack('>HHH',1,len(tracks)+1,PPQ))+chunk(b'MTrk',conductor)
-    for channel,(name,program,notes) in enumerate(tracks):
-        events=[(0,b'\xff\x03'+vlq(len(name))+name.encode()),(0,bytes([0xc0+channel,program]))]
+    for track_index,(name,program,notes) in enumerate(tracks):
+        channel=9 if name=='Drums' else track_index
+        events=[(0,b'\xff\x03'+vlq(len(name))+name.encode())]
+        if name!='Drums': events.append((0,bytes([0xc0+channel,program])))
         for beat,duration,pitch,velocity in notes:
             events.extend([(round(beat*PPQ),bytes([0x90+channel,pitch,velocity])),(min(total_beats*PPQ,round((beat+duration)*PPQ)),bytes([0x80+channel,pitch,0]))])
         events.sort(key=lambda e:(e[0],0 if e[1][0]&0xf0==0x80 else 1))
@@ -42,44 +44,48 @@ def midi(path, config, tracks, total_beats):
     path.write_bytes(output)
 
 def voice(program,pitch,duration):
-    t=np.arange(int((duration+.5)*SR))/SR
+    t=np.arange(int((duration+.16)*SR))/SR
     hz=440*2**((pitch-69)/12)
-    attack=np.minimum(t/(.04 if program in [88,73] else .009),1)
-    release=np.clip((duration+.5-t)/.5,0,1)
-    if program==88:
-        raw=np.sin(2*np.pi*hz*t)+.23*np.sin(2*np.pi*hz*2.002*t)+.14*np.sin(2*np.pi*hz*.998*t)
-        env=attack*release*np.exp(-t*.4)
-    elif program==73:
-        raw=np.sin(2*np.pi*hz*t+np.sin(t*31)*.018)+.08*np.sin(2*np.pi*hz*2*t)
-        env=attack*release*np.exp(-t*.5)
-    elif program==32:
-        raw=np.sin(2*np.pi*hz*t)+.18*np.sin(2*np.pi*hz*2*t)
-        env=attack*np.exp(-t*3)*release
-    elif program==24:
-        raw=sum(a*np.sin(2*np.pi*hz*(i+1)*t) for i,a in enumerate([1,.38,.16,.08]))
-        env=attack*np.exp(-t*5)*release
+    attack=np.minimum(t/.006,1)
+    release=np.clip((duration+.16-t)/.16,0,1)
+    if program==128:
+        noise=np.random.default_rng(pitch*173+len(t)).normal(0,.4,len(t))
+        if pitch==36:
+            phase=2*np.pi*(47*t+85*.035*(1-np.exp(-t/.035)))
+            return np.sin(phase)*np.exp(-t*14)+noise*np.exp(-t*140)*.2
+        if pitch==38:
+            return (noise*.85+np.sin(2*np.pi*180*t)*.22)*attack*np.exp(-t*22)
+        high=noise-np.roll(noise,1)
+        return high*attack*np.exp(-t*(60 if pitch==42 else 13))*.32
+    if program==38:
+        raw=np.sin(2*np.pi*hz*t)+.3*np.sin(2*np.pi*hz*2*t)+.12*np.sin(2*np.pi*hz*3*t)
+        return np.tanh(raw*1.7)*attack*release*np.exp(-t*2.5)
+    harmonics=range(1,min(15,int(SR*.46/hz))+1)
+    raw=sum(np.sin(2*np.pi*hz*k*t)*((1/k) if program!=80 or k%2 else 0) for k in harmonics)
+    if program==30:
+        raw=np.tanh(raw*2.6)+.18*np.sin(2*np.pi*hz*1.5*t)
     else:
-        raw=np.sin(2*np.pi*hz*t)+.24*np.sin(2*np.pi*hz*2*t)*np.exp(-t*5)+.10*np.sin(2*np.pi*hz*3.99*t)*np.exp(-t*8)
-        env=attack*np.exp(-t*(3.5 if program==10 else 2.2))*release
-    return raw*env
+        raw+=.16*np.sin(2*np.pi*hz*1.003*t)
+    return raw*attack*release*np.exp(-t*(6 if program==30 else 4))*.65
 
 def compose(config):
-    arp=[]; bass=[]; melody=[]; pad=[]
+    pulse=[]; bass=[]; lead=[]; drums=[]
     for bar in range(16):
         root=config['roots'][(bar//2)%8]
+        # Muted eighth-note motor, syncopated bass and a four-bar call/response.
         for i,interval in enumerate(config['pattern']):
-            # The highland theme leaves longer gaps; coast uses light syncopation.
-            if config['mood']=='pad' and i%2: continue
-            beat=bar*4+i*.5+(.15 if config['mood']=='piano' and i%2 else 0)
-            arp.append((beat,.38 if config['mood']!='pad' else .85,root+12+interval,48 if config['mood']=='pad' else 64))
-        bass.extend([(bar*4,1.4,root-12,68),(bar*4+2.5,.8,root-5,50)])
-        for i in range(2 if config['mood']=='pad' else 4):
-            interval=config['melody'][(bar*3+i)%len(config['melody'])]
-            beat=bar*4+i*(2 if config['mood']=='pad' else 1)+(.5 if bar%2 and config['mood']=='piano' else 0)
-            if beat<64: melody.append((beat,1.5 if config['mood']=='pad' else .65,root+12+interval,60))
-        if bar%2==0:
-            for offset in [0,7,14 if config['mood']!='pad' else 10]: pad.append((bar*4,5.8,root+offset,34))
-    return [('Arpeggio',config['program'],arp),('Bass',32,bass),('Melody',config['lead'],melody),('Air',88,pad)]
+            pulse.append((bar*4+i*.5,.22,root+12+interval,66 if i%2 else 83))
+            if i in [0,2,3,4,6,7]: bass.append((bar*4+i*.5,.30,root-12+(7 if i==7 else 0),83))
+        if bar%4 in [1,2,3]:
+            for i in range(4):
+                lead.append((bar*4+i+.25,.45,root+12+config['melody'][(bar*3+i)%16],67 if bar<8 else 78))
+        for beat in [0,1.5,2,3.5]: drums.append((bar*4+beat,.22,36,100))
+        for beat in [1,3]: drums.append((bar*4+beat,.18,38,92))
+        for i in range(8): drums.append((bar*4+i*.5,.07,42 if i!=7 else 46,52 if i%2 else 65))
+        if bar%4==3:
+            for i in [0,.25,.5,.75]: drums.append((bar*4+3+i,.10,38,50+int(i*42)))
+        if bar in [0,8]: drums.append((bar*4,.6,49,70))
+    return [('Pulse',config['program'],pulse),('Bass',38,bass),('Lead',config['lead'],lead),('Drums',128,drums)]
 
 def generate():
     ROOT.mkdir(parents=True,exist_ok=True)
@@ -89,12 +95,12 @@ def generate():
         audio=np.zeros(count)
         for name,program,notes in tracks:
             for beat,length,pitch,velocity in notes:
-                data=voice(program,pitch,length*beat_seconds)*(velocity/127)*(.13 if name=='Air' else .18)
+                data=voice(program,pitch,length*beat_seconds)*(velocity/127)*({'Pulse':.18,'Bass':.26,'Lead':.13,'Drums':.38}[name])
                 start=round(beat*beat_seconds*SR)
                 np.add.at(audio,(np.arange(len(data))+start)%count,data)
         # Circular delays preserve the score's exact loop and keep the reverb tail at the start.
         dry=audio.copy()
-        for delay,gain in [(.143,.14),(.289,.10),(.431,.06)]: audio+=np.roll(dry,round(delay*SR))*gain
+        for delay,gain in [(beat_seconds*.75,.10),(beat_seconds*1.5,.055)]: audio+=np.roll(dry,round(delay*SR))*gain
         audio=np.tanh(audio*1.4)
         audio*=.70/max(.7,np.max(np.abs(audio)))
         # A 2ms endpoint taper removes sub-sample phase jumps without shortening the MIDI grid.

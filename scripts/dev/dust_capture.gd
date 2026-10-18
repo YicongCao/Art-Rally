@@ -30,7 +30,7 @@ func _run() -> void:
 	for i: int in range(4): await process_frame
 	await RenderingServer.frame_post_draw
 	root.get_texture().get_image().save_jpg("res://docs/previews/route-v2-dust-side.jpg",.95)
-	app.leave_race()
+	await app.leave_race()
 	app.queue_free()
 	await process_frame
 	quit()

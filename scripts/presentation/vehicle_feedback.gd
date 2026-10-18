@@ -39,7 +39,7 @@ func build(parent: Node3D) -> void:
 			if collision_cooldown<=0 and parent.vehicle.linear_velocity.length()>2:
 				one_shot.stream = RallyAudioDirector.asset("collision")
 				one_shot.volume_db = linear_to_db(clampf(parent.vehicle.linear_velocity.length()/35,0.05,0.7))
-				one_shot.play()
+				if DisplayServer.get_name()!="headless": one_shot.play()
 				collision_cooldown = 0.3)
 	for kind: String in ["engine","load","asphalt","gravel","mud","water","impact"]:
 		var player := AudioStreamPlayer.new()
@@ -101,12 +101,12 @@ func update(car: RallyVehicle, settings: RallyGameSettings, controls: RallyInput
 		if braking and not was_braking:
 			one_shot.stream = RallyAudioDirector.asset("brake")
 			one_shot.volume_db = -26
-			one_shot.play()
+			if DisplayServer.get_name()!="headless": one_shot.play()
 		was_braking = braking
 		if last_gear!=car.drivetrain.gear:
 			one_shot.stream = RallyAudioDirector.asset("shift")
 			one_shot.volume_db = -15
-			one_shot.play()
+			if DisplayServer.get_name()!="headless": one_shot.play()
 			last_gear = car.drivetrain.gear
 	impact_cooldown = maxf(0,impact_cooldown-dt)
 	last_mix = mix_for(car)
@@ -160,9 +160,9 @@ func stop_rumble() -> void:
 
 func dispose() -> void:
 	stop_rumble()
-	for player: AudioStreamPlayer in engine_layers.values():
-		if is_instance_valid(player): player.stop()
-	for player: AudioStreamPlayer in players.values():
+	var all_players: Array = engine_layers.values()+players.values()
+	if is_instance_valid(one_shot): all_players.append(one_shot)
+	for player: AudioStreamPlayer in all_players:
 		if is_instance_valid(player):
 			player.stream_paused = false
 			player.stop()

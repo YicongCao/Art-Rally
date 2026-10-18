@@ -77,7 +77,7 @@ func _run() -> void:
 			scene.camera.position = at+right*12+Vector3.UP*14
 			scene.camera.look_at(scene.presentation.scenery.sailboats[0].node.global_position+Vector3.UP*6)
 			await shot("sailing-bay")
-		app.leave_race()
+		await app.leave_race()
 		await process_frame
 	app.show_gallery()
 	await shot("gallery")

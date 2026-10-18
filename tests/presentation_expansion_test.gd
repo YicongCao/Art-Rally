@@ -36,9 +36,9 @@ func _run() -> void:
 		app.race.session.phase = RallyStageSession.Phase.RUNNING
 		for fraction: float in RallyBroadcastHelicopter.FRACTIONS:
 			app.race.session.progress = stage.target_length*fraction+1
-			for i: int in range(13): helicopter.advance(1)
+			for i: int in range(48): helicopter.advance(1)
 		check(helicopter.next_pass==4 and helicopter.shot_count==4,id+" helicopter makes four photographic passes")
-		app.leave_race()
+		await app.leave_race()
 		app.queue_free()
 		await process_frame
 	finish()

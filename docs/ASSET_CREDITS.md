@@ -4,7 +4,7 @@
 - 主菜单、金银铜奖牌及赛道符号 SVG 图标、三主题矢量场景插画：项目原创，源文件位于 `assets/ui/icons/` 与 `scripts/game/menu_backdrop.gd`。
 - 专属车牌输入、预览和三维文字共用 Chakra Petch Bold 英文／数字字形及 Noto Sans SC 中文回退，不依赖系统字体。
 - 车辆可编辑源：`art_source/vehicles/*.blend`，导出：`assets/vehicles/*.glb`，可用 `blender --background --python scripts/generate_vehicles.py` 重建。
-- 声音与音乐：项目原创程序合成，生成脚本 `scripts/generate_audio.py`、`scripts/generate_music.py`；标题与三赛道的四首原创配乐同时保存 MIDI 源和离线 WAV。没有外部录音、在线音源或 Kenney 资源混入包内。
+- 声音与音乐：项目原创程序合成，生成脚本 `scripts/generate_audio.py`、`scripts/generate_music.py`、`scripts/generate_flag_sweep.py`；标题与三赛道的四首原创配乐同时保存 MIDI 源和离线 WAV。没有外部录音、在线音源或 Kenney 资源混入包内。
 - Godot Engine：MIT，https://godotengine.org/license/ 。运行时许可与第三方依赖名单见随包 `Godot-LICENSE.txt`、`Godot-THIRD-PARTY.json`。
 - Jolt Physics：Godot 自带物理后端，依其打包许可分发。
 - Noto Sans SC / Noto Sans Mono：SIL Open Font License，原文见 `assets/fonts/` 随附许可。

@@ -9,6 +9,7 @@ var solid: bool = false
 
 
 func build(vehicle: RallyVehicleDefinition, data: Dictionary,translucent: bool = true) -> void:
+	physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
 	solid = not translucent
 	definition = vehicle
 	recording = data
@@ -65,4 +66,4 @@ func update(time: float, player_position: Vector3, enabled: bool) -> void:
 	for i: int in range(4):
 		wheels[i].position = Vector3((-0.5 if i%2==0 else 0.5)*definition.track_width,-sample.lengths[i],(-0.5 if i<2 else 0.5)*definition.wheelbase)
 		wheels[i].rotation.y = sample.steer if i<2 else 0
-		wheels[i].get_child(0).rotation.x = -sample.spins[i]
+		wheels[i].get_child(0).rotation.x = -fmod(sample.spins[i],TAU)

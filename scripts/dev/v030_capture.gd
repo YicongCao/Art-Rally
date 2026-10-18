@@ -45,7 +45,7 @@ func _run() -> void:
 			app.race.controls.resume()
 		await physics_frame
 	await capture("crowds")
-	app.leave_race()
+	await app.leave_race()
 	app.queue_free()
 	await process_frame
 	quit()

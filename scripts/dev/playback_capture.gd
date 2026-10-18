@@ -17,6 +17,7 @@ func _run() -> void:
 	var trajectory: Dictionary = saved.recording
 	var report: Dictionary = saved.result
 	app.race.trajectory.frames = trajectory.frames
+	app.race.trajectory.unwrapped_spins = trajectory.get("unwrapped_spins",false)
 	app.race.trajectory.gaps = trajectory.gaps
 	app.race.session.phase = RallyStageSession.Phase.FINISHED
 	app.show_results({"elapsed":report.elapsed,"penalty":0,"total_time":report.elapsed,"splits":report.splits,"outcome":{"eligible":false,"new_best":false}})
@@ -31,7 +32,7 @@ func _run() -> void:
 		app.race.replay.seek(128)
 		await shot("replay-%d"%mode)
 	app._set_immersive(false)
-	app.leave_race()
+	await app.leave_race()
 	app.show_guide()
 	await shot("guide")
 	app.queue_free()

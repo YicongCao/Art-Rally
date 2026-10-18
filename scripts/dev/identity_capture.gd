@@ -58,7 +58,7 @@ func _run() -> void:
 			app.race.camera.global_position = app.race.vehicle.to_global(Vector3(-.9,1.0,-app.race.challenge.vehicle.body_size.z/2-2.5))
 			app.race.camera.look_at(app.race.vehicle.to_global(Vector3(0,.13,-app.race.challenge.vehicle.body_size.z/2)))
 			await capture("F160-front")
-		app.leave_race()
+		await app.leave_race()
 		await process_frame
 	app.queue_free()
 	await process_frame
