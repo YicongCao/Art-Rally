@@ -6,7 +6,7 @@ func _run() -> void:
 	root.add_child(scene)
 	await ticks(2)
 	var atmosphere: RallySampleAtmosphere = scene.atmosphere
-	check(atmosphere.near_clouds.size() > 8 and atmosphere.far_clouds.size() > 12, "Two finite-distance cloud layers provide near and far geometry")
+	check(atmosphere.near_clouds.size() >= 4 and atmosphere.far_clouds.size() >= 6 and atmosphere.near_clouds.size()+atmosphere.far_clouds.size() <= 15, "Two sparse, finite-distance cloud layers leave open sky")
 	var direction: Vector3 = scene.get_node("Sun").global_basis.z
 	check(direction.is_equal_approx(atmosphere.sun_direction), "Sky disc cloud shading and directional light share the sun vector")
 	check(absf(rad_to_deg(asin(direction.y)) - 24) < 0.01, "Afternoon art direction uses a 24-degree solar elevation")
@@ -25,7 +25,12 @@ func _run() -> void:
 	check(near_angle > far_angle, "Lateral camera translation produces stronger near-layer parallax")
 	var arrays := near.mesh.surface_get_arrays(0)
 	var normals: PackedVector3Array = arrays[Mesh.ARRAY_NORMAL]
-	check(normals[0].is_equal_approx(normals[1]) and normals.size() > 500, "Clouds have flat triangle normals rather than billboard/noise surfaces")
+	var curved_normals := false
+	for i: int in range(0,normals.size(),3):
+		if not normals[i].is_equal_approx(normals[i+1]): curved_normals = true; break
+	check(curved_normals and normals.size()>500,"Cloud lobes have smooth normals rather than flat shards")
+	var bounds := near.mesh.get_aabb()
+	check(bounds.size.y/bounds.size.x>0.25,"Cumulus banks retain vertical volume instead of flattened disks")
 	scene.set_style(false)
 	check(not near.is_visible_in_tree(), "Graybox comparison hides finite cloud layers")
 	scene.queue_free()

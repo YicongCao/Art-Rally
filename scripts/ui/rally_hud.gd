@@ -141,16 +141,30 @@ func _draw() -> void:
 		center_text("F5 / 手柄 Back 重跑    Esc 设置",Vector2(640,458),15,AMBER)
 
 
+static func pacenote_arrow(code: String,at: Vector2 = Vector2.ZERO) -> Dictionary:
+	var side := -1.0 if code.begins_with("LEFT") else 1.0
+	var tight := code.ends_with("TIGHT")
+	var bend := at+Vector2(0,-10) if tight else at
+	var end := bend+Vector2(side*19,0) if tight else at+Vector2(side*16,-16)
+	var forward := (end-bend).normalized()
+	var across := Vector2(-forward.y,forward.x)
+	# Derive the pointed tip and its symmetric base from the same final segment.
+	# Screen Y points down: a medium right turn ends up-right, not down-right.
+	var tip := end+forward*10
+	var base := tip-forward*17
+	return {"path":PackedVector2Array([at+Vector2(0,25),bend,end]),
+		"head":PackedVector2Array([tip,base+across*8,base-across*8])}
+
+
 func _draw_note() -> void:
 	var code := str(model.note)
 	if code.is_empty(): return
 	panel(Rect2(465,24,350,91))
 	var at := Vector2(504,65)
-	var direction := -1.0 if code.begins_with("LEFT") else 1.0
 	if code.begins_with("LEFT") or code.begins_with("RIGHT"):
-		var turn := at+Vector2(direction*16,-16)
-		draw_polyline(PackedVector2Array([at+Vector2(0,25),at,turn]),AMBER,5,true)
-		draw_colored_polygon(PackedVector2Array([turn+Vector2(direction*9,-3),turn+Vector2(-direction*4,-10),turn+Vector2(-direction*7,7)]),AMBER)
+		var arrow := pacenote_arrow(code,at)
+		draw_polyline(arrow.path,AMBER,5,true)
+		draw_colored_polygon(arrow.head,AMBER)
 	elif code == "CREST_JUMP":
 		draw_polyline(PackedVector2Array([at+Vector2(-24,14),at+Vector2(-8,-3),at+Vector2(7,-3),at+Vector2(25,14)]),AMBER,4,true)
 	elif code == "WATER":

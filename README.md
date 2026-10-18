@@ -58,6 +58,7 @@ macOS 首次安装：`brew install --cask godot`。Homebrew 跟随新版发布�
 ./scripts/dev.sh m6-release-check # 内置字体、1080p HUD、最小窗口与完赛流程检查
 ./scripts/dev.sh v02-tire-render-check # 真实窗口检查轮胎形变、动态接触斑与 F9 数据
 ./scripts/dev.sh autumn-capture # 自动驾驶采集砂石、泥地、驾驶舱三张秋日实机图
+./scripts/dev.sh pacenote-render-check # 渲染左右普通弯、急弯四张实际路书卡片
 ./scripts/dev.sh controller-probe # 枚举当前真实手柄名称、GUID、映射与初始轴值
 ./scripts/dev.sh export-macos # 使用匹配模板生成 .app、ZIP 和 SHA-256
 ./scripts/dev.sh macos-app-check # 从导出包验证主场景、音频、字体、设置与成绩读写

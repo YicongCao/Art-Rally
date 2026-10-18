@@ -37,12 +37,12 @@ func build(owner_scene: Node3D) -> void:
 	environment.sky = sky
 	environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	environment.ambient_light_color = Color("b8c5e2")
-	environment.ambient_light_energy = 0.68
+	environment.ambient_light_energy = 0.52
 	environment.reflected_light_source = Environment.REFLECTION_SOURCE_SKY
 	environment.tonemap_mode = Environment.TONE_MAPPER_ACES
 	environment.fog_enabled = true
 	environment.fog_light_color = Color("b6b8d5")
-	environment.fog_light_energy = 0.85
+	environment.fog_light_energy = 0.75
 	environment.fog_density = 0.00065
 	environment.fog_sky_affect = 0.0
 	environment.ssao_enabled = false

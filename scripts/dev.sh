@@ -143,6 +143,11 @@ case "$MODE" in
     run_logged "$ROOT/logs/tire_feedback_render_check.log" --path "$ROOT" --max-fps 60 --script res://tests/tire_feedback_render_check.gd -- --test-defaults
     grep -q '^TEST RESULT: .* 0 failures$' "$ROOT/logs/tire_feedback_render_check.log"
     ;;
+  pacenote-render-check)
+    mkdir -p "$ROOT/logs"
+    run_logged "$ROOT/logs/pacenote_render_check.log" --path "$ROOT" --max-fps 60 --script res://tests/pacenote_render_check.gd
+    grep -q '^TEST RESULT: .* 0 failures$' "$ROOT/logs/pacenote_render_check.log"
+    ;;
   autumn-capture)
     mkdir -p "$ROOT/logs"
     run_logged "$ROOT/logs/autumn_capture.log" --path "$ROOT" --max-fps 60 --script res://tests/autumn_capture.gd -- --test-defaults
@@ -211,7 +216,7 @@ PY
     grep -q 'res://scripts/dev/package_smoke.gd.remap' "$ROOT/logs/export_windows.log"
     ;;
   *)
-    echo "Usage: $0 {doctor|editor|run|lab|stage|preview|check|regression|stage-check|stage-matrix|preview-check|preview-render-check|m5-render-check|drive-choice-render-check|autopilot-render-check|result-render-check|m6-perf|m6-release-check|v02-tire-render-check|autumn-capture|controller-probe|export-macos|macos-app-check|export-windows|windows-package-check} [Godot options]" >&2
+    echo "Usage: $0 {doctor|editor|run|lab|stage|preview|check|regression|stage-check|stage-matrix|preview-check|preview-render-check|m5-render-check|drive-choice-render-check|autopilot-render-check|result-render-check|m6-perf|m6-release-check|v02-tire-render-check|pacenote-render-check|autumn-capture|controller-probe|export-macos|macos-app-check|export-windows|windows-package-check} [Godot options]" >&2
     exit 2
     ;;
 esac

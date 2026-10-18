@@ -66,12 +66,12 @@ func _setup_light() -> void:
 	styled_environment.sky = sky
 	styled_environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	styled_environment.ambient_light_color = Color("b8c5e2")
-	styled_environment.ambient_light_energy = 0.68
+	styled_environment.ambient_light_energy = 0.52
 	styled_environment.reflected_light_source = Environment.REFLECTION_SOURCE_SKY
 	styled_environment.tonemap_mode = Environment.TONE_MAPPER_ACES
 	styled_environment.fog_enabled = true
 	styled_environment.fog_light_color = Color("b6b8d5")
-	styled_environment.fog_light_energy = 0.85
+	styled_environment.fog_light_energy = 0.75
 	styled_environment.fog_density = 0.00065
 	styled_environment.fog_sky_affect = 0.0
 	styled_environment.ssao_enabled = true

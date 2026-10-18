@@ -40,6 +40,19 @@ func _run() -> void:
 		var layout := RallyHUD.layout_for(viewport)
 		var corner: Vector2 = layout.offset+Vector2(1256,696)*float(layout.scale)
 		check(corner.x<viewport.x and corner.y<viewport.y,"HUD remains inside viewport %s"%viewport)
+	for code: String in ["LEFT_MEDIUM","RIGHT_MEDIUM","LEFT_TIGHT","RIGHT_TIGHT"]:
+		var arrow := RallyHUD.pacenote_arrow(code)
+		var path: PackedVector2Array = arrow.path
+		var head: PackedVector2Array = arrow.head
+		var base := (head[1]+head[2])*0.5
+		var pointing := (head[0]-base).normalized()
+		var terminal := (path[-1]-path[-2]).normalized()
+		var expected_side := -1.0 if code.begins_with("LEFT") else 1.0
+		check(pointing.dot(terminal)>0.999 and pointing.x*expected_side>0.7,code+" arrow tip follows the turn rather than its back edge")
+		check(absf(pointing.y)<0.001 if code.ends_with("TIGHT") else pointing.y < -0.7,code+" distinguishes a right-angle bend from an upward diagonal")
+	var left: PackedVector2Array = RallyHUD.pacenote_arrow("LEFT_MEDIUM").head
+	var right: PackedVector2Array = RallyHUD.pacenote_arrow("RIGHT_MEDIUM").head
+	check(left[0].is_equal_approx(Vector2(-right[0].x,right[0].y)),"Left and right pacenote tips are exact horizontal mirrors")
 	car.queue_free()
 	await process_frame
 	finish()
