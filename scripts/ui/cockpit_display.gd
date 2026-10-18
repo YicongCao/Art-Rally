@@ -10,7 +10,7 @@ var throttle: float = 0
 var automatic: bool = true
 var drive_layout: String = "AWD"
 var drive_status: String = ""
-var font: Font = RallyFonts.mono_bold()
+var font: Font = RallyFonts.plate()
 
 
 func _ready() -> void:
@@ -32,9 +32,12 @@ func refresh(car: RallyVehicle) -> void:
 
 func _draw() -> void:
 	draw_rect(Rect2(Vector2.ZERO,size),Color("0b1314"))
-	for x: int in range(-300,800,18): draw_line(Vector2(x,0),Vector2(x+300,300),Color("152123"),2)
+	RallyGaugePatina.tread(self,Vector2(10,112),deg_to_rad(72),11,1.2)
+	RallyGaugePatina.tread(self,Vector2(680,108),deg_to_rad(65),10,1.2)
+	RallyGaugePatina.mud(self,Vector2(744,184),Vector2(12,70),44)
+	RallyGaugePatina.mud(self,Vector2(20,275),Vector2(14,12),16)
 	var amber := Color("ffc36e")
-	var white := Color("e7f1e6")
+	var white := Color("eee7d4")
 	draw_rect(Rect2(18,18,732,5),amber)
 	text("ART RALLY / "+drive_layout,Vector2(24,55),24,white)
 	text("AUTO" if automatic else "SEQ",Vector2(626,55),23,amber)

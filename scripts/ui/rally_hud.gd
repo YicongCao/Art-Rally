@@ -6,10 +6,13 @@ const PAPER := Color("eee7d4")
 const AMBER := Color("e8ac59")
 const MUTED := Color("ccd5ce")
 const RED := Color("e56b4f")
+const HANDBRAKE_ICON: Texture2D = preload("res://assets/ui/icons/handbrake.svg")
+const SHIFT_ICON: Texture2D = preload("res://assets/ui/icons/shift.svg")
 const NOTE_TEXT := {"LEFT_MEDIUM":"左弯 3", "RIGHT_MEDIUM":"右弯 3", "LEFT_TIGHT":"左急弯", "RIGHT_TIGHT":"右急弯", "CAUTION_NARROW":"注意 · 收窄勿切", "CUT":"弯心平整 · 可小切", "MUD_NARROW":"泥地 · 收窄", "WATER":"积水 · 减速", "ASPHALT":"进入柏油", "GRAVEL":"进入砂石", "CREST_JUMP":"坡顶 · 跳跃", "FINISH":"终点"}
 var title_font: Font = RallyFonts.bold()
 var number_font: Font = RallyFonts.mono_bold()
 var text_font: Font = RallyFonts.regular()
+var gauge_font: Font = RallyFonts.plate()
 var model: Dictionary = {}
 var route_map := PackedVector2Array()
 var map_min := Vector2.ZERO
@@ -237,27 +240,56 @@ func _draw_map() -> void:
 func _draw_gauge() -> void:
 	panel(Rect2(994,432,262,264))
 	var center := Vector2(1125,565)
-	var rpm_ratio := clampf(float(model.rpm)/float(model.redline),0,1)
-	for i: int in range(29):
-		var angle := deg_to_rad(135+i*270.0/28)
-		var ray := Vector2(cos(angle),sin(angle))
-		var color := Color("40574b")
-		if i/28.0 <= rpm_ratio: color = RED if i>24 else AMBER
-		draw_line(center+ray*91,center+ray*(105 if i%4==0 else 99),color,3,true)
-	center_text(model.gear,center+Vector2(0,-25),44,AMBER,number_font)
-	center_text("%03d"%model.speed,center+Vector2(0,34),51,PAPER,number_font)
-	center_text("KM/H",center+Vector2(0,54),11,MUTED,title_font)
-	center_text("%04d RPM"%model.rpm,Vector2(1125,648),13,MUTED,number_font)
-	text("AUTO" if model.automatic else "SEQ",Vector2(1191,455),11,MUTED,title_font)
+	var rpm_ratio := clampf(float(model.rpm)/maxf(float(model.redline),1),0,1)
+	# Patina stays on the casing; the live dial is printed above it.
+	RallyGaugePatina.tread(self,Vector2(1007,527),deg_to_rad(78),9,.85)
+	RallyGaugePatina.tread(self,Vector2(1200,470),deg_to_rad(33),4,.8)
+	RallyGaugePatina.mud(self,Vector2(1011,652),Vector2(10,22),16)
+	RallyGaugePatina.mud(self,Vector2(1239,483),Vector2(10,19),27)
+	draw_circle(center,108,Color(.025,.055,.048,.16))
+	draw_arc(center,108,deg_to_rad(132),deg_to_rad(408),80,Color(PAPER,.35),1,true)
+	draw_arc(center,111,deg_to_rad(159),deg_to_rad(364),64,Color(PAPER,.12),1,true)
+	draw_arc(center,83,deg_to_rad(135),deg_to_rad(405),72,Color(PAPER,.18),1,true)
+	draw_arc(center,104,deg_to_rad(135+270*.86),deg_to_rad(405),20,Color(RED,.35),7,true)
+	for i: int in range(41):
+		var ray := Vector2.from_angle(deg_to_rad(135+i*270.0/40))
+		var major := i%5==0
+		var color := Color(RED,.9) if i>=35 else Color(PAPER,.88 if major else .42)
+		draw_line(center+ray*(89 if major else 97),center+ray*103,color,2 if major else 1,true)
+	# Short perimeter needle keeps the center clear, including three-digit speeds.
+	var needle := Vector2.from_angle(deg_to_rad(135+rpm_ratio*270))
+	var normal := needle.orthogonal()
+	draw_colored_polygon(PackedVector2Array([center+needle*106,center+needle*78+normal*4,center+needle*78-normal*4]),AMBER)
+	draw_arc(center,86,deg_to_rad(135),deg_to_rad(135+maxf(rpm_ratio,.001)*270),64,Color(AMBER,.55),2,true)
+	# A separate gear window echoes the punched-metal gauges of rally cars.
+	draw_style_box(_gear_window(),Rect2(1102,493,46,47))
+	center_text(str(model.gear),Vector2(1125,532),36,AMBER,gauge_font)
+	center_text("%03d"%model.speed,Vector2(1125,601),59,PAPER,gauge_font)
+	center_text("KM/H",Vector2(1125,620),11,MUTED,gauge_font)
+	center_text("%04d"%model.rpm,Vector2(1110,649),19,PAPER,gauge_font)
+	text("RPM",Vector2(1139,648),10,AMBER,gauge_font)
+	text("AUTO" if model.automatic else "SEQ",Vector2(1191,455),11,MUTED,gauge_font)
 	var surface: String = ["柏油","砂石","泥地","草土"][int(model.surface)]
 	text(surface,Vector2(1012,455),13,PAPER)
-	# Separate status rail above the RPM arc: never overlap speed or gear digits.
 	var status := "handbrake" if model.handbrake>.1 else ("shift" if model.get("shift_sync",false) else "")
-	if not status.is_empty(): draw_texture_rect(load("res://assets/ui/icons/"+status+".svg"),Rect2(1115,437,20,20),false,RED if status=="handbrake" else AMBER)
-	draw_rect(Rect2(1020,672,93,4),Color("40574b"))
-	draw_rect(Rect2(1020,672,93*model.throttle,4),Color("86bd9a"))
-	draw_rect(Rect2(1134,672,93,4),Color("40574b"))
-	draw_rect(Rect2(1134,672,93*model.brake,4),RED)
+	if not status.is_empty(): draw_texture_rect(HANDBRAKE_ICON if status=="handbrake" else SHIFT_ICON,Rect2(1115,437,20,20),false,RED if status=="handbrake" else AMBER)
+	for x: float in [1002.0,1248.0]:
+		draw_circle(Vector2(x,688),2.5,Color(PAPER,.35))
+		draw_line(Vector2(x-1,687),Vector2(x+1,689),Color(INK,.8),1,true)
+	for i: int in range(12):
+		draw_rect(Rect2(1026+i*7,674,5,4),Color("86bd9a") if i<model.throttle*12 else Color(PAPER,.16))
+		draw_rect(Rect2(1141+i*7,674,5,4),RED if i<model.brake*12 else Color(PAPER,.16))
+
+
+static var gear_window_style: StyleBoxFlat
+static func _gear_window() -> StyleBoxFlat:
+	if gear_window_style==null:
+		gear_window_style = StyleBoxFlat.new()
+		gear_window_style.bg_color = Color(.045,.075,.065,.48)
+		gear_window_style.border_color = Color(PAPER,.45)
+		gear_window_style.set_border_width_all(1)
+		gear_window_style.set_corner_radius_all(3)
+	return gear_window_style
 
 
 func panel(rect: Rect2, color: Color = Color(0.035,0.09,0.075,0.90)) -> void:
