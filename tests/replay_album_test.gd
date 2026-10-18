@@ -69,8 +69,17 @@ func _run() -> void:
 	check(scene.replay.clock==stopped and scene.vehicle.transform==frozen,"Replay pause holds time and never advances vehicle physics")
 	app._set_immersive(true)
 	check(app.screen=="replay" and not app.ui.visible and app.immersive_ui.visible,"Immersive replay hides result text and keeps camera controls")
-	app._set_immersive(false)
-	check(app.screen=="results" and app.ui.visible,"Immersive replay returns to the existing result page")
+	var cancel := InputEventJoypadButton.new()
+	cancel.device = 5
+	cancel.button_index = JOY_BUTTON_B
+	cancel.pressed = true
+	root.push_input(cancel)
+	await process_frame
+	cancel = cancel.duplicate()
+	cancel.pressed = false
+	root.push_input(cancel)
+	await process_frame
+	check(app.screen=="results" and app.ui.visible and root.gui_get_focus_owner()!=null,"Controller cancel leaves immersive replay and restores result focus")
 	app.retry()
 	check(app.screen=="race" and not paused and scene.replay==null and scene.vehicle.visible,"Retry removes replay and restores actual driving")
 	await app.leave_race()

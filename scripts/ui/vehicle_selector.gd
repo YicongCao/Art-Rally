@@ -12,6 +12,7 @@ var power_ps: float = 200
 
 
 func build() -> void:
+	RallyMenuInput.install()
 	layer = 30
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	var root := Control.new()
@@ -108,6 +109,6 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventJoypadButton and event.pressed and event.button_index==JOY_BUTTON_START:
 		confirmed.emit(selected)
 		get_viewport().set_input_as_handled()
-	elif event is InputEventKey and event.pressed and event.physical_keycode==KEY_ESCAPE and allow_cancel:
+	elif event.is_action_pressed("ui_cancel") and allow_cancel:
 		cancelled.emit()
 		get_viewport().set_input_as_handled()

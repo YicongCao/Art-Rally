@@ -43,6 +43,7 @@ func build(settings: RallyGameSettings,height: float = 330) -> void:
 		nav.add_child(tab)
 		tabs.append(tab)
 		var scroll := ScrollContainer.new()
+		scroll.follow_focus = true
 		scroll.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 		content.add_child(scroll)

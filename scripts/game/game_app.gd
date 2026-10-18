@@ -37,9 +37,12 @@ var replay_buttons: Array[Button] = []
 var replay_cameras: Array[OptionButton] = []
 var immersive_idle: float = 0
 var transitions := RallyPageTransition.new()
+var focus_memory: Dictionary = {}
+var page_back: Callable
 
 
 func _ready() -> void:
+	RallyMenuInput.install()
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	test_mode = "--test-defaults" in OS.get_cmdline_user_args()
 	if test_mode and profile.path=="user://player/profile.json": profile.path = "user://test-session/profile.json"
@@ -87,6 +90,11 @@ func _theme() -> Theme:
 func _page(title: String, subtitle: String, name_id: String) -> void:
 	var previous_screen := screen
 	var previous_ui := ui
+	var focus := get_viewport().gui_get_focus_owner()
+	if is_instance_valid(previous_ui) and focus!=null and previous_ui.is_ancestor_of(focus):
+		focus_memory[previous_screen] = RallyMenuInput.token(focus)
+	page_back = Callable()
+	_restore_page_focus.call_deferred(name_id)
 	transitions.finish_slide()
 	screen = name_id
 	ui = Control.new()
@@ -112,6 +120,7 @@ func _page(title: String, subtitle: String, name_id: String) -> void:
 	for side: String in ["top","bottom"]: margins.add_theme_constant_override("margin_"+side,28)
 	ui.add_child(margins)
 	var scroll := ScrollContainer.new()
+	scroll.follow_focus = true
 	margins.add_child(scroll)
 	column = VBoxContainer.new()
 	column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -159,6 +168,7 @@ func _row(parent: Node) -> HBoxContainer:
 
 
 func _actions(back_title: String,back: Callable,confirm_title: String = "",confirm: Callable = Callable()) -> RallyActionBar:
+	page_back = back if not back_title.is_empty() else Callable()
 	return RallyActionBar.create(column,back_title,func(): audio.cue("ui"); back.call(),confirm_title,func(): audio.cue("ui"); confirm.call())
 
 
@@ -220,7 +230,9 @@ A D / ← →　转向
 空格　手刹　　R　恢复
 C　镜头　　Q E　换挡
 T　遥测与调试
-Esc　暂停"],["手柄","右 / 左扳机　加速 / 制动
+Esc　暂停"],["手柄","十字键 / 左摇杆　菜单导航
+A / ×　确认　　B / ○　返回
+右 / 左扳机　加速 / 制动
 左摇杆　转向
 A　手刹　　Y　恢复
 X　镜头　　肩键　换挡
@@ -317,6 +329,7 @@ func show_stages() -> void:
 			medals += vehicle_id+" "+MEDALS[int(profile.result_for(challenge.key()).get("medal",0))]+"\n"
 		_label(card,medals.strip_edges(),16,Color("e9bd78"))
 		var select := _button(card,"选择赛段",func(): chosen_stage=id; show_stages())
+		select.set_meta("focus_key","stage:"+id)
 		RallySelectionStyle.apply(select,id==chosen_stage)
 	_actions("← 主菜单",show_home,"确认赛道 →",show_vehicles).primary_button.grab_focus()
 
@@ -348,10 +361,13 @@ func show_vehicles() -> void:
 			RallySelectionStyle.apply(option,tier==selected_tier)
 			if not available: option.icon = load("res://assets/ui/icons/lock.svg")
 			option.disabled = not available
+			option.focus_mode = Control.FOCUS_ALL if available else Control.FOCUS_NONE
+			option.set_meta("focus_key","power:%s:%d"%[id,tier])
 			option.set_meta("power_tier",tier)
 			option.set_meta("vehicle_id",id)
 			option.tooltip_text = "原厂组金牌解锁" if tier==1 else ("进阶组金牌解锁" if tier==2 else "原厂动力")
 		var select := _button(card,"选择 "+id,_select_vehicle_variant.bind(id,selected_tier))
+		select.set_meta("focus_key","vehicle:"+id)
 		RallySelectionStyle.apply(select,id==chosen_vehicle)
 	_actions("← 选择赛道",show_stages,"驾驶 %s · %s →"%[chosen_vehicle,RallyContentCatalog.power_label(chosen_vehicle,chosen_power_tier)],start_race).primary_button.grab_focus()
 
@@ -720,6 +736,10 @@ func _set_immersive(enabled: bool) -> void:
 		_replay_controls(panel,true)
 	if is_instance_valid(immersive_ui): immersive_ui.visible = enabled
 	screen = "replay" if enabled else "results"
+	if enabled:
+		immersive_ui.get_child(0).show()
+		replay_buttons[-1].grab_focus()
+	else: _restore_page_focus.call_deferred("results")
 
 
 func _close_immersive() -> void:
@@ -847,6 +867,7 @@ func show_settings() -> void:
 	var categories := RallySettingsPanel.new()
 	column.add_child(categories)
 	categories.build(prefs,350)
+	categories.tabs[0].grab_focus()
 	categories.setting_changed.connect(func(key: String,value: Variant): prefs.set_value(key,value); audio.apply_settings(prefs); _save())
 	categories.voice_preview.connect(func(): audio.speak_note("preview",true))
 	var footer := _row(column)
@@ -949,11 +970,20 @@ func show_bindings() -> void:
 	for entry: Array in [[KEY_W,"加速"],[KEY_S,"制动"],[KEY_A,"左转"],[KEY_D,"右转"],[KEY_SPACE,"手刹"],[KEY_R,"恢复"],[KEY_C,"镜头"],[KEY_Q,"降挡"],[KEY_E,"升挡"]]:
 		var key := str(entry[0])
 		var button := _button(grid,entry[1]+"  "+OS.get_keycode_string(int(profile.data.bindings.get(key,entry[0]))),func(): pass)
+		button.set_meta("focus_key","binding:"+key)
 		button.pressed.connect(func(): binding_wait=key; binding_button=button; button.text="请按新按键…")
 	_actions("← 设置",show_settings,"完成映射",show_settings)
 
 
 func _input(event: InputEvent) -> void:
+	if screen=="replay" and ((event is InputEventJoypadButton and event.pressed) or (event is InputEventJoypadMotion and absf(event.axis_value)>.5)):
+		var waking: bool = not immersive_ui.get_child(0).visible
+		immersive_idle=0
+		immersive_ui.get_child(0).show()
+		if get_viewport().gui_get_focus_owner()==null: replay_buttons[-1].grab_focus()
+		if waking and event.is_action_pressed("ui_accept"):
+			get_viewport().set_input_as_handled()
+			return
 	if screen=="replay" and event is InputEventMouseMotion: immersive_idle = 0
 	if screen in ["results","replay"] and is_instance_valid(race) and race.replay!=null and race.replay.active and event is InputEventKey and event.pressed and not event.echo:
 		immersive_idle = 0
@@ -962,7 +992,9 @@ func _input(event: InputEvent) -> void:
 			KEY_C: race.replay.set_camera(race.replay.mode+1)
 			KEY_LEFT: race.replay.seek(race.replay.clock-5)
 			KEY_RIGHT: race.replay.seek(race.replay.clock+5)
-			KEY_ESCAPE: _set_immersive(screen!="replay")
+			KEY_ESCAPE:
+				if screen!="replay": return
+				_set_immersive(false)
 			_: return
 		get_viewport().set_input_as_handled()
 		return
@@ -999,3 +1031,34 @@ func _save() -> void:
 
 static func _time(seconds: float) -> String:
 	return "%02d:%05.2f"%[int(seconds)/60,fmod(seconds,60)]
+
+
+func _restore_page_focus(expected: String) -> void:
+	if screen!=expected or not is_instance_valid(ui) or not ui.visible: return
+	var candidates := RallyMenuInput.focusable(ui)
+	var saved := str(focus_memory.get(screen,""))
+	if not saved.is_empty():
+		for control: Control in candidates:
+			if RallyMenuInput.token(control)==saved:
+				control.grab_focus()
+				return
+	var focus := get_viewport().gui_get_focus_owner()
+	if focus!=null and ui.is_ancestor_of(focus): return
+	if not candidates.is_empty(): candidates[0].grab_focus()
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if not event.is_action_pressed("ui_cancel") or event.is_echo(): return
+	if loading or transitions.busy or transitions.wipe.visible: return
+	if screen=="race": return # The visible pause menu owns cancel during driving.
+	if not binding_wait.is_empty():
+		binding_wait=""
+		show_bindings()
+	elif screen=="replay":
+		_set_immersive(false)
+	elif page_back.is_valid():
+		audio.cue("ui")
+		page_back.call()
+	else:
+		return
+	get_viewport().set_input_as_handled()

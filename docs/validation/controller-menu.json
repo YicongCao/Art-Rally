@@ -1,0 +1,50 @@
+{
+  "date": "2026-10-18",
+  "engine": "Godot 4.7.2",
+  "platform": "macOS / Apple M5 / Metal",
+  "root_cause": "Platform ui_accept and ui_cancel defaults lacked joypad events; menu back handlers and initial focus were also incomplete.",
+  "tests": [
+    {
+      "suite": "menu_controller_headless",
+      "checks": 35,
+      "failures": 0
+    },
+    {
+      "suite": "menu_controller_native",
+      "checks": 35,
+      "failures": 0
+    },
+    {
+      "suite": "replay_native",
+      "checks": 27,
+      "failures": 0
+    },
+    {
+      "suite": "first_playable_flow",
+      "checks": 27,
+      "failures": 0
+    },
+    {
+      "suite": "action_hierarchy",
+      "checks": 30,
+      "failures": 0
+    },
+    {
+      "suite": "driving_input",
+      "checks": 11,
+      "failures": 0
+    }
+  ],
+  "unique_checks": 130,
+  "input_method": "Joypad button events sent through Viewport GUI dispatch; analog events through Input.parse_input_event. Uses nonzero device IDs 7 and 5. No direct button callback substitution.",
+  "connected_physical_controllers_during_probe": [],
+  "physical_controller_acceptance": false,
+  "parse_check": "passed",
+  "notes": [
+    "Popup cancellation stays on the current page; pause cancel resumes driving.",
+    "Disabled power options are skipped; selection-page rebuilds restore focus.",
+    "Mouse, keyboard bindings and original keyboard UI mappings are preserved.",
+    "First-use plate entry remains required.",
+    "No release binaries rebuilt."
+  ]
+}

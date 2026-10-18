@@ -19,6 +19,7 @@ signal voice_preview
 
 
 func build(settings: RallyGameSettings) -> void:
+	RallyMenuInput.install()
 	prefs = settings
 	layer = 20
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -124,3 +125,10 @@ func show_menu(value: bool) -> void:
 	else:
 		var focus := get_viewport().gui_get_focus_owner()
 		if focus!=null: focus.release_focus()
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	# Popup menus receive cancel first. ESC/Start remain owned by driving input.
+	if visible and event is InputEventJoypadButton and event.is_action_pressed("ui_cancel"):
+		get_viewport().set_input_as_handled()
+		resume_requested.emit()
