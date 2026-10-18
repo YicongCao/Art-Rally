@@ -55,4 +55,6 @@ func set_text(value: String) -> void:
 	var width := font.get_string_size(plate_text,HORIZONTAL_ALIGNMENT_LEFT,-1,64).x
 	for label: Label3D in labels:
 		label.text = plate_text
-		label.pixel_size = minf(.105/font.get_height(64),.60/maxf(1,width))
+		# Enlarge the old type by 20%, capped at 10% inset on each edge of the frame.
+		var old_size := minf(.105/font.get_height(64),.60/maxf(1,width))
+		label.pixel_size = minf(old_size*1.2,minf(.17*.8/font.get_height(64),.70*.8/maxf(1,width)))

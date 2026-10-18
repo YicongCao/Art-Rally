@@ -1,0 +1,24 @@
+[
+	{
+		"gear": 1,
+		"grade": 0.1,
+		"late_slip": 0.707985462304002,
+		"max_gear": 1,
+		"power_ps": 160.0,
+		"speed_kmh": 50.9585140228272,
+		"stuck_limiter_seconds": 0.0,
+		"surface": 1,
+		"vehicle": "F160"
+	},
+	{
+		"gear": 1,
+		"grade": 0.1,
+		"late_slip": 6.36563827924606,
+		"max_gear": 1,
+		"power_ps": 160.0,
+		"speed_kmh": 9.14941921234131,
+		"stuck_limiter_seconds": 9.99166666666674,
+		"surface": 2,
+		"vehicle": "F160"
+	}
+]

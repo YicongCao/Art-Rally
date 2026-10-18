@@ -1,0 +1,80 @@
+[
+	{
+		"duration": 20,
+		"gear": 2,
+		"grade": 0.1,
+		"late_slip": 0.178177560146752,
+		"max_gear": 2,
+		"power_ps": 192.0,
+		"speed_at_20": 61.3706588745117,
+		"speed_kmh": 61.3706588745117,
+		"stuck_limiter_seconds": 0.0,
+		"surface": 1,
+		"vehicle": "F160"
+	},
+	{
+		"duration": 20,
+		"gear": 3,
+		"grade": 0.1,
+		"late_slip": 0.127437739517178,
+		"max_gear": 3,
+		"power_ps": 240.0,
+		"speed_at_20": 101.514887237549,
+		"speed_kmh": 101.514887237549,
+		"stuck_limiter_seconds": 0.0,
+		"surface": 1,
+		"vehicle": "R200"
+	},
+	{
+		"duration": 20,
+		"gear": 4,
+		"grade": 0.1,
+		"late_slip": 0.0554119936338573,
+		"max_gear": 4,
+		"power_ps": 288.0,
+		"speed_at_20": 105.768402099609,
+		"speed_kmh": 105.768402099609,
+		"stuck_limiter_seconds": 0.0,
+		"surface": 1,
+		"vehicle": "A240"
+	},
+	{
+		"duration": 40,
+		"gear": 1,
+		"grade": 0.1,
+		"late_slip": 0.182210872843008,
+		"max_gear": 1,
+		"power_ps": 192.0,
+		"speed_at_20": 33.5306064605713,
+		"speed_kmh": 42.6006168365479,
+		"stuck_limiter_seconds": 0.0,
+		"surface": 2,
+		"vehicle": "F160"
+	},
+	{
+		"duration": 40,
+		"gear": 2,
+		"grade": 0.1,
+		"late_slip": 0.181222201735892,
+		"max_gear": 2,
+		"power_ps": 240.0,
+		"speed_at_20": 48.9563415527344,
+		"speed_kmh": 66.7838768005371,
+		"stuck_limiter_seconds": 0.0,
+		"surface": 2,
+		"vehicle": "R200"
+	},
+	{
+		"duration": 40,
+		"gear": 3,
+		"grade": 0.1,
+		"late_slip": 0.100598242401941,
+		"max_gear": 3,
+		"power_ps": 288.0,
+		"speed_at_20": 101.105296325684,
+		"speed_kmh": 103.606697845459,
+		"stuck_limiter_seconds": 0.0,
+		"surface": 2,
+		"vehicle": "A240"
+	}
+]

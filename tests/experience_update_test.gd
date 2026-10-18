@@ -49,14 +49,21 @@ func _run() -> void:
 	check(near_gain>.6 and scene.river_audio[0].volume_linear<.02,"River sound rises nearby and fades away with distance")
 	var hud: RallyHUD = scene.game_hud
 	var data := RallyHUD.data_for(scene.vehicle,scene.session,false)
-	data.gate_times = [0.0,8.5]
-	data.best_gate_times = [0.0,9.0]
+	data.gate_times=[0.0,2.0,4.0]
 	hud.refresh(data)
-	check(hud.sector.number==1 and hud.sector.seconds==8.5 and hud.sector.delta==-.5,"Checkpoint popup shows local segment time and fastest-run segment delta")
-	data.gate_times = [0.0,8.5,18.0]
-	data.best_gate_times = [0.0,9.0,18.0]
+	check(hud.sector.is_empty(),"Ordinary checkpoints do not create sector popups")
+	data.split_times = [8.5]
+	data.best_splits = [9.0]
 	hud.refresh(data)
-	check(hud.sector.seconds==9.5 and hud.sector.delta==.5,"Second checkpoint compares the segment, not cumulative elapsed time")
+	check(hud.sector.number==1 and hud.sector.seconds==8.5 and hud.sector.delta==-.5,"First sector shows its time and fastest-run sector delta")
+	hud.sector_clock=2.0
+	data.gate_times.append(10.0)
+	hud.refresh(data)
+	check(hud.sector_clock==2.0,"An intermediate checkpoint cannot restart a sector notification")
+	data.split_times = [8.5,18.0]
+	data.best_splits = [9.0,18.0]
+	hud.refresh(data)
+	check(hud.sector.seconds==9.5 and hud.sector.delta==.5,"Second sector compares its own time, not cumulative elapsed time")
 	data.speed = 40
 	hud.refresh(data)
 	hud._process(.2)
@@ -65,7 +72,7 @@ func _run() -> void:
 	hud.refresh(data)
 	hud._process(.2)
 	check(hud.hint_alpha==1,"Bottom controls fade in when stopped")
-	data.gate_times=[]
+	data.split_times=[]
 	hud.refresh(data)
 	check(hud.sector.is_empty(),"Restart clears the previous segment notification")
 	await app.leave_race()

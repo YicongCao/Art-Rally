@@ -457,7 +457,7 @@ func _loading_page() -> void:
 		facts.add_child(fact)
 		_label(fact,entry[0],13,Color("65746c"))
 		_label(fact,entry[1],25)
-	_label(column,"奖牌目标" if challenge.human_calibrated else "奖牌目标 · 暂定",13,Color("65746c"))
+	_label(column,"奖牌目标",13,Color("65746c"))
 	var targets := challenge.thresholds()
 	var medals := _row(column)
 	for i: int in range(3):

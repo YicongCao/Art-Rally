@@ -20,12 +20,12 @@ func _run() -> void:
 	scene._set_autopilot_mode_name("vgamepad")
 	for i: int in range(1800): await physics_frame
 	var data: Dictionary=RallyHUD.data_for(scene.vehicle,scene.session,false)
-	data.gate_times=[0.0,8.35]
-	data.best_gate_times=[0.0,8.89]
+	data.split_times=[8.35]
+	data.best_splits=[8.89]
 	data.ghost_position=Vector2(scene.vehicle.position.x+8,scene.vehicle.position.z-18)
 	data.ghost_progress=scene.session.progress+20
 	data.show_fps=true
-	scene.game_hud.seen_gates = 0
+	scene.game_hud.seen_sectors = 0
 	scene.game_hud.refresh(data)
 	scene.set_process(false)
 	scene.game_hud.sector_clock=1.0

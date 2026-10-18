@@ -2,6 +2,8 @@ extends "res://tests/test_suite.gd"
 
 
 func _run() -> void:
+	for pair: Array in [[0,"00"],[7,"07"],[99,"99"],[100,"100"],[236,"236"]]:
+		check(RallyHUD.speed_text(pair[0])==pair[1],"Speed uses two digits below 100, three above: "+str(pair[0]))
 	var car := RallyVehicle.new()
 	root.add_child(car)
 	var route := RallyStageRoute.new()

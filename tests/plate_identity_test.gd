@@ -50,7 +50,7 @@ func _run() -> void:
 	var clocks := app.ui.find_children("*", "Label", true, false).filter(func(label: Label): return label.text == app._time(RallyContentCatalog.challenge(app.chosen_stage,app.chosen_vehicle).thresholds()[2]))
 	check(not clocks.is_empty() and clocks[0].size.x > 100 and clocks[0].size.y < 60, "Medal times retain a readable horizontal layout")
 	var loading_text := " ".join(app.ui.find_children("*","Label",true,false).map(func(label: Label): return label.text))
-	check(not loading_text.contains("罚时") and not loading_text.contains("检查点") and not loading_text.contains("有效挑战"),"Loading retains essentials without rule explanations")
+	check(not loading_text.contains("罚时") and not loading_text.contains("检查点") and not loading_text.contains("有效挑战") and not loading_text.contains("暂定"),"Loading retains essentials without rule explanations")
 	app.show_plate_setup(false)
 	app.profile.read_only = true
 	app.plate_input.text = "FAILED-160"
@@ -63,6 +63,13 @@ func _run() -> void:
 		var plates := RallyVehiclePlate.attach(body,RallyContentCatalog.vehicle(id),"沪A·山野拉力016")
 		check(plates.labels.size() == 2 and plates.labels.all(func(label: Label3D): return label.text == "沪A·山野拉力016" and label.font == RallyPlateText.font()), id + " has matching front and rear plates in the shared font")
 		check(plates.labels[0].global_basis.z.z > .99 and plates.labels[1].global_basis.z.z < -.99, id + " plates face outward on both ends")
+		for value: String in ["RALLY","WWWWWWWWWW","沪A·山野拉力016"]:
+			plates.set_text(value)
+			var face := RallyPlateText.font()
+			var width := face.get_string_size(value,HORIZONTAL_ALIGNMENT_LEFT,-1,64).x
+			var scale: float=plates.labels[0].pixel_size
+			check(width*scale<=.70*.8+.00001 and face.get_height(64)*scale<=.17*.8+.00001,"Plate keeps at least ten percent inset: "+value)
+			if value=="RALLY": check(is_equal_approx(scale,.105/face.get_height(64)*1.2),"Short plate type grows by twenty percent")
 		check(plates.find_children("*", "CollisionObject3D", true, false).is_empty(), id + " identity adds no collision or physics body")
 		body.free()
 	app.free()

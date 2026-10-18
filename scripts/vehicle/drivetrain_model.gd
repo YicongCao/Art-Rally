@@ -14,6 +14,8 @@ var wheelspin: float = 0
 var rolling_rpm: float = 0
 var output_torque: float = 0
 var effective_throttle: float = 0
+var traction_scale: float = 1
+var loose_contact: bool = false
 
 
 func rpm() -> float:
@@ -37,6 +39,8 @@ func reset() -> void:
 	rolling_rpm = 0
 	output_torque = 0
 	effective_throttle = 0
+	traction_scale = 1
+	loose_contact = false
 
 
 func road_rpm(speed: float, target: int, wheel_radius: float = 0.34) -> float:
@@ -53,6 +57,10 @@ func driven_omega(wheels: Array[RallyWheelState], handbrake: bool = false) -> fl
 
 func begin_tick(command: DriverCommand, speed: float, wheel_radius: float = 0.34, wheels: Array[RallyWheelState] = [], forward_speed: float = NAN) -> void:
 	auto_shift_cut = false
+	loose_contact = false
+	for i: int in range(wheels.size()):
+		if (config.drive_layout=="FWD" and i>=2) or (config.drive_layout=="RWD" and i<2): continue
+		loose_contact = loose_contact or (wheels[i].grounded and wheels[i].load>50 and wheels[i].surface.surface_id in [1,2,3])
 	var travel := maxf(forward_speed if is_finite(forward_speed) else speed, 0)
 	rolling_rpm = road_rpm(travel, gear, wheel_radius)
 	wheelspin = absf(driven_omega(wheels) * wheel_radius - travel) / maxf(travel, 3) if not wheels.is_empty() else 0.0
@@ -80,7 +88,10 @@ func begin_tick(command: DriverCommand, speed: float, wheel_radius: float = 0.34
 			auto_shift_cut = true
 		return
 	var coupling_slip := absf(engine_omega - driven_omega(wheels) * ratio()) / maxf(engine_omega, 100) if not wheels.is_empty() else 0.0
-	if gear < 6 and command.brake < 0.1 and rpm() > config.upshift_rpm and rolling_rpm > config.upshift_rpm * config.upshift_road_fraction and wheelspin < config.max_upshift_slip and coupling_slip < 0.28:
+	# Shorter power-band shifts on loose ground, only after real road speed recovers.
+	var shift_rpm := 6200.0 if config.loose_surface_assist and loose_contact else config.upshift_rpm
+	var road_fraction := .82 if config.loose_surface_assist and loose_contact else config.upshift_road_fraction
+	if gear < 6 and command.brake < 0.1 and rpm() > shift_rpm and rolling_rpm > shift_rpm * road_fraction and wheelspin < config.max_upshift_slip and coupling_slip < 0.28:
 		request_shift(gear + 1, speed)
 
 
@@ -128,7 +139,8 @@ func step(command: DriverCommand, wheels: Array[RallyWheelState], dt: float) -> 
 	if config.drive_layout=="RWD" and handbrake: clutch = 0
 	var capacity := config.clutch_capacity * clutch
 	clutch_torque = clampf((engine_omega - engaged_speed) * config.clutch_coupling, -capacity, capacity)
-	effective_throttle = command.throttle if shift_remaining <= 0 and rpm() < config.redline_rpm and not auto_shift_cut else 0.0
+	_update_traction(command,wheels,dt)
+	effective_throttle = command.throttle*traction_scale if shift_remaining <= 0 and rpm() < config.redline_rpm and not auto_shift_cut else 0.0
 	var idle_governor := clampf((config.idle_rpm - rpm()) * 0.5, 0, 130)
 	var drag := 20.0 + engine_omega * 0.045
 	# The published torque curve is net shaft torque; retain closed-throttle engine braking.
@@ -136,3 +148,29 @@ func step(command: DriverCommand, wheels: Array[RallyWheelState], dt: float) -> 
 	var engine_torque := output_torque - clutch_torque
 	engine_omega = maxf(0, engine_omega + engine_torque / config.engine_inertia * dt)
 	return distribute(clutch_torque * gearing, omega, handbrake, config)
+
+
+func _update_traction(command: DriverCommand,wheels: Array[RallyWheelState],dt: float) -> void:
+	# Regulate engine input rather than wheel speed or tire force. Keep useful slip
+	# for loose-surface driving, and release smoothly as the tires regain purchase.
+	if not config.loose_surface_assist or not loose_contact or gear<=0 or command.handbrake>.1 or command.brake>.1 or command.throttle<.1:
+		traction_scale=move_toward(traction_scale,1,dt*2)
+		return
+	var slip := 0.0
+	var supported_load := 0.0
+	for i: int in range(wheels.size()):
+		if (config.drive_layout=="FWD" and i>=2) or (config.drive_layout=="RWD" and i<2): continue
+		var wheel := wheels[i]
+		if not wheel.grounded or wheel.load<50: continue
+		var excess := maxf(0,wheel.omega*wheel.effective_radius-wheel.longitudinal_speed)/maxf(absf(wheel.longitudinal_speed),3)
+		slip+=excess*wheel.load
+		supported_load+=wheel.load
+	if supported_load<=0: return
+	# Preserve the automatic clutch's launch band: cutting below it can trap a
+	# front-drive car in a repeated idle / disengage cycle on a steep incline.
+	if rpm()<2400:
+		traction_scale=move_toward(traction_scale,1,dt*3)
+		return
+	slip/=supported_load
+	var change := clampf((.18-slip)*3,-6,.7)
+	traction_scale=clampf(traction_scale+change*dt,.05,1)

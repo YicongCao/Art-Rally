@@ -6,7 +6,7 @@ extends Resource
 @export var description: String = "牵引力充足 · 提前规划制动"
 @export var drive_layout: String = "AWD"
 var power_tier: int = 0
-@export var power_ps: float = 240
+@export var power_ps: float = 288
 @export var mass_kg: float = 1300
 @export var wheelbase: float = 2.6
 @export var track_width: float = 1.72
@@ -14,7 +14,7 @@ var power_tier: int = 0
 @export var accent := Color("e8bf4d")
 @export var paint := Color("245caa")
 @export var number: int = 44
-@export var revision: String = "fp2"
+@export var revision: String = "fp3"
 @export var model_path: String = "res://assets/vehicles/A240.glb"
 @export var cockpit_offset := Vector3(0,0.74,-0.80)
 @export var hood_offset := Vector3(0,0.72,-1.40)
@@ -39,6 +39,7 @@ func physics_config() -> RallyVehicleConfig:
 func drivetrain_config() -> RallyDrivetrainConfig:
 	var result := RallyDrivetrainConfig.new()
 	result.drive_layout = drive_layout
+	result.loose_surface_assist = true
 	result.rated_power_ps = power_ps
 	result.power_multiplier = RallyContentCatalog.POWER_MULTIPLIERS[power_tier]
 	result.calibration_version = vehicle_id+"-"+revision

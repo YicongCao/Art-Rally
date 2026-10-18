@@ -22,7 +22,7 @@ var ui_offset := Vector2.ZERO
 var acrylic := RallyAcrylicPanels.new()
 var hint_alpha: float = 1
 var sector_clock: float = 99
-var seen_gates: int = 0
+var seen_sectors: int = 0
 var sector: Dictionary = {}
 
 
@@ -63,22 +63,22 @@ static func data_for(car: RallyVehicle, session: RallyStageSession, paused: bool
 		"note_distance":maxf(0,session.note_s-session.progress),"phase":int(session.phase),"countdown":session.countdown,
 		"practice":session.practice,"paused":paused,"warning":warning,"surface":car.wheels[0].surface.surface_id,
 		"position":Vector2(car.position.x,car.position.z),"heading":Vector2(-car.basis.z.x,-car.basis.z.z),
-		"gate_times":session.gate_times.duplicate(),"gate_number":gate+1,"gate_distance":car.position.distance_to(target),"gate_direction":Vector2(local.x,local.z).normalized()}
+		"gate_times":session.gate_times.duplicate(),"split_times":session.split_times.duplicate(),"gate_number":gate+1,"gate_distance":car.position.distance_to(target),"gate_direction":Vector2(local.x,local.z).normalized()}
 
 
 func refresh(value: Dictionary) -> void:
-	var times: Array = value.get("gate_times",[])
-	if times.size()<seen_gates:
+	var times: Array = value.get("split_times",[])
+	if times.size()<seen_sectors:
 		sector.clear()
 		sector_clock = 99
-	if times.size()>seen_gates and times.size()>=2:
+	if times.size()>seen_sectors and not times.is_empty():
 		var i := times.size()-1
-		sector = {"number":i,"seconds":float(times[i])-float(times[i-1])}
-		var best: Array = value.get("best_gate_times",[])
+		sector = {"number":i+1,"seconds":float(times[i])-(float(times[i-1]) if i>0 else 0.0)}
+		var best: Array = value.get("best_splits",[])
 		if best.size()>i:
-			sector["delta"] = sector.seconds-(float(best[i])-float(best[i-1]))
+			sector["delta"] = sector.seconds-(float(best[i])-(float(best[i-1]) if i>0 else 0.0))
 		sector_clock = 0
-	seen_gates = times.size()
+	seen_sectors = times.size()
 	model = value
 	queue_redraw()
 
@@ -88,6 +88,10 @@ func _process(dt: float) -> void:
 	sector_clock += dt
 	hint_alpha = move_toward(hint_alpha,1.0 if float(model.get("speed",0))<.8 else 0.0,dt/.14)
 	queue_redraw()
+
+
+static func speed_text(value: float) -> String:
+	return "%02d"%maxf(value,0)
 
 
 static func time_text(value: float) -> String:
@@ -120,8 +124,8 @@ func _draw() -> void:
 		text("%02d km/h · %+0.2f m"%[float(model.get("target_speed",0))*3.6,float(model.get("lateral_error",0))],Vector2(316,76),11,PAPER,number_font)
 	if int(model.phase)!=RallyStageSession.Phase.FINISHED:
 		panel(Rect2(24,105,260,42))
-		draw_texture_rect(RallyGateSymbols.texture("checkpoint"),Rect2(38,113,22,22),false,AMBER)
-		text("%02d  /  %d m"%[model.gate_number,model.gate_distance],Vector2(69,132),13,AMBER,number_font)
+		draw_texture_rect(RallyGateSymbols.texture("checkpoint"),Rect2(38,115,22,22),false,AMBER)
+		text("%02d  /  %d m"%[model.gate_number,model.gate_distance],Vector2(69,126-number_font.get_height(13)*.5+number_font.get_ascent(13)),13,AMBER,number_font)
 		var forward: Vector2 = model.gate_direction
 		var side := Vector2(-forward.y,forward.x)
 		var at := Vector2(264,126)
@@ -264,7 +268,7 @@ func _draw_gauge() -> void:
 	# A separate gear window echoes the punched-metal gauges of rally cars.
 	draw_style_box(_gear_window(),Rect2(1102,493,46,47))
 	center_text(str(model.gear),Vector2(1125,532),36,AMBER,gauge_font)
-	center_text("%03d"%model.speed,Vector2(1125,601),59,PAPER,gauge_font)
+	center_text(speed_text(model.speed),Vector2(1125,601),59,PAPER,gauge_font)
 	center_text("KM/H",Vector2(1125,620),11,MUTED,gauge_font)
 	center_text("%04d"%model.rpm,Vector2(1110,649),19,PAPER,gauge_font)
 	text("RPM",Vector2(1139,648),10,AMBER,gauge_font)
@@ -321,8 +325,8 @@ func _draw_sector() -> void:
 	# Two short flashes, then a steady readable hold and a crisp 200 ms fade.
 	if (sector_clock>.12 and sector_clock<.24) or (sector_clock>.36 and sector_clock<.48): return
 	var opacity := 1-smoothstep(3.1,3.3,sector_clock)
-	panel(Rect2(968,170,288,92 if sector.has("delta") else 62),Color(.035,.09,.075,.90*opacity))
-	draw_texture_rect(preload("res://assets/ui/icons/sector.svg"),Rect2(984,190,25,25),false,Color(AMBER,opacity))
-	text("%02d  %s"%[sector.number,time_text(sector.seconds)],Vector2(1020,205),20,Color(PAPER,opacity),number_font)
+	panel(Rect2(465,126,350,77 if sector.has("delta") else 54),Color(.035,.09,.075,.90*opacity))
+	draw_texture_rect(preload("res://assets/ui/icons/sector.svg"),Rect2(481,141,25,25),false,Color(AMBER,opacity))
+	text("%02d  %s"%[sector.number,time_text(sector.seconds)],Vector2(526,159),20,Color(PAPER,opacity),number_font)
 	if sector.has("delta"):
-		text("%+.2f s"%sector.delta,Vector2(1020,242),23,Color(Color("91d5b2") if sector.delta<=0 else RED,opacity),number_font)
+		text("%+.2f s"%sector.delta,Vector2(526,190),19,Color(Color("91d5b2") if sector.delta<=0 else RED,opacity),number_font)

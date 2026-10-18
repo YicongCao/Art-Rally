@@ -11,6 +11,14 @@ func _run() -> void:
 		if not errors.is_empty(): print(stage_id," geometry: ",errors.slice(0,10))
 		check(errors.is_empty(),stage_id+" is a nonintersecting driveable route")
 		check(absf(route.length-stage.target_length)<10,stage_id+" meets authored length")
+		var session := RallyStageSession.new()
+		session.setup(route)
+		check(session.split_gates.size()>=3 and session.split_gates.size()<=6,stage_id+" has three to six sectors")
+		var previous := 0.0
+		for index: int in session.split_gates:
+			var distance: float=session.gates[index]
+			check(absf(distance-previous-route.length/3)<route.length*.06,stage_id+" sectors divide route distance evenly")
+			previous=distance
 		for note: Dictionary in route.notes:
 			check(float(note.s)>=0 and float(note.s)<=route.length,stage_id+" note inside route")
 		for car_id: String in RallyContentCatalog.VEHICLES:
@@ -32,6 +40,7 @@ func _run() -> void:
 		check(config.body_mass==a.mass_kg and config.wheelbase==a.wheelbase,"Vehicle geometry and dynamics share dimensions")
 		var power := a.drivetrain_config()
 		check(power.drive_layout==a.drive_layout and power.rated_power_ps==a.power_ps,"Each car owns its power and drivetrain")
+		check(a.power_ps=={"F160":192.0,"R200":240.0,"A240":288.0}[id] and power.loose_surface_assist,"Base power grows twenty percent with loose-ground assistance")
 		a.mass_kg = 99
 		check(b.mass_kg!=99,"Catalog resources are isolated per session")
 	check(RallyContentCatalog.challenge("missing","F160")==null,"Unknown content rejected")

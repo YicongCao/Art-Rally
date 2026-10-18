@@ -207,7 +207,7 @@ func _safety_pause() -> void:
 func _result_hud_data() -> Dictionary:
 	var data := super._result_hud_data()
 	var best: Dictionary = result_summary.get("human_best",{})
-	data["best_gate_times"] = best.get("gate_times",[])
+	data["best_splits"] = best.get("splits",[])
 	var sample := RallyGhostRecording.sample(ghost.recording,minf(session.total_time(),float(ghost.recording.get("duration",0)))) if preferences.values.ghost else {}
 	if not sample.is_empty():
 		var at: Vector3 = sample.pose.origin

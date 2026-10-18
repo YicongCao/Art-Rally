@@ -15,6 +15,7 @@ extends Resource
 @export var downshift_target_rpm: float = 4200
 @export var upshift_road_fraction: float = 0.88
 @export var max_upshift_slip: float = 0.35
+@export var loose_surface_assist: bool = false
 @export var engine_inertia: float = 0.32
 @export var clutch_capacity: float = 650
 @export var clutch_coupling: float = 12

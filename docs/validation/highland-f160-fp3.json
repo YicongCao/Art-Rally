@@ -1,0 +1,19 @@
+[
+	{
+		"elapsed": 271.174999999918,
+		"finished": true,
+		"input": "vgamepad",
+		"max_lateral": 0.467666536569595,
+		"physics_p95_ms": 3.929,
+		"power_tier": 0,
+		"progress": 3168.27135979864,
+		"recoveries": 0,
+		"splits": [
+			86.2500000000147,
+			183.949999999997,
+			271.174999999918
+		],
+		"stage": "misty_highlands",
+		"vehicle": "F160"
+	}
+]
