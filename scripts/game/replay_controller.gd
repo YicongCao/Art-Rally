@@ -40,7 +40,7 @@ func begin(owner_scene: Node3D,data: Dictionary,plate: String) -> bool:
 	scene.camera.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
 	actor.build(scene.challenge.vehicle,recording,false)
 	RallyVehiclePlate.attach(actor.get_child(0),scene.challenge.vehicle,plate)
-	streaks.build(scene,scene.challenge.vehicle.body_size,scene.challenge.vehicle.vehicle_id)
+	streaks.build(scene,scene.challenge.vehicle.body_size,scene.challenge.vehicle.vehicle_id,actor.get_child(0))
 	streaks.visual.name = "ReplayTailStreaks"
 	surface_fx.build(scene)
 	scene.presentation.tire_marks.visual.hide()

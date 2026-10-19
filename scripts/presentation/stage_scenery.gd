@@ -456,13 +456,9 @@ func set_quality(low: bool) -> void:
 
 
 func _theme_ground(material: ShaderMaterial) -> void:
-	match generator.definition.environment_id:
-		"coast":
-			material.set_shader_parameter("grass_dark",Color("a8a785"))
-			material.set_shader_parameter("grass_light",Color("ddd8b6"))
-		"highland":
-			material.set_shader_parameter("grass_dark",Color("737e67"))
-			material.set_shader_parameter("grass_light",Color("c4be88"))
+	var colors: Array=RallyScreenprintStyle.current().biome_palettes[generator.definition.environment_id]
+	material.set_shader_parameter("grass_dark",colors[0])
+	material.set_shader_parameter("grass_light",colors[1])
 
 
 func _build_landmarks() -> void:
@@ -496,6 +492,9 @@ func _build_landmarks() -> void:
 		var mesh := MeshInstance3D.new()
 		mesh.mesh = builder.finish()
 		root.add_child(mesh)
+		if entry.kind!="stones":
+			mesh.visible=false
+			RallyScreenprintProps.add(root,"lighthouse" if entry.kind=="lighthouse" else "cabin")
 
 
 func rendered_height_at(x: float,z: float) -> float:

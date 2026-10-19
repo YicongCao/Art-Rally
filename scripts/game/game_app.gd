@@ -69,22 +69,7 @@ func _package_check() -> void:
 
 
 func _theme() -> Theme:
-	var result := Theme.new()
-	result.default_font = RallyFonts.regular()
-	result.default_font_size = 18
-	result.set_color("font_color","Label",Color("f3ead2"))
-	for state: String in ["normal","hover","pressed","focus","disabled"]:
-		var style := StyleBoxFlat.new()
-		style.bg_color = Color("24413d") if state=="normal" else Color("416256")
-		style.border_color = Color("efbd69")
-		style.border_width_bottom = 2 if state in ["focus","hover"] else 0
-		style.content_margin_left = 20
-		style.content_margin_right = 20
-		style.content_margin_top = 12
-		style.content_margin_bottom = 12
-		result.set_stylebox(state,"Button",style)
-		result.set_color("font_color","Button",Color("f8efd8"))
-	return result
+	return RallyScreenprintStyle.theme()
 
 
 func _page(title: String, subtitle: String, name_id: String) -> void:
@@ -119,6 +104,9 @@ func _page(title: String, subtitle: String, name_id: String) -> void:
 		patina.page_corner=true
 		patina.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		ui.add_child(patina)
+	var print_margin := RallyScreenprintPaper.new()
+	print_margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	ui.add_child(print_margin)
 	var margins := MarginContainer.new()
 	margins.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	for side: String in ["left","right"]: margins.add_theme_constant_override("margin_"+side,48)
@@ -191,7 +179,7 @@ func _card(parent: Node) -> VBoxContainer:
 	var panel := PanelContainer.new()
 	panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var style := StyleBoxFlat.new()
-	style.bg_color = Color(.055,.12,.12,.90)
+	style.bg_color = Color(.125,.145,.17,.94)
 	for side: String in ["left","right","top","bottom"]: style.set_content_margin(SIDE_LEFT if side=="left" else (SIDE_RIGHT if side=="right" else (SIDE_TOP if side=="top" else SIDE_BOTTOM)),18)
 	panel.add_theme_stylebox_override("panel",style)
 	parent.add_child(panel)
@@ -210,21 +198,21 @@ func show_home() -> void:
 	column.add_child(logo)
 	var main := _row(column)
 	main.add_theme_constant_override("separation",12)
-	var challenge := _menu_tile(main,"开始计时挑战","","challenge",Color("dfb372"),func(): practice=false; tutorial=false; show_stages(),true)
+	var challenge := _menu_tile(main,"开始计时挑战","","challenge",Color("d6a83c"),func(): practice=false; tutorial=false; show_stages(),true)
 	challenge.size_flags_stretch_ratio = 1.4
 	challenge.grab_focus()
-	_menu_tile(main,"自由练习","","practice",Color("315b51"),func(): practice=true; tutorial=false; show_stages(),true)
-	_menu_tile(main,"设置","","settings",Color("2b464d"),show_settings,true)
+	_menu_tile(main,"自由练习","","practice",Color("246263"),func(): practice=true; tutorial=false; show_stages(),true)
+	_menu_tile(main,"设置","","settings",Color("493e5c"),show_settings,true)
 	var gap := Control.new()
 	gap.custom_minimum_size.y = 18
 	column.add_child(gap)
 	var secondary := _row(column)
 	secondary.add_theme_constant_override("separation",10)
-	_menu_tile(secondary,"相册","","gallery",Color("203b37"),show_gallery,false)
-	_menu_tile(secondary,"操作指南","","guide",Color("203b37"),show_guide,false)
-	_menu_tile(secondary,"成绩册","","records",Color("203b37"),show_records,false)
-	_menu_tile(secondary,"制作名单","","credits",Color("203b37"),show_credits,false)
-	_menu_tile(secondary,"退出","","exit",Color("203b37"),_quit_game,false)
+	_menu_tile(secondary,"相册","","gallery",Color("20252b"),show_gallery,false)
+	_menu_tile(secondary,"操作指南","","guide",Color("20252b"),show_guide,false)
+	_menu_tile(secondary,"成绩册","","records",Color("20252b"),show_records,false)
+	_menu_tile(secondary,"制作名单","","credits",Color("20252b"),show_credits,false)
+	_menu_tile(secondary,"退出","","exit",Color("20252b"),_quit_game,false)
 
 
 func show_guide() -> void:
@@ -289,16 +277,16 @@ func _menu_tile(parent: Node,title: String,caption: String,icon: String,color: C
 		tile.add_theme_stylebox_override(state,style)
 		# Keep Button.text for accessibility and navigation; the child labels provide tile layout.
 		tile.add_theme_color_override("font_" + state + "_color" if state != "normal" else "font_color",Color.TRANSPARENT)
-	# Blur the live landscape behind the buttons while keeping icons and labels crisp.
-	# The strong dark tint gives the title tiles less transparency than the driving HUD.
+	# Matte screenprinted color; the driving HUD retains its lighter acrylic panels.
 	var acrylic := ColorRect.new()
 	acrylic.name = "AcrylicSurface"
+	acrylic.show_behind_parent = true
 	acrylic.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	acrylic.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	acrylic.color = Color(color,0.94)
+	acrylic.color = Color(color,1.0)
 	var glass := ShaderMaterial.new()
-	glass.shader = preload("res://assets/shaders/hud_acrylic.gdshader")
-	glass.set_shader_parameter("frost",0.58)
+	glass.shader = preload("res://assets/shaders/screenprint_paper.gdshader")
+	glass.set_shader_parameter("strength",RallyScreenprintStyle.current().print_strength)
 	acrylic.material = glass
 	tile.add_child(acrylic)
 	var margins := MarginContainer.new()
@@ -403,21 +391,24 @@ func _select_vehicle_variant(id: String,tier: int) -> void:
 
 
 func _vehicle_preview(parent: Node,definition: RallyVehicleDefinition) -> void:
-	var container := SubViewportContainer.new()
-	container.custom_minimum_size = Vector2(270,120)
-	container.stretch = true
+	var container := TextureRect.new()
+	container.custom_minimum_size = Vector2(270,150)
+	container.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	container.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	container.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	parent.add_child(container)
 	var viewport := SubViewport.new()
-	viewport.size = Vector2i(320,200)
+	viewport.size = Vector2i(640,360)
+	viewport.msaa_3d = Viewport.MSAA_4X
 	viewport.own_world_3d = true
 	viewport.transparent_bg = true
 	viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
 	container.add_child(viewport)
+	container.texture = viewport.get_texture()
 	var body := Node3D.new()
 	viewport.add_child(body)
 	if ResourceLoader.exists(definition.model_path):
-		body.add_child(load(definition.model_path).instantiate())
+		body.add_child(RallyVehicleAppearance.build(definition))
 		RallyVehiclePlate.attach(body,definition,str(profile.data.get("plate","")))
 	for side: float in [-1,1]:
 		for axle: float in [-1,1]:
@@ -446,7 +437,7 @@ func _vehicle_preview(parent: Node,definition: RallyVehicleDefinition) -> void:
 	camera.position = Vector3(4,2.1,-5)
 	camera.look_at(Vector3(0,.3,0))
 	camera.projection = Camera3D.PROJECTION_ORTHOGONAL
-	camera.size = 4.2
+	camera.size = 3.6
 
 
 func _loading_page() -> void:
@@ -472,6 +463,20 @@ func _loading_page() -> void:
 	preview.offset_top=14
 	preview.offset_right=-24
 	preview.offset_bottom=-30
+	# Use an actual build capture inside the printed illustration's breakout edges.
+	var picture_path := "res://assets/ui/screenprint_previews/"+chosen_stage+".jpg"
+	if ResourceLoader.exists(picture_path):
+		var picture := TextureRect.new()
+		picture.texture=load(picture_path)
+		picture.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+		picture.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		picture.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		frame.add_child(picture)
+		picture.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		picture.offset_left=18
+		picture.offset_top=14
+		picture.offset_right=-24
+		picture.offset_bottom=-30
 	var details := VBoxContainer.new()
 	details.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	details.size_flags_stretch_ratio = 1.4

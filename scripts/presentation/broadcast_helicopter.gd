@@ -65,7 +65,8 @@ func build(owner_scene: Node3D,photo_album: RallyPhotoAlbum) -> void:
 	b.box(Vector3(.42,.10,.10),Vector3(-2.55,1.05,1.25),Color("586b68"))
 	b.box(Vector3(.08,.08,.08),Vector3(-3.44,1.04,1.25),Color("f34c32"))
 
-	RallyStageLandmarks._mesh(airframe,b)
+	RallyStageLandmarks._mesh(airframe,b).visible=false
+	RallyScreenprintProps.add(airframe,"helicopter")
 	airframe.add_child(rotor)
 	rotor.position.y = 2.2
 	var blades := RallySampleMeshes.new()

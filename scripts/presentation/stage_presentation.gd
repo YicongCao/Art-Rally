@@ -28,9 +28,10 @@ func build(owner_scene: Node3D) -> void:
 	scene.vehicle.reset_completed.connect(tire_marks.break_trails)
 	atmosphere.build_at(scenery.dressing,scenery.route,scenery.center,scene.get_node("Sun"),1.8)
 	car_style.build(scene.vehicle,scene.vehicle_definition)
-	tail_streaks.build(scene,scene.vehicle.config.body_size,scene.vehicle_definition.vehicle_id if scene.vehicle_definition!=null else "A240")
+	tail_streaks.build(scene,scene.vehicle.config.body_size,scene.vehicle_definition.vehicle_id if scene.vehicle_definition!=null else "A240",car_style.body)
 	scene.vehicle.reset_completed.connect(tail_streaks.clear)
 	camera_rig.definition = scene.vehicle_definition
+	camera_rig.appearance_body = car_style.body
 	camera_rig.build(scene.camera)
 	scene.vehicle.reset_completed.connect(camera_rig.reset)
 	scene.controls.view_reset_requested.connect(camera_rig.reset)
@@ -94,19 +95,19 @@ func _apply_biome(sky: ShaderMaterial) -> void:
 	var cloud_light := Color("fff3d9")
 	var cloud_shadow := Color("bdc9cd")
 	if biome=="autumn":
-		palette = [Color("ffda9a"),Color("eca79b"),Color("91a7ca")]
+		palette = [Color("efd2a2"),Color("dca58b"),Color("7d91b1")]
 		var forward: Vector3 = scene.generator.route.tangent_at(430)
 		forward.y = 0
 		var horizontal: Vector3 = forward.normalized().rotated(Vector3.UP,deg_to_rad(-65))
 		atmosphere.sun_direction = horizontal*cos(deg_to_rad(12.5))+Vector3.UP*sin(deg_to_rad(12.5))
 		sun.light_color = Color("ffcf91")
-		sun.light_energy = 1.8
+		sun.light_energy = 1.5
 		environment.ambient_light_color = Color("94abc7")
 		environment.ambient_light_energy = .48
 		environment.fog_light_color = Color("d4b5a4")
 		environment.fog_density = .0005
 		cloud_light = Color("ffdda7")
-		cloud_shadow = Color("967f94")
+		cloud_shadow = Color("7f718b")
 	elif biome=="coast":
 		palette = [Color("fff0d4"),Color("d6e8e4"),Color("7eb7d2")]
 		sun.light_color = Color("fff3d9")
@@ -121,7 +122,7 @@ func _apply_biome(sky: ShaderMaterial) -> void:
 		palette = [Color("f4e7c9"),Color("c0d5d9"),Color("8daebd")]
 		sun.light_color = Color("ffe5bb")
 		sun.light_energy = 1.1
-		environment.ambient_light_color = Color("b0c9d4")
+		environment.ambient_light_color = Color("a4b6cb")
 		environment.ambient_light_energy = .65
 		environment.fog_light_color = Color("bed2d2")
 		environment.fog_light_energy = .85

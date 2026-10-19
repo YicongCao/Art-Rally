@@ -1,11 +1,11 @@
 class_name RallyHUD
 extends Control
 
-const INK := Color("102823")
-const PAPER := Color("eee7d4")
-const AMBER := Color("e8ac59")
+const INK := Color("20252b")
+const PAPER := Color("eee2c5")
+const AMBER := Color("d6a83c")
 const MUTED := Color("ccd5ce")
-const RED := Color("e56b4f")
+const RED := Color("c45d3f")
 const GAUGE_RECT := Rect2(994,432,262,264)
 const TIMER_RECT := Rect2(994,22,262,112)
 const HANDBRAKE_ICON: Texture2D = preload("res://assets/ui/icons/handbrake.svg")

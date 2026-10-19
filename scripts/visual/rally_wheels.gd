@@ -7,6 +7,10 @@ static var rim: ArrayMesh
 # Local Y is the axle, matching the existing tire deformation/spin transform.
 static func tire(radius: float) -> ArrayMesh:
 	if tires.has(radius): return tires[radius]
+	var authored := authored_mesh("wheel_tire")
+	if authored!=null and is_equal_approx(radius,.34):
+		tires[radius]=authored
+		return authored
 	var b := RallySampleMeshes.new()
 	var rubber := Color("29302e")
 	var casing := TorusMesh.new()
@@ -37,6 +41,8 @@ static func tire(radius: float) -> ArrayMesh:
 
 static func five_spoke() -> ArrayMesh:
 	if rim!=null: return rim
+	rim=authored_mesh("wheel_rim")
+	if rim!=null: return rim
 	var b := RallySampleMeshes.new()
 	var white := Color("ebe8dc")
 	var ring := TorusMesh.new()
@@ -65,3 +71,26 @@ static func install_hubs(pivot: Node3D) -> void:
 		visual.mesh=five_spoke()
 		visual.rotation.z=PI*.5
 		hub.add_child(visual)
+
+
+static func authored_mesh(kind: String) -> ArrayMesh:
+	var path := "res://assets/screenprint/props/"+kind+".glb"
+	if not ResourceLoader.exists(path): return null
+	var source: Node3D=load(path).instantiate()
+	var builder := RallySampleMeshes.new()
+	_append_authored(source,Transform3D.IDENTITY,builder)
+	source.free()
+	return builder.finish()
+
+static func _append_authored(node: Node3D,parent_pose: Transform3D,builder: RallySampleMeshes) -> void:
+	var pose := parent_pose*node.transform
+	if node is MeshInstance3D:
+		for surface: int in range(node.mesh.get_surface_count()):
+			var data: Array=node.mesh.surface_get_arrays(surface)
+			var vertices: PackedVector3Array=data[Mesh.ARRAY_VERTEX]
+			var indices: PackedInt32Array=data[Mesh.ARRAY_INDEX]
+			var material := node.mesh.surface_get_material(surface) as StandardMaterial3D
+			builder.tool.set_color((material.albedo_color if material!=null else Color.WHITE).srgb_to_linear())
+			for index: int in indices: builder.tool.add_vertex(pose*vertices[index])
+	for child: Node in node.get_children():
+		if child is Node3D: _append_authored(child,pose,builder)

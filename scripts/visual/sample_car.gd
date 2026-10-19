@@ -94,7 +94,7 @@ func set_style(enabled: bool) -> void:
 
 func _build_model(car: RallyVehicle, definition: RallyVehicleDefinition) -> void:
 	body.free()
-	body = load(definition.model_path).instantiate()
+	body = RallyVehicleAppearance.build(definition)
 	body.name = definition.vehicle_id+"Bodywork"
 	car.add_child(body)
 	for node_name: String in ["Body","Cabin","HoodStripe"]:

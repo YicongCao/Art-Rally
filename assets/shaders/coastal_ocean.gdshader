@@ -4,7 +4,7 @@ varying vec3 world;
 uniform vec3 shallow : source_color = vec3(0.15,0.64,0.66);
 uniform vec3 deep : source_color = vec3(0.06,0.31,0.46);
 uniform vec3 sun_direction = vec3(-0.4,0.78,-0.48);
-uniform float sparkle_strength = 2.6;
+uniform float sparkle_strength = 1.9;
 float hash21(vec2 p){ return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453); }
 float twinkles(vec2 p,float phase){
  vec2 cell=floor(p);
@@ -29,7 +29,7 @@ void fragment(){
  float distant_scale=smoothstep(.03,.18,fine_footprint);
  float sparkle=(twinkles(fine+drift,0.0)+twinkles(world.xz*.075+drift,1.7)*.85*distant_scale)*(.5+sun_band*.5);
  float fresnel=pow(1.0-max(to_camera.y,0.0),3.0);
- ALBEDO=mix(deep,shallow,0.45+wave*.14)+vec3(.08,.11,.12)*fresnel;
+ ALBEDO=mix(deep,shallow,0.44+smoothstep(-.35,.45,wave)*.14)+vec3(.08,.11,.12)*fresnel;
  EMISSION=vec3(1.0,.93,.72)*sparkle*sparkle_strength;
  ROUGHNESS=.22+wave*.035; METALLIC=.10; SPECULAR=.65;
  NORMAL_MAP=vec3(.5+cos(world.x*.11+TIME*.65)*.055,.5+cos(world.z*.16-TIME*.35)*.055,1.0);

@@ -266,3 +266,24 @@ v0.2 轮胎模型已按 [技术方案](docs/V0.2_TIRE_CONTACT_DEFORMATION.zh-CN.
 [0.3.0 公开试玩版下载](https://github.com/YicongCao/Art-Rally/releases/tag/v0.3.0) · [本轮发布验证](docs/validation/v030-release.zh-CN.md)。
 
 [0.3.1 HUD 修订包下载](https://github.com/YicongCao/Art-Rally/releases/tag/v0.3.1) · [HUD 修订验证](docs/validation/v031-hud.zh-CN.md)。
+
+### 套色拉力美术管线
+
+直接运行当前工作目录的游戏：
+
+```bash
+./scripts/dev.sh run
+```
+
+精修源文件在 `art_source/screenprint/`；Godot 只加载 `assets/screenprint/` 的 GLB，不直接导入 Blender 源。编辑 `.blend` 后执行：
+
+```bash
+./scripts/dev.sh screenprint-export           # 导出已有源文件，绝不重新生成覆盖源模型
+./scripts/dev.sh screenprint-export --only=F160
+./scripts/dev.sh screenprint-check            # 资产预算、挂点、兼容性检查
+./scripts/dev.sh screenprint-capture          # 三赛道与界面的实机截图
+```
+
+其他 Blender 安装位置可设置 `BLENDER_BIN`。旧 `scripts/generate_vehicles.py` 仅生成旧版模型，新外观不读取其产物。一次性源文件初始化脚本会跳过已存在的 `.blend`；日常修改只需导出。
+
+[改造计划](docs/SCREENPRINT_ART_PLAN.zh-CN.md) · [实现与验收记录](docs/art-direction/screenprint/IMPLEMENTATION.md)

@@ -25,6 +25,7 @@ static func build(parent: Node3D,route: RallyStageRoute,station: float,wordmark:
 	node.position=route.position_at(station)
 	node.rotation.y=route.pose_at(station).basis.get_euler().y
 	var half := route.width_at(station)*.5+1.05
+	for side: float in [-1,1]: RallyScreenprintProps.add(node,"arch_foot",Vector3(side*half,0,0))
 	var path: Array[Vector2]=[]
 	for i: int in range(9): path.append(Vector2(-half,i*.55))
 	for i: int in range(1,9):
@@ -57,6 +58,11 @@ static func build(parent: Node3D,route: RallyStageRoute,station: float,wordmark:
 	material.shader=preload("res://assets/shaders/inflatable_arch.gdshader")
 	mesh.material_override=material
 	node.add_child(mesh)
+	var authored := RallyScreenprintProps.add(node,"arch")
+	if authored!=null:
+		mesh.visible=false
+		authored.scale.x=half/6.0
+		for part: Node in authored.find_children("*","MeshInstance3D",true,false): part.material_override=material
 	# Two faces remain readable from either direction; no reversed lettering.
 	for side: float in [-1,1]:
 		var sign := Sprite3D.new()

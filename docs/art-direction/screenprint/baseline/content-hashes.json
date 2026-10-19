@@ -1,0 +1,9 @@
+{
+  "resources/content/A240.tres": "f02dab6944c4f462c5ab36bbf5ec6a7b7212279505d2cc34e36fe64e604c461d",
+  "resources/content/F160.tres": "45cb87149a2b3620b212446f44b6dad5ed0481b25997241bac1cc1ccf121fe6a",
+  "resources/content/R200.tres": "9404fee70a7c81a89551bc9bdb726f0aba03ba8ee0e395053744b788ae8f3b53",
+  "resources/content/challenge_targets.json": "3461b8e740134901be47a77439b12ead4faf103244a7b3350dd4188f07823b7f",
+  "resources/stages/misty_highlands.tres": "cadc3c914d502acbfee213f1a8a18d8fae3450fcecd8c34af7573f87dc6c14db",
+  "resources/stages/sunlit_cape.tres": "c3ab5a1f9022ecd96f04c45f2b603cbf53bc9c5181a463265afe80cb2c21cae8",
+  "resources/stages/sunset_ridge.tres": "eded91d460da15119f6eedb016f50e9c04c5bb4418396d08a348dad4adca8e76"
+}

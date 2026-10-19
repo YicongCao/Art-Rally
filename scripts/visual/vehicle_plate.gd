@@ -12,7 +12,7 @@ static func attach(body: Node3D, definition: RallyVehicleDefinition, text: Strin
 	for side: float in [1,-1]:
 		var mount := Node3D.new()
 		mount.name = "Rear" if side>0 else "Front"
-		mount.position = Vector3(0,.02,side*(definition.body_size.z/2+.052))
+		mount.position = RallyVehicleAppearance.mount(body,"PlateRear" if side>0 else "PlateFront",Vector3(0,.02,side*(definition.body_size.z/2+.052)))
 		mount.rotation.y = 0 if side>0 else PI
 		plates.add_child(mount)
 		var frame := MeshInstance3D.new()

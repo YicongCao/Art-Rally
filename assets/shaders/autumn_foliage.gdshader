@@ -16,5 +16,11 @@ void fragment() {
 	ALBEDO = COLOR.rgb;
 	ROUGHNESS = 1.0;
 	// A small leaf fill retains autumn color inside layered crowns.
-	EMISSION = COLOR.rgb * (grass_blades ? 0.08 : 0.12);
+	EMISSION = COLOR.rgb * (grass_blades ? 0.04 : 0.08);
+}
+
+void light() {
+ float n=dot(NORMAL,LIGHT);
+ float tone=.38+.32*smoothstep(-.12,.12,n)+.30*smoothstep(.52,.72,n);
+ DIFFUSE_LIGHT+=ALBEDO*mix(vec3(.65,.62,.76),vec3(1.0),tone)*LIGHT_COLOR*ATTENUATION/PI;
 }

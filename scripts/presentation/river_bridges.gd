@@ -29,6 +29,7 @@ static func build(land: RallyStageScenery) -> void:
 				var edge_b := inverse*(b+rb*side*(wb+.20))
 				deck.beam(edge_a-Vector3.UP*.16,edge_b-Vector3.UP*.16,.32,Color("b0ad98"))
 				rails.beam(edge_a+Vector3.UP*.15,edge_a+Vector3.UP*1.12,.075,Color("ddd3b7"))
+				RallyScreenprintProps.add(node,"bridge_post",edge_a)
 				for height: float in [.65,1.12]: rails.beam(edge_a+Vector3.UP*height,edge_b+Vector3.UP*height,.075,Color("adb9ae"))
 				if i==first or i==last-1:
 					deck.beam(edge_a,edge_a-Vector3.UP*3,.65,Color("737c75"))

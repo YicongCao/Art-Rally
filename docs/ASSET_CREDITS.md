@@ -17,3 +17,11 @@
 
 - 中文语音路书：使用 [hexgrad/Kokoro-82M-v1.1-zh](https://huggingface.co/hexgrad/Kokoro-82M-v1.1-zh) 的 `zf_001` / `zm_010` 合成，模型许可 Apache-2.0，许可文本见 `assets/audio/voice/LICENSE-Kokoro.txt`。模型卡说明中文训练数据由龙猫数据许可提供。生成脚本 `scripts/generate_pacenotes.py` 与逐句文本／声线清单 `assets/audio/voice/lines.json` 随仓库保存；游戏只打包 WAV，不包含模型或推理依赖，不需要联网。
 - 河流水声、旋翼声与蹄声：项目原创合成，脚本 `scripts/generate_world_audio.py`。
+
+## 套色拉力原创资产（2026-10-19）
+
+- 三车新造型、涂装、轮系、描边代理及功能挂点：Blender 原创模型；权威源文件 `art_source/screenprint/vehicles/`，游戏 GLB 位于 `assets/screenprint/vehicles/`，独立视觉版本 `screenprint-1`。
+- 木屋、灯塔、桥柱模块、直升机及记者摄像机、保障车、帆船、气球拱门与锚固件、AT 胎与五辐轮毂：原创 Blender 源文件 `art_source/screenprint/props/`。
+- `scripts/export_screenprint.py` 从已保存的源文件生成 GLB、三档车身 LOD 和面数／挂点清单，不回写源文件。`create_screenprint_sources.py` 为一次性初始化；`refine_screenprint_sources.py` 记录本轮有版本标记的修整，不属于日常导出步骤。
+- 套色材质、赛车专用墨线、UI 纸面印刷 shader 和矢量版式：项目原创代码。未引入外部品牌、赞助标识、贴图或字体。
+- 方向参考图由内置 image_gen 生成，仅用于设计讨论；实际游戏继续使用原创三维资产和代码绘制 UI。

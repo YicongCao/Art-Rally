@@ -6,6 +6,7 @@ var wheels: Array[Node3D] = []
 var material := StandardMaterial3D.new()
 var definition: RallyVehicleDefinition
 var solid: bool = false
+var outline_materials: Array[ShaderMaterial] = []
 
 
 func build(vehicle: RallyVehicleDefinition, data: Dictionary,translucent: bool = true) -> void:
@@ -18,7 +19,7 @@ func build(vehicle: RallyVehicleDefinition, data: Dictionary,translucent: bool =
 	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	material.no_depth_test = false
 	var body: Node3D
-	if ResourceLoader.exists(vehicle.model_path): body = load(vehicle.model_path).instantiate()
+	if ResourceLoader.exists(vehicle.model_path): body = RallyVehicleAppearance.build(vehicle)
 	else:
 		var box := MeshInstance3D.new()
 		var mesh := BoxMesh.new()
@@ -46,7 +47,14 @@ func build(vehicle: RallyVehicleDefinition, data: Dictionary,translucent: bool =
 
 func _tint(node: Node) -> void:
 	if node is MeshInstance3D:
-		node.material_override = material
+		if str(node.name).begins_with("Outline_"):
+			var line := ShaderMaterial.new()
+			line.shader=preload("res://assets/shaders/screenprint_ghost_outline.gdshader")
+			line.set_shader_parameter("ink",material.albedo_color)
+			line.set_shader_parameter("opacity",material.albedo_color.a)
+			node.material_override=line
+			outline_materials.append(line)
+		else: node.material_override = material
 		node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	for child: Node in node.get_children(): _tint(child)
 
@@ -59,6 +67,7 @@ func update(time: float, player_position: Vector3, enabled: bool) -> void:
 	var distance := position.distance_to(player_position)
 	if not solid:
 		material.albedo_color.a = 0.27*smoothstep(2,7,distance)
+		for line: ShaderMaterial in outline_materials: line.set_shader_parameter("opacity",material.albedo_color.a)
 		visible = distance>2
 	for i: int in range(4):
 		wheels[i].position = Vector3((-0.5 if i%2==0 else 0.5)*definition.track_width,-sample.lengths[i],(-0.5 if i<2 else 0.5)*definition.wheelbase)

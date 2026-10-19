@@ -53,6 +53,24 @@ prepare_runtime() {
 MODE="${1:-editor}"
 if [[ $# -gt 0 ]]; then shift; fi
 case "$MODE" in
+  screenprint-export)
+    BLENDER_EXEC="${BLENDER_BIN:-/Applications/Blender.app/Contents/MacOS/Blender}"
+    if [[ ! -x "$BLENDER_EXEC" ]]; then BLENDER_EXEC="$(command -v blender || true)"; fi
+    if [[ -z "$BLENDER_EXEC" ]]; then echo "Set BLENDER_BIN to your Blender executable." >&2; exit 1; fi
+    mkdir -p "$ROOT/logs"
+    run_external_logged "$ROOT/logs/screenprint_export.log" "$BLENDER_EXEC" --background --python "$ROOT/scripts/export_screenprint.py" -- "$@"
+    grep -q '^SCREENPRINT EXPORT PASSED' "$ROOT/logs/screenprint_export.log"
+    prepare_runtime
+    ;;
+  screenprint-check)
+    prepare_runtime
+    run_logged "$ROOT/logs/screenprint_test.log" --headless --path "$ROOT" --script res://tests/screenprint_test.gd
+    grep -q '^TEST RESULT: .* 0 failures$' "$ROOT/logs/screenprint_test.log"
+    ;;
+  screenprint-capture)
+    prepare_runtime
+    run_logged "$ROOT/logs/screenprint_capture.log" --path "$ROOT" --max-fps 60 --script res://scripts/dev/screenprint_capture.gd -- --test-defaults "$@"
+    ;;
   first-playable-matrix|first-playable-lifecycle|first-playable-audio|first-playable-capture|first-playable-perf)
     mkdir -p "$ROOT/logs"
     case "$MODE" in

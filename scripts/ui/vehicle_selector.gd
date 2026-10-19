@@ -27,7 +27,7 @@ func build() -> void:
 	root.add_child(center)
 	var panel := PanelContainer.new()
 	var style := StyleBoxFlat.new()
-	style.bg_color = Color("19362c")
+	style.bg_color = Color("20252b")
 	style.border_width_top = 3
 	style.border_color = Color("e8ac59")
 	style.content_margin_left = 26
@@ -36,18 +36,7 @@ func build() -> void:
 	style.content_margin_bottom = 24
 	panel.add_theme_stylebox_override("panel",style)
 	center.add_child(panel)
-	var theme := Theme.new()
-	theme.default_font = RallyFonts.TEXT
-	theme.default_font_size = 16
-	theme.set_color("font_color","Label",Color("eee7d4"))
-	for state: String in ["normal","hover","pressed","focus"]:
-		var button_style := StyleBoxFlat.new()
-		button_style.bg_color = Color("345c48") if state in ["hover","pressed"] else Color("102a22")
-		button_style.border_color = Color("e8ac59")
-		button_style.set_border_width_all(2 if state in ["pressed","focus"] else 0)
-		button_style.content_margin_top = 12
-		button_style.content_margin_bottom = 12
-		theme.set_stylebox(state,"Button",button_style)
+	var theme := RallyScreenprintStyle.theme()
 	panel.theme = theme
 	var column := VBoxContainer.new()
 	column.add_theme_constant_override("separation",18)

@@ -59,7 +59,7 @@ void fragment() {
 	vec3 color = mix(grass, earth, smoothstep(0.44, 0.8, noise(world.xz * 0.11)) * 0.25);
 	if (alpine_terrain) {
 		float slope = 1.0-abs((INV_VIEW_MATRIX*vec4(NORMAL,0.0)).y);
-		vec3 rock = mix(vec3(.26,.33,.36),vec3(.47,.52,.52),large);
+		vec3 rock = mix(vec3(.25,.28,.36),vec3(.43,.46,.54),large);
 		rock *= .94+.06*sin(world.y*.7+noise(world.xz*.09)*2.0);
 		color = mix(color,rock,smoothstep(.16,.55,slope));
 	}
@@ -76,8 +76,8 @@ void fragment() {
 		float near_detail = 1.0-smoothstep(0.15,1.1,length(fwidth(world.xz))*13.0);
 		float crown = smoothstep(0.018,0.15,stones.y)*(1.0-smoothstep(0.12,0.55,stones.x));
 		float grain_shade = mix(0.83,1.12,stones.z);
-		gravel *= mix(1.0,grain_shade,near_detail*0.48);
-		gravel *= 1.0-(1.0-smoothstep(0.012,0.055,stones.y))*near_detail*0.10;
+		gravel *= mix(1.0,grain_shade,near_detail*0.20);
+		gravel *= 1.0-(1.0-smoothstep(0.012,0.055,stones.y))*near_detail*0.05;
 		road_bump = crown*near_detail*on_road;
 		color = mix(color, earth * 1.09, shoulder);
 		// Irregular, compacted edges and dragged material break up the straight join.
@@ -101,13 +101,13 @@ void fragment() {
 	}
 	float wet = road_mesh ? clamp(zone.a*(.75+.25*noise(world.xz*1.8)),0.0,1.0) : 0.0;
 	color *= 1.0-wet*.35;
-	color *= 0.92 + grit * 0.14;
-	color += vec3(fleck * 0.012 * stone_speckle);
+	color *= 0.975 + grit * 0.05;
+	color += vec3(fleck * 0.005 * stone_speckle);
 	ALBEDO = color;
 	float muddy_lane = road_mesh && abs(UV.x)<UV2.x ? clamp(zone.b,0.0,1.0) : 0.0;
 	ROUGHNESS = mix(mix(0.96,0.76,muddy_lane),0.28,wet);
 	SPECULAR = mix(mix(0.08,0.12,muddy_lane),0.38,wet);
 	vec2 bumps = vec2(dFdx(road_bump),dFdy(road_bump));
-	NORMAL_MAP = vec3(vec2(0.5)+clamp(-bumps*0.55,vec2(-0.20),vec2(0.20)) + vec2(grit-0.5)*0.08,1.0);
+	NORMAL_MAP = vec3(vec2(0.5)+clamp(-bumps*0.55,vec2(-0.20),vec2(0.20)) + vec2(grit-0.5)*0.025,1.0);
 	NORMAL_MAP_DEPTH = 0.4;
 }

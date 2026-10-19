@@ -8,11 +8,18 @@ var clock: float = 0
 var width: float = 1.6
 var length: float = 3.8
 var lamp_edge: float = .71
+var left_mount := Vector3.ZERO
+var right_mount := Vector3.ZERO
 
-func build(parent: Node3D,body: Vector3,vehicle_id: String = "A240") -> void:
+func build(parent: Node3D,body: Vector3,vehicle_id: String = "A240",appearance: Node3D = null) -> void:
 	width = body.x
 	length = body.z
 	lamp_edge = width*.5-.17+({"F160":.11,"R200":.53,"A240":.48}.get(vehicle_id,.48))*.5
+	left_mount=Vector3(-lamp_edge,.20,length*.5+.009)
+	right_mount=Vector3(lamp_edge,.20,length*.5+.009)
+	if appearance!=null:
+		left_mount=RallyVehicleAppearance.mount(appearance,"TailLeft",left_mount)
+		right_mount=RallyVehicleAppearance.mount(appearance,"TailRight",right_mount)
 	visual.name = "TailLightSlipstreams"
 	visual.mesh = mesh
 	visual.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
@@ -36,8 +43,8 @@ func update(pose: Transform3D,speed: float,dt: float,camera: Camera3D) -> void:
 	if intensity<=.001:
 		clear()
 		return
-	var left := pose*Vector3(-lamp_edge,.20,length*.5+.009)
-	var right := pose*Vector3(lamp_edge,.20,length*.5+.009)
+	var left := pose*left_mount
+	var right := pose*right_mount
 	if not history.is_empty() and (left.distance_to(history[-1].left)>12 or dt>.25): clear()
 	history.append({"left":left,"right":right,"time":clock,"intensity":intensity})
 	while not history.is_empty() and (clock-float(history[0].time)>.5 or history.size()>48): history.pop_front()

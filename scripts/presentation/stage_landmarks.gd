@@ -72,6 +72,12 @@ static func _service(land: RallyStageScenery,s: float) -> void:
 		b.box(Vector3(.04,.18,.7),Vector3(1+side*1.14,1.7,.65),Color("2a7a72"))
 		for axle: float in [-1.45,1.45]: b.ellipsoid(Vector3(.22,.43,.43),Vector3(1+side*1.12,.48,axle),Color("263c40"))
 		b.box(Vector3(.35,.15,.32),Vector3(1+side*.65,2.14,-1),Color("3aa7d1"))
+	# Freeze the old vehicle collider; the authored van is visual-only.
+	var legacy_van := _mesh(node,b,true)
+	legacy_van.name="LegacyVanCollisionVisual"
+	legacy_van.visible=false
+	RallyScreenprintProps.add(node,"medical",Vector3(1,.15,0))
+	b=RallySampleMeshes.new()
 	# Marshals' high-visibility vests, radio post, small shelter.
 	for i: int in range(3):
 		var at := Vector3(-2+i*.85,0,3.9)
@@ -148,7 +154,8 @@ static func _coast(land: RallyStageScenery) -> void:
 		sail.beam(Vector3(0,.3,0),Vector3(0,18,0),.1,Color("9e7d52"))
 		sail.triangle(Vector3(.1,17.6,0),Vector3(.1,1,-7),Vector3(.1,1,0),Color("fff4d5"))
 		sail.triangle(Vector3(-.1,14,0),Vector3(-.1,1,0),Vector3(-.1,1,7),Color("df9d68"))
-		_mesh(boat,sail)
+		_mesh(boat,sail).visible=false
+		RallyScreenprintProps.add(boat,"sailboat")
 		land.sailboats.append({"node":boat,"origin":boat.position,"direction":-boat.basis.z})
 
 

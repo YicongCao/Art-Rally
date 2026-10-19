@@ -2,6 +2,7 @@ class_name RallyCameraRig
 extends RefCounted
 
 var definition: RallyVehicleDefinition
+var appearance_body: Node3D
 var dashboard := Node3D.new()
 var steering_wheel := Node3D.new()
 var display: Label3D
@@ -114,7 +115,9 @@ func update(camera: Camera3D,car: RallyVehicle,mode: int,motion: bool,paused: bo
 		history_valid = true
 	else:
 		var offset := Vector3(0,0.74,-0.80) if mode==2 else Vector3(0,0.72,-1.40)
-		if definition!=null: offset = definition.cockpit_offset if mode==2 else definition.hood_offset
+		if definition!=null:
+			offset = definition.cockpit_offset if mode==2 else definition.hood_offset
+			if appearance_body!=null: offset=RallyVehicleAppearance.mount(appearance_body,"CameraCockpit" if mode==2 else "CameraHood",offset)
 		if motion: offset.y += sin(elapsed*37)*minf(car.linear_velocity.length()/20,1)*0.005
 		camera.position = pose*offset
 		var head := pose.basis*Basis(Vector3.UP,-view_angles.x)*Basis(Vector3.RIGHT,view_angles.y)

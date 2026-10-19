@@ -57,10 +57,8 @@ func beam(a: Vector3, b: Vector3, radius: float, color: Color) -> void:
 func finish() -> ArrayMesh:
 	tool.generate_normals()
 	var mesh := tool.commit()
-	var material := StandardMaterial3D.new()
-	material.vertex_color_use_as_albedo = true
-	material.roughness = 0.9
-	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	var material := ShaderMaterial.new()
+	material.shader = preload("res://assets/shaders/screenprint_environment.gdshader")
 	mesh.surface_set_material(0,material)
 	return mesh
 
@@ -75,7 +73,7 @@ static func pine(seed_value: int, umbrella: bool) -> ArrayMesh:
 	var bark := Color("78717c") if umbrella else Color("685047")
 	builder.cone(0.19,0.045,7.4,Vector3(0,3.7,0),bark,7)
 	if umbrella:
-		var palette: Array[Color] = [Color("e97428"),Color("d7a833"),Color("cb533f")]
+		var palette: Array[Color] = [Color("b95532"),Color("c4a13d"),Color("a84436")]
 		var crown_color := palette[posmod(seed_value / 19,3)]
 		for i: int in range(16):
 			var angle := i*2.39996
@@ -84,17 +82,17 @@ static func pine(seed_value: int, umbrella: bool) -> ArrayMesh:
 			builder.beam(Vector3(0,2.7+i*0.16,0),at,0.065,bark)
 			# Small, intersecting opaque leaves give the crown a broken edge without
 			# alpha overdraw or camera-facing billboards.
-			for leaf: int in range(60):
+			for leaf: int in range(34):
 				var offset := Vector3(rng.randf_range(-1,1),rng.randf_range(-0.85,0.85),rng.randf_range(-1,1))
 				if offset.length_squared()>1.25: offset *= 0.65
 				var center := at+offset
 				var rotation := Basis.from_euler(Vector3(rng.randf_range(-1.1,1.1),rng.randf()*TAU,rng.randf_range(-0.8,0.8)))
-				var across := rotation*Vector3(rng.randf_range(0.12,0.22),0,0)
-				var up := rotation*Vector3(0,rng.randf_range(0.16,0.30),0)
+				var across := rotation*Vector3(rng.randf_range(0.23,0.36),0,0)
+				var up := rotation*Vector3(0,rng.randf_range(0.28,0.42),0)
 				var color := crown_color.darkened(rng.randf_range(0,0.22)).lightened(rng.randf_range(0,0.10))
 				builder.leaf(center,across,up,color)
 	else:
-		var palette: Array[Color] = [Color("397b56"),Color("356c68"),Color("cfaa35")]
+		var palette: Array[Color] = [Color("2b6257"),Color("285c63"),Color("b6a04d")]
 		var needles := palette[posmod(seed_value / 39,3)]
 		for tier: int in range(18):
 			var y := 1.5+tier*0.36
@@ -188,7 +186,7 @@ static func grass(seed_value: int) -> ArrayMesh:
 		var middle := base.lerp(tip,0.6)+Vector3.UP*0.04
 		var shade := rng.randf_range(0,0.13)
 		for v: Vector3 in [base-across,middle+across,middle-across,base-across,base+across,middle+across,middle-across,middle+across,tip]:
-			var color := Color("b78b36").lerp(Color("f3cd65"),clampf(v.y/0.55,0,1)).darkened(shade)
+			var color := Color("a98236").lerp(Color("d9b956"),clampf(v.y/0.55,0,1)).darkened(shade)
 			builder.tool.set_color(color.srgb_to_linear())
 			builder.tool.add_vertex(v)
 	var mesh := builder.finish()

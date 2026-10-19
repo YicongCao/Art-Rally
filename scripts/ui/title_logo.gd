@@ -25,9 +25,9 @@ func _draw() -> void:
 	for i: int in range(18):
 		var point := Vector2(mud_x+mud.randf_range(12,150),baseline-mud.randf_range(85,128))
 		draw_circle(point,mud.randf_range(.7,2.2),Color(.23,.17,.10,.48))
-	draw_string(face,Vector2(0,baseline+2),"ART RALLY",HORIZONTAL_ALIGNMENT_LEFT,-1,font_size,Color(.01,.04,.05,.28))
-	draw_string(face,Vector2(0,baseline),"ART RALLY",HORIZONTAL_ALIGNMENT_LEFT,-1,font_size,Color("f3e8ce"))
+	draw_string(face,Vector2(3,baseline+4),"ART RALLY",HORIZONTAL_ALIGNMENT_LEFT,-1,font_size,Color(.01,.04,.05,.28))
+	draw_string(face,Vector2(0,baseline),"ART RALLY",HORIZONTAL_ALIGNMENT_LEFT,-1,font_size,Color("eee2c5"))
 	var x := minf(size.x-80,face.get_string_size("ART RALLY",HORIZONTAL_ALIGNMENT_LEFT,-1,font_size).x+20)
 	for i: int in range(3):
 		var start := Vector2(x+i*15,baseline-105)
-		draw_colored_polygon(PackedVector2Array([start,start+Vector2(9,0),start+Vector2(-10,59),start+Vector2(-19,59)]),Color("dfad68"))
+		draw_colored_polygon(PackedVector2Array([start,start+Vector2(9,0),start+Vector2(-10,59),start+Vector2(-19,59)]),Color("d6a83c"))

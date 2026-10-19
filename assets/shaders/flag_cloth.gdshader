@@ -27,13 +27,13 @@ void fragment() {
 	vec2 grid = floor((cloth + 0.5) * extent / square);
 	float checker = mod(grid.x + grid.y, 2.0);
 	// Ink is deep blue-green, with warm ivory squares and a broad woven center ribbon.
-	vec3 dark = vec3(0.115, 0.185, 0.195);
-	vec3 ivory = vec3(0.91, 0.875, 0.755);
+	vec3 dark = vec3(0.125,0.145,0.17);
+	vec3 ivory = vec3(.933,.886,.773);
 	vec3 color = mix(ivory, dark, checker);
 	float ribbon = 1.0 - smoothstep(0.145, 0.148, abs(cloth.y));
 	color = mix(color, dark, ribbon);
 	float piping = (1.0 - smoothstep(0.002, 0.004, abs(abs(cloth.y) - 0.14)));
-	color = mix(color, vec3(0.82, 0.57, 0.27), piping);
+	color = mix(color, vec3(.839,.659,.235), piping);
 	float logo_width = min(viewport_size.x * 0.94, viewport_size.y * 1.8);
 	vec2 logo_uv = cloth * extent / vec2(logo_width, logo_width / 6.0) + 0.5;
 	float inside_logo = step(0.0, logo_uv.x) * step(logo_uv.x, 1.0) * step(0.0, logo_uv.y) * step(logo_uv.y, 1.0);

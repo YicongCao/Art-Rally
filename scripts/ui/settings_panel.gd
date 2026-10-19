@@ -26,7 +26,7 @@ func build(settings: RallyGameSettings,height: float = 330) -> void:
 	add_child(nav)
 	var content := PanelContainer.new()
 	var surface := StyleBoxFlat.new()
-	surface.bg_color = Color(.035,.085,.075,.86)
+	surface.bg_color = Color(.125,.145,.17,.92)
 	surface.content_margin_left = 18
 	surface.content_margin_right = 18
 	surface.content_margin_top = 10

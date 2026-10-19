@@ -15,6 +15,7 @@ var power_tier: int = 0
 @export var paint := Color("245caa")
 @export var number: int = 44
 @export var revision: String = "fp3"
+@export var appearance: RallyVehicleAppearance = preload("res://resources/visual/vehicle_appearance.tres")
 @export var model_path: String = "res://assets/vehicles/A240.glb"
 @export var cockpit_offset := Vector3(0,0.74,-0.80)
 @export var hood_offset := Vector3(0,0.72,-1.40)
