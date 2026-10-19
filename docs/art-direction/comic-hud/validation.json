@@ -1,0 +1,63 @@
+{
+  "engine": "Godot 4.7.2",
+  "device": "Apple M5, Metal Forward+",
+  "tests": [
+    {
+      "test": "first_playable_flow_test",
+      "checks": 29,
+      "failures": 0
+    },
+    {
+      "test": "hud_test",
+      "checks": 27,
+      "failures": 0
+    },
+    {
+      "test": "presentation_test",
+      "checks": 33,
+      "failures": 0
+    },
+    {
+      "test": "presentation_theme_test",
+      "checks": 20,
+      "failures": 0
+    },
+    {
+      "test": "replay_album_test",
+      "checks": 27,
+      "failures": 0
+    },
+    {
+      "test": "screenprint_test",
+      "checks": 93,
+      "failures": 0
+    },
+    {
+      "test": "stage_art_test",
+      "checks": 12,
+      "failures": 0
+    },
+    {
+      "test": "stage_play_test",
+      "checks": 13,
+      "failures": 0
+    },
+    {
+      "test": "stage_session_test",
+      "checks": 20,
+      "failures": 0
+    }
+  ],
+  "checks": 274,
+  "failures": 0,
+  "static_collision_route_challenge_contract_unchanged": true,
+  "generated_asset_sha256": {
+    "assets/ui/comic_hud/atlas.png": "e9dc2527c83564f772fa2537422a8371d5bb921856db031d9c644781991d3b24",
+    "assets/sky/comic/cloud-banks.png": "25deabf98ab65d0ba56c4d59170522398c1a042ae88926926c03754eeb76c06e"
+  },
+  "limits": [
+    "Native captures are short samples, not full-stage performance runs.",
+    "No Windows or physical controller acceptance performed for this change.",
+    "Layout fixture images use representative HUD values, not actual driving."
+  ]
+}

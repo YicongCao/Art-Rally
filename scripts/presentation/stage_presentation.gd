@@ -15,12 +15,15 @@ var checkpoints := RallyCheckpointMarkers.new()
 var tire_marks := RallyTireMarks.new()
 var sky_life := RallySkyLife.new()
 var tail_streaks := RallyTailStreaks.new()
+var road_posts := RallyBreakablePosts.new()
 
 
 func build(owner_scene: Node3D) -> void:
 	scene = owner_scene
 	scene.add_child(scenery)
 	scenery.build(scene.generator)
+	scene.add_child(road_posts)
+	road_posts.build(scenery,scene.vehicle)
 	scene.add_child(sky_life)
 	sky_life.build(scenery)
 	checkpoints.build(scene,scenery.route,scene.session.gates)
@@ -44,6 +47,7 @@ func build(owner_scene: Node3D) -> void:
 	var material := ShaderMaterial.new()
 	material.shader = preload("res://assets/shaders/sample_sky.gdshader")
 	material.set_shader_parameter("painted_banks",true)
+	material.set_shader_parameter("cloud_atlas",preload("res://assets/sky/comic/cloud-banks.png"))
 	material.set_shader_parameter("cloud_drift",0.0)
 	material.set_shader_parameter("sun_direction",atmosphere.sun_direction)
 	sky.sky_material = material
@@ -102,19 +106,19 @@ func _apply_biome(sky: ShaderMaterial) -> void:
 	var cloud_light := Color("fff3d9")
 	var cloud_shadow := Color("bdc9cd")
 	if biome=="autumn":
-		palette = [Color("ffd59b"),Color("eea1ac"),Color("5285c8")]
+		palette = [Color("ffca86"),Color("ed9aa9"),Color("487dc4")]
 		var forward: Vector3 = scene.generator.route.tangent_at(430)
 		forward.y = 0
 		var horizontal: Vector3 = forward.normalized().rotated(Vector3.UP,deg_to_rad(-65))
 		atmosphere.sun_direction = horizontal*cos(deg_to_rad(12.5))+Vector3.UP*sin(deg_to_rad(12.5))
 		sun.light_color = Color("ffe1b5")
-		sun.light_energy = 1.65
-		environment.ambient_light_color = Color("94abc7")
-		environment.ambient_light_energy = .40
+		sun.light_energy = 1.80
+		environment.ambient_light_color = Color("809ac3")
+		environment.ambient_light_energy = .36
 		environment.fog_light_color = Color("bdafcf")
 		environment.fog_density = .00032
-		cloud_light = Color("ffe1a3")
-		cloud_shadow = Color("9e83bc")
+		cloud_light = Color("ffe6ac")
+		cloud_shadow = Color("a18abd")
 	elif biome=="coast":
 		palette = [Color("fff0d4"),Color("d6e8e4"),Color("7eb7d2")]
 		sun.light_color = Color("fff3d9")
@@ -146,13 +150,17 @@ func _apply_biome(sky: ShaderMaterial) -> void:
 			painted.shader = preload("res://assets/shaders/anime_mountain.gdshader")
 			painted.set_shader_parameter("sun_direction",atmosphere.sun_direction)
 			painted.set_shader_parameter("layer",float(str(backdrop.name).trim_prefix("MountainLayer")))
-			painted.set_shader_parameter("shade_color",Color("666eaa"))
-			painted.set_shader_parameter("lit_color",Color("d5b899"))
+			painted.set_shader_parameter("shade_color",Color("646da2"))
+			painted.set_shader_parameter("lit_color",Color("efc391"))
 			if biome=="highland":
 				painted.set_shader_parameter("shade_color",Color("526485"))
 				painted.set_shader_parameter("lit_color",Color("adb4b6"))
+			if biome=="coast":
+				painted.set_shader_parameter("shade_color",Color("629ba4"))
+				painted.set_shader_parameter("lit_color",Color("ede1bf"))
 			backdrop.material_override = painted
 	sun.basis = Basis.looking_at(-atmosphere.sun_direction,Vector3.UP)
+	sky.set_shader_parameter("cloud_atlas_warmth",1.0 if biome=="autumn" else .10)
 	sky.set_shader_parameter("cloud_light",cloud_light)
 	sky.set_shader_parameter("cloud_shadow",cloud_shadow)
 	sky.set_shader_parameter("cloud_mid",cloud_light.lerp(cloud_shadow,.45))

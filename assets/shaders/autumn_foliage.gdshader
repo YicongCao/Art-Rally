@@ -24,13 +24,13 @@ void fragment() {
 
 void light() {
  float n=dot(NORMAL,LIGHT);
- float tone=.22+.40*smoothstep(-.15,.10,n)+.38*smoothstep(.48,.72,n);
- vec3 shadow=vec3(.35,.48,.68);
+ float tone=.18+.42*smoothstep(-.12,.06,n)+.40*smoothstep(.45,.63,n);
+ vec3 shadow=vec3(.27,.43,.66);
  DIFFUSE_LIGHT+=ALBEDO*mix(shadow,vec3(1.0),tone)*LIGHT_COLOR*ATTENUATION/PI;
  if (!grass_blades) {
   // Broad waxy leaf sheen and warm transmitted light, not PBR wet/plastic shine.
-  float sheen=smoothstep(.68,.90,dot(normalize(LIGHT+VIEW),NORMAL));
+  float sheen=smoothstep(.63,.84,dot(normalize(LIGHT+VIEW),NORMAL));
   float back=pow(max(dot(-LIGHT,VIEW),0.0),4.0)*(1.0-max(n,0.0));
-  DIFFUSE_LIGHT+=(ALBEDO*vec3(1.2,.78,.30)*back*.32+mix(ALBEDO,vec3(1.0),.32)*sheen*.20)*LIGHT_COLOR*ATTENUATION*canopy/PI;
+  DIFFUSE_LIGHT+=(ALBEDO*vec3(1.2,.78,.30)*back*.38+mix(ALBEDO,vec3(1.0),.32)*sheen*.29)*LIGHT_COLOR*ATTENUATION*canopy/PI;
  }
 }

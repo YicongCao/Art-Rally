@@ -179,7 +179,8 @@ func _build_markers() -> void:
 		for side: float in [-1, 1]:
 			var point := route.position_at(s) + route.rights[index] * side * (route.width_at(s) * 0.5 + 0.5)
 			point.y += 0.25
-			marker_transforms.append(Transform3D(Basis.IDENTITY,point))
+			if not RallyBreakablePosts.covers(s,route.length):
+				marker_transforms.append(Transform3D(Basis.IDENTITY,point))
 		if s % 100 == 20:
 			var position := route.position_at(s) + route.rights[index] * rng.randf_range(10, 17)
 			position.y -= 1

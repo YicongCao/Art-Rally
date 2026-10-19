@@ -9,11 +9,13 @@ varying vec3 world;
 void vertex(){world_normal=normalize(MODEL_NORMAL_MATRIX*NORMAL);world=(MODEL_MATRIX*vec4(VERTEX,1.0)).xyz;}
 void fragment(){
  float light=dot(normalize(world_normal),normalize(sun_direction));
- float planes=.08+.40*smoothstep(-.10,.20,light)+.52*smoothstep(.55,.78,light);
+ float planes=.08+.40*smoothstep(-.08,.12,light)+.52*smoothstep(.38,.60,light);
  vec3 paint=mix(shade_color.rgb,lit_color.rgb,planes);
  // Wide mineral bands stay attached to the mountain, never screen-space noise.
  float stratum=sin(world.y*.045+sin(world.x*.008+world.z*.011)*2.0);
- paint*=.94+.06*smoothstep(-.2,.4,stratum);
+ paint*=.90+.10*smoothstep(-.15,.2,stratum);
+ float ridge=sin(world.y*.024+world.x*.012-world.z*.009);
+ paint=mix(paint,lit_color.rgb,smoothstep(.85,.98,ridge)*max(light,0.0)*.22);
  paint=mix(paint,vec3(.17,.23,.40),layer*.18);
  ALBEDO=mix(paint,vec3(.20,.23,.40),clamp(length(VERTEX)/9500.0,.04,.36));
 }

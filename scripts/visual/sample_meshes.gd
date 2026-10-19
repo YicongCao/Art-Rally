@@ -73,7 +73,7 @@ static func pine(seed_value: int, umbrella: bool) -> ArrayMesh:
 	var bark := Color("78717c") if umbrella else Color("685047")
 	builder.cone(0.19,0.045,7.4,Vector3(0,3.7,0),bark,7)
 	if umbrella:
-		var palette: Array[Color] = [Color("e96526"),Color("efb52d"),Color("ce3628")]
+		var palette: Array[Color] = [Color("f17421"),Color("ffc43c"),Color("e83b23")]
 		var crown_color := palette[posmod(seed_value / 19,3)]
 		for i: int in range(16):
 			var angle := i*2.39996
@@ -92,7 +92,7 @@ static func pine(seed_value: int, umbrella: bool) -> ArrayMesh:
 				var color := crown_color.darkened(rng.randf_range(0,0.22)).lightened(rng.randf_range(0,0.10))
 				builder.round_leaf(center,across,up,color)
 	else:
-		var palette: Array[Color] = [Color("177363"),Color("195b65"),Color("bea740")]
+		var palette: Array[Color] = [Color("147e6e"),Color("175e70"),Color("bea740")]
 		var needles := palette[posmod(seed_value / 39,3)]
 		for tier: int in range(18):
 			var y := 1.5+tier*0.36
@@ -193,7 +193,7 @@ static func grass(seed_value: int) -> ArrayMesh:
 		var middle := base.lerp(tip,0.6)+Vector3.UP*0.04
 		var shade := rng.randf_range(0,0.13)
 		for v: Vector3 in [base-across,middle+across,middle-across,base-across,base+across,middle+across,middle-across,middle+across,tip]:
-			var color := Color("a98236").lerp(Color("d9b956"),clampf(v.y/0.55,0,1)).darkened(shade)
+			var color := Color("bf8a29").lerp(Color("f7c34c"),clampf(v.y/0.55,0,1)).darkened(shade)
 			builder.tool.set_color(color.srgb_to_linear())
 			builder.tool.add_vertex(v)
 	var mesh := builder.finish()

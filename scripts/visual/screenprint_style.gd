@@ -12,9 +12,9 @@ extends Resource
 @export var outline_pixels: float = 2.0
 @export var print_strength: float = .035
 @export var biome_palettes: Dictionary = {
- "autumn":[Color("b58b31"),Color("edbf45"),Color("aeb2c4"),Color("efc59b")],
- "coast":[Color("8d9675"),Color("d7c895"),Color("b6d1ce"),Color("eee2c5")],
- "highland":[Color("777d69"),Color("bcb786"),Color("a8bdc8"),Color("e3dac2")]
+ "autumn":[Color("c18e26"),Color("ffcb52"),Color("aeb2c4"),Color("efc59b")],
+ "coast":[Color("758c68"),Color("e4cd8c"),Color("b6d1ce"),Color("eee2c5")],
+ "highland":[Color("627968"),Color("c8c48a"),Color("a8bdc8"),Color("e3dac2")]
 }
 static func current() -> RallyScreenprintStyle:
  return load("res://resources/visual/screenprint.tres") as RallyScreenprintStyle

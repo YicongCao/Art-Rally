@@ -16,7 +16,7 @@ func _run() -> void:
 	check(generator.road_visuals.size() == generator.chunk_bodies.size(),"Every physical road chunk has a styled counterpart")
 	check(scenery.foliage.placements.size()>20000 and scenery.gravel_batches>40,"Approved vegetation and gravel cover full stage")
 	var markers := generator.get_node("RoadMarkers") as MultiMeshInstance3D
-	check(markers.multimesh.instance_count>200,"Roadside posts share one draw batch")
+	check(markers.multimesh.instance_count>140 and markers.multimesh.instance_count<220,"Legacy marker batch covers the remaining 70 percent of road")
 	check(scenery.all_batches.size()<600,"Scenery uses bounded spatial batches instead of one draw object per placement")
 	check(scenery.foliage.animated_arms.size()==generator.definition.spectators.size()*7,"All authored spectator groups are built")
 	check(scenery.obstacles.size()>0 and scenery.obstacles.size()<8,"Near-road obstacles retain shapes in a bounded number of static bodies")

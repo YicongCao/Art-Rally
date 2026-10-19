@@ -1,47 +1,41 @@
-// Original direction-space cloud painting. Broad lobes are smoothly joined;
-// the lighting field is sampled independently so overlapping puffs have no seams.
-uniform vec4 cloud_light : source_color = vec4(1.0, .86, .58, 1.0);
-uniform vec4 cloud_shadow : source_color = vec4(.56, .43, .67, 1.0);
-uniform vec4 cloud_mid : source_color = vec4(.91, .62, .64, 1.0);
+// Painted banks live in sky direction, not on the camera or a full-screen overlay.
+// Ten texture samples replace 126 procedural lobe evaluations per half-res pixel.
+uniform sampler2D cloud_atlas : source_color, filter_linear_mipmap, repeat_disable;
+uniform vec4 cloud_light : source_color = vec4(1.0,.86,.58,1.0);
+uniform vec4 cloud_shadow : source_color = vec4(.56,.43,.67,1.0);
+uniform vec4 cloud_mid : source_color = vec4(.91,.62,.64,1.0);
+uniform float cloud_atlas_warmth = 1.0;
 uniform float cloud_drift = 0.0;
-float cloud_hash(float p) { return fract(sin(p * 127.1 + 311.7) * 43758.5453); }
-float cloud_field(vec2 uv) {
- float field=-10.0;
- for(int bank=0;bank<7;bank++) {
-  float b=float(bank);
-  float angle=b*.897598+sin(b*4.0)*.12;
-  float dx=atan(sin(uv.x-angle),cos(uv.x-angle));
-  float base=.09+cloud_hash(b+9.0)*.13;
-  vec2 q=vec2(dx,uv.y-base);
-  float scale=.55+cloud_hash(b+4.0)*.65;
-  float bank_field=-10.0;
-  for(int lobe=0;lobe<7;lobe++) {
-   float id=b*19.0+float(lobe);
-   float x=(float(lobe)-3.0)*.09*scale;
-   float radius=(.036+cloud_hash(id+3.0)*.047)*scale;
-   vec2 center=vec2(x,.015+cloud_hash(id+32.0)*.065*scale);
-   vec2 d=(q-center)/vec2(radius*1.7,radius);
-   float theta=atan(d.y,d.x);
-   float edge=1.0-length(d)+.065*sin(theta*7.0+id)+.025*sin(theta*13.0-id);
-   // Smooth max joins lobe boundaries rather than shading each sphere separately.
-   float h=clamp(.5+.5*(edge-bank_field)/.35,0.0,1.0);
-   bank_field=mix(bank_field,edge,h)+.35*h*(1.0-h);
-  }
-  bank_field=min(bank_field,(q.y+.045)*14.0);
-  field=max(field,bank_field);
- }
- return field;
-}
+float cloud_hash(float p) { return fract(sin(p*127.1+311.7)*43758.5453); }
 vec4 painted_clouds(vec3 ray,vec3 sun) {
- vec2 uv=vec2(atan(ray.z,ray.x)+cloud_drift,asin(clamp(ray.y,-1.0,1.0)));
- float density=cloud_field(uv);
- float cover=smoothstep(-.022,.022,density)*smoothstep(.04,.09,uv.y);
- // Light arrives from upper left; exposed scallops are warm, deep masses violet.
- float solar_az=atan(sun.z,sun.x);
- float upper=cloud_field(uv+vec2(sin(solar_az-uv.x)*.025,.025));
- float exposed=1.0-smoothstep(-.05,.60,upper);
- float body=.5+.5*sin(uv.x*23.0+sin(uv.y*38.0))*sin(uv.y*19.0+uv.x*4.0);
- vec3 paint=mix(cloud_shadow.rgb,cloud_mid.rgb,smoothstep(.30,.75,body)*.60);
- paint=mix(paint,cloud_light.rgb,smoothstep(.28,.82,exposed));
- return vec4(paint,cover);
+ vec2 direction=vec2(atan(ray.z,ray.x)+cloud_drift,asin(clamp(ray.y,-1.0,1.0)));
+ vec4 cloud=vec4(0.0);
+ for(int bank=0;bank<10;bank++) {
+  float b=float(bank);
+  float yaw=b*.628318+sin(b*4.0)*.15;
+  float dx=atan(sin(direction.x-yaw),cos(direction.x-yaw));
+  float height=.10+cloud_hash(b+9.0)*.26;
+  float width=.8+cloud_hash(b+4.0)*.65;
+  float thickness=width*.18;
+  vec2 uv=vec2(dx/width+.5,.5-(direction.y-height)/thickness);
+  if(uv.x>0.0 && uv.x<1.0 && uv.y>0.0 && uv.y<1.0) {
+   int row=bank%4;
+   vec2 strip=vec2(.0,.31);
+   if(row==1)strip=vec2(.312,.218);
+   if(row==2)strip=vec2(.535,.255);
+   if(row==3)strip=vec2(.79,.21);
+   vec4 paint=texture(cloud_atlas,vec2(uv.x,strip.x+uv.y*strip.y));
+   float edge=smoothstep(0.0,.018,uv.x)*smoothstep(0.0,.018,1.0-uv.x)*smoothstep(0.0,.025,uv.y)*smoothstep(0.0,.025,1.0-uv.y);
+   float alpha=smoothstep(.04,.86,paint.a)*edge;
+   float tone=dot(paint.rgb,vec3(.2126,.7152,.0722));
+   vec3 neutral=mix(cloud_shadow.rgb,cloud_light.rgb,smoothstep(.13,.80,tone));
+   vec3 color=mix(neutral,paint.rgb,cloud_atlas_warmth);
+   // Premultiplied accumulation avoids dark halos at transparent atlas edges.
+   cloud.rgb=color*alpha+cloud.rgb*(1.0-alpha);
+   cloud.a=alpha+cloud.a*(1.0-alpha);
+  }
+ }
+ cloud.rgb/=max(cloud.a,.0001);
+ cloud.a*=smoothstep(.035,.075,direction.y);
+ return cloud;
 }

@@ -295,6 +295,7 @@ func _restart() -> void:
 	startup_focus_pause = false
 	recorder = VehicleTelemetryRecorder.new()
 	presentation.tire_marks.clear()
+	presentation.road_posts.reset()
 	camera_snap = true
 	if is_instance_valid(pause_menu): pause_menu.show_menu(false)
 
