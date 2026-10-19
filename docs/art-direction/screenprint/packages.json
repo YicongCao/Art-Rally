@@ -1,0 +1,10 @@
+{
+  "builds/macos/Art-Rally-macos-universal.zip": {
+    "bytes": 82284172,
+    "sha256": "8bc31e05fe5856a73e8d41c81bfb23b4dab4274a5ece13ced59638d3dbcefdac"
+  },
+  "builds/windows/Art-Rally-windows-x86_64.zip": {
+    "bytes": 59635143,
+    "sha256": "255f5ddadf3e9f1cee2c5fd9be74937ee13af3913b046ec9c88da6eb4064cd4d"
+  }
+}

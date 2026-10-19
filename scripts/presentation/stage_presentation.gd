@@ -26,7 +26,9 @@ func build(owner_scene: Node3D) -> void:
 	checkpoints.build(scene,scenery.route,scene.session.gates)
 	tire_marks.build(scene)
 	scene.vehicle.reset_completed.connect(tire_marks.break_trails)
-	atmosphere.build_at(scenery.dressing,scenery.route,scenery.center,scene.get_node("Sun"),1.8)
+	# Painted sky replaces intersecting 3D cloud blobs. Keep the light convention.
+	atmosphere.sun_direction = Vector3(-.6,.4,-.6).normalized()
+	scenery.dressing.add_child(atmosphere.cloud_root)
 	car_style.build(scene.vehicle,scene.vehicle_definition)
 	tail_streaks.build(scene,scene.vehicle.config.body_size,scene.vehicle_definition.vehicle_id if scene.vehicle_definition!=null else "A240",car_style.body)
 	scene.vehicle.reset_completed.connect(tail_streaks.clear)
@@ -41,6 +43,8 @@ func build(owner_scene: Node3D) -> void:
 	var sky := Sky.new()
 	var material := ShaderMaterial.new()
 	material.shader = preload("res://assets/shaders/sample_sky.gdshader")
+	material.set_shader_parameter("painted_banks",true)
+	material.set_shader_parameter("cloud_drift",0.0)
 	material.set_shader_parameter("sun_direction",atmosphere.sun_direction)
 	sky.sky_material = material
 	environment.sky = sky
@@ -71,6 +75,9 @@ func update(dt: float) -> void:
 	checkpoints.update(scene.session.next_gate)
 	if not scene.get_tree().paused:
 		elapsed += dt
+		# Slow bank drift; update only twice per second to amortize sky radiance updates.
+		if int(elapsed*2)!=int((elapsed-dt)*2):
+			environment.sky.sky_material.set_shader_parameter("cloud_drift",elapsed*.00035)
 		sky_life.advance(dt)
 		tail_streaks.update(scene.vehicle.get_global_transform_interpolated(),scene.vehicle.linear_velocity.length(),dt,scene.camera)
 	camera_rig.update(scene.camera,scene.vehicle,scene.camera_mode,scene.preferences.values.camera_motion,scene.get_tree().paused,dt,scene.controls.look_vector())
@@ -95,19 +102,19 @@ func _apply_biome(sky: ShaderMaterial) -> void:
 	var cloud_light := Color("fff3d9")
 	var cloud_shadow := Color("bdc9cd")
 	if biome=="autumn":
-		palette = [Color("efd2a2"),Color("dca58b"),Color("7d91b1")]
+		palette = [Color("ffd59b"),Color("eea1ac"),Color("5285c8")]
 		var forward: Vector3 = scene.generator.route.tangent_at(430)
 		forward.y = 0
 		var horizontal: Vector3 = forward.normalized().rotated(Vector3.UP,deg_to_rad(-65))
 		atmosphere.sun_direction = horizontal*cos(deg_to_rad(12.5))+Vector3.UP*sin(deg_to_rad(12.5))
-		sun.light_color = Color("ffcf91")
-		sun.light_energy = 1.5
+		sun.light_color = Color("ffe1b5")
+		sun.light_energy = 1.65
 		environment.ambient_light_color = Color("94abc7")
-		environment.ambient_light_energy = .48
-		environment.fog_light_color = Color("d4b5a4")
-		environment.fog_density = .0005
-		cloud_light = Color("ffdda7")
-		cloud_shadow = Color("7f718b")
+		environment.ambient_light_energy = .40
+		environment.fog_light_color = Color("bdafcf")
+		environment.fog_density = .00032
+		cloud_light = Color("ffe1a3")
+		cloud_shadow = Color("9e83bc")
 	elif biome=="coast":
 		palette = [Color("fff0d4"),Color("d6e8e4"),Color("7eb7d2")]
 		sun.light_color = Color("fff3d9")
@@ -133,7 +140,22 @@ func _apply_biome(sky: ShaderMaterial) -> void:
 		atmosphere.sun_direction = morning*cos(deg_to_rad(18))+Vector3.UP*sin(deg_to_rad(18))
 		cloud_light = Color("f0ebd9")
 		cloud_shadow = Color("a6bdc7")
+	for backdrop: Node in scenery.dressing.get_children():
+		if backdrop is MeshInstance3D and str(backdrop.name).begins_with("MountainLayer"):
+			var painted := ShaderMaterial.new()
+			painted.shader = preload("res://assets/shaders/anime_mountain.gdshader")
+			painted.set_shader_parameter("sun_direction",atmosphere.sun_direction)
+			painted.set_shader_parameter("layer",float(str(backdrop.name).trim_prefix("MountainLayer")))
+			painted.set_shader_parameter("shade_color",Color("666eaa"))
+			painted.set_shader_parameter("lit_color",Color("d5b899"))
+			if biome=="highland":
+				painted.set_shader_parameter("shade_color",Color("526485"))
+				painted.set_shader_parameter("lit_color",Color("adb4b6"))
+			backdrop.material_override = painted
 	sun.basis = Basis.looking_at(-atmosphere.sun_direction,Vector3.UP)
+	sky.set_shader_parameter("cloud_light",cloud_light)
+	sky.set_shader_parameter("cloud_shadow",cloud_shadow)
+	sky.set_shader_parameter("cloud_mid",cloud_light.lerp(cloud_shadow,.45))
 	sky.set_shader_parameter("sun_direction",atmosphere.sun_direction)
 	for i: int in range(3):
 		var key: String = ["horizon_sun","horizon_away","zenith_color"][i]

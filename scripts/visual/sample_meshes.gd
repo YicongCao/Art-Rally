@@ -73,7 +73,7 @@ static func pine(seed_value: int, umbrella: bool) -> ArrayMesh:
 	var bark := Color("78717c") if umbrella else Color("685047")
 	builder.cone(0.19,0.045,7.4,Vector3(0,3.7,0),bark,7)
 	if umbrella:
-		var palette: Array[Color] = [Color("b95532"),Color("c4a13d"),Color("a84436")]
+		var palette: Array[Color] = [Color("e96526"),Color("efb52d"),Color("ce3628")]
 		var crown_color := palette[posmod(seed_value / 19,3)]
 		for i: int in range(16):
 			var angle := i*2.39996
@@ -90,9 +90,9 @@ static func pine(seed_value: int, umbrella: bool) -> ArrayMesh:
 				var across := rotation*Vector3(rng.randf_range(0.23,0.36),0,0)
 				var up := rotation*Vector3(0,rng.randf_range(0.28,0.42),0)
 				var color := crown_color.darkened(rng.randf_range(0,0.22)).lightened(rng.randf_range(0,0.10))
-				builder.leaf(center,across,up,color)
+				builder.round_leaf(center,across,up,color)
 	else:
-		var palette: Array[Color] = [Color("2b6257"),Color("285c63"),Color("b6a04d")]
+		var palette: Array[Color] = [Color("177363"),Color("195b65"),Color("bea740")]
 		var needles := palette[posmod(seed_value / 39,3)]
 		for tier: int in range(18):
 			var y := 1.5+tier*0.36
@@ -131,6 +131,13 @@ func triangle(a: Vector3,b: Vector3,c: Vector3,color: Color) -> void:
 func leaf(center: Vector3,across: Vector3,up: Vector3,color: Color) -> void:
 	triangle(center-up,center-across,center+up,color)
 	triangle(center-up,center+up,center+across,color.lightened(0.04))
+
+
+func round_leaf(center: Vector3,across: Vector3,up: Vector3,color: Color) -> void:
+	# Six broad facets form a soft organic silhouette rather than a diamond shard.
+	var points := [center-up,center-up*.5-across*.88,center+up*.5-across*.88,center+up,center+up*.5+across*.88,center-up*.5+across*.88]
+	var spine := center+across.cross(up).normalized()*.065
+	for i: int in range(6): triangle(spine,points[i],points[(i+1)%6],color)
 
 
 static func foliage_material(grass_blades: bool) -> ShaderMaterial:

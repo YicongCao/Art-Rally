@@ -4,6 +4,7 @@ extends Control
 var wash := GradientTexture2D.new()
 var biome: String = "autumn"
 var ink_wash: bool = true
+var poster_mode: bool = false
 var breakout: bool = false
 
 
@@ -18,6 +19,9 @@ func _ready() -> void:
 
 
 func _draw() -> void:
+	if poster_mode:
+		_poster()
+		return
 	match biome:
 		"coast": _coast()
 		"highland": _highland()
@@ -130,3 +134,18 @@ func _highland() -> void:
 	_pine(.23,.91,.32,Color("2d5650"))
 	_pine(.94,.98,.41,Color("214c47"))
 	_pine(.85,.90,.25,Color("2d5650"))
+
+
+func _poster() -> void:
+	draw_rect(Rect2(Vector2.ZERO,size),Color("f5e9d1"))
+	_poly([[.62,0],[1,0],[1,.27],[.53,.48]],Color("e85828"))
+	_poly([[.75,0],[1,0],[1,.04],[.70,.20]],Color("20252b"))
+	_poly([[0,.78],[.10,.67],[.21,.73],[.34,.57],[.51,.75],[.69,.60],[.84,.69],[1,.51],[1,1],[0,1]],Color("d15b32"))
+	_poly([[0,.91],[.17,.73],[.33,.86],[.50,.70],[.69,.81],[.84,.67],[1,.76],[1,1],[0,1]],Color("202b31"))
+	for tree: Array in [[.04,1.03,.30],[.12,.95,.22],[.25,1.1,.34],[.78,1.05,.25],[.92,1.04,.44],[.98,.94,.22]]:
+		_pine(tree[0],tree[1],tree[2],Color("18262c"))
+	# Static print texture lives on page margins, never across driving scenery.
+	for row: int in range(18):
+		for col: int in range(36):
+			var at := Vector2(size.x*(.62+col*.011),size.y*(.03+row*.013))
+			draw_circle(at,.7+float(row)/18,Color(.08,.11,.13,.15))

@@ -8,7 +8,7 @@ vec3 autumn_sky(vec3 direction, vec3 sun) {
 	float azimuth = dot(normalize(direction.xz + vec2(0.00001)), normalize(sun.xz));
 	float warm_side = pow(max(azimuth, 0.0), 1.6);
 	vec3 horizon = mix(horizon_away.rgb, horizon_sun.rgb, warm_side);
-	float height = pow(clamp(direction.y / 0.85, 0.0, 1.0), 0.72);
+	float height = pow(clamp(direction.y / 0.85, 0.0, 1.0), 0.40);
 	vec3 sky_color = mix(horizon, zenith_color.rgb, height);
 	float alignment = max(dot(direction, normalize(sun)), 0.0);
 	// Local solar scattering, not a white wash across the entire upper frame.

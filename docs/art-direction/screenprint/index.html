@@ -1,0 +1,37 @@
+<!doc<p style="padding:16px;background:#f5e9d1;color:#20252b">此页为套色资产阶段记录。<a href="../anime-prototype/README.zh-CN.md">最新动画质感原型与验收边界</a></p>type html>
+<html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ART RALLY · 套色拉力实机对照</title>
+<style>
+:root{color-scheme:dark;--ink:#20252b;--paper:#eee2c5;--yellow:#d6a83c}*{box-sizing:border-box}body{margin:0;background:var(--ink);color:var(--paper);font:16px/1.6 system-ui,sans-serif}main{max-width:1440px;margin:auto;padding:40px 24px}h1{font-size:clamp(40px,7vw,96px);letter-spacing:-.07em;line-height:1;margin:12px 0}h2{font-size:24px;margin-top:40px}p{max-width:900px;color:#b8c2bd}nav{display:flex;gap:8px;flex-wrap:wrap;margin:24px 0}button,a{font:inherit}button{border:1px solid #657773;padding:10px 20px;background:#246263;color:var(--paper);cursor:pointer}button[aria-pressed=true]{background:var(--yellow);color:var(--ink);outline:2px solid var(--paper)}button:focus-visible,a:focus-visible{outline:3px solid var(--paper);outline-offset:4px}a{color:var(--yellow)}.compare{position:relative;aspect-ratio:16/9;overflow:hidden;background:#131c22}.compare img{position:absolute;width:100%;height:100%;object-fit:contain;top:0;left:0}.compare .after{clip-path:inset(0 0 0 var(--split,50%))}.line{position:absolute;top:0;bottom:0;width:2px;background:var(--yellow);left:var(--split,50%);pointer-events:none}.badge{position:absolute;top:12px;background:#20252be8;padding:5px 12px;font-size:13px}.old{left:12px}.new{right:12px}input{width:100%;accent-color:var(--yellow)}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}.grid img{width:100%;display:block}.grid a{display:block;text-decoration:none;background:#293138}.caption{padding:12px 16px}video{width:100%;max-height:75vh;background:#131c22}.eyebrow{letter-spacing:.16em;color:var(--yellow);font-size:12px}.note{border-left:3px solid var(--yellow);padding:12px 20px;background:#293138}@media(max-width:700px){main{padding:24px 16px}.grid{grid-template-columns:1fr}}
+</style>
+<main>
+<div class="eyebrow">GODOT / ACTUAL BUILD CAPTURES / SCREENPRINT-1</div>
+<h1>ART RALLY</h1>
+<p>套色拉力 · 实机对照。车辆墨线、限定色彩、分区明暗与印刷界面。所有画面来自运行中的 Godot，不是概念图。</p>
+<nav aria-label="选择对照场景">
+<button data-scene="sunset_ridge" aria-pressed="true">夕照松岭</button><button data-scene="sunlit_cape" aria-pressed="false">晴岬海岸</button><button data-scene="misty_highlands" aria-pressed="false">雾杉高地</button><button data-scene="home" aria-pressed="false">标题</button><button data-scene="vehicles" aria-pressed="false">选车</button>
+</nav>
+<div class="compare" id="compare"><img id="before" src="baseline/sunset_ridge.jpg" alt="改造前同机位画面"><img class="after" id="after" src="current/sunset_ridge.jpg" alt="套色拉力同机位画面"><div class="line"></div><span class="badge old">旧版</span><span class="badge new">套色拉力</span></div>
+<label for="split">拖动比较分界</label><input id="split" type="range" min="0" max="100" value="50">
+<p class="note">同路线位置、车型与镜头脚本；运动中的采样帧可能略有偏差。路线、驾驶路面、碰撞快照与挑战兼容键另有逐项对照，未因外观改造改变。</p>
+<h2>运动中的画面</h2>
+<video controls preload="metadata" poster="current/sunset_ridge.jpg" src="showcase.mp4"></video>
+<p>三赛道原生渲染的短驾驶片段，测试会话静音。固定帧率影片导出不用于测量实际运行性能。</p>
+<h2>界面与回放</h2>
+<div class="grid">
+<a href="current/vehicles.jpg"><img loading="lazy" src="current/vehicles.jpg" alt="三车选择"><div class="caption">三种侧影 / 独立马力选择</div></a>
+<a href="current/stages.jpg"><img loading="lazy" src="current/stages.jpg" alt="赛道选择"><div class="caption">赛道选择 / 地貌与路面信息</div></a>
+<a href="current/loading.jpg"><img loading="lazy" src="current/loading.jpg" alt="加载页面"><div class="caption">加载 / 实机预览与套色边饰</div></a>
+<a href="current/results.jpg"><img loading="lazy" src="current/results.jpg" alt="赛后成绩"><div class="caption">成绩 / 原有轨迹在新版本中的回放</div></a>
+<a href="current/replay-0.jpg"><img loading="lazy" src="current/replay-0.jpg" alt="电视回放"><div class="caption">电视视角 / 完整实体材质</div></a>
+<a href="current/settings.jpg"><img loading="lazy" src="current/settings.jpg" alt="分类设置"><div class="caption">设置 / 分类、焦点与持久选择</div></a>
+</div>
+<h2>证据与可编辑源</h2>
+<p><a href="IMPLEMENTATION.md">实现与验收记录</a> · <a href="../../SCREENPRINT_ART_PLAN.zh-CN.md">完整计划</a> · <a href="../../../art_source/screenprint/README.md">Blender 工作流</a></p>
+<p>视觉版本不等于新的正式发行版。Windows 实机、实体手柄与最终人工美术验收的状态以验证记录为准。</p>
+</main>
+<script>
+document.querySelector('#split').addEventListener('input',e=>document.querySelector('#compare').style.setProperty('--split',e.target.value+'%'));
+document.querySelectorAll('[data-scene]').forEach(button=>button.addEventListener('click',()=>{document.querySelectorAll('[data-scene]').forEach(item=>item.setAttribute('aria-pressed',String(item===button)));document.querySelector('#before').src='baseline/'+button.dataset.scene+'.jpg';document.querySelector('#after').src='current/'+button.dataset.scene+'.jpg';}));
+</script>
+</html>

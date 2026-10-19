@@ -1,0 +1,48 @@
+{
+  "scope": "Animation rendering prototype, not release certification",
+  "suites": [
+    {
+      "name": "hud_test",
+      "passed": true,
+      "checks": 27
+    },
+    {
+      "name": "menu_controller_test",
+      "passed": true,
+      "checks": 35
+    },
+    {
+      "name": "presentation_theme_test",
+      "passed": true,
+      "checks": 20
+    },
+    {
+      "name": "stage_art_test",
+      "passed": true,
+      "checks": 12
+    },
+    {
+      "name": "screenprint_test",
+      "passed": true,
+      "checks": 90
+    },
+    {
+      "name": "atmosphere_test",
+      "passed": true,
+      "checks": 8
+    }
+  ],
+  "route_collision_challenge_contract_unchanged": true,
+  "native_capture": true,
+  "ui_resolutions": [
+    "1280x720",
+    "1680x720"
+  ],
+  "manual_windows_gamepad_audio": "Not performed",
+  "full_stage_performance": "Not validated; short capture samples only",
+  "previous_full_suite_failures": {
+    "experience_update_test": 2,
+    "utility_line_test": 4,
+    "note": "Previously reproduced in baseline commit 64d7610; not fixed by this visual change."
+  }
+}

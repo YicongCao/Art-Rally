@@ -1,0 +1,26 @@
+{
+  "misty_highlands": {
+    "actual_pixels": "1920x1080",
+    "note": "Short native capture sample; includes capture viewport presentation; not a full-stage benchmark.",
+    "p95_wall_ms": 25.964,
+    "p99_wall_ms": 41.507,
+    "progress_m": 131.163315857789,
+    "sample_frames": 360
+  },
+  "sunlit_cape": {
+    "actual_pixels": "1920x1080",
+    "note": "Short native capture sample; includes capture viewport presentation; not a full-stage benchmark.",
+    "p95_wall_ms": 19.293,
+    "p99_wall_ms": 23.711,
+    "progress_m": 99.5666856037419,
+    "sample_frames": 360
+  },
+  "sunset_ridge": {
+    "actual_pixels": "1920x1080",
+    "note": "Short native capture sample; includes capture viewport presentation; not a full-stage benchmark.",
+    "p95_wall_ms": 24.524,
+    "p99_wall_ms": 28.956,
+    "progress_m": 82.3508609383091,
+    "sample_frames": 360
+  }
+}

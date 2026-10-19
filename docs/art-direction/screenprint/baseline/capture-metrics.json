@@ -1,0 +1,26 @@
+{
+  "misty_highlands": {
+    "frames": 180,
+    "mean_cpu_frame_ms": 21.6409888888889,
+    "note": "Short moving capture sample; CPU process time, not full-stage GPU or wall-frame benchmark",
+    "p95_cpu_frame_ms": 39.41,
+    "p99_cpu_frame_ms": 39.41,
+    "resolution": "1920x1080"
+  },
+  "sunlit_cape": {
+    "frames": 180,
+    "mean_cpu_frame_ms": 19.6294722222222,
+    "note": "Short moving capture sample; CPU process time, not full-stage GPU or wall-frame benchmark",
+    "p95_cpu_frame_ms": 35.431,
+    "p99_cpu_frame_ms": 35.431,
+    "resolution": "1920x1080"
+  },
+  "sunset_ridge": {
+    "frames": 180,
+    "mean_cpu_frame_ms": 24.8793611111111,
+    "note": "Short moving capture sample; CPU process time, not full-stage GPU or wall-frame benchmark",
+    "p95_cpu_frame_ms": 40.783,
+    "p99_cpu_frame_ms": 40.783,
+    "resolution": "1920x1080"
+  }
+}

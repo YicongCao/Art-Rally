@@ -1,0 +1,482 @@
+{
+  "earlier_suites": [
+    {
+      "checks": 30,
+      "failures": 0
+    },
+    {
+      "checks": 8,
+      "failures": 0
+    },
+    {
+      "checks": 15,
+      "failures": 0
+    },
+    {
+      "checks": 15,
+      "failures": 0
+    },
+    {
+      "checks": 6,
+      "failures": 0
+    },
+    {
+      "checks": 5,
+      "failures": 0
+    },
+    {
+      "checks": 7,
+      "failures": 0
+    },
+    {
+      "checks": 26,
+      "failures": 0
+    },
+    {
+      "checks": 7,
+      "failures": 0
+    },
+    {
+      "checks": 8,
+      "failures": 0
+    },
+    {
+      "checks": 3,
+      "failures": 0
+    },
+    {
+      "checks": 154,
+      "failures": 0
+    },
+    {
+      "checks": 43,
+      "failures": 0
+    },
+    {
+      "checks": 33,
+      "failures": 0
+    },
+    {
+      "checks": 13,
+      "failures": 0
+    },
+    {
+      "checks": 23,
+      "failures": 0
+    },
+    {
+      "checks": 15,
+      "failures": 0
+    },
+    {
+      "checks": 46,
+      "failures": 2
+    }
+  ],
+  "remaining_suites": [
+    {
+      "test": "feedback_test.gd",
+      "passed": true,
+      "summary": [
+        "12",
+        "0"
+      ],
+      "errors": false
+    },
+    {
+      "test": "first_playable_entry_test.gd",
+      "passed": true,
+      "summary": [
+        "12",
+        "0"
+      ],
+      "errors": false
+    },
+    {
+      "test": "first_playable_flow_test.gd",
+      "passed": true,
+      "summary": [
+        "27",
+        "0"
+      ],
+      "errors": false
+    },
+    {
+      "test": "first_playable_rules_test.gd",
+      "passed": true,
+      "summary": [
+        "10",
+        "0"
+      ],
+      "errors": false
+    },
+    {
+      "test": "flag_render_test.gd",
+      "passed": false,
+      "summary": [],
+      "errors": false,
+      "execution_note": "Headless not supported; native rerun passed 27 checks",
+      "resolved_by": "native_flag_render"
+    },
+    {
+      "test": "flare_test.gd",
+      "passed": true,
+      "summary": [
+        "6",
+        "0"
+      ],
+      "errors": false
+    },
+    {
+      "test": "gravel_test.gd",
+      "passed": true,
+      "summary": [
+        "6",
+        "0"
+      ],
+      "errors": false
+    },
+    {
+      "test": "highland_rockfall_test.gd",
+      "passed": true,
+      "summary": [
+        "56",
+        "0"
+      ],
+      "errors": false
+    },
+    {
+      "test": "hud_test.gd",
+      "passed": true,
+      "summary": [
+        "27",
+        "0"
+      ],
+      "errors": false
+    },
+    {
+      "test": "input_test.gd",
+      "passed": true,
+      "summary": [
+        "11",
+        "0"
+      ],
+      "errors": false
+    },
+    {
+      "test": "loose_climb_test.gd",
+      "passed": true,
+      "summary": [
+        "18",
+        "0"
+      ],
+      "errors": false
+    },
+    {
+      "test": "menu_controller_test.gd",
+      "passed": true,
+      "summary": [
+        "35",
+        "0"
+      ],
+      "errors": false
+    },
+    {
+      "test": "patch_contact_test.gd",
+      "passed": true,
+      "summary": [
+        "7",
+        "0"
+      ],
+      "errors": false
+    },
+    {
+      "test": "patch_substep_test.gd",
+      "passed": true,
+      "summary": [
+        "2",
+        "0"
+      ],
+      "errors": false
+    },
+    {
+      "test": "patch_tire_test.gd",
+      "passed": true,
+      "summary": [
+        "8",
+        "0"
+      ],
+      "errors": false
+    },
+    {
+      "test": "plate_identity_test.gd",
+      "passed": true,
+      "summary": [
+        "42",
+        "0"
+      ],
+      "errors": false
+    },
+    {
+      "test": "power_gearing_test.gd",
+      "passed": true,
+      "summary": [
+        "49",
+        "0"
+      ],
+      "errors": false
+    },
+    {
+      "test": "power_progression_test.gd",
+      "passed": true,
+      "summary": [
+        "97",
+        "0"
+      ],
+      "errors": false
+    },
+    {
+      "test": "presentation_expansion_test.gd",
+      "passed": true,
+      "summary": [
+        "43",
+        "0"
+      ],
+      "errors": false
+    },
+    {
+      "test": "presentation_theme_test.gd",
+      "passed": true,
+      "summary": [
+        "11",
+        "0"
+      ],
+      "errors": false
+    },
+    {
+      "test": "profile_ghost_test.gd",
+      "passed": true,
+      "summary": [
+        "31",
+        "0"
+      ],
+      "errors": false
+    },
+    {
+      "test": "replay_album_test.gd",
+      "passed": true,
+      "summary": [
+        "27",
+        "0"
+      ],
+      "errors": false
+    },
+    {
+      "test": "route_jumps_test.gd",
+      "passed": true,
+      "summary": [
+        "10",
+        "0"
+      ],
+      "errors": false
+    },
+    {
+      "test": "route_revision_test.gd",
+      "passed": true,
+      "summary": [
+        "41",
+        "0"
+      ],
+      "errors": false
+    },
+    {
+      "test": "screenprint_test.gd",
+      "passed": true,
+      "summary": [
+        "90",
+        "0"
+      ],
+      "errors": false
+    },
+    {
+      "test": "settings_test.gd",
+      "passed": true,
+      "summary": [
+        "7",
+        "0"
+      ],
+      "errors": false
+    },
+    {
+      "test": "shoulder_lod_test.gd",
+      "passed": true,
+      "summary": [
+        "10",
+        "0"
+      ],
+      "errors": false
+    },
+    {
+      "test": "stage_art_test.gd",
+      "passed": true,
+      "summary": [
+        "12",
+        "0"
+      ],
+      "errors": false
+    },
+    {
+      "test": "stage_geometry_test.gd",
+      "passed": true,
+      "summary": [
+        "16",
+        "0"
+      ],
+      "errors": false
+    },
+    {
+      "test": "stage_play_test.gd",
+      "passed": true,
+      "summary": [
+        "13",
+        "0"
+      ],
+      "errors": false
+    },
+    {
+      "test": "stage_result_store_test.gd",
+      "passed": true,
+      "summary": [
+        "11",
+        "0"
+      ],
+      "errors": false
+    },
+    {
+      "test": "stage_session_test.gd",
+      "passed": true,
+      "summary": [
+        "20",
+        "0"
+      ],
+      "errors": false
+    },
+    {
+      "test": "surface_test.gd",
+      "passed": true,
+      "summary": [
+        "17",
+        "0"
+      ],
+      "errors": false
+    },
+    {
+      "test": "tail_streaks_test.gd",
+      "passed": true,
+      "summary": [
+        "5",
+        "0"
+      ],
+      "errors": false
+    },
+    {
+      "test": "terrain_detail_test.gd",
+      "passed": true,
+      "summary": [
+        "56",
+        "0"
+      ],
+      "errors": false
+    },
+    {
+      "test": "tire_feedback_test.gd",
+      "passed": true,
+      "summary": [
+        "5",
+        "0"
+      ],
+      "errors": false
+    },
+    {
+      "test": "tire_test.gd",
+      "passed": true,
+      "summary": [
+        "12",
+        "0"
+      ],
+      "errors": false
+    },
+    {
+      "test": "tire_vertical_test.gd",
+      "passed": true,
+      "summary": [
+        "11",
+        "0"
+      ],
+      "errors": false
+    },
+    {
+      "test": "utility_line_test.gd",
+      "passed": false,
+      "summary": [
+        "9",
+        "4"
+      ],
+      "errors": false
+    },
+    {
+      "test": "v030_polish_test.gd",
+      "passed": true,
+      "summary": [
+        "35",
+        "0"
+      ],
+      "errors": false
+    },
+    {
+      "test": "vehicle_test.gd",
+      "passed": true,
+      "summary": [
+        "11",
+        "0"
+      ],
+      "errors": false
+    },
+    {
+      "test": "visual_sample_test.gd",
+      "passed": true,
+      "summary": [
+        "17",
+        "0"
+      ],
+      "errors": false
+    },
+    {
+      "test": "world_details_test.gd",
+      "passed": true,
+      "summary": [
+        "27",
+        "0"
+      ],
+      "errors": false
+    },
+    {
+      "test": "world_test.gd",
+      "passed": true,
+      "summary": [
+        "13",
+        "0"
+      ],
+      "errors": false
+    }
+  ],
+  "native_flag_render": {
+    "checks": 27,
+    "failures": 0
+  },
+  "preexisting_failures": {
+    "experience_update_test.gd": 2,
+    "utility_line_test.gd": 4
+  },
+  "matrix_note": "Physics timing in parallel matrix runs is not a performance benchmark."
+}

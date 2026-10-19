@@ -2,6 +2,7 @@ class_name RallyTitleLogo
 extends Control
 
 var crop_bottom: bool = true
+var poster_ink: bool = false
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -26,8 +27,13 @@ func _draw() -> void:
 		var point := Vector2(mud_x+mud.randf_range(12,150),baseline-mud.randf_range(85,128))
 		draw_circle(point,mud.randf_range(.7,2.2),Color(.23,.17,.10,.48))
 	draw_string(face,Vector2(3,baseline+4),"ART RALLY",HORIZONTAL_ALIGNMENT_LEFT,-1,font_size,Color(.01,.04,.05,.28))
-	draw_string(face,Vector2(0,baseline),"ART RALLY",HORIZONTAL_ALIGNMENT_LEFT,-1,font_size,Color("eee2c5"))
+	if poster_ink:
+		draw_string(face,Vector2(0,baseline),"ART",HORIZONTAL_ALIGNMENT_LEFT,-1,font_size,Color("eb562b"))
+		var next := face.get_string_size("ART ",HORIZONTAL_ALIGNMENT_LEFT,-1,font_size).x
+		draw_string(face,Vector2(next,baseline),"RALLY",HORIZONTAL_ALIGNMENT_LEFT,-1,font_size,Color("20252b"))
+	else:
+		draw_string(face,Vector2(0,baseline),"ART RALLY",HORIZONTAL_ALIGNMENT_LEFT,-1,font_size,Color("eee2c5"))
 	var x := minf(size.x-80,face.get_string_size("ART RALLY",HORIZONTAL_ALIGNMENT_LEFT,-1,font_size).x+20)
 	for i: int in range(3):
 		var start := Vector2(x+i*15,baseline-105)
-		draw_colored_polygon(PackedVector2Array([start,start+Vector2(9,0),start+Vector2(-10,59),start+Vector2(-19,59)]),Color("d6a83c"))
+		draw_colored_polygon(PackedVector2Array([start,start+Vector2(9,0),start+Vector2(-10,59),start+Vector2(-19,59)]),Color("f05a28"))

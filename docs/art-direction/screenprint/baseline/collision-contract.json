@@ -1,0 +1,50 @@
+{
+  "misty_highlands": {
+    "challenge_keys": [
+      "misty_highlands@7|F160@fp3|time-trial-4",
+      "misty_highlands@7|F160@fp3-p150|time-trial-4",
+      "misty_highlands@7|F160@fp3-p200|time-trial-4",
+      "misty_highlands@7|R200@fp3|time-trial-4",
+      "misty_highlands@7|R200@fp3-p150|time-trial-4",
+      "misty_highlands@7|R200@fp3-p200|time-trial-4",
+      "misty_highlands@7|A240@fp3|time-trial-4",
+      "misty_highlands@7|A240@fp3-p150|time-trial-4",
+      "misty_highlands@7|A240@fp3-p200|time-trial-4"
+    ],
+    "collision_components": 46779,
+    "collision_sha256": "452694f7140b64bcc64aad111b2a9c93f32f7c0319009d452629d192b3cff272",
+    "route_points": "d0e5f0cc4df8b642489ef8cfa51ce8e1b91516e3ac3193d00c1e34aeb56219eb"
+  },
+  "sunlit_cape": {
+    "challenge_keys": [
+      "sunlit_cape@7|F160@fp3|time-trial-4",
+      "sunlit_cape@7|F160@fp3-p150|time-trial-4",
+      "sunlit_cape@7|F160@fp3-p200|time-trial-4",
+      "sunlit_cape@7|R200@fp3|time-trial-4",
+      "sunlit_cape@7|R200@fp3-p150|time-trial-4",
+      "sunlit_cape@7|R200@fp3-p200|time-trial-4",
+      "sunlit_cape@7|A240@fp3|time-trial-4",
+      "sunlit_cape@7|A240@fp3-p150|time-trial-4",
+      "sunlit_cape@7|A240@fp3-p200|time-trial-4"
+    ],
+    "collision_components": 43880,
+    "collision_sha256": "d1bd4d1cde9723b413efd44147d2ac4400243d2c6c7f5554e14caf81d47e8552",
+    "route_points": "bf59ef0262560ccc6045ef689ba0792021a346d34c8d85de0efc535d4fb095d7"
+  },
+  "sunset_ridge": {
+    "challenge_keys": [
+      "sunset_ridge@7|F160@fp3|time-trial-4",
+      "sunset_ridge@7|F160@fp3-p150|time-trial-4",
+      "sunset_ridge@7|F160@fp3-p200|time-trial-4",
+      "sunset_ridge@7|R200@fp3|time-trial-4",
+      "sunset_ridge@7|R200@fp3-p150|time-trial-4",
+      "sunset_ridge@7|R200@fp3-p200|time-trial-4",
+      "sunset_ridge@7|A240@fp3|time-trial-4",
+      "sunset_ridge@7|A240@fp3-p150|time-trial-4",
+      "sunset_ridge@7|A240@fp3-p200|time-trial-4"
+    ],
+    "collision_components": 37120,
+    "collision_sha256": "df2148374eb7ed09103fbe711eae7257791018787c0dec2b355503a76d14a2ce",
+    "route_points": "28b0e4d4e1e559dfb422aca823646fb142a5966bcf40da70ec54ed3c33b4d51b"
+  }
+}

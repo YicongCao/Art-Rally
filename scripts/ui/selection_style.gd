@@ -12,7 +12,7 @@ static func apply(button: Button,selected: bool) -> void:
 	button.add_theme_constant_override("h_separation",7)
 	for state: String in ["normal","hover","pressed","hover_pressed","disabled","focus"]:
 		var style := StyleBoxFlat.new()
-		style.bg_color = Color("d6a83c") if selected else Color("246263")
+		style.bg_color = Color("f05a28") if selected else Color("20252b")
 		if state in ["hover","hover_pressed"]: style.bg_color = style.bg_color.lightened(.10)
 		style.border_color = Color("eee2c5") if selected else Color("847f88")
 		style.set_border_width_all(2 if selected else 1)
@@ -28,7 +28,7 @@ static func apply(button: Button,selected: bool) -> void:
 		style.content_margin_top = 8
 		style.content_margin_bottom = 8
 		button.add_theme_stylebox_override(state,style)
-		var ink := Color("20252b") if selected else Color("eee2c5")
+		var ink := Color("fff0d3")
 		if state=="disabled": ink = Color("8c9a90")
 		button.add_theme_color_override("font_color" if state=="normal" else "font_"+state+"_color",ink)
 		button.add_theme_color_override("icon_normal_color" if state=="normal" else "icon_"+state+"_color",ink)

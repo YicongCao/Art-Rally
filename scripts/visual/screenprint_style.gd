@@ -1,6 +1,7 @@
 class_name RallyScreenprintStyle
 extends Resource
 
+@export var accent := Color("f05a28")
 @export var ink := Color("20252b")
 @export var ivory := Color("eee2c5")
 @export var teal := Color("246263")
@@ -11,7 +12,7 @@ extends Resource
 @export var outline_pixels: float = 2.0
 @export var print_strength: float = .035
 @export var biome_palettes: Dictionary = {
- "autumn":[Color("9a7836"),Color("d6b54e"),Color("aeb2c4"),Color("efc59b")],
+ "autumn":[Color("b58b31"),Color("edbf45"),Color("aeb2c4"),Color("efc59b")],
  "coast":[Color("8d9675"),Color("d7c895"),Color("b6d1ce"),Color("eee2c5")],
  "highland":[Color("777d69"),Color("bcb786"),Color("a8bdc8"),Color("e3dac2")]
 }
@@ -27,8 +28,8 @@ static func theme() -> Theme:
  for type: String in ["Button","OptionButton"]:
   for state: String in ["normal","hover","pressed","focus","disabled","hover_pressed"]:
    var box := StyleBoxFlat.new()
-   box.bg_color=s.teal if state=="normal" else s.plum
-   box.border_color=s.mustard
+   box.bg_color=s.ink if state=="normal" else s.accent.darkened(.16)
+   box.border_color=s.accent
    box.border_width_bottom=3 if state in ["hover","pressed","hover_pressed"] else 1
    if state=="focus":
     box.bg_color=Color.TRANSPARENT

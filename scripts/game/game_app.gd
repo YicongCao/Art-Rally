@@ -90,6 +90,7 @@ func _page(title: String, subtitle: String, name_id: String) -> void:
 	layer.add_child(ui)
 	backdrop = RallyMenuBackdrop.new()
 	backdrop.biome = RallyContentCatalog.stage(chosen_stage).environment_id
+	backdrop.poster_mode = name_id=="home"
 	backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	ui.add_child(backdrop)
 	if paper:
@@ -170,7 +171,7 @@ func _selected_card(card: VBoxContainer,selected: bool) -> void:
 	var panel := card.get_parent() as PanelContainer
 	RallyRacingPatina.select_mark(panel,true)
 	var style := panel.get_theme_stylebox("panel").duplicate() as StyleBoxFlat
-	style.border_color = Color("e6b66d")
+	style.border_color = Color("f05a28")
 	style.set_border_width_all(2)
 	panel.add_theme_stylebox_override("panel",style)
 
@@ -194,15 +195,16 @@ func show_home() -> void:
 	_page("","", "home")
 	column.add_theme_constant_override("separation",0)
 	var logo := RallyTitleLogo.new()
+	logo.poster_ink = true
 	logo.custom_minimum_size = Vector2(0,210)
 	column.add_child(logo)
 	var main := _row(column)
 	main.add_theme_constant_override("separation",12)
-	var challenge := _menu_tile(main,"开始计时挑战","","challenge",Color("d6a83c"),func(): practice=false; tutorial=false; show_stages(),true)
+	var challenge := _menu_tile(main,"开始计时挑战","","challenge",Color("f05a28"),func(): practice=false; tutorial=false; show_stages(),true)
 	challenge.size_flags_stretch_ratio = 1.4
 	challenge.grab_focus()
-	_menu_tile(main,"自由练习","","practice",Color("246263"),func(): practice=true; tutorial=false; show_stages(),true)
-	_menu_tile(main,"设置","","settings",Color("493e5c"),show_settings,true)
+	_menu_tile(main,"自由练习","","practice",Color("20252b"),func(): practice=true; tutorial=false; show_stages(),true)
+	_menu_tile(main,"设置","","settings",Color("303644"),show_settings,true)
 	var gap := Control.new()
 	gap.custom_minimum_size.y = 18
 	column.add_child(gap)
@@ -262,7 +264,7 @@ func _menu_tile(parent: Node,title: String,caption: String,icon: String,color: C
 	tile.size_flags_horizontal = Control.SIZE_EXPAND_FILL if large else Control.SIZE_SHRINK_BEGIN
 	tile.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	tile.tooltip_text = title.replace("  →", "") + (" · " + caption if not caption.is_empty() else "")
-	var ink := Color("183b34") if icon == "challenge" else Color("f4ead6")
+	var ink := Color("fff0d3")
 	for state: String in ["normal","hover","pressed","focus","disabled"]:
 		var style := StyleBoxFlat.new()
 		style.bg_color = Color.TRANSPARENT

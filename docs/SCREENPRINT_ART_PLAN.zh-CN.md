@@ -102,3 +102,7 @@ Blender 精修木屋、灯塔、桥梁模块、直升机及记者／摄像机、
 ## 执行记录
 
 实际交付和未完成验收见 `art-direction/screenprint/IMPLEMENTATION.md`；不以概念图或自动测试代替实机与人工验收。
+
+## 2026-10-19 参考图更新：明艳动画电影光感
+
+用户进一步提供「A · GRAPHIC ANIME RALLY」图，强调鲜亮枝叶、冷暖远山、层叠飘云及 retro HUD／UI。执行中保留三维资产、车辆专属墨线和原定玩法兼容边界，增加专用枝叶着色、绘画式天空与山体材质，标题和 HUD 转向橙黑暖白。该调整的首轮实机结果与剩余差距见 [原型记录](art-direction/anime-prototype/README.zh-CN.md)。不得将首轮渲染原型等同于整项高保真美术终验。

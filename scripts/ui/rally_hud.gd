@@ -2,10 +2,10 @@ class_name RallyHUD
 extends Control
 
 const INK := Color("20252b")
-const PAPER := Color("eee2c5")
-const AMBER := Color("d6a83c")
+const PAPER := Color("fff0d3")
+const AMBER := Color("f2642d")
 const MUTED := Color("ccd5ce")
-const RED := Color("c45d3f")
+const RED := Color("f04429")
 const GAUGE_RECT := Rect2(994,432,262,264)
 const TIMER_RECT := Rect2(994,22,262,112)
 const HANDBRAKE_ICON: Texture2D = preload("res://assets/ui/icons/handbrake.svg")
@@ -263,7 +263,7 @@ func _draw_gauge() -> void:
 	RallyGaugePatina.tread(self,Vector2(1200,470),deg_to_rad(33),4,.8)
 	RallyGaugePatina.mud(self,Vector2(1011,652),Vector2(10,22),16)
 	RallyGaugePatina.mud(self,Vector2(1239,483),Vector2(10,19),27)
-	draw_circle(center,108,Color(.025,.055,.048,.16))
+	draw_circle(center,108,Color(.05,.065,.08,.55))
 	draw_arc(center,108,deg_to_rad(132),deg_to_rad(408),80,Color(PAPER,.35),1,true)
 	draw_arc(center,111,deg_to_rad(159),deg_to_rad(364),64,Color(PAPER,.12),1,true)
 	draw_arc(center,83,deg_to_rad(135),deg_to_rad(405),72,Color(PAPER,.18),1,true)
@@ -277,7 +277,7 @@ func _draw_gauge() -> void:
 	var needle := Vector2.from_angle(deg_to_rad(135+rpm_ratio*270))
 	var normal := needle.orthogonal()
 	draw_colored_polygon(PackedVector2Array([center+needle*106,center+needle*78+normal*4,center+needle*78-normal*4]),AMBER)
-	draw_arc(center,86,deg_to_rad(135),deg_to_rad(135+maxf(rpm_ratio,.001)*270),64,Color(AMBER,.55),2,true)
+	draw_arc(center,86,deg_to_rad(135),deg_to_rad(135+maxf(rpm_ratio,.001)*270),64,Color(AMBER,.95),5,true)
 	# A separate gear window echoes the punched-metal gauges of rally cars.
 	draw_style_box(_gear_window(),Rect2(1102,493,46,47))
 	center_text(str(model.gear),Vector2(1125,532),36,AMBER,gauge_font)
@@ -312,14 +312,16 @@ static func _gear_window() -> StyleBoxFlat:
 func panel(rect: Rect2, color: Color = Color(0.035,0.09,0.075,0.90)) -> void:
 	var p := rect.position
 	var e := rect.end
-	var polygon := PackedVector2Array([p+Vector2(10,0),Vector2(e.x,p.y),Vector2(e.x,e.y-10),e-Vector2(10,0),Vector2(p.x,e.y),p+Vector2(0,10)])
-	var tint := color
-	tint.a = (.58 if color.r > color.g else .34)*color.a/.90
+	var polygon := PackedVector2Array([p+Vector2(14,0),Vector2(e.x,p.y),e-Vector2(14,0),Vector2(p.x,e.y)])
+	var tint := Color(.055,.068,.082,.72)
+	if color.r > color.g: tint = Color(color,.82)
+	var opacity := clampf(color.a/.90,0,1)
+	tint.a *= opacity
 	acrylic.regions.append({"shape":polygon,"tint":tint})
 	var border := polygon.duplicate()
 	border.append(polygon[0])
-	draw_polyline(border,Color(.85,.94,.91,.19),1,true)
-	draw_line(p+Vector2(10,0),Vector2(e.x,p.y),Color(.94,1.0,.97,.40),1,true)
+	draw_polyline(border,Color(.85,.94,.91,.19*opacity),1,true)
+	draw_line(p+Vector2(14,0),p+Vector2(minf(50,rect.size.x*.20),0),Color(AMBER,opacity),3,true)
 
 
 func text(value: String, at: Vector2, font_size: int, color: Color = PAPER, font: Font = null) -> void:

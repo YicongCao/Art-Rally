@@ -1,0 +1,50 @@
+[
+  {
+    "step": "import",
+    "returncode": 0
+  },
+  {
+    "step": "captures",
+    "returncode": 0
+  },
+  {
+    "step": "preview-import",
+    "returncode": 0
+  },
+  {
+    "step": "ui",
+    "returncode": 0
+  },
+  {
+    "step": "replay",
+    "returncode": 0
+  },
+  {
+    "step": "movie",
+    "returncode": 0
+  },
+  {
+    "step": "video",
+    "returncode": 0
+  },
+  {
+    "step": "export-macos",
+    "returncode": 0
+  },
+  {
+    "step": "export-windows",
+    "returncode": 0
+  },
+  {
+    "step": "macos-app",
+    "returncode": 0
+  },
+  {
+    "step": "windows-structure",
+    "returncode": 0
+  },
+  {
+    "step": "baseline-performance",
+    "returncode": -15
+  }
+]
