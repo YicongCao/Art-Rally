@@ -17,9 +17,6 @@ func snap(label: String) -> void:
 	var pixels := viewport.get_texture().get_image()
 	assert(pixels.get_size()==Vector2i(1920,1080))
 	pixels.save_jpg(DEST+"/"+label+".jpg",.94)
-	if label.begins_with("preview-"):
-		pixels.resize(960,540,Image.INTERPOLATE_LANCZOS)
-		pixels.save_jpg("res://assets/ui/screenprint_previews/"+label.trim_prefix("preview-")+".jpg",.92)
 	print("ANIME CAPTURE: ",label)
 func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(DEST)

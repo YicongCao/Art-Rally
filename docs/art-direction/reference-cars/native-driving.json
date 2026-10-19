@@ -1,0 +1,20 @@
+{
+  "A240": {
+    "advance_m": 63.9303550356196,
+    "duration": 6.37500000000011,
+    "recorded_frames": 192,
+    "stage": "misty_highlands"
+  },
+  "F160": {
+    "advance_m": 41.0982228857765,
+    "duration": 6.37500000000011,
+    "recorded_frames": 192,
+    "stage": "sunset_ridge"
+  },
+  "R200": {
+    "advance_m": 64.2669478290127,
+    "duration": 6.37500000000011,
+    "recorded_frames": 192,
+    "stage": "sunlit_cape"
+  }
+}

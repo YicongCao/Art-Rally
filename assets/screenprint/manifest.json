@@ -61,28 +61,28 @@
   },
   "assets/screenprint/vehicles/A240-lod0.glb": {
     "source": "art_source/screenprint/vehicles/A240.blend",
-    "triangles": 10172,
+    "triangles": 22171,
     "lod": 0,
     "mounts": {
       "TailLeft": [
-        -1.005,
-        0.2,
-        2.12
+        -0.9,
+        0.22,
+        2.187
       ],
       "TailRight": [
-        1.005,
-        0.2,
-        2.12
+        0.9,
+        0.22,
+        2.187
       ],
       "PlateRear": [
         0.0,
         0.015,
-        2.165
+        2.195
       ],
       "PlateFront": [
         0.0,
-        0.015,
-        -2.165
+        -0.18,
+        -2.29
       ],
       "CameraCockpit": [
         0.0,
@@ -118,28 +118,28 @@
   },
   "assets/screenprint/vehicles/A240-lod1.glb": {
     "source": "art_source/screenprint/vehicles/A240.blend",
-    "triangles": 5456,
+    "triangles": 12084,
     "lod": 1,
     "mounts": {
       "TailLeft": [
-        -1.005,
-        0.2,
-        2.12
+        -0.9,
+        0.22,
+        2.187
       ],
       "TailRight": [
-        1.005,
-        0.2,
-        2.12
+        0.9,
+        0.22,
+        2.187
       ],
       "PlateRear": [
         0.0,
         0.015,
-        2.165
+        2.195
       ],
       "PlateFront": [
         0.0,
-        0.015,
-        -2.165
+        -0.18,
+        -2.29
       ],
       "CameraCockpit": [
         0.0,
@@ -175,28 +175,28 @@
   },
   "assets/screenprint/vehicles/A240-lod2.glb": {
     "source": "art_source/screenprint/vehicles/A240.blend",
-    "triangles": 2632,
+    "triangles": 5931,
     "lod": 2,
     "mounts": {
       "TailLeft": [
-        -1.005,
-        0.2,
-        2.12
+        -0.9,
+        0.22,
+        2.187
       ],
       "TailRight": [
-        1.005,
-        0.2,
-        2.12
+        0.9,
+        0.22,
+        2.187
       ],
       "PlateRear": [
         0.0,
         0.015,
-        2.165
+        2.195
       ],
       "PlateFront": [
         0.0,
-        0.015,
-        -2.165
+        -0.18,
+        -2.29
       ],
       "CameraCockpit": [
         0.0,
@@ -232,28 +232,28 @@
   },
   "assets/screenprint/vehicles/F160-lod0.glb": {
     "source": "art_source/screenprint/vehicles/F160.blend",
-    "triangles": 9048,
+    "triangles": 15990,
     "lod": 0,
     "mounts": {
       "TailLeft": [
-        -0.715,
-        0.2,
-        1.845
+        -0.73,
+        0.22,
+        1.912
       ],
       "TailRight": [
-        0.715,
-        0.2,
-        1.845
+        0.73,
+        0.22,
+        1.912
       ],
       "PlateRear": [
         0.0,
         0.015,
-        1.89
+        1.92
       ],
       "PlateFront": [
         0.0,
         0.015,
-        -1.89
+        -1.945
       ],
       "CameraCockpit": [
         0.0,
@@ -289,28 +289,28 @@
   },
   "assets/screenprint/vehicles/F160-lod1.glb": {
     "source": "art_source/screenprint/vehicles/F160.blend",
-    "triangles": 4890,
+    "triangles": 8621,
     "lod": 1,
     "mounts": {
       "TailLeft": [
-        -0.715,
-        0.2,
-        1.845
+        -0.73,
+        0.22,
+        1.912
       ],
       "TailRight": [
-        0.715,
-        0.2,
-        1.845
+        0.73,
+        0.22,
+        1.912
       ],
       "PlateRear": [
         0.0,
         0.015,
-        1.89
+        1.92
       ],
       "PlateFront": [
         0.0,
         0.015,
-        -1.89
+        -1.945
       ],
       "CameraCockpit": [
         0.0,
@@ -346,28 +346,28 @@
   },
   "assets/screenprint/vehicles/F160-lod2.glb": {
     "source": "art_source/screenprint/vehicles/F160.blend",
-    "triangles": 2402,
+    "triangles": 4135,
     "lod": 2,
     "mounts": {
       "TailLeft": [
-        -0.715,
-        0.2,
-        1.845
+        -0.73,
+        0.22,
+        1.912
       ],
       "TailRight": [
-        0.715,
-        0.2,
-        1.845
+        0.73,
+        0.22,
+        1.912
       ],
       "PlateRear": [
         0.0,
         0.015,
-        1.89
+        1.92
       ],
       "PlateFront": [
         0.0,
         0.015,
-        -1.89
+        -1.945
       ],
       "CameraCockpit": [
         0.0,
@@ -403,28 +403,28 @@
   },
   "assets/screenprint/vehicles/R200-lod0.glb": {
     "source": "art_source/screenprint/vehicles/R200.blend",
-    "triangles": 9204,
+    "triangles": 19074,
     "lod": 0,
     "mounts": {
       "TailLeft": [
-        -0.96,
-        0.2,
-        2.095
+        -0.84,
+        0.22,
+        2.162
       ],
       "TailRight": [
-        0.96,
-        0.2,
-        2.095
+        0.84,
+        0.22,
+        2.162
       ],
       "PlateRear": [
         0.0,
         0.015,
-        2.14
+        2.17
       ],
       "PlateFront": [
         0.0,
         0.015,
-        -2.14
+        -2.195
       ],
       "CameraCockpit": [
         0.0,
@@ -460,28 +460,28 @@
   },
   "assets/screenprint/vehicles/R200-lod1.glb": {
     "source": "art_source/screenprint/vehicles/R200.blend",
-    "triangles": 4982,
+    "triangles": 10285,
     "lod": 1,
     "mounts": {
       "TailLeft": [
-        -0.96,
-        0.2,
-        2.095
+        -0.84,
+        0.22,
+        2.162
       ],
       "TailRight": [
-        0.96,
-        0.2,
-        2.095
+        0.84,
+        0.22,
+        2.162
       ],
       "PlateRear": [
         0.0,
         0.015,
-        2.14
+        2.17
       ],
       "PlateFront": [
         0.0,
         0.015,
-        -2.14
+        -2.195
       ],
       "CameraCockpit": [
         0.0,
@@ -517,28 +517,28 @@
   },
   "assets/screenprint/vehicles/R200-lod2.glb": {
     "source": "art_source/screenprint/vehicles/R200.blend",
-    "triangles": 2406,
+    "triangles": 4922,
     "lod": 2,
     "mounts": {
       "TailLeft": [
-        -0.96,
-        0.2,
-        2.095
+        -0.84,
+        0.22,
+        2.162
       ],
       "TailRight": [
-        0.96,
-        0.2,
-        2.095
+        0.84,
+        0.22,
+        2.162
       ],
       "PlateRear": [
         0.0,
         0.015,
-        2.14
+        2.17
       ],
       "PlateFront": [
         0.0,
         0.015,
-        -2.14
+        -2.195
       ],
       "CameraCockpit": [
         0.0,

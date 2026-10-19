@@ -22,6 +22,11 @@ func _run() -> void:
 	app.chosen_vehicle = "F160"
 	app.start_race()
 	check(app.screen=="loading" and app.progress_bar!=null,"Vehicle confirmation opens briefing inside actual loading page")
+	check(app.column.find_children("*","RallyMenuBackdrop",true,false).size()==1,"Loading page retains its vector landscape illustration")
+	var screenshot_found := false
+	for image: Node in app.column.find_children("*","TextureRect",true,false):
+		if image.texture!=null and image.texture.resource_path.ends_with(".jpg"): screenshot_found=true
+	check(not screenshot_found,"Loading page does not embed gameplay screenshots")
 	while app.loading: await process_frame
 	check(app.screen=="race","Menu loads a complete playable challenge")
 	check(app.race.vehicle.drivetrain.config.drive_layout=="FWD","Selected vehicle physics survive settings application")

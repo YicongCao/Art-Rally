@@ -1,6 +1,6 @@
 # 套色拉力资产源
 
-这些 `.blend` 是本轮原创模型的权威源文件。游戏只读取 `assets/screenprint/` 中的 GLB。
+这些 `.blend` 是精修模型的权威源文件。游戏只读取 `assets/screenprint/` 中的 GLB。
 
 ## 日常编辑
 
@@ -24,4 +24,18 @@
 
 环境源文件不带描边及碰撞。现有场景保留原碰撞代理，视觉模块单独挂载。桥面仍由原路线生成以精确匹配坡度和碰撞；Blender 桥柱模块用于细节。直升机螺旋桨、灯塔光束、帆船运动、拱门文字与布面动画仍由游戏驱动。
 
-全部模型、配色和几何涂装为本项目原创，不含第三方商标或外部贴图。
+环境模型继续采用项目原创设计。车辆在本次用户指定的参考改造中改为 Volkswagen GTI / Red Bull、BMW M3 E30 / Mobil 1、Audi quattro S1。车身网格及几何涂装由 Blender Python 制作；品牌名称和标识来源于用户指定的赛车主题，不再声称车辆涂装不含第三方商标。未下载或导入第三方整车模型。
+
+## 参考赛车改造
+
+`build_reference_cars.py` 是独立、显式的一次性建模记录，只有传入 `--replace-reference-cars` 才会覆盖这三辆车的源文件。**日常修改只编辑 `.blend` 并导出，不重新运行建模脚本，避免覆盖之后的手工修整。**
+
+```sh
+/Applications/Blender.app/Contents/MacOS/Blender --background --python scripts/build_reference_cars.py -- --replace-reference-cars
+./scripts/dev.sh screenprint-export --only=F160
+./scripts/dev.sh screenprint-export --only=R200
+./scripts/dev.sh screenprint-export --only=A240
+./scripts/dev.sh screenprint-check
+```
+
+内部 ID、机械尺寸、轴距、轮距、号码与机械版本均沿用旧车型。只改变外观及显示名称；导出产物不带碰撞体。参考来源、实机截图与验证记录见 `docs/art-direction/reference-cars/README.zh-CN.md`。

@@ -378,10 +378,10 @@ func show_vehicles() -> void:
 			option.set_meta("power_tier",tier)
 			option.set_meta("vehicle_id",id)
 			option.tooltip_text = "原厂组金牌解锁" if tier==1 else ("进阶组金牌解锁" if tier==2 else "原厂动力")
-		var select := _button(card,"选择 "+id,_select_vehicle_variant.bind(id,selected_tier))
+		var select := _button(card,"选择 "+vehicle.short_title(),_select_vehicle_variant.bind(id,selected_tier))
 		select.set_meta("focus_key","vehicle:"+id)
 		RallySelectionStyle.apply(select,id==chosen_vehicle)
-	_actions("← 选择赛道",show_stages,"驾驶 %s · %s →"%[chosen_vehicle,RallyContentCatalog.power_label(chosen_vehicle,chosen_power_tier)],start_race).primary_button.grab_focus()
+	_actions("← 选择赛道",show_stages,"驾驶 %s · %s →"%[RallyContentCatalog.vehicle(chosen_vehicle).short_title(),RallyContentCatalog.power_label(chosen_vehicle,chosen_power_tier)],start_race).primary_button.grab_focus()
 
 
 func _select_vehicle_variant(id: String,tier: int) -> void:
@@ -423,6 +423,7 @@ func _vehicle_preview(parent: Node,definition: RallyVehicleDefinition) -> void:
 				var hub := MeshInstance3D.new()
 				hub.mesh=RallyWheelMeshes.five_spoke()
 				hub.position.y=face*.125
+				hub.rotation.x=PI if face<0 else 0
 				wheel.add_child(hub)
 	var light := DirectionalLight3D.new()
 	light.rotation_degrees = Vector3(-45,-25,0)
@@ -465,20 +466,6 @@ func _loading_page() -> void:
 	preview.offset_top=14
 	preview.offset_right=-24
 	preview.offset_bottom=-30
-	# Use an actual build capture inside the printed illustration's breakout edges.
-	var picture_path := "res://assets/ui/screenprint_previews/"+chosen_stage+".jpg"
-	if ResourceLoader.exists(picture_path):
-		var picture := TextureRect.new()
-		picture.texture=load(picture_path)
-		picture.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
-		picture.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_COVERED
-		picture.mouse_filter=Control.MOUSE_FILTER_IGNORE
-		frame.add_child(picture)
-		picture.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		picture.offset_left=18
-		picture.offset_top=14
-		picture.offset_right=-24
-		picture.offset_bottom=-30
 	var details := VBoxContainer.new()
 	details.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	details.size_flags_stretch_ratio = 1.4

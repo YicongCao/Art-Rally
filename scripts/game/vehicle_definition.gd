@@ -21,6 +21,10 @@ var power_tier: int = 0
 @export var hood_offset := Vector3(0,0.72,-1.40)
 
 
+func short_title() -> String:
+	return title.split(" · ")[0]
+
+
 func physics_config() -> RallyVehicleConfig:
 	var result := RallyVehicleConfig.new()
 	result.body_mass = mass_kg

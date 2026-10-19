@@ -2,8 +2,20 @@ extends "res://tests/test_suite.gd"
 
 func _run() -> void:
  var baseline: Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://docs/art-direction/screenprint/baseline/content-hashes.json"))
+ var mechanics: Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/vehicle-mechanics-hashes.json"))
  for path: String in baseline:
-  check(FileAccess.get_sha256("res://"+path)==baseline[path],"Mechanical resource unchanged: "+path)
+  var actual := FileAccess.get_sha256("res://"+path)
+  var expected: String=baseline[path]
+  if mechanics.has(path):
+   # Baseline captured before reference-car presentation edits. All other fields
+   # (including camera, wheel, identity and version data) remain protected.
+   var mechanical_text := ""
+   for line: String in FileAccess.get_file_as_string("res://"+path).trim_suffix("\n").split("\n"):
+    if line.begins_with("title =") or line.begins_with("description =") or line.begins_with("paint =") or line.begins_with("accent ="): continue
+    mechanical_text+=line+"\n"
+   actual=mechanical_text.sha256_text()
+   expected=mechanics[path]
+  check(actual==expected,"Mechanical resource unchanged: "+path)
  var manifest: Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://assets/screenprint/manifest.json"))
  for path: String in manifest:
   var item: Dictionary=manifest[path]
@@ -11,6 +23,8 @@ func _run() -> void:
   if "/vehicles/" in path: check(int(item.triangles)<=40000,"Vehicle triangle budget: "+path)
  for id: String in RallyContentCatalog.VEHICLES:
   var definition := RallyContentCatalog.vehicle(id)
+  var expected_names := {"F160":"大众 GTI", "R200":"宝马 M3 E30", "A240":"奥迪 quattro S1"}
+  check(definition.short_title()==expected_names[id],"Reference name reaches selection and confirmation: "+id)
   var body := RallyVehicleAppearance.build(definition)
   root.add_child(body)
   check(body.get_child_count()==3,"Three body LODs: "+id)

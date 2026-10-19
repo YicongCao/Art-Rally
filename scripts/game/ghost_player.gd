@@ -40,6 +40,7 @@ func build(vehicle: RallyVehicleDefinition, data: Dictionary,translucent: bool =
 			var hub := MeshInstance3D.new()
 			hub.mesh=RallyWheelMeshes.five_spoke()
 			hub.position.y=side*.125
+			hub.rotation.x=PI if side<0 else 0
 			tire.add_child(hub)
 		if not solid: _tint(tire)
 	visible = false

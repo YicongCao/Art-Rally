@@ -69,7 +69,7 @@ static func install_hubs(pivot: Node3D) -> void:
 		var visual := MeshInstance3D.new()
 		visual.name="WhiteFiveSpoke"
 		visual.mesh=five_spoke()
-		visual.rotation.z=PI*.5
+		visual.rotation.z=-signf(hub.position.x)*PI*.5
 		hub.add_child(visual)
 
 

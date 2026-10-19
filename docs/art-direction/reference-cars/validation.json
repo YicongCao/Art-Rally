@@ -1,0 +1,32 @@
+{
+  "assets": {
+    "checks": 93,
+    "failures": 0
+  },
+  "menu_flow": {
+    "checks": 29,
+    "failures": 0
+  },
+  "profile_ghost": {
+    "checks": 31,
+    "failures": 0
+  },
+  "controller": {
+    "checks": 35,
+    "failures": 0
+  },
+  "replay_album": {
+    "checks": 27,
+    "failures": 0
+  },
+  "plate": {
+    "checks": 42,
+    "failures": 0
+  },
+  "tail_streaks": {
+    "checks": 5,
+    "failures": 0
+  },
+  "collision_route_and_27_keys_unchanged": true,
+  "total_checks": 262
+}

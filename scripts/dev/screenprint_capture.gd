@@ -11,10 +11,6 @@ func capture(label: String) -> void:
 	await RenderingServer.frame_post_draw
 	var image := root.get_texture().get_image()
 	image.save_jpg(destination+"/"+label+".jpg",.92)
-	if label.begins_with("preview-") and not "--baseline" in OS.get_cmdline_user_args():
-		DirAccess.make_dir_recursive_absolute("res://assets/ui/screenprint_previews")
-		image.resize(960,540,Image.INTERPOLATE_LANCZOS)
-		image.save_jpg("res://assets/ui/screenprint_previews/"+label.trim_prefix("preview-")+".jpg",.92)
 	print("CAPTURE: ",label)
 func resume_capture() -> void:
 	if is_instance_valid(app.race):
