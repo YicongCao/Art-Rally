@@ -22,13 +22,14 @@ func _run() -> void:
 	app.chosen_vehicle = "F160"
 	app.start_race()
 	check(app.screen=="loading" and app.progress_bar!=null,"Vehicle confirmation opens briefing inside actual loading page")
+	check(not app.progress_bar.show_percentage and app.progress_bar.find_children("*","Label",true,false).is_empty(),"Loading fill contains no numeric percentage")
 	check(app.column.find_children("*","RallyMenuBackdrop",true,false).size()==1,"Loading page retains its vector landscape illustration")
 	var screenshot_found := false
 	for image: Node in app.column.find_children("*","TextureRect",true,false):
 		if image.texture!=null and image.texture.resource_path.ends_with(".jpg"): screenshot_found=true
 	check(not screenshot_found,"Loading page does not embed gameplay screenshots")
 	while app.loading: await process_frame
-	check(app.screen=="race","Menu loads a complete playable challenge")
+	check(app.screen=="race" and not app.menu_background.visible,"Menu loads a playable challenge and hides its stationary background")
 	check(app.race.vehicle.drivetrain.config.drive_layout=="FWD","Selected vehicle physics survive settings application")
 	check(app.race.vehicle.config.body_mass==1000,"Selected mass applied")
 	check(app.race.session.split_gates.size()==3,"Three splits configured")
@@ -56,7 +57,7 @@ func _run() -> void:
 	check(app.chosen_vehicle=="R200" and app.chosen_power_tier==1 and app.vehicle_power_choices.F160==2,"Another card changes the active car and retains the previous car's power choice")
 	app._select_vehicle_variant("F160",2)
 	await app.start_race()
-	check(app.race.vehicle.drivetrain.config.rated_power_ps==384 and app.race.challenge.vehicle.power_tier==2,"Selected +100% F160 actually loads 384 PS into gameplay")
+	check(app.race.vehicle.drivetrain.config.rated_power_ps==440 and app.race.challenge.vehicle.power_tier==2,"Selected +100% F160 actually loads 440 PS into gameplay")
 	check(app.profile.data.last_power_tier==2,"The loaded variant is the saved recent selection")
 	await app.leave_race()
 	await process_frame

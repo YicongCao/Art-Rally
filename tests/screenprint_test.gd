@@ -3,6 +3,7 @@ extends "res://tests/test_suite.gd"
 func _run() -> void:
  var baseline: Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://docs/art-direction/screenprint/baseline/content-hashes.json"))
  var mechanics: Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/vehicle-mechanics-hashes.json"))
+ var approved: Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/v040-mechanics-hashes.json"))
  for path: String in baseline:
   var actual := FileAccess.get_sha256("res://"+path)
   var expected: String=baseline[path]
@@ -15,7 +16,9 @@ func _run() -> void:
     mechanical_text+=line+"\n"
    actual=mechanical_text.sha256_text()
    expected=mechanics[path]
-  check(actual==expected,"Mechanical resource unchanged: "+path)
+  # 0.4.0 deliberately raises F160 power and versions only its nine challenges.
+  if approved.has(path): expected=approved[path]
+  check(actual==expected,"Approved mechanical resource: "+path)
  var manifest: Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://assets/screenprint/manifest.json"))
  for path: String in manifest:
   var item: Dictionary=manifest[path]

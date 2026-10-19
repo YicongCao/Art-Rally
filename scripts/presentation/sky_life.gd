@@ -16,16 +16,17 @@ func build(land: RallyStageScenery) -> void:
 		add_child(node)
 		var station := land.route.length*(.08+.84*float(i)/float(count-1))
 		var bank_side := -1.0 if i%2==0 else 1.0
-		var at := land.route.position_at(station)+land.route.rights[land.route.index_at(station)]*bank_side*rng.randf_range(330,650)
+		var at := land.route.position_at(station)+land.route.rights[land.route.index_at(station)]*bank_side*rng.randf_range(190,380)
 		at += land.route.tangent_at(station)*rng.randf_range(-45,45)
-		at.y = maxf(land.height_at(at.x,at.z),land.route.position_at(station).y)+rng.randf_range(100,230)
+		at.y = maxf(land.height_at(at.x,at.z),land.route.position_at(station).y)+rng.randf_range(75,150)
 		for attempt: int in range(16):
 			var crowded := false
 			for existing: Dictionary in balloons:
-				if at.distance_to(existing.origin)<240: crowded = true
+				if at.distance_to(existing.origin)<190: crowded = true
 			if not crowded: break
-			at += land.route.rights[land.route.index_at(station)]*bank_side*130+Vector3.UP*12
+			at += land.route.rights[land.route.index_at(station)]*bank_side*75+Vector3.UP*8
 		node.position = at
+		node.scale=Vector3.ONE*1.35
 		var b := RallySampleMeshes.new()
 		var ink: Color = [Color("c96b48"),Color("d6b665"),Color("528d92"),Color("a05e6e")][i%4]
 		for sector: int in range(12):

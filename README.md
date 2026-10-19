@@ -2,9 +2,9 @@
 
 ## 简介
 
-低多边形、完全离线的计时拉力游戏。当前版本为 **[0.3.1](https://github.com/YicongCao/Art-Rally/releases/latest)**：三条主题赛道、F160 / R200 / A240 三辆原创赛车、三档动力的 27 个独立挑战、奖牌与分段计时、个人幽灵、本地档案、赛后回放、航拍相册及声音。底层仍采用原有 120 Hz 车辆与轮胎系统。
+采用漫画套色画风、完全离线的计时拉力游戏。当前版本为 **[0.4.0](https://github.com/YicongCao/Art-Rally/releases/latest)**：三条主题赛道、大众 GTI／宝马 M3 E30／奥迪 quattro S1 三辆赛车、三档动力的 27 个独立挑战、奖牌与分段计时、个人幽灵、本地档案、赛后回放、航拍相册及声音。底层仍采用原有 120 Hz 车辆与轮胎系统。
 
-[0.3.0 候选版变化](docs/V0_3_0_RC.zh-CN.md) · [实施计划](docs/FIRST_PLAYABLE_PLAN.zh-CN.md) · [实施状态与未通过项](docs/FIRST_PLAYABLE_STATUS.zh-CN.md) · [实测验收报告](docs/FIRST_PLAYABLE_VALIDATION.zh-CN.md) · [操作说明](docs/PLAY_GUIDE.zh-CN.md) · [素材名单](docs/ASSET_CREDITS.md)
+[0.4.0 更新与发布验证](docs/validation/v040-release.zh-CN.md) · [0.3.0 候选版变化](docs/V0_3_0_RC.zh-CN.md) · [实施计划](docs/FIRST_PLAYABLE_PLAN.zh-CN.md) · [实施状态与未通过项](docs/FIRST_PLAYABLE_STATUS.zh-CN.md) · [实测验收报告](docs/FIRST_PLAYABLE_VALIDATION.zh-CN.md) · [操作说明](docs/PLAY_GUIDE.zh-CN.md) · [素材名单](docs/ASSET_CREDITS.md)
 
 ## 直接玩游戏
 
@@ -16,7 +16,7 @@
 
 启动后进入标题菜单，可选择计时挑战、自由练习和设置。脚本会先导入资源、更新脚本缓存，首次启动会稍慢；终端会打印项目绝对路径。请确认进入的是最新版本所在的目录。
 
-**无需开发环境：** 从 [最新发行版](https://github.com/YicongCao/Art-Rally/releases/latest) 下载对应系统的 ZIP，解压后打开 macOS 的 `Art Rally.app` 或 Windows 的 `Art Rally.exe`。macOS 包已实机验证；Windows 包已完成交叉导出与结构校验，仍待真实 Windows 运行验证。奖牌阈值仍待熟练真人基准跑标定。
+**无需开发环境：** 从 [最新发行版](https://github.com/YicongCao/Art-Rally/releases/latest) 下载对应系统的 ZIP，解压后打开 macOS 的 `Art Rally.app` 或 Windows 的 `Art Rally.exe`。0.4.0 macOS 包通过自动启动与驾驶检查；Windows 包完成交叉导出与结构校验，本轮未做人工试玩或真实 Windows 验收。奖牌阈值仍待熟练真人基准跑标定。
 
 <table>
   <tr>
@@ -257,7 +257,7 @@ v0.2 轮胎模型已按 [技术方案](docs/V0.2_TIRE_CONTACT_DEFORMATION.zh-CN.
 
 执行顺序与验收标准见 [开发计划](docs/DEVELOPMENT_PLAN.zh-CN.md)。手柄优先标定，键盘通过输入平滑与车速相关转向辅助降低难度，两者共享相同车辆物理。
 
-最新赛道与选车改动见 [赛道第二版更新](docs/ROUTE_V2_UPDATE.zh-CN.md)。当前运行版本为 `0.3.1`；当前路线版本 7、车辆标定 fp3，与旧版成绩、幽灵隔离。页面动效、回放与音乐调整见 [体验打磨更新](docs/CINEMATIC_POLISH.zh-CN.md)。
+最新赛道与选车改动见 [赛道第二版更新](docs/ROUTE_V2_UPDATE.zh-CN.md)。当前运行版本为 `0.4.0`；路线版本 7，前驱车标定 fp4（220／330／440 PS），后驱与四驱仍为 fp3。旧前驱成绩保留，按标定版本隔离。页面动效、回放与音乐调整见 [体验打磨更新](docs/CINEMATIC_POLISH.zh-CN.md)。
 
 本轮界面、混合路面与窄桥、回放、航拍相册和四主题 MIDI 配乐见 [玩家体验更新](docs/PLAYER_EXPERIENCE_UPDATE.zh-CN.md)。
 

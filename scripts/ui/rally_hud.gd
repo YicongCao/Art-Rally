@@ -219,14 +219,14 @@ static func pacenote_arrow(code: String,at: Vector2 = Vector2.ZERO) -> Dictionar
 func _draw_note() -> void:
 	var code := str(model.note)
 	if code.is_empty(): return
-	panel(Rect2(24,94,116,124))
-	var at := Vector2(82,141)
+	panel(Rect2(515,24,250,91))
+	var at := Vector2(560,66)
 	if code.begins_with("LEFT") or code.begins_with("RIGHT"):
 		var turn := RallyComicHUDArt.turn(code,float(model.get("bend_degrees",-1)))
 		var texture := RallyComicHUDArt.sprite(turn.sprite)
 		var arrow_size := texture.get_size()
-		arrow_size*=minf(78/arrow_size.x,79/arrow_size.y)
-		var rectangle := Rect2(Vector2(82,140)-arrow_size*.5,arrow_size)
+		arrow_size*=minf(70/arrow_size.x,72/arrow_size.y)
+		var rectangle := Rect2(Vector2(560,66)-arrow_size*.5,arrow_size)
 		if turn.right: rectangle=Rect2(rectangle.position,Vector2(-rectangle.size.x,rectangle.size.y))
 		draw_texture_rect(texture,rectangle,false)
 	else:
@@ -254,8 +254,8 @@ func _draw_note() -> void:
 			draw_colored_polygon(PackedVector2Array([at+Vector2(0,-23),at+Vector2(24,20),at+Vector2(-24,20)]),AMBER)
 			center_text("!",at+Vector2(0,13),27,INK,title_font)
 		var short_labels := {"LOGS":"勿切","ROCKFALL":"落石","CAUTION_NARROW":"收窄","CUT":"可切","MUD_NARROW":"泥地","WATER":"积水","ASPHALT":"柏油","GRAVEL":"砂石","CREST_JUMP":"飞坡","FINISH":"终点"}
-		center_text(short_labels.get(code,"注意"),Vector2(82,181),13,PAPER)
-	center_text("%d m"%model.note_distance,Vector2(82,204),16,PAPER,gauge_font)
+		center_text(short_labels.get(code,"注意"),Vector2(665,54),15,PAPER)
+	center_text("%d m"%model.note_distance,Vector2(665,88),24,PAPER,gauge_font)
 
 
 func _draw_map() -> void:
@@ -276,7 +276,13 @@ func _draw_map() -> void:
 		var side := Vector2(-forward.y,forward.x)
 		draw_colored_polygon(PackedVector2Array([position+forward*7,position-forward*4+side*4,position-forward*4-side*4]),PAPER)
 	draw_line(Vector2(41,665),Vector2(37,681),AMBER,4,true)
-	text("%02d / %d m"%[model.get("gate_number",1),model.get("gate_distance",0)],Vector2(50,680),14,PAPER,gauge_font)
+	# Match the rising baseline and rightward shear of the map caption plate.
+	var canvas := Transform2D(Vector2(ui_scale,0),Vector2(0,ui_scale),ui_offset)
+	draw_set_transform_matrix(canvas*Transform2D(Vector2(1,-.075),Vector2(-.22,1),Vector2(50,674)))
+	var caption := "%02d / %d m"%[model.get("gate_number",1),model.get("gate_distance",0)]
+	draw_string(gauge_font,Vector2(0,1.3),caption,HORIZONTAL_ALIGNMENT_LEFT,-1,14,Color(.015,.025,.03,.8))
+	draw_string(gauge_font,Vector2.ZERO,caption,HORIZONTAL_ALIGNMENT_LEFT,-1,14,PAPER)
+	draw_set_transform(ui_offset,0,Vector2.ONE*ui_scale)
 
 
 func _draw_gauge() -> void:

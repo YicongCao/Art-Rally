@@ -4,7 +4,7 @@ extends RefCounted
 
 static func run(scene: Node3D) -> void:
 	var failures := PackedStringArray()
-	if ProjectSettings.get_setting("application/config/version","")!="0.3.1":
+	if ProjectSettings.get_setting("application/config/version","")!="0.4.0":
 		failures.append("application version")
 	if scene.generator.route.length<3000 or scene.vehicle.wheels.size()!=4:
 		failures.append("main stage resources")
@@ -57,7 +57,7 @@ static func run_app(app: Node) -> void:
 	app.prefs=RallyGameSettings.new()
 	app.audio.apply_settings(app.prefs)
 	if app.profile.set_plate("PACK-160") != OK: failures.append("player plate save")
-	if ProjectSettings.get_setting("application/config/version","")!="0.3.1": failures.append("application version")
+	if ProjectSettings.get_setting("application/config/version","")!="0.4.0": failures.append("application version")
 	if app.screen!="home": failures.append("main menu")
 	for stage: String in RallyContentCatalog.STAGES:
 		for vehicle: String in RallyContentCatalog.VEHICLES:

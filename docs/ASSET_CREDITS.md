@@ -25,3 +25,8 @@
 - `scripts/export_screenprint.py` 从已保存的源文件生成 GLB、三档车身 LOD 和面数／挂点清单，不回写源文件。`create_screenprint_sources.py` 为一次性初始化；`refine_screenprint_sources.py` 记录本轮有版本标记的修整，不属于日常导出步骤。
 - 套色材质、赛车专用墨线、UI 纸面印刷 shader 和矢量版式：项目原创代码。未引入外部品牌、赞助标识、贴图或字体。
 - 方向参考图由内置 image_gen 生成，仅用于设计讨论；实际游戏继续使用原创三维资产和代码绘制 UI。
+
+## 0.4.0 实际使用的美术资产
+
+- 三辆参考赛车由项目 Blender 脚本自主建模，参考用户提供的 GTI／Red Bull、M3 E30／Mobil 1 和 quattro S1 照片与涂装要求；没有导入第三方下载的整车模型。车厂、车型与赞助名称及标识归各自权利人所有。
+- 漫画 HUD 外壳、金色弯道箭头 atlas（`assets/ui/comic_hud/atlas.png`）和手绘云带（`assets/sky/comic/cloud-banks.png`）使用内置 image_gen 生成并实际随游戏打包；原始透明 RGBA 保留，裁区、镜像与色调适配由运行时代码完成。提示词及来源记录见仓库 `docs/art-direction/comic-hud/imagegen-prompts.md`。

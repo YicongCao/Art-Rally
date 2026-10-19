@@ -11,6 +11,7 @@ var layer := CanvasLayer.new()
 var ui: Control
 var column: VBoxContainer
 var backdrop: RallyMenuBackdrop
+var menu_background: Control
 var race: Node3D
 var chosen_stage: String = "sunset_ridge"
 var chosen_vehicle: String = "F160"
@@ -85,29 +86,47 @@ func _page(title: String, subtitle: String, name_id: String) -> void:
 	ui = Control.new()
 	ui.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	ui.theme = _theme()
-	var paper := name_id in ["loading","plate"]
+	var paper := name_id=="plate"
 	ui.set_meta("paper",paper)
 	layer.add_child(ui)
+	if is_instance_valid(menu_background):
+		menu_background.hide()
+		menu_background.queue_free()
+	menu_background=Control.new()
+	menu_background.name="MenuBackground"
+	menu_background.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	menu_background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	layer.add_child(menu_background)
+	layer.move_child(menu_background,0)
+	var page_background := menu_background
+	var page_ui := ui
+	ui.visibility_changed.connect(func():
+		if is_instance_valid(page_background): page_background.visible=page_ui.visible)
 	backdrop = RallyMenuBackdrop.new()
 	backdrop.biome = RallyContentCatalog.stage(chosen_stage).environment_id
-	backdrop.poster_mode = name_id=="home"
+	backdrop.poster_mode = name_id in ["home","loading"]
 	backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	ui.add_child(backdrop)
+	menu_background.add_child(backdrop)
 	if paper:
 		backdrop.visible = false
 		var ground := ColorRect.new()
 		ground.color = Color("f1f0e9")
 		ground.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		ground.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		ui.add_child(ground)
+		menu_background.add_child(ground)
 	if name_id=="loading":
+		var shade := ColorRect.new()
+		shade.color=Color(.06,.075,.09,.90)
+		shade.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		menu_background.add_child(shade)
 		var patina := RallyRacingPatina.new()
 		patina.page_corner=true
 		patina.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		ui.add_child(patina)
+		menu_background.add_child(patina)
 	var print_margin := RallyScreenprintPaper.new()
 	print_margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	ui.add_child(print_margin)
+	menu_background.add_child(print_margin)
 	var margins := MarginContainer.new()
 	margins.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	for side: String in ["left","right"]: margins.add_theme_constant_override("margin_"+side,48)
@@ -291,6 +310,10 @@ func _menu_tile(parent: Node,title: String,caption: String,icon: String,color: C
 	glass.set_shader_parameter("strength",RallyScreenprintStyle.current().print_strength)
 	acrylic.material = glass
 	tile.add_child(acrylic)
+	# The painted child covers Button's fill: tint that visible surface directly.
+	var sync_hover := func(): acrylic.color=Color(color.lightened(.18) if tile.is_hovered() else color,1.0)
+	tile.mouse_entered.connect(sync_hover)
+	tile.mouse_exited.connect(sync_hover)
 	var margins := MarginContainer.new()
 	margins.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	margins.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -477,16 +500,16 @@ func _loading_page() -> void:
 		var fact := VBoxContainer.new()
 		fact.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		facts.add_child(fact)
-		_label(fact,entry[0],13,Color("65746c"))
+		_label(fact,entry[0],13,Color("bbb9ae"))
 		_label(fact,entry[1],25)
-	_label(column,"奖牌目标",13,Color("65746c"))
+	_label(column,"奖牌目标",13,Color("bbb9ae"))
 	var targets := challenge.thresholds()
 	var medals := _row(column)
 	for i: int in range(3):
 		var panel := PanelContainer.new()
 		panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		var style := StyleBoxFlat.new()
-		style.bg_color = Color("e7e9e1")
+		style.bg_color = Color("30343d")
 		style.content_margin_left = 18
 		style.content_margin_top = 12
 		style.content_margin_bottom = 12
@@ -495,7 +518,7 @@ func _loading_page() -> void:
 		var medal := _row(panel)
 		var glyph := TextureRect.new()
 		glyph.texture = load("res://assets/ui/icons/medal_" + ["gold","silver","bronze"][i] + ".svg")
-		glyph.self_modulate = [Color("a77828"),Color("657c89"),Color("a16140")][i]
+		glyph.self_modulate = [Color("edbd5a"),Color("bdccd3"),Color("d2936a")][i]
 		glyph.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		glyph.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		glyph.custom_minimum_size = Vector2(56,70)
@@ -504,7 +527,7 @@ func _loading_page() -> void:
 		text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		text.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		medal.add_child(text)
-		_label(text,["金牌","银牌","铜牌"][i],15,Color("65746c"))
+		_label(text,["金牌","银牌","铜牌"][i],15,Color("bbb9ae"))
 		_label(text,_time(targets[2-i]),31)
 
 

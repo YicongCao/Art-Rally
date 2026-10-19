@@ -5,7 +5,7 @@
       "reference_seconds": 265,
       "human_calibrated": false,
       "stage_version": "7",
-      "vehicle_revision": "fp3"
+      "vehicle_revision": "fp4"
     },
     "sunset_ridge/R200": {
       "reference_seconds": 260,
@@ -23,7 +23,7 @@
       "reference_seconds": 220,
       "human_calibrated": false,
       "stage_version": "7",
-      "vehicle_revision": "fp3"
+      "vehicle_revision": "fp4"
     },
     "sunlit_cape/R200": {
       "reference_seconds": 215,
@@ -41,7 +41,7 @@
       "reference_seconds": 290,
       "human_calibrated": false,
       "stage_version": "7",
-      "vehicle_revision": "fp3"
+      "vehicle_revision": "fp4"
     },
     "misty_highlands/R200": {
       "reference_seconds": 285,
@@ -59,13 +59,13 @@
       "reference_seconds": 249.1,
       "human_calibrated": false,
       "stage_version": "7",
-      "vehicle_revision": "fp3-p150"
+      "vehicle_revision": "fp4-p150"
     },
     "sunset_ridge/F160/p200": {
       "reference_seconds": 238.5,
       "human_calibrated": false,
       "stage_version": "7",
-      "vehicle_revision": "fp3-p200"
+      "vehicle_revision": "fp4-p200"
     },
     "sunset_ridge/R200/p150": {
       "reference_seconds": 244.4,
@@ -95,13 +95,13 @@
       "reference_seconds": 206.8,
       "human_calibrated": false,
       "stage_version": "7",
-      "vehicle_revision": "fp3-p150"
+      "vehicle_revision": "fp4-p150"
     },
     "sunlit_cape/F160/p200": {
       "reference_seconds": 198.0,
       "human_calibrated": false,
       "stage_version": "7",
-      "vehicle_revision": "fp3-p200"
+      "vehicle_revision": "fp4-p200"
     },
     "sunlit_cape/R200/p150": {
       "reference_seconds": 202.1,
@@ -131,13 +131,13 @@
       "reference_seconds": 272.6,
       "human_calibrated": false,
       "stage_version": "7",
-      "vehicle_revision": "fp3-p150"
+      "vehicle_revision": "fp4-p150"
     },
     "misty_highlands/F160/p200": {
       "reference_seconds": 261.0,
       "human_calibrated": false,
       "stage_version": "7",
-      "vehicle_revision": "fp3-p200"
+      "vehicle_revision": "fp4-p200"
     },
     "misty_highlands/R200/p150": {
       "reference_seconds": 267.9,

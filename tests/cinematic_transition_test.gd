@@ -8,6 +8,16 @@ func _run() -> void:
 	app.show_home()
 	await process_frame
 	check(app.ui.find_children("*","Button",true,false).all(func(b: Button): return b.text!="驾驶教学"),"Tutorial action is hidden from the title menu")
+	if DisplayServer.get_name()!="headless":
+		await process_frame
+		var tile: Button=app.column.find_children("*","Button",true,false).filter(func(b: Button):return b.text=="开始计时挑战")[0]
+		var surface: ColorRect=tile.get_node("AcrylicSurface")
+		var idle := surface.color
+		var motion := InputEventMouseMotion.new()
+		motion.position=tile.get_global_rect().get_center()
+		app.get_viewport().push_input(motion,true)
+		await process_frame
+		check(tile.is_hovered() and surface.color!=idle,"Mouse hover visibly changes the painted title button")
 	app.show_stages()
 	if DisplayServer.get_name()!="headless":
 		check(app.ui.position.x>0,"Forward navigation enters from the right")
@@ -19,9 +29,10 @@ func _run() -> void:
 		await app.transitions.sliding.finished
 	app.show_stages()
 	app.show_vehicles()
+	check(not app.ui.is_ancestor_of(app.backdrop) and app.menu_background.position==Vector2.ZERO,"Shared background stays outside sliding page content")
 	if DisplayServer.get_name()!="headless": await app.transitions.sliding.finished
 	await process_frame
-	check(app.ui.position.x==0 and app.layer.get_child_count()==1,"Interrupted navigation retires stale pages and restores the latest page")
+	check(app.ui.position.x==0 and app.layer.get_child_count()==2,"Interrupted navigation retires stale pages and restores the latest page")
 	await app.transitions.cover(true)
 	check(app.transitions.wipe.visible and app.transitions.wipe.phase==1 and app.transitions.busy,"Chequered flag completely covers the scene at the swap point")
 	if DisplayServer.get_name()!="headless":

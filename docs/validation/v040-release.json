@@ -1,0 +1,105 @@
+{
+  "version": "0.4.0",
+  "date": "2026-10-20",
+  "engine": "4.7.2",
+  "automatic_checks": 592,
+  "headless_suites": [
+    {
+      "name": "hud",
+      "passed": true,
+      "summary": [
+        "TEST RESULT: 27 checks, 0 failures"
+      ]
+    },
+    {
+      "name": "content_catalog",
+      "passed": true,
+      "summary": [
+        "TEST RESULT: 154 checks, 0 failures"
+      ]
+    },
+    {
+      "name": "cinematic_transition",
+      "passed": true,
+      "summary": [
+        "TEST RESULT: 8 checks, 0 failures"
+      ]
+    },
+    {
+      "name": "v030_polish",
+      "passed": true,
+      "summary": [
+        "TEST RESULT: 35 checks, 0 failures"
+      ]
+    },
+    {
+      "name": "menu_controller",
+      "passed": true,
+      "summary": [
+        "TEST RESULT: 35 checks, 0 failures"
+      ]
+    },
+    {
+      "name": "replay_album",
+      "passed": true,
+      "summary": [
+        "TEST RESULT: 27 checks, 0 failures"
+      ]
+    },
+    {
+      "name": "screenprint",
+      "passed": true,
+      "summary": [
+        "TEST RESULT: 93 checks, 0 failures"
+      ]
+    },
+    {
+      "name": "first_playable_flow",
+      "passed": true,
+      "summary": [
+        "TEST RESULT: 30 checks, 0 failures"
+      ]
+    },
+    {
+      "name": "profile_ghost",
+      "passed": true,
+      "summary": [
+        "TEST RESULT: 31 checks, 0 failures"
+      ]
+    },
+    {
+      "name": "power_progression",
+      "passed": true,
+      "summary": [
+        "TEST RESULT: 97 checks, 0 failures"
+      ]
+    },
+    {
+      "name": "plate_identity",
+      "passed": true,
+      "summary": [
+        "TEST RESULT: 42 checks, 0 failures"
+      ]
+    }
+  ],
+  "native_transition_checks": 13,
+  "macos_package_smoke": "passed",
+  "macos_signature": "ad-hoc, codesign --verify --deep --strict passed",
+  "windows_package_structure": "passed",
+  "manual_playtest": "not performed, per user request",
+  "windows_native_run": "not performed; cross-export only",
+  "packages": [
+    {
+      "platform": "macOS universal",
+      "file": "Art-Rally-macos-universal.zip",
+      "bytes": 85678321,
+      "sha256": "39553c234d5efb1c3700a8fa15d81c5165f7c72e08726408606b7c7804f651f3"
+    },
+    {
+      "platform": "Windows x86_64",
+      "file": "Art-Rally-windows-x86_64.zip",
+      "bytes": 63031045,
+      "sha256": "d76cf122bbb2b542abdd72692fbc0982034fee146ccd3c661159b11dfadc40fb"
+    }
+  ]
+}
