@@ -14,7 +14,7 @@ func _run() -> void:
 	app.profile.path="user://highland-rockfall-capture-%d/profile.json"%Time.get_ticks_usec()
 	root.add_child(app)
 	app.profile.data=RallyProfileStore.fresh()
-	app.profile.data.plate="ART RALLY"
+	app.profile.data.plate="BRUSHLINE"
 	app.chosen_stage="misty_highlands"
 	app.chosen_vehicle="A240"
 	AudioServer.set_bus_mute(0,true)
@@ -72,8 +72,14 @@ func _run() -> void:
 			push_error("Highland capture did not reach %dm under production driving"%station)
 			quit(1)
 			return
+		# Inspect the near-miss itself, not only the road before activation.
+		var fall: Dictionary=scene.rockfall.events[index]
+		var deadline := Time.get_ticks_msec()+6000
+		while float(fall.elapsed)<2.7 and Time.get_ticks_msec()<deadline:
+			await process_frame
 		await RenderingServer.frame_post_draw
-		var path: String="res://docs/previews/highland-rockfall-%02d.jpg"%index
+		print("NEAR MISS ",index," elapsed=",fall.elapsed," clearance=",scene.rockfall.closest_clearance)
+		var path: String="res://docs/brushline/rockfall-%02d.jpg"%index
 		root.get_texture().get_image().save_jpg(path,.94)
 		print("SAVED ",path," progress=",scene.session.progress," recoveries=",scene.session.reset_count," average_fps=",rendered_frames*1000.0/maxi(1,Time.get_ticks_msec()-wall_start))
 	await app.leave_race()
@@ -105,7 +111,7 @@ func _full_drive(scene: Node3D) -> bool:
 			physics.append(scene.vehicle.physics_usec/1000.0)
 		if photo<RallyRockfall.ROCKFALL_SITES.size() and scene.session.progress>=RallyRockfall.ROCKFALL_SITES[photo]-4:
 			await RenderingServer.frame_post_draw
-			root.get_texture().get_image().save_jpg("res://docs/previews/highland-rockfall-%02d.jpg"%photo,.94)
+			root.get_texture().get_image().save_jpg("res://docs/brushline/rockfall-%02d.jpg"%photo,.94)
 			print("HIGHLAND PHOTO ",photo," progress=",scene.session.progress)
 			photo+=1
 		if elapsed>=next_report:

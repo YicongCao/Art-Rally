@@ -40,7 +40,9 @@ func build(land: RallyStageScenery) -> void:
 		b.box(Vector3(2.1,1.3,1.6),Vector3(0,.65,0),Color("806949"))
 		for side: float in [-1,1]:
 			for z: float in [-.7,.7]: b.beam(Vector3(side*.9,1.2,z),Vector3(side*1.5,3.2,z),.045,Color("594f42"))
-		RallyStageLandmarks._mesh(node,b)
+		var legacy := RallyStageLandmarks._mesh(node,b)
+		var authored := RallyScreenprintProps.add(node,"balloon")
+		if authored!=null: legacy.queue_free()
 		balloons.append({"node":node,"origin":at,"phase":rng.randf_range(0,TAU)})
 	if land.generator.definition.environment_id=="autumn": return
 	# Shared group phase keeps each loose formation together, instead of unrelated solo birds.

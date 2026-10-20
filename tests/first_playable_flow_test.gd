@@ -23,7 +23,7 @@ func _run() -> void:
 	app.start_race()
 	check(app.screen=="loading" and app.progress_bar!=null,"Vehicle confirmation opens briefing inside actual loading page")
 	check(not app.progress_bar.show_percentage and app.progress_bar.find_children("*","Label",true,false).is_empty(),"Loading fill contains no numeric percentage")
-	check(app.column.find_children("*","RallyMenuBackdrop",true,false).size()==1,"Loading page retains its vector landscape illustration")
+	check(app.column.find_children("*","RallyArtbookPanel",true,false).size()==3,"Loading page has three authored illustration panels")
 	var screenshot_found := false
 	for image: Node in app.column.find_children("*","TextureRect",true,false):
 		if image.texture!=null and image.texture.resource_path.ends_with(".jpg"): screenshot_found=true

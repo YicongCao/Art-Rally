@@ -9,6 +9,7 @@ var trajectory := RallyGhostRecording.new()
 var ghost := RallyGhostPlayer.new()
 var free_practice: bool = false
 var tutorial: bool = false
+var demonstration: bool = false
 var tutorial_step: int = 0
 var tutorial_label: Label
 var previous_note: int = 0
@@ -32,11 +33,11 @@ func start() -> void:
 	RallyVehiclePlate.attach(presentation.car_style.body,challenge.vehicle,plate)
 	session.practice = free_practice or tutorial
 	_apply_preferences()
-	controls.allow_mechanical_shortcuts = session.practice
+	controls.allow_mechanical_shortcuts = session.practice and not demonstration
 	controls.bindings = profile.data.bindings.duplicate()
 	# Official challenges retain fixed mechanical setup. Developer tools remain in the lab.
 	for key: String in ["brake_bias","spring_scale"]:
-		pause_menu.widgets[key].editable = session.practice
+		pause_menu.widgets[key].editable = session.practice and not demonstration
 	pause_menu.actions.add_back("返回赛道选择",func(): return_requested.emit(),true)
 	pause_menu.message.text = "练习不计入奖牌与个人纪录" if session.practice else "正式挑战 · 机械调校固定 · 自动驾驶跑段不计成绩"
 	_build_spatial_ambience()
@@ -137,14 +138,20 @@ func _restart() -> void:
 	trajectory.reset()
 	super._restart()
 	ghost.recording = profile.load_ghost(challenge)
+	if demonstration:
+		var demo := get_node_or_null("BenchmarkDemo")
+		if demo!=null: demo.restart()
 
 
 func _apply_preferences() -> void:
 	super._apply_preferences()
-	if not session.practice and vehicle_definition!=null:
+	if (not session.practice or demonstration) and vehicle_definition!=null:
 		var baseline := vehicle_definition.physics_config()
 		vehicle.config.front_brake_bias = baseline.front_brake_bias
 		vehicle.config.static_compression = baseline.static_compression
+	if demonstration:
+		RallyGameSettings.new().apply_input(controls,false)
+		vehicle.drivetrain.automatic=true
 	if audio_director!=null: audio_director.apply_settings(preferences)
 
 

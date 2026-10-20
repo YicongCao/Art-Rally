@@ -194,5 +194,19 @@
     "code": "LOGS",
     "text": "圆木障碍，不要切弯。",
     "seconds": 1.9536666666666667
+  },
+  {
+    "voice": "female",
+    "speaker": "zf_001",
+    "code": "ROCKFALL",
+    "text": "注意落石。",
+    "seconds": 0.9593333333333334
+  },
+  {
+    "voice": "male",
+    "speaker": "zm_010",
+    "code": "ROCKFALL",
+    "text": "注意落石。",
+    "seconds": 1.0858333333333334
   }
 ]

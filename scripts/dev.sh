@@ -43,7 +43,7 @@ prepare_runtime() {
   mkdir -p "$ROOT/logs"
   # A source checkout has no imported assets or global GDScript class cache.
   # Refresh both before running, including after pulling new scripts/assets.
-  printf 'Preparing Art Rally project: %s\n' "$ROOT"
+  printf 'Preparing Brushline Rally project: %s\n' "$ROOT"
   if command -v git >/dev/null 2>&1 && git -C "$ROOT" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
     printf 'Source revision: %s (%s)\n' "$(git -C "$ROOT" rev-parse --short HEAD)" "$(git -C "$ROOT" branch --show-current)"
   fi
@@ -210,22 +210,22 @@ case "$MODE" in
       exit 1
     fi
     mkdir -p "$ROOT/logs" "$ROOT/builds/macos"
-    rm -rf "$ROOT/builds/macos/Art Rally.app" "$ROOT/builds/macos/Art-Rally-macos-universal.zip"
-    run_logged "$ROOT/logs/export_macos.log" --headless --path "$ROOT" --export-release "macOS" "$ROOT/builds/macos/Art Rally.app"
-    test -x "$ROOT/builds/macos/Art Rally.app/Contents/MacOS/Art Rally"
+    rm -rf "$ROOT/builds/macos/Brushline Rally.app" "$ROOT/builds/macos/Brushline-Rally-macos-universal.zip"
+    run_logged "$ROOT/logs/export_macos.log" --headless --path "$ROOT" --export-release "macOS" "$ROOT/builds/macos/Brushline Rally.app"
+    test -x "$ROOT/builds/macos/Brushline Rally.app/Contents/MacOS/Brushline Rally"
     cp "$ROOT/docs/PLAY_GUIDE.zh-CN.md" "$ROOT/docs/ASSET_CREDITS.md" "$ROOT/assets/licenses/Godot-LICENSE.txt" "$ROOT/assets/licenses/Godot-THIRD-PARTY.json" "$ROOT/builds/macos/"
-    ditto -c -k --sequesterRsrc --keepParent "$ROOT/builds/macos/Art Rally.app" "$ROOT/builds/macos/Art-Rally-macos-universal.zip"
-    (cd "$ROOT/builds/macos" && /usr/bin/zip -q "Art-Rally-macos-universal.zip" PLAY_GUIDE.zh-CN.md ASSET_CREDITS.md Godot-LICENSE.txt Godot-THIRD-PARTY.json)
-    (cd "$ROOT/builds/macos" && shasum -a 256 "Art-Rally-macos-universal.zip" > "Art-Rally-macos-universal.zip.sha256")
+    ditto -c -k --sequesterRsrc --keepParent "$ROOT/builds/macos/Brushline Rally.app" "$ROOT/builds/macos/Brushline-Rally-macos-universal.zip"
+    (cd "$ROOT/builds/macos" && /usr/bin/zip -q "Brushline-Rally-macos-universal.zip" PLAY_GUIDE.zh-CN.md ASSET_CREDITS.md Godot-LICENSE.txt Godot-THIRD-PARTY.json)
+    (cd "$ROOT/builds/macos" && shasum -a 256 "Brushline-Rally-macos-universal.zip" > "Brushline-Rally-macos-universal.zip.sha256")
     ;;
   macos-app-check)
-    APP="$ROOT/builds/macos/Art Rally.app"
-    EXECUTABLE="$APP/Contents/MacOS/Art Rally"
+    APP="$ROOT/builds/macos/Brushline Rally.app"
+    EXECUTABLE="$APP/Contents/MacOS/Brushline Rally"
     test -x "$EXECUTABLE"
     mkdir -p "$ROOT/logs"
     run_external_logged "$ROOT/logs/macos_app_check.log" "$EXECUTABLE" --max-fps 60 -- --test-defaults --package-smoke
     grep -q '^PACKAGE SMOKE PASSED$' "$ROOT/logs/macos_app_check.log"
-    test "$(plutil -extract CFBundleIdentifier raw "$APP/Contents/Info.plist")" = "com.yicongcao.artrally"
+    test "$(plutil -extract CFBundleIdentifier raw "$APP/Contents/Info.plist")" = "com.yicongcao.brushlinerally"
     lipo -archs "$EXECUTABLE" | grep -qw arm64
     ;;
   export-windows)
@@ -235,17 +235,17 @@ case "$MODE" in
       exit 1
     fi
     mkdir -p "$ROOT/logs" "$ROOT/builds/windows"
-    rm -rf "$ROOT/builds/windows/Art Rally" "$ROOT/builds/windows/Art-Rally-windows-x86_64.zip" "$ROOT/builds/windows/Art-Rally-windows-x86_64.zip.sha256"
-    mkdir -p "$ROOT/builds/windows/Art Rally"
-    run_logged "$ROOT/logs/export_windows.log" --headless --path "$ROOT" --export-release "Windows Desktop" "$ROOT/builds/windows/Art Rally/Art Rally.exe"
-    test -f "$ROOT/builds/windows/Art Rally/Art Rally.exe"
-    cp "$ROOT/docs/PLAY_GUIDE.zh-CN.md" "$ROOT/docs/ASSET_CREDITS.md" "$ROOT/assets/licenses/Godot-LICENSE.txt" "$ROOT/assets/licenses/Godot-THIRD-PARTY.json" "$ROOT/builds/windows/Art Rally/"
-    (cd "$ROOT/builds/windows" && /usr/bin/zip -r -9 -X "Art-Rally-windows-x86_64.zip" "Art Rally")
-    (cd "$ROOT/builds/windows" && shasum -a 256 "Art-Rally-windows-x86_64.zip" > "Art-Rally-windows-x86_64.zip.sha256")
+    rm -rf "$ROOT/builds/windows/Brushline Rally" "$ROOT/builds/windows/Brushline-Rally-windows-x86_64.zip" "$ROOT/builds/windows/Brushline-Rally-windows-x86_64.zip.sha256"
+    mkdir -p "$ROOT/builds/windows/Brushline Rally"
+    run_logged "$ROOT/logs/export_windows.log" --headless --path "$ROOT" --export-release "Windows Desktop" "$ROOT/builds/windows/Brushline Rally/Brushline Rally.exe"
+    test -f "$ROOT/builds/windows/Brushline Rally/Brushline Rally.exe"
+    cp "$ROOT/docs/PLAY_GUIDE.zh-CN.md" "$ROOT/docs/ASSET_CREDITS.md" "$ROOT/assets/licenses/Godot-LICENSE.txt" "$ROOT/assets/licenses/Godot-THIRD-PARTY.json" "$ROOT/builds/windows/Brushline Rally/"
+    (cd "$ROOT/builds/windows" && /usr/bin/zip -r -9 -X "Brushline-Rally-windows-x86_64.zip" "Brushline Rally")
+    (cd "$ROOT/builds/windows" && shasum -a 256 "Brushline-Rally-windows-x86_64.zip" > "Brushline-Rally-windows-x86_64.zip.sha256")
     ;;
   windows-package-check)
-    EXE="$ROOT/builds/windows/Art Rally/Art Rally.exe"
-    ZIP="$ROOT/builds/windows/Art-Rally-windows-x86_64.zip"
+    EXE="$ROOT/builds/windows/Brushline Rally/Brushline Rally.exe"
+    ZIP="$ROOT/builds/windows/Brushline-Rally-windows-x86_64.zip"
     test -f "$EXE" -a -f "$ZIP"
     file "$EXE" | grep -Eq 'PE32\+ executable.*x86-64'
     python3 - "$EXE" <<'PY'

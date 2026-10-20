@@ -51,7 +51,7 @@ func build(settings: RallyGameSettings) -> void:
 	column.add_theme_constant_override("separation",10)
 	panel.add_child(column)
 	var title := Label.new()
-	title.text = "ART / RALLY     暂停与设置"
+	title.text = "BRUSHLINE RALLY     暂停与设置"
 	title.add_theme_font_override("font",RallyFonts.bold())
 	title.add_theme_font_size_override("font_size",23)
 	column.add_child(title)

@@ -135,7 +135,7 @@ func _process(dt: float) -> void:
 	hud_clock += dt
 	if hud_clock < 0.05: return
 	hud_clock = 0
-	readout.text = "ART RALLY / DRIVING LAB\n%03d km/h    GEAR %s    %s" % [vehicle.linear_velocity.length() * 3.6, _gear_name(), "PAUSED - ENTER TO RESUME" if get_tree().paused else RallySurfaceQuery.PROFILES[vehicle.wheels[0].surface.surface_id].label]
+	readout.text = "BRUSHLINE RALLY / DRIVING LAB\n%03d km/h    GEAR %s    %s" % [vehicle.linear_velocity.length() * 3.6, _gear_name(), "PAUSED - ENTER TO RESUME" if get_tree().paused else RallySurfaceQuery.PROFILES[vehicle.wheels[0].surface.surface_id].label]
 	details.visible = telemetry_visible
 	readout.get_parent().get_parent().visible = not debug_panel.visible
 	debug_visual.visible = telemetry_visible or debug_panel.visible

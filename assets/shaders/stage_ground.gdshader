@@ -4,6 +4,7 @@ render_mode diffuse_burley;
 varying vec3 world;
 varying vec4 zone;
 uniform bool road_mesh = false;
+uniform sampler2D wear_atlas : source_color, filter_linear_mipmap_anisotropic;
 uniform bool alpine_terrain = false;
 uniform int mountain_section_count = 0;
 uniform vec3 mountain_sections[4];
@@ -35,6 +36,13 @@ vec3 aggregate(vec2 p) {
 	}
 	return vec3(first,second-first,shade);
 }
+vec3 wear_sample(vec2 uv,vec2 quadrant) {
+ // Safe atlas margins avoid mip bleeding between different surfaces.
+ vec2 cell=floor(uv), f=fract(uv);
+ f=mix(f,vec2(1.0)-f,step(.5,hash(cell)));
+ return texture(wear_atlas,(quadrant+.035+f*.93)*.5).rgb;
+}
+
 void vertex() {
 	world = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 	zone = COLOR;
@@ -97,6 +105,15 @@ void fragment() {
 		tarmac = mix(tarmac,vec3(0.56,0.53,0.43),edge_mark*(.45+.55*noise(world.xz*1.4)));
 		gravel = mix(mix(gravel,mud_color,mud),tarmac,asphalt);
 		road_bump *= 1.0-asphalt*0.93;
+		vec2 wear_uv=vec2(UV.x/5.5,UV.y/11.0);
+		vec3 painted=wear_sample(wear_uv,vec2(1,0));
+		painted=mix(painted,wear_sample(wear_uv,vec2(0,1)),mud);
+		painted=mix(painted,wear_sample(wear_uv,vec2(0,0)),asphalt);
+		painted=mix(painted,wear_sample(wear_uv,vec2(1,1)),zone.a*.5);
+		vec2 seam=abs(fract(wear_uv)-.5)*2.0;
+		float patch=(1.0-smoothstep(.78,.99,max(seam.x,seam.y)))*smoothstep(.38,.68,noise(vec2(UV.x*.3,UV.y*.045)));
+		float fade=1.0-smoothstep(35.0,95.0,length(VERTEX));
+		gravel=mix(gravel,painted,patch*.48*fade);
 		color = mix(color, gravel, on_road);
 	}
 	float wet = road_mesh ? clamp(zone.a*(.75+.25*noise(world.xz*1.8)),0.0,1.0) : 0.0;

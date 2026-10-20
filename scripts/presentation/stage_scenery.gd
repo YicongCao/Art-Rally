@@ -229,6 +229,7 @@ func _apply_materials() -> void:
 	var ground := ShaderMaterial.new()
 	ground.shader = preload("res://assets/shaders/stage_ground.gdshader")
 	ground.set_shader_parameter("road_mesh",true)
+	ground.set_shader_parameter("wear_atlas",preload("res://assets/brushline/road-wear.png"))
 	if not generator.definition.mountain_cliff_sections.is_empty():
 		ground.set_shader_parameter("mountain_section_count",generator.definition.mountain_cliff_sections.size())
 		ground.set_shader_parameter("mountain_sections",generator.definition.mountain_cliff_sections)
@@ -273,6 +274,35 @@ func _build_terrain() -> void:
 	_theme_ground(material)
 	mesh.material_override = material
 	dressing.add_child(mesh)
+
+	if generator.definition.environment_id=="highland":
+		# Use the very same visible terrain triangles, never a hidden flat apron.
+		var faces := PackedVector3Array()
+		for z: int in range(count.y):
+			for x: int in range(count.x):
+				var a := z*(count.x+1)+x
+				var b := a+count.x+1
+				var center_at: Vector3=(vertices[a]+vertices[b+1])*.5
+				var near := nearest(center_at)
+				if float(near.distance)>85: continue
+				for tri: Array in [[a,a+1,b+1],[a,b+1,b]]:
+					var clear := true
+					for index: int in tri:
+						var frame := nearest(vertices[index])
+						if float(frame.distance)<route.width_at(frame.s)*.5+1.15: clear=false
+					if clear:
+						for index: int in tri: faces.append(vertices[index])
+		var body := StaticBody3D.new()
+		body.name="AlpineTerrainCollision"
+		body.collision_layer=1
+		body.collision_mask=2
+		body.set_meta("surface_id",3)
+		var shape := ConcavePolygonShape3D.new()
+		shape.set_faces(faces)
+		var collider := CollisionShape3D.new()
+		collider.shape=shape
+		body.add_child(collider)
+		dressing.add_child(body)
 
 
 func _build_mountains() -> void:

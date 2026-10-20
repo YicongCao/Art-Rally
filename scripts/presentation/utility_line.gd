@@ -19,6 +19,7 @@ func plan(land: RallyStageScenery) -> void:
 		if not bank:
 			for offset: float in [30,38,24,46,54]:
 				var at := land.ground_at(s,offset)
+				at.y = land.rendered_height_at(at.x,at.z)
 				var nearest := land.nearest(at)
 				if float(nearest.distance)<land.route.width_at(nearest.s)*.5+15: continue
 				var occupied := false
@@ -32,21 +33,42 @@ func plan(land: RallyStageScenery) -> void:
 				poles.append({"s":s,"base":at,"height":9.2+.35*sin(s*.031),"right":right.normalized()})
 				break
 		s+=STEP
-	# Preserve ground clearance through valleys and across sharp bends. Raising a
-	# shared support also raises the adjacent span; it never invalidates clearance.
+	# Shorten spans over ridges rather than growing seventy-metre wooden poles.
+	for iteration: int in range(8):
+		var refined: Array[Dictionary] = []
+		var inserted := false
+		for i: int in range(poles.size()-1):
+			var a: Dictionary=poles[i]
+			var b: Dictionary=poles[i+1]
+			refined.append(a)
+			var lift := _span_lift(land,a,b)
+			if lift>3.0 and a.base.distance_to(b.base)>6:
+				var at: Vector3=(a.base+b.base)*.5
+				var near := land.nearest(at)
+				var right := land.route.rights[land.route.index_at(near.s)]
+				var clearance := land.route.width_at(near.s)*.5+16
+				if float(near.distance)<clearance:
+					at=near.point+right*(1 if near.lateral>=0 else -1)*clearance
+				at.y=land.rendered_height_at(at.x,at.z)
+				refined.append({"s":near.s,"base":at,"height":9.2,"right":right})
+				inserted=true
+		refined.append(poles[-1])
+		poles=refined
+		if not inserted: break
 	for i: int in range(poles.size()-1):
-		var a: Dictionary=poles[i]
-		var b: Dictionary=poles[i+1]
-		var lift := 0.0
-		for sample: int in range(1,16):
-			var t := sample/16.0
-			var at: Vector3 = (a.base+Vector3.UP*a.height).lerp(b.base+Vector3.UP*b.height,t)-Vector3.UP*4*SAG*t*(1-t)
-			var ground := land.height_at(at.x,at.z)
-			var near := land.nearest(at)
-			if float(near.distance)<land.route.width_at(near.s)*.5+2: ground=maxf(ground,near.point.y+2)
-			lift=maxf(lift,ground+5.0-at.y)
-		a.height+=lift
-		b.height+=lift
+		var lift := maxf(0,_span_lift(land,poles[i],poles[i+1]))
+		poles[i].height+=lift
+		poles[i+1].height+=lift
+
+func _span_lift(land: RallyStageScenery,a: Dictionary,b: Dictionary) -> float:
+	var lift := 0.0
+	for lane: float in [-1.15,0,1.15]:
+		for sample: int in range(33):
+			var t := sample/32.0
+			var at: Vector3=(a.base+Vector3.UP*a.height+a.right*lane).lerp(b.base+Vector3.UP*b.height+b.right*lane,t)-Vector3.UP*4*SAG*t*(1-t)
+			var ground := land.rendered_height_at(at.x,at.z)
+			lift=maxf(lift,ground+4.2-at.y)
+	return lift
 
 func build(land: RallyStageScenery) -> void:
 	var biome := land.generator.definition.environment_id

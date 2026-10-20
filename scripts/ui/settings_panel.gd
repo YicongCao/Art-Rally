@@ -15,7 +15,7 @@ const SLIDERS := [
 	[["brake_bias","前轮制动比例"],["spring_scale","悬架弹簧"]]]
 const TOGGLES := [
 	[["automatic","自动换挡"],["reverse_assist","停稳制动挂倒挡"],["keyboard_light","键盘辅助"],["vibration","手柄震动"]],
-	[["ghost","个人幽灵"],["show_fps","显示帧率"],["low_detail","简化植被"],["camera_motion","驾驶舱震动"],["lens_flare","镜头光斑"]],[],[]]
+	[["reduced_motion","减少界面动态"],["ghost","个人幽灵"],["show_fps","显示帧率"],["low_detail","简化植被"],["camera_motion","驾驶舱震动"],["lens_flare","镜头光斑"]],[],[]]
 
 func build(settings: RallyGameSettings,height: float = 330) -> void:
 	prefs = settings

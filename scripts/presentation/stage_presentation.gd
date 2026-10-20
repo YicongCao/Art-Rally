@@ -16,6 +16,7 @@ var tire_marks := RallyTireMarks.new()
 var sky_life := RallySkyLife.new()
 var tail_streaks := RallyTailStreaks.new()
 var road_posts := RallyBreakablePosts.new()
+var welcome: Array[Node3D]=[]
 
 
 func build(owner_scene: Node3D) -> void:
@@ -27,12 +28,26 @@ func build(owner_scene: Node3D) -> void:
 	scene.add_child(sky_life)
 	sky_life.build(scenery)
 	checkpoints.build(scene,scenery.route,scene.session.gates)
+	_build_service_and_welcome()
 	tire_marks.build(scene)
 	scene.vehicle.reset_completed.connect(tire_marks.break_trails)
 	# Painted sky replaces intersecting 3D cloud blobs. Keep the light convention.
 	atmosphere.sun_direction = Vector3(-.6,.4,-.6).normalized()
 	scenery.dressing.add_child(atmosphere.cloud_root)
 	car_style.build(scene.vehicle,scene.vehicle_definition)
+	if scene.generator.definition.environment_id=="highland":
+		for side: float in [-1,1]:
+			var lamp := SpotLight3D.new()
+			lamp.name="Headlight"+str(side)
+			lamp.position=Vector3(side*.65,.15,-scene.vehicle.config.body_size.z*.5-.25)
+			lamp.rotation_degrees.x=-5
+			lamp.light_color=Color("ffe6ad")
+			lamp.light_energy=5.0
+			lamp.spot_range=65
+			lamp.spot_angle=32
+			lamp.spot_attenuation=.6
+			lamp.shadow_enabled=side<0
+			scene.vehicle.add_child(lamp)
 	tail_streaks.build(scene,scene.vehicle.config.body_size,scene.vehicle_definition.vehicle_id if scene.vehicle_definition!=null else "A240",car_style.body)
 	scene.vehicle.reset_completed.connect(tail_streaks.clear)
 	camera_rig.definition = scene.vehicle_definition
@@ -83,6 +98,10 @@ func update(dt: float) -> void:
 		if int(elapsed*2)!=int((elapsed-dt)*2):
 			environment.sky.sky_material.set_shader_parameter("cloud_drift",elapsed*.00035)
 		sky_life.advance(dt)
+		for i: int in range(welcome.size()):
+			for arm_id: String in ["FlagArm","CheerArm"]:
+				var arm := welcome[i].find_child(arm_id,true,false) as Node3D
+				if arm!=null: arm.rotation.z=sin(elapsed*2.4+i)*.24
 		tail_streaks.update(scene.vehicle.get_global_transform_interpolated(),scene.vehicle.linear_velocity.length(),dt,scene.camera)
 	camera_rig.update(scene.camera,scene.vehicle,scene.camera_mode,scene.preferences.values.camera_motion,scene.get_tree().paused,dt,scene.controls.look_vector())
 	for i: int in range(scenery.foliage.animated_arms.size()):
@@ -120,9 +139,9 @@ func _apply_biome(sky: ShaderMaterial) -> void:
 		cloud_light = Color("ffe6ac")
 		cloud_shadow = Color("a18abd")
 	elif biome=="coast":
-		palette = [Color("fff0d4"),Color("d6e8e4"),Color("7eb7d2")]
+		palette = [Color("ffe8b0"),Color("8ddadf"),Color("278dca")]
 		sun.light_color = Color("fff3d9")
-		sun.light_energy = 1.35
+		sun.light_energy = 1.55
 		environment.ambient_light_color = Color("c9dce5")
 		environment.fog_light_color = Color("d0e1dd")
 		environment.fog_density = .00035
@@ -130,20 +149,25 @@ func _apply_biome(sky: ShaderMaterial) -> void:
 		var sea := scenery.dressing.get_node("CoastalOcean") as MeshInstance3D
 		sea.material_override.set_shader_parameter("sun_direction",atmosphere.sun_direction)
 	else:
-		palette = [Color("f4e7c9"),Color("c0d5d9"),Color("8daebd")]
+		palette = [Color("f2754f"),Color("57477f"),Color("1b234c")]
 		sun.light_color = Color("ffe5bb")
-		sun.light_energy = 1.1
-		environment.ambient_light_color = Color("a4b6cb")
-		environment.ambient_light_energy = .65
-		environment.fog_light_color = Color("bed2d2")
-		environment.fog_light_energy = .85
-		environment.fog_density = .00065
+		sun.light_energy = .22
+		# Dusk has no hard sun shadows; contact AO and one headlight shadow retain depth.
+		sun.shadow_enabled=false
+		environment.ssao_enabled=true
+		environment.ssao_intensity=.7
+		environment.ssao_radius=1.5
+		environment.ambient_light_color = Color("6d79bd")
+		environment.ambient_light_energy = .23
+		environment.fog_light_color = Color("605e91")
+		environment.fog_light_energy = .35
+		environment.fog_density = .00042
 		environment.fog_height = scene.generator.route.points[0].y-12
 		environment.fog_height_density = .002
 		var morning := Vector3(.35,0,-.85).normalized()
-		atmosphere.sun_direction = morning*cos(deg_to_rad(18))+Vector3.UP*sin(deg_to_rad(18))
-		cloud_light = Color("f0ebd9")
-		cloud_shadow = Color("a6bdc7")
+		atmosphere.sun_direction = morning*cos(deg_to_rad(4))+Vector3.UP*sin(deg_to_rad(4))
+		cloud_light = Color("ef946b")
+		cloud_shadow = Color("544878")
 	for backdrop: Node in scenery.dressing.get_children():
 		if backdrop is MeshInstance3D and str(backdrop.name).begins_with("MountainLayer"):
 			var painted := ShaderMaterial.new()
@@ -153,8 +177,8 @@ func _apply_biome(sky: ShaderMaterial) -> void:
 			painted.set_shader_parameter("shade_color",Color("646da2"))
 			painted.set_shader_parameter("lit_color",Color("efc391"))
 			if biome=="highland":
-				painted.set_shader_parameter("shade_color",Color("526485"))
-				painted.set_shader_parameter("lit_color",Color("adb4b6"))
+				painted.set_shader_parameter("shade_color",Color("3c3d75"))
+				painted.set_shader_parameter("lit_color",Color("ce8a84"))
 			if biome=="coast":
 				painted.set_shader_parameter("shade_color",Color("629ba4"))
 				painted.set_shader_parameter("lit_color",Color("ede1bf"))
@@ -177,3 +201,17 @@ func _apply_biome(sky: ShaderMaterial) -> void:
 		material.set_shader_parameter("cloud_light",cloud_light)
 		material.set_shader_parameter("sun_direction",atmosphere.sun_direction)
 		cloud.mesh.surface_set_material(0,material)
+
+
+func _build_service_and_welcome() -> void:
+	var station := 1400.0 if scenery.generator.definition.environment_id=="highland" else scenery.route.length*.51
+	var service := RallyScreenprintProps.add(scenery.dressing,"service_station",scenery.ground_at(station,-14))
+	if service!=null: service.rotation.y=scenery.route.pose_at(station).basis.get_euler().y
+	for i: int in range(13):
+		var s := scenery.route.length-8-(i/2)*2.1
+		var side := -1.0 if i%2==0 else 1.0
+		var at := scenery.ground_at(s,side*(scenery.route.width_at(s)*.5+3.2))
+		var person := RallyScreenprintProps.add(scenery.dressing,"marshal" if i==0 else "spectator",at)
+		if person==null: continue
+		person.rotation.y=scenery.route.pose_at(s).basis.get_euler().y+side*.65
+		welcome.append(person)

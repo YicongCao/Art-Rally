@@ -9,8 +9,8 @@ const FLAG_EXIT_SECONDS := 0.30
 class FlagWordmark extends Control:
 	func _draw() -> void:
 		var font := RallyFonts.DISPLAY
-		var text := "ART RALLY"
-		var font_size := 220
+		var text := "BRUSHLINE RALLY"
+		var font_size := 150
 		var width := font.get_string_size(text,HORIZONTAL_ALIGNMENT_LEFT,-1,font_size).x
 		draw_string(font,Vector2((size.x-width)*.5,198),text,HORIZONTAL_ALIGNMENT_LEFT,-1,font_size,Color.WHITE)
 
@@ -61,6 +61,7 @@ var sliding: Tween
 var outgoing: Control
 var incoming: Control
 var busy: bool = false
+var reduced_motion: bool = false
 
 func _ready() -> void:
 	layer = 100
@@ -87,11 +88,45 @@ func slide(old_page: Control,new_page: Control,direction: float) -> void:
 	wipe.black = true
 	wipe.phase = 0
 	wipe.show()
+	if reduced_motion or new_page.get_meta("comic_page",false) or old_page.get_meta("comic_page",false):
+		_comic_slide.call_deferred(old_page,new_page,direction)
+		return
 	var width := get_viewport().get_visible_rect().size.x
 	new_page.position.x = width*direction
 	sliding = create_tween().set_parallel(true).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	sliding.tween_property(old_page,"position:x",-width*direction,.20)
 	sliding.tween_property(new_page,"position:x",0.0,.20)
+	sliding.chain().tween_callback(_complete_slide)
+
+func _comic_slide(old_page: Control,new_page: Control,direction: float) -> void:
+	await get_tree().process_frame
+	if not is_instance_valid(new_page) or incoming!=new_page: return
+	sliding=create_tween().set_parallel(true).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	sliding.tween_property(old_page,"modulate:a",0.0,.12)
+	if reduced_motion:
+		new_page.modulate.a=0
+		sliding.tween_property(new_page,"modulate:a",1.0,.12)
+		sliding.chain().tween_callback(_complete_slide)
+		return
+	var outgoing_index := 0
+	for panel: Node in old_page.find_children("*","PanelContainer",true,false):
+		if not panel.get_meta("comic_card",false): continue
+		var content: Control=panel.get_child(0)
+		sliding.tween_property(content,"position:x",content.position.x-72*direction,.14).set_delay(outgoing_index*.025)
+		outgoing_index+=1
+	var index := 0
+	for panel: Node in new_page.find_children("*","PanelContainer",true,false):
+		if not panel.get_meta("comic_card",false): continue
+		var content: Control=panel.get_child(0)
+		var target := content.position.x
+		content.modulate.a=0
+		if not reduced_motion: content.position.x+=88*direction
+		sliding.tween_property(content,"position:x",target,.16).set_delay(index*.045)
+		sliding.tween_property(content,"modulate:a",1.0,.14).set_delay(index*.045)
+		index+=1
+	if index==0 or reduced_motion:
+		new_page.modulate.a=0
+		sliding.tween_property(new_page,"modulate:a",1.0,.12)
 	sliding.chain().tween_callback(_complete_slide)
 
 func _complete_slide() -> void:

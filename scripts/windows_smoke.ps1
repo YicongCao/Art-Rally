@@ -1,5 +1,5 @@
 param(
-    [string]$ExePath = "builds/windows/Art Rally/Art Rally.exe"
+    [string]$ExePath = "builds/windows/Brushline Rally/Brushline Rally.exe"
 )
 
 $resolved = Resolve-Path -LiteralPath $ExePath -ErrorAction Stop
@@ -10,7 +10,7 @@ $process = Start-Process `
     -Wait
 
 if ($process.ExitCode -ne 0) {
-    throw "Art Rally package smoke failed with exit code $($process.ExitCode)."
+    throw "Brushline Rally package smoke failed with exit code $($process.ExitCode)."
 }
 
 Write-Host "WINDOWS PACKAGE SMOKE PASSED"

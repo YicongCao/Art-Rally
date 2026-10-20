@@ -39,7 +39,7 @@ func _draw() -> void:
 	var amber := Color("ffc36e")
 	var white := Color("eee7d4")
 	draw_rect(Rect2(18,18,732,5),amber)
-	text("ART RALLY / "+drive_layout,Vector2(24,55),24,white)
+	text("BRUSHLINE RALLY / "+drive_layout,Vector2(24,55),24,white)
 	text("AUTO" if automatic else "SEQ",Vector2(626,55),23,amber)
 	for i: int in range(24):
 		var color := Color("26372f")

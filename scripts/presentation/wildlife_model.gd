@@ -4,6 +4,16 @@ extends RefCounted
 const KINDS := ["reindeer","bear","zebra","ostrich","kangaroo"]
 
 static func build(kind: String) -> Node3D:
+	var path := "res://assets/screenprint/props/"+kind+".glb"
+	if ResourceLoader.exists(path):
+		var authored: Node3D=load(path).instantiate()
+		RallyVehicleAppearance._style(authored,0,Vector3.ZERO)
+		var limbs: Array[Node3D]=[]
+		for i: int in range(4):
+			var limb := authored.find_child("Leg%d"%i,true,false) as Node3D
+			if limb!=null: limbs.append(limb)
+		authored.set_meta("legs",limbs)
+		return authored
 	var root := Node3D.new()
 	root.name = kind.capitalize()
 	var b := RallySampleMeshes.new()

@@ -17,12 +17,14 @@ func _run() -> void:
 		for pole: Dictionary in line.poles:
 			var near:=land.nearest(pole.base)
 			road_clear=road_clear and near.distance>land.route.width_at(near.s)*.5+14
-			grounded=grounded and absf(pole.base.y-land.height_at(pole.base.x,pole.base.z))<.01
+			grounded=grounded and absf(pole.base.y-land.rendered_height_at(pole.base.x,pole.base.z))<.01
 			max_height=maxf(max_height,pole.height)
 		for span: PackedVector3Array in line.spans:
 			for point: Vector3 in span:
-				wire_clear=wire_clear and point.y-land.height_at(point.x,point.z)>3.5
-		check(road_clear and grounded,stage_id+" supports sit on terrain outside the recovery corridor")
+				wire_clear=wire_clear and point.y-land.rendered_height_at(point.x,point.z)>3.5
+		check(road_clear,stage_id+" supports stay outside recovery corridor")
+		check(grounded,stage_id+" supports sit on rendered terrain")
+		check(max_height<18,stage_id+" wooden poles remain plausible height")
 		check(wire_clear,stage_id+" sagging wires stay above terrain")
 		print("UTILITY LINE ",stage_id," poles=",line.poles.size()," max_height=",max_height)
 		await app.leave_race()

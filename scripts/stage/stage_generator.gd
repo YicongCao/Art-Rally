@@ -105,6 +105,7 @@ func _build_chunk(start: int, end: int) -> void:
 	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
 	for i: int in range(start, end):
 		for col: int in range(8):
+			if absf(definition.mountain_side_at(route.distances[i]))>.01 and col in [0,1,6,7]: continue
 			for corner: Vector2i in [Vector2i(i,col),Vector2i(i+1,col),Vector2i(i,col+1),Vector2i(i,col+1),Vector2i(i+1,col),Vector2i(i+1,col+1)]:
 				var vertex := vertex_at(corner.x,corner.y)
 				tool.set_uv(Vector2((vertex-route.points[corner.x]).dot(route.rights[corner.x]),route.distances[corner.x]))

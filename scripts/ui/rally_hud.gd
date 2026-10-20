@@ -152,7 +152,7 @@ func _draw() -> void:
 	skins.queue_redraw()
 	draw_set_transform(ui_offset,0,Vector2.ONE*ui_scale)
 	_skin(1,Rect2(24,22,270,60))
-	text("ART RALLY",Vector2(65,65),32,PAPER,gauge_font)
+	text("BRUSHLINE RALLY",Vector2(65,65),23,PAPER,gauge_font)
 	var auto_label := str(model.get("label",""))
 	if not auto_label.is_empty(): text("AUTO",Vector2(311,59),13,AMBER,gauge_font)
 	_skin(2,TIMER_RECT)

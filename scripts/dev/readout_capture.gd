@@ -11,7 +11,7 @@ func _run() -> void:
 	app.profile.path="user://readout-capture-%d/profile.json"%Time.get_ticks_usec()
 	root.add_child(app)
 	app.profile.data=RallyProfileStore.fresh()
-	app.profile.data.plate="ART RALLY"
+	app.profile.data.plate="BRUSHLINE"
 	app.chosen_stage="misty_highlands"
 	app.chosen_vehicle="F160"
 	AudioServer.set_bus_mute(0,true)

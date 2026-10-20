@@ -10,7 +10,7 @@ var loaded_from_backup: bool = false
 
 
 static func fresh() -> Dictionary:
-	return {"version":VERSION,"settings":{},"bindings":{},"plate":"","tutorial_complete":false,"last_stage":"sunset_ridge","last_vehicle":"F160","last_power_tier":0,"unlocked_power_tier":0,"challenges":{}}
+	return {"version":VERSION,"settings":{},"bindings":{},"plate":"","tutorial_complete":false,"last_stage":"sunset_ridge","last_vehicle":"F160","last_power_tier":0,"unlocked_power_tier":0,"unlocked_stages":["sunset_ridge"],"challenges":{}}
 
 
 func load_file() -> Error:
@@ -32,10 +32,12 @@ func load_file() -> Error:
 	var candidate: Variant = read_json(path)
 	if valid(candidate):
 		data = candidate
+		_migrate_stage_access()
 		return OK
 	candidate = read_json(path+".bak")
 	if valid(candidate):
 		data = candidate
+		_migrate_stage_access()
 		loaded_from_backup = true
 		message = "已从上一份有效备份恢复进度"
 		return OK
@@ -71,6 +73,26 @@ func unlocked_power_tier() -> int:
 	return unlocked
 
 
+func _migrate_stage_access() -> void:
+	if data.has("unlocked_stages"): return
+	var unlocked: Array = ["sunset_ridge"]
+	for key: String in data.challenges:
+		var bucket: Dictionary = data.challenges[key]
+		if not valid_result(bucket.get("best",null)): continue
+		var stage_id := key.get_slice("@",0)
+		if stage_id not in RallyContentCatalog.STAGES: continue
+		if stage_id not in unlocked: unlocked.append(stage_id)
+		if stage_id=="sunset_ridge" and int(bucket.get("medal",0))==3:
+			unlocked=Array(RallyContentCatalog.STAGES)
+	data["unlocked_stages"] = unlocked
+
+func stage_unlocked(stage_id: String, practice_mode: bool = false) -> bool:
+	if stage_id not in RallyContentCatalog.STAGES: return false
+	if practice_mode or stage_id=="sunset_ridge": return true
+	_migrate_stage_access()
+	return stage_id in data.get("unlocked_stages",[])
+
+
 func set_plate(value: String) -> Error:
 	value = value.strip_edges()
 	if not RallyPlateText.valid(value): return ERR_INVALID_PARAMETER
@@ -87,6 +109,8 @@ func record(challenge: RallyChallengeDefinition,result: Dictionary,ghost: Dictio
 	if not valid_result(result): return {"eligible":false,"saved":false,"reason":"成绩无效"}
 	if challenge.vehicle.power_tier>unlocked_power_tier():
 		return {"eligible":false,"saved":false,"reason":"动力版本尚未解锁"}
+	if not stage_unlocked(challenge.stage.stage_id):
+		return {"eligible":false,"saved":false,"reason":"赛道尚未解锁"}
 	var previous_unlock := unlocked_power_tier()
 	var key := challenge.key()
 	var previous: Dictionary = data.challenges.get(key,{})
@@ -117,6 +141,7 @@ func record(challenge: RallyChallengeDefinition,result: Dictionary,ghost: Dictio
 	var unlocked := previous_unlock
 	if earned==3 and challenge.vehicle.power_tier==previous_unlock: unlocked = mini(2,previous_unlock+1)
 	working["unlocked_power_tier"] = unlocked
+	if earned==3 and challenge.stage.stage_id=="sunset_ridge": working["unlocked_stages"] = Array(RallyContentCatalog.STAGES)
 	var original := data
 	data = working
 	var error := save_file()
@@ -184,6 +209,10 @@ static func valid(value: Variant) -> bool:
 	for field: String in ["last_power_tier","unlocked_power_tier"]:
 		var tier: Variant = value.get(field,0)
 		if not RallyGhostRecording.numeric(tier) or float(tier)!=floorf(float(tier)) or int(tier)<0 or int(tier)>2: return false
+	if value.has("unlocked_stages"):
+		if value.unlocked_stages is not Array: return false
+		for id: Variant in value.unlocked_stages:
+			if id not in RallyContentCatalog.STAGES: return false
 	var mapped: Array[int] = []
 	for action: String in value.bindings:
 		var code: Variant = value.bindings[action]

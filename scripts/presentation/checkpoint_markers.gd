@@ -55,6 +55,22 @@ func update(next_gate: int) -> void:
 
 
 func _tube_mesh(material: Material) -> ArrayMesh:
+	var path := "res://assets/screenprint/props/checkpoint.glb"
+	if ResourceLoader.exists(path):
+		var source: Node3D=load(path).instantiate()
+		var merged := SurfaceTool.new()
+		merged.begin(Mesh.PRIMITIVE_TRIANGLES)
+		for part: Node in source.find_children("*","MeshInstance3D",true,false):
+			var pose: Transform3D=part.transform
+			var ancestor := part.get_parent()
+			while ancestor!=source and ancestor is Node3D:
+				pose=ancestor.transform*pose
+				ancestor=ancestor.get_parent()
+			for surface: int in range(part.mesh.get_surface_count()): merged.append_from(part.mesh,surface,pose)
+		var result := merged.commit()
+		result.surface_set_material(0,material)
+		source.free()
+		return result
 	var tool := SurfaceTool.new()
 	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
 	for band: int in range(12):

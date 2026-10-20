@@ -2,7 +2,7 @@ class_name RallyPlateText
 extends RefCounted
 
 const MAX_LENGTH := 10
-const DEFAULT_TEXT := "ART-RALLY"
+const DEFAULT_TEXT := "BRUSHLINE"
 
 
 static func font() -> Font:

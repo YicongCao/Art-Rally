@@ -40,6 +40,7 @@ var immersive_idle: float = 0
 var transitions := RallyPageTransition.new()
 var focus_memory: Dictionary = {}
 var page_back: Callable
+var benchmark_requested: bool=false
 
 
 func _ready() -> void:
@@ -47,7 +48,12 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	test_mode = "--test-defaults" in OS.get_cmdline_user_args()
 	if test_mode and profile.path=="user://player/profile.json": profile.path = "user://test-session/profile.json"
+	var migration := OK
+	if not test_mode and profile.path=="user://player/profile.json": migration=RallyBrandMigration.migrate()
 	profile.load_file()
+	if migration!=OK:
+		profile.read_only=true
+		profile.message="旧存档迁移失败，原进度已保留；本次不会覆盖进度。"
 	for key: String in profile.data.settings: prefs.set_value(key,profile.data.settings[key])
 	chosen_stage = profile.data.last_stage
 	chosen_vehicle = profile.data.last_vehicle
@@ -83,9 +89,11 @@ func _page(title: String, subtitle: String, name_id: String) -> void:
 	_restore_page_focus.call_deferred(name_id)
 	transitions.finish_slide()
 	screen = name_id
+	transitions.reduced_motion=prefs.values.reduced_motion
 	ui = Control.new()
 	ui.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	ui.theme = _theme()
+	ui.set_meta("comic_page",name_id in ["stages","vehicles","loading"])
 	var paper := name_id=="plate"
 	ui.set_meta("paper",paper)
 	layer.add_child(ui)
@@ -104,9 +112,21 @@ func _page(title: String, subtitle: String, name_id: String) -> void:
 		if is_instance_valid(page_background): page_background.visible=page_ui.visible)
 	backdrop = RallyMenuBackdrop.new()
 	backdrop.biome = RallyContentCatalog.stage(chosen_stage).environment_id
-	backdrop.poster_mode = name_id in ["home","loading"]
+	backdrop.poster_mode = name_id in ["home","stages","vehicles","loading"]
 	backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	menu_background.add_child(backdrop)
+	if name_id in ["home","stages","vehicles","loading"]:
+		var landscape := TextureRect.new()
+		var region := AtlasTexture.new()
+		region.atlas=preload("res://assets/brushline/banner.png")
+		region.region=Rect2(1120,0,1052,724)
+		landscape.texture=region
+		landscape.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+		landscape.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		landscape.modulate=Color(1,1,1,.16)
+		landscape.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		landscape.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		menu_background.add_child(landscape)
 	if paper:
 		backdrop.visible = false
 		var ground := ColorRect.new()
@@ -140,8 +160,8 @@ func _page(title: String, subtitle: String, name_id: String) -> void:
 	column.add_theme_constant_override("separation",10 if name_id in ["stages","vehicles","loading"] else 14)
 	scroll.add_child(column)
 	if name_id!="home":
-		_label(column,title,42)
-		if not subtitle.is_empty(): _label(column,subtitle,17,Color("64716b") if paper else Color("c8d5c7"))
+		_label(column,title,42,Color("20252b") if name_id in ["stages","vehicles"] else Color("eee2c5"))
+		if not subtitle.is_empty(): _label(column,subtitle,17,Color("566366") if paper or name_id in ["stages","vehicles"] else Color("c8d5c7"))
 	if not profile.message.is_empty(): _label(column,profile.message,16,Color("ffd38b"))
 	if is_instance_valid(previous_ui):
 		if previous_screen!=name_id and previous_screen not in ["race","results",""] and name_id!="results" and not transitions.busy:
@@ -203,6 +223,7 @@ func _card(parent: Node) -> VBoxContainer:
 	for side: String in ["left","right","top","bottom"]: style.set_content_margin(SIDE_LEFT if side=="left" else (SIDE_RIGHT if side=="right" else (SIDE_TOP if side=="top" else SIDE_BOTTOM)),18)
 	panel.add_theme_stylebox_override("panel",style)
 	parent.add_child(panel)
+	if screen in ["stages","vehicles","loading"]: panel.set_meta("comic_card",true)
 	var box := VBoxContainer.new()
 	box.add_theme_constant_override("separation",12)
 	panel.add_child(box)
@@ -228,6 +249,7 @@ func show_home() -> void:
 	gap.custom_minimum_size.y = 18
 	column.add_child(gap)
 	var secondary := _row(column)
+	_menu_tile(secondary,"玩法演示","","practice",Color("303644"),start_benchmark,false)
 	secondary.add_theme_constant_override("separation",10)
 	_menu_tile(secondary,"相册","","gallery",Color("20252b"),show_gallery,false)
 	_menu_tile(secondary,"操作指南","","guide",Color("20252b"),show_guide,false)
@@ -343,6 +365,7 @@ func _menu_tile(parent: Node,title: String,caption: String,icon: String,color: C
 
 
 func show_stages() -> void:
+	if not profile.stage_unlocked(chosen_stage,practice): chosen_stage="sunset_ridge"
 	_page("选择一段旅途", "自由练习 · 不记录奖牌和个人最佳" if practice else "计时挑战", "stages")
 	var row := _row(column)
 	for id: String in RallyContentCatalog.STAGES:
@@ -350,20 +373,30 @@ func show_stages() -> void:
 		var card := _card(row)
 		card.add_theme_constant_override("separation",10)
 		_selected_card(card,id == chosen_stage)
-		var preview := RallyMenuBackdrop.new()
-		preview.biome = definition.environment_id
-		preview.ink_wash = false
-		preview.custom_minimum_size = Vector2(260,145)
+		var preview := RallyArtbookPanel.new()
+		preview.atlas=load("res://assets/brushline/stage-artbook.png")
+		preview.panel_index=RallyContentCatalog.STAGES.find(id)
+		preview.custom_minimum_size=Vector2(260,230)
 		card.add_child(preview)
 		_label(card,definition.title,26)
 		_label(card,definition.subtitle,16)
 		_label(card,"%.2f km · %s"%[definition.target_length/1000.0,definition.surface_summary()],16)
-		var medals := ""
+		var awards := _row(card)
 		for vehicle_id: String in RallyContentCatalog.VEHICLES:
 			var challenge := RallyContentCatalog.challenge(id,vehicle_id,chosen_power_tier)
-			medals += vehicle_id+" "+MEDALS[int(profile.result_for(challenge.key()).get("medal",0))]+"\n"
-		_label(card,medals.strip_edges(),16,Color("e9bd78"))
-		var select := _button(card,"选择赛段",func(): chosen_stage=id; show_stages())
+			var earned := int(profile.result_for(challenge.key()).get("medal",0))
+			var badge := TextureRect.new()
+			badge.texture=load("res://assets/ui/icons/medal_"+["bronze","bronze","silver","gold"][earned]+".svg")
+			badge.custom_minimum_size=Vector2(24,24)
+			badge.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+			badge.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			badge.modulate.a=1.0 if earned>0 else .25
+			awards.add_child(badge)
+			_label(awards,vehicle_id,14)
+		var available := profile.stage_unlocked(id,practice)
+		var select := _button(card,"选择赛段" if available else "松岭金牌解锁",func(): chosen_stage=id; show_stages())
+		select.disabled=not available
+		if not available: select.icon=load("res://assets/ui/icons/lock.svg")
 		select.set_meta("focus_key","stage:"+id)
 		RallySelectionStyle.apply(select,id==chosen_stage)
 	_actions("← 主菜单",show_home,"确认赛道 →",show_vehicles).primary_button.grab_focus()
@@ -381,7 +414,12 @@ func show_vehicles() -> void:
 		card.set_meta("vehicle_id",id)
 		card.add_theme_constant_override("separation",8)
 		_selected_card(card,id == chosen_vehicle)
-		_vehicle_preview(card,vehicle)
+		var art := RallyArtbookPanel.new()
+		art.atlas=load("res://assets/brushline/car-artbook.png")
+		art.panel_index=RallyContentCatalog.VEHICLES.find(id)
+		art.custom_minimum_size=Vector2(270,235)
+		card.add_child(art)
+		_vehicle_preview(art,vehicle)
 		_label(card,vehicle.title,24,vehicle.accent.lightened(.3))
 		_label(card,"%s · %d PS · %d kg"%[vehicle.drive_layout,vehicle.power_ps,vehicle.mass_kg],17)
 		_label(card,vehicle.description,16)
@@ -417,7 +455,9 @@ func _select_vehicle_variant(id: String,tier: int) -> void:
 
 func _vehicle_preview(parent: Node,definition: RallyVehicleDefinition) -> void:
 	var container := TextureRect.new()
-	container.custom_minimum_size = Vector2(270,150)
+	container.custom_minimum_size = Vector2(140,85)
+	container.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT)
+	container.position=Vector2(122,143)
 	container.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	container.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	container.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -460,7 +500,7 @@ func _vehicle_preview(parent: Node,definition: RallyVehicleDefinition) -> void:
 	viewport.add_child(world)
 	var camera := Camera3D.new()
 	viewport.add_child(camera)
-	camera.position = Vector3(4,2.1,-5)
+	camera.position = Vector3(-4,1.8,5)
 	camera.look_at(Vector3(0,.3,0))
 	camera.projection = Camera3D.PROJECTION_ORTHOGONAL
 	camera.size = 3.6
@@ -474,66 +514,38 @@ func _loading_page() -> void:
 	progress_bar.custom_minimum_size.y = 26
 	column.add_child(progress_bar)
 	var layout := _row(column)
-	layout.add_theme_constant_override("separation",32)
-	var preview := RallyMenuBackdrop.new()
-	preview.biome = challenge.stage.environment_id
-	preview.ink_wash = false
-	preview.breakout = true
-	var frame := Control.new()
-	frame.custom_minimum_size=Vector2(350,250)
-	frame.size_flags_horizontal=Control.SIZE_EXPAND_FILL
-	layout.add_child(frame)
-	frame.add_child(preview)
-	preview.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	preview.offset_left=18
-	preview.offset_top=14
-	preview.offset_right=-24
-	preview.offset_bottom=-30
-	var details := VBoxContainer.new()
-	details.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	details.size_flags_stretch_ratio = 1.4
-	details.add_theme_constant_override("separation",10)
-	layout.add_child(details)
-	_label(details,challenge.vehicle.title+" · %d PS"%challenge.vehicle.power_ps,25)
-	var facts := _row(details)
-	for entry: Array in [["赛段长度","%.2f km" % (challenge.stage.target_length/1000.0)],["驱动形式",challenge.vehicle.drive_layout]]:
-		var fact := VBoxContainer.new()
-		fact.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		facts.add_child(fact)
-		_label(fact,entry[0],13,Color("bbb9ae"))
-		_label(fact,entry[1],25)
-	_label(column,"奖牌目标",13,Color("bbb9ae"))
+	var stage_index := RallyContentCatalog.STAGES.find(chosen_stage)
+	for index: int in range(3):
+		var card := _card(layout)
+		var art := RallyArtbookPanel.new()
+		art.atlas=load("res://assets/brushline/car-artbook.png" if index==1 else "res://assets/brushline/stage-artbook.png")
+		art.panel_index=RallyContentCatalog.VEHICLES.find(chosen_vehicle) if index==1 else stage_index
+		art.custom_minimum_size=Vector2(260,290)
+		art.detail=index==2
+		art.caption=[challenge.stage.title,challenge.vehicle.short_title(),["林间木屋","海岬灯塔","暮色山口"][stage_index]][index]
+		card.add_child(art)
+		_label(card,["%.2f km"%(challenge.stage.target_length/1000),"%d PS · %s"%[challenge.vehicle.power_ps,challenge.vehicle.drive_layout],"夕照 · 晴岬 · 暮色".split(" · ")[stage_index]][index],22)
 	var targets := challenge.thresholds()
 	var medals := _row(column)
-	for i: int in range(3):
-		var panel := PanelContainer.new()
-		panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		var style := StyleBoxFlat.new()
-		style.bg_color = Color("30343d")
-		style.content_margin_left = 18
-		style.content_margin_top = 12
-		style.content_margin_bottom = 12
-		panel.add_theme_stylebox_override("panel",style)
-		medals.add_child(panel)
-		var medal := _row(panel)
-		var glyph := TextureRect.new()
-		glyph.texture = load("res://assets/ui/icons/medal_" + ["gold","silver","bronze"][i] + ".svg")
-		glyph.self_modulate = [Color("edbd5a"),Color("bdccd3"),Color("d2936a")][i]
-		glyph.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		glyph.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		glyph.custom_minimum_size = Vector2(56,70)
-		medal.add_child(glyph)
-		var text := VBoxContainer.new()
-		text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		text.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-		medal.add_child(text)
-		_label(text,["金牌","银牌","铜牌"][i],15,Color("bbb9ae"))
-		_label(text,_time(targets[2-i]),31)
+	for tier: int in [2,1,0]:
+		var group := _row(medals)
+		var icon := TextureRect.new()
+		icon.texture=load("res://assets/ui/icons/medal_"+["bronze","silver","gold"][tier]+".svg")
+		icon.custom_minimum_size=Vector2(26,26)
+		icon.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+		icon.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		group.add_child(icon)
+		var time_label := _label(group,_time(targets[tier]),20)
+		time_label.custom_minimum_size.x=120
 
 
 
 func start_race() -> void:
 	if loading: return
+	if not profile.stage_unlocked(chosen_stage,practice) and not test_mode:
+		profile.message="松岭金牌解锁此挑战；也可先自由练习。"
+		show_stages()
+		return
 	loading = true
 	chosen_power_tier = mini(chosen_power_tier,profile.unlocked_power_tier())
 	_loading_page()
@@ -548,6 +560,7 @@ func start_race() -> void:
 	race.challenge = RallyContentCatalog.challenge(chosen_stage,chosen_vehicle,chosen_power_tier)
 	race.profile = profile
 	race.free_practice = practice
+	race.demonstration=benchmark_requested
 	race.tutorial = tutorial
 	race.audio_director = audio
 	album.directory = profile.path.get_base_dir()+"/gallery"
@@ -581,6 +594,12 @@ func start_race() -> void:
 	race.controls.resume()
 	loading = false
 	screen = "race"
+	if benchmark_requested:
+		benchmark_requested=false
+		var demo := RallyBenchmarkDemo.new()
+		race.add_child(demo)
+		demo.begin(race)
+		demo.finished.connect(show_benchmark_result)
 
 
 func _loading_progress(value: float,_description: String) -> void:
@@ -1062,8 +1081,8 @@ func _input(event: InputEvent) -> void:
 
 
 func show_credits() -> void:
-	_page("沿途的创作者","Art Rally / 原创复古计时拉力","credits")
-	_label(column,"引擎：Godot Engine / Jolt Physics\n车辆、风景、涂装：Art Rally 原创低多边形设计\n音效与音乐：项目原创合成
+	_page("沿途的创作者","Brushline Rally / 原创复古计时拉力","credits")
+	_label(column,"引擎：Godot Engine / Jolt Physics\n车辆、风景、涂装：Brushline Rally 原创低多边形设计\n音效与音乐：项目原创合成
 中文领航：Kokoro 合成语音，全部离线打包\n字体与依赖许可：见随包 ASSET_CREDITS.md\n\n感谢每一位试驾并留下反馈的玩家。",24)
 	_label(column,"0.3.0 · 离线计时拉力 · 本地成绩与个人幽灵",16)
 	_actions("← 主菜单",show_home)
@@ -1114,3 +1133,24 @@ func _quit_game() -> void:
 	audio.stop_all()
 	await get_tree().create_timer(.12).timeout
 	get_tree().quit()
+
+
+func start_benchmark() -> void:
+	chosen_stage="sunset_ridge"
+	chosen_vehicle="R200"
+	chosen_power_tier=0
+	practice=true
+	tutorial=false
+	benchmark_requested=true
+	await start_race()
+
+func show_benchmark_result(report: Dictionary) -> void:
+	var output := "user://benchmarks/demo-%d.json"%Time.get_unix_time_from_system()
+	var saved := RallyProfileStore.atomic_json(output,report,false)
+	await leave_race("home")
+	_page("玩法演示","松岭 / 后驱 / 固定场景性能","benchmark")
+	_label(column,"%.1f FPS"%report.average_fps,52)
+	_label(column,"P95 %.1f ms  /  P99 %.1f ms  /  物理 P95 %.2f ms"%[report.p95_ms,report.p99_ms,report.physics_p95_ms],22)
+	_label(column,"侧滑峰值 %.1f° · %s"%[report.peak_sideslip_deg,"已恢复抓地" if report.recovered else "本次未完成有效救车演示"],20)
+	_label(column,"固定演示场景，非全赛道性能报告。"+(" 已保存遥测。" if saved==OK else " 报告保存失败。"),16)
+	_actions("← 主菜单",show_home,"再看一次 →",start_benchmark)

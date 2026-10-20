@@ -7,7 +7,7 @@ func _run() -> void:
 	app.profile.path="user://gauge-capture-%d/profile.json"%Time.get_ticks_usec()
 	root.add_child(app)
 	app.profile.data=RallyProfileStore.fresh()
-	app.profile.data.plate="ART RALLY"
+	app.profile.data.plate="BRUSHLINE"
 	AudioServer.set_bus_mute(0,true)
 	for stage_id: String in ["sunset_ridge","sunlit_cape"]:
 		root.size=Vector2i(1280,720) if stage_id=="sunset_ridge" else Vector2i(1920,1080)

@@ -8,7 +8,7 @@ func _run() -> void:
 	app.profile.path="user://utility-capture-%d/profile.json"%Time.get_ticks_usec()
 	root.add_child(app)
 	app.profile.data=RallyProfileStore.fresh()
-	app.profile.data.plate="ART RALLY"
+	app.profile.data.plate="BRUSHLINE"
 	AudioServer.set_bus_mute(0,true)
 	for stage_id: String in RallyContentCatalog.STAGES:
 		if not OS.get_cmdline_user_args().is_empty() and stage_id!=OS.get_cmdline_user_args()[0]: continue

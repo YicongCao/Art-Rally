@@ -42,7 +42,7 @@ func build() -> void:
 	column.add_theme_constant_override("separation",18)
 	panel.add_child(column)
 	var title := Label.new()
-	title.text = "ART / RALLY    选择驱动方式"
+	title.text = "BRUSHLINE RALLY    选择驱动方式"
 	title.add_theme_font_override("font",RallyFonts.bold())
 	title.add_theme_font_size_override("font_size",26)
 	column.add_child(title)

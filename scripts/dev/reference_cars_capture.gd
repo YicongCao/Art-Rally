@@ -54,7 +54,7 @@ func _run() -> void:
   var body := Node3D.new()
   stage.add_child(body)
   body.add_child(RallyVehicleAppearance.build(definition))
-  RallyVehiclePlate.attach(body,definition,"ART RALLY")
+  RallyVehiclePlate.attach(body,definition,"BRUSHLINE")
   for side: float in [-1,1]:
    for axle: float in [-1,1]:
     var wheel := MeshInstance3D.new()
@@ -82,7 +82,7 @@ func _run() -> void:
  viewport.add_child(app)
  AudioServer.set_bus_mute(0,true)
  app.profile.data=RallyProfileStore.fresh()
- app.profile.data.plate="ART RALLY"
+ app.profile.data.plate="BRUSHLINE"
  for dimensions: Vector2i in [Vector2i(1280,720),Vector2i(1920,1080)]:
   viewport.size=dimensions
   app.show_vehicles()

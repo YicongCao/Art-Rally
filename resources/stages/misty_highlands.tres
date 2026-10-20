@@ -4,9 +4,10 @@
 
 [resource]
 script = ExtResource("1")
+stage_version = "8"
 stage_id = "misty_highlands"
 title = "雾杉高地"
-subtitle = "晨雾山口 · 起伏砂石与泥水"
+subtitle = "暮色山口 · 悬崖与灯光"
 target_length = 3200
 road_width = 5.2
 seed_value = 92841

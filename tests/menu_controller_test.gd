@@ -29,6 +29,7 @@ func _run() -> void:
 	root.add_child(app)
 	app.profile.data=RallyProfileStore.fresh()
 	app.profile.data.plate="PAD TEST"
+	app.profile.data.unlocked_stages=Array(RallyContentCatalog.STAGES)
 	AudioServer.set_bus_mute(0,true)
 	app.show_home()
 	await settle()
