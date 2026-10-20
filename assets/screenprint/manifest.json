@@ -11,6 +11,39 @@
     "lod": 0,
     "mounts": {}
   },
+  "assets/screenprint/props/balloon.glb": {
+    "source": "art_source/screenprint/props/balloon.blend",
+    "triangles": 5000,
+    "lod": 0,
+    "mounts": {}
+  },
+  "assets/screenprint/props/bear.glb": {
+    "source": "art_source/screenprint/props/bear.blend",
+    "triangles": 4964,
+    "lod": 0,
+    "mounts": {
+      "Leg0": [
+        -0.27,
+        0.95,
+        -0.48
+      ],
+      "Leg1": [
+        0.27,
+        0.95,
+        -0.48
+      ],
+      "Leg2": [
+        -0.27,
+        0.95,
+        0.48
+      ],
+      "Leg3": [
+        0.27,
+        0.95,
+        0.48
+      ]
+    }
+  },
   "assets/screenprint/props/bridge_post.glb": {
     "source": "art_source/screenprint/props/bridge_post.blend",
     "triangles": 752,
@@ -23,11 +56,34 @@
     "lod": 0,
     "mounts": {}
   },
-  "assets/screenprint/props/helicopter.glb": {
-    "source": "art_source/screenprint/props/helicopter.blend",
-    "triangles": 6672,
+  "assets/screenprint/props/checkpoint.glb": {
+    "source": "art_source/screenprint/props/checkpoint.blend",
+    "triangles": 3476,
     "lod": 0,
     "mounts": {}
+  },
+  "assets/screenprint/props/helicopter.glb": {
+    "source": "art_source/screenprint/props/helicopter.blend",
+    "triangles": 8708,
+    "lod": 0,
+    "mounts": {}
+  },
+  "assets/screenprint/props/kangaroo.glb": {
+    "source": "art_source/screenprint/props/kangaroo.blend",
+    "triangles": 4760,
+    "lod": 0,
+    "mounts": {
+      "Leg0": [
+        -0.27,
+        0.7,
+        0.08
+      ],
+      "Leg1": [
+        0.27,
+        0.7,
+        0.08
+      ]
+    }
   },
   "assets/screenprint/props/lighthouse.glb": {
     "source": "art_source/screenprint/props/lighthouse.blend",
@@ -35,17 +91,101 @@
     "lod": 0,
     "mounts": {}
   },
+  "assets/screenprint/props/marshal.glb": {
+    "source": "art_source/screenprint/props/marshal.blend",
+    "triangles": 2834,
+    "lod": 0,
+    "mounts": {
+      "CheerArm": [
+        -0.26,
+        1.38,
+        0.0
+      ],
+      "FlagArm": [
+        0.26,
+        1.38,
+        0.0
+      ]
+    }
+  },
   "assets/screenprint/props/medical.glb": {
     "source": "art_source/screenprint/props/medical.blend",
     "triangles": 3696,
     "lod": 0,
     "mounts": {}
   },
+  "assets/screenprint/props/ostrich.glb": {
+    "source": "art_source/screenprint/props/ostrich.blend",
+    "triangles": 4916,
+    "lod": 0,
+    "mounts": {
+      "Leg0": [
+        -0.27,
+        1.3,
+        0.08
+      ],
+      "Leg1": [
+        0.27,
+        1.3,
+        0.08
+      ]
+    }
+  },
+  "assets/screenprint/props/reindeer.glb": {
+    "source": "art_source/screenprint/props/reindeer.blend",
+    "triangles": 6844,
+    "lod": 0,
+    "mounts": {
+      "Leg0": [
+        -0.27,
+        0.95,
+        -0.48
+      ],
+      "Leg1": [
+        0.27,
+        0.95,
+        -0.48
+      ],
+      "Leg2": [
+        -0.27,
+        0.95,
+        0.48
+      ],
+      "Leg3": [
+        0.27,
+        0.95,
+        0.48
+      ]
+    }
+  },
   "assets/screenprint/props/sailboat.glb": {
     "source": "art_source/screenprint/props/sailboat.blend",
-    "triangles": 1116,
+    "triangles": 2056,
     "lod": 0,
     "mounts": {}
+  },
+  "assets/screenprint/props/service_station.glb": {
+    "source": "art_source/screenprint/props/service_station.blend",
+    "triangles": 4154,
+    "lod": 0,
+    "mounts": {}
+  },
+  "assets/screenprint/props/spectator.glb": {
+    "source": "art_source/screenprint/props/spectator.blend",
+    "triangles": 2616,
+    "lod": 0,
+    "mounts": {
+      "CheerArm": [
+        -0.26,
+        1.38,
+        0.0
+      ],
+      "FlagArm": [
+        0.26,
+        1.38,
+        0.0
+      ]
+    }
   },
   "assets/screenprint/props/wheel_rim.glb": {
     "source": "art_source/screenprint/props/wheel_rim.blend",
@@ -59,9 +199,36 @@
     "lod": 0,
     "mounts": {}
   },
+  "assets/screenprint/props/zebra.glb": {
+    "source": "art_source/screenprint/props/zebra.blend",
+    "triangles": 5792,
+    "lod": 0,
+    "mounts": {
+      "Leg0": [
+        -0.27,
+        0.95,
+        -0.48
+      ],
+      "Leg1": [
+        0.27,
+        0.95,
+        -0.48
+      ],
+      "Leg2": [
+        -0.27,
+        0.95,
+        0.48
+      ],
+      "Leg3": [
+        0.27,
+        0.95,
+        0.48
+      ]
+    }
+  },
   "assets/screenprint/vehicles/A240-lod0.glb": {
     "source": "art_source/screenprint/vehicles/A240.blend",
-    "triangles": 22171,
+    "triangles": 29144,
     "lod": 0,
     "mounts": {
       "TailLeft": [
@@ -118,7 +285,7 @@
   },
   "assets/screenprint/vehicles/A240-lod1.glb": {
     "source": "art_source/screenprint/vehicles/A240.blend",
-    "triangles": 12084,
+    "triangles": 15644,
     "lod": 1,
     "mounts": {
       "TailLeft": [
@@ -175,7 +342,7 @@
   },
   "assets/screenprint/vehicles/A240-lod2.glb": {
     "source": "art_source/screenprint/vehicles/A240.blend",
-    "triangles": 5931,
+    "triangles": 7415,
     "lod": 2,
     "mounts": {
       "TailLeft": [
@@ -232,7 +399,7 @@
   },
   "assets/screenprint/vehicles/F160-lod0.glb": {
     "source": "art_source/screenprint/vehicles/F160.blend",
-    "triangles": 15990,
+    "triangles": 21222,
     "lod": 0,
     "mounts": {
       "TailLeft": [
@@ -289,7 +456,7 @@
   },
   "assets/screenprint/vehicles/F160-lod1.glb": {
     "source": "art_source/screenprint/vehicles/F160.blend",
-    "triangles": 8621,
+    "triangles": 11277,
     "lod": 1,
     "mounts": {
       "TailLeft": [
@@ -346,7 +513,7 @@
   },
   "assets/screenprint/vehicles/F160-lod2.glb": {
     "source": "art_source/screenprint/vehicles/F160.blend",
-    "triangles": 4135,
+    "triangles": 5223,
     "lod": 2,
     "mounts": {
       "TailLeft": [
@@ -403,7 +570,7 @@
   },
   "assets/screenprint/vehicles/R200-lod0.glb": {
     "source": "art_source/screenprint/vehicles/R200.blend",
-    "triangles": 19074,
+    "triangles": 24324,
     "lod": 0,
     "mounts": {
       "TailLeft": [
@@ -460,7 +627,7 @@
   },
   "assets/screenprint/vehicles/R200-lod1.glb": {
     "source": "art_source/screenprint/vehicles/R200.blend",
-    "triangles": 10285,
+    "triangles": 12983,
     "lod": 1,
     "mounts": {
       "TailLeft": [
@@ -517,7 +684,7 @@
   },
   "assets/screenprint/vehicles/R200-lod2.glb": {
     "source": "art_source/screenprint/vehicles/R200.blend",
-    "triangles": 4922,
+    "triangles": 6067,
     "lod": 2,
     "mounts": {
       "TailLeft": [

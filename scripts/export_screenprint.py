@@ -32,9 +32,9 @@ for src in sorted((ROOT/'art_source/screenprint').glob('*/*.blend')):
   groups={}
   for o in list(bpy.context.scene.objects):
    if o.type!='MESH':continue
-   key='OutlineInk' if o.name.startswith('Outline_') else ('BrakeLamp' if o.name.startswith('BrakeLamp') else o.data.materials[0].name)
-   groups.setdefault(key,[]).append(o)
-  for key,objects in groups.items():
+   key='OutlineInk' if o.name.startswith('Outline_') else ('BrakeLamp' if 'BrakeLamp' in o.name else o.data.materials[0].name)
+   groups.setdefault((o.parent.name if o.parent else '',key),[]).append(o)
+  for (parent_name,key),objects in groups.items():
    bpy.ops.object.select_all(action='DESELECT')
    for o in objects:o.select_set(True)
    bpy.context.view_layer.objects.active=objects[0]
