@@ -1,0 +1,16 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Suspension supports weight within five percent
+PASS: Suspension settles without persistent bounce
+PASS: Static ride height matches spring equilibrium
+PASS: Ten-second static drift below 0.1 m
+PASS: Airborne wheels produce no support force
+PASS: Drop and landing recover stable ride height
+METRIC acceleration_speed_mps=12.5728387832642 lateral_drift_m=-0.0000064394053
+PASS: Wheel torque accelerates car without asymmetric yaw
+PASS: Tire braking stops the car
+PASS: Brake hold remains stable for ten seconds
+PASS: Reverse gear drives backwards through wheel forces
+METRIC turn_position=(3.315061, 0.690678, -9.688677) yaw=-0.53467619419098 rpm=1926.97267285782
+PASS: Steering generates a right-hand turn from contact forces
+TEST RESULT: 11 checks, 0 failures

@@ -1,0 +1,20 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Visual sample scope is 200 meters
+PASS: Full stage is not generated or dressed in sample
+PASS: Road geometry exactly matches approved M4 route
+PASS: Baseline vehicle remains supported on sample road
+PASS: A/B toggle changes presentation without disabling contact
+PASS: Background terrain fills horizon rather than a floating road ribbon
+PASS: Sample contains batched vegetation rocks and seven simple spectators
+PASS: Decoration stays within approved sample and outside driving lane
+PASS: Visual dressing introduces no hidden physics obstacles
+PASS: Graybox mode restores original car presentation
+PASS: Styled body is opt-in and does not replace baseline asset
+PASS: Sample uses local vehicle resource without mutating shared configuration
+PASS: Stationary contact does not create cosmetic dust
+PASS: Dust emission reads actual contacting gravel wheel state
+PASS: Airborne wheel cannot emit ground dust
+PASS: A/B switch removes particle presentation too
+PASS: Leaving sample restores viewport settings for baseline scenes
+TEST RESULT: 17 checks, 0 failures

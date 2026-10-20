@@ -1,0 +1,157 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: sunset_ridge is a nonintersecting driveable route
+PASS: sunset_ridge meets authored length
+PASS: sunset_ridge has three to six sectors
+PASS: sunset_ridge sectors divide route distance evenly
+PASS: sunset_ridge sectors divide route distance evenly
+PASS: sunset_ridge sectors divide route distance evenly
+PASS: sunset_ridge note inside route
+PASS: sunset_ridge note inside route
+PASS: sunset_ridge note inside route
+PASS: sunset_ridge note inside route
+PASS: sunset_ridge note inside route
+PASS: sunset_ridge note inside route
+PASS: sunset_ridge note inside route
+PASS: sunset_ridge note inside route
+PASS: sunset_ridge note inside route
+PASS: sunset_ridge note inside route
+PASS: sunset_ridge note inside route
+PASS: sunset_ridge note inside route
+PASS: sunset_ridge note inside route
+PASS: sunset_ridge note inside route
+PASS: sunset_ridge note inside route
+PASS: sunset_ridge note inside route
+PASS: sunset_ridge note inside route
+PASS: sunset_ridge note inside route
+PASS: sunset_ridge note inside route
+PASS: sunset_ridge note inside route
+PASS: sunset_ridge note inside route
+PASS: sunset_ridge note inside route
+PASS: sunset_ridge note inside route
+PASS: sunset_ridge note inside route
+PASS: sunset_ridge note inside route
+PASS: sunset_ridge note inside route
+PASS: Unique challenge sunset_ridge / F160
+PASS: Inclusive gold boundary
+PASS: Silver and bronze boundaries
+PASS: Invalid times cannot earn medals
+PASS: Unmeasured targets explicitly remain provisional
+PASS: Unique challenge sunset_ridge / R200
+PASS: Inclusive gold boundary
+PASS: Silver and bronze boundaries
+PASS: Invalid times cannot earn medals
+PASS: Unmeasured targets explicitly remain provisional
+PASS: Unique challenge sunset_ridge / A240
+PASS: Inclusive gold boundary
+PASS: Silver and bronze boundaries
+PASS: Invalid times cannot earn medals
+PASS: Unmeasured targets explicitly remain provisional
+PASS: sunlit_cape is a nonintersecting driveable route
+PASS: sunlit_cape meets authored length
+PASS: sunlit_cape has three to six sectors
+PASS: sunlit_cape sectors divide route distance evenly
+PASS: sunlit_cape sectors divide route distance evenly
+PASS: sunlit_cape sectors divide route distance evenly
+PASS: sunlit_cape note inside route
+PASS: sunlit_cape note inside route
+PASS: sunlit_cape note inside route
+PASS: sunlit_cape note inside route
+PASS: sunlit_cape note inside route
+PASS: sunlit_cape note inside route
+PASS: sunlit_cape note inside route
+PASS: sunlit_cape note inside route
+PASS: sunlit_cape note inside route
+PASS: sunlit_cape note inside route
+PASS: sunlit_cape note inside route
+PASS: sunlit_cape note inside route
+PASS: sunlit_cape note inside route
+PASS: sunlit_cape note inside route
+PASS: sunlit_cape note inside route
+PASS: sunlit_cape note inside route
+PASS: sunlit_cape note inside route
+PASS: sunlit_cape note inside route
+PASS: sunlit_cape note inside route
+PASS: sunlit_cape note inside route
+PASS: sunlit_cape note inside route
+PASS: sunlit_cape note inside route
+PASS: sunlit_cape note inside route
+PASS: Unique challenge sunlit_cape / F160
+PASS: Inclusive gold boundary
+PASS: Silver and bronze boundaries
+PASS: Invalid times cannot earn medals
+PASS: Unmeasured targets explicitly remain provisional
+PASS: Unique challenge sunlit_cape / R200
+PASS: Inclusive gold boundary
+PASS: Silver and bronze boundaries
+PASS: Invalid times cannot earn medals
+PASS: Unmeasured targets explicitly remain provisional
+PASS: Unique challenge sunlit_cape / A240
+PASS: Inclusive gold boundary
+PASS: Silver and bronze boundaries
+PASS: Invalid times cannot earn medals
+PASS: Unmeasured targets explicitly remain provisional
+PASS: misty_highlands is a nonintersecting driveable route
+PASS: misty_highlands meets authored length
+PASS: misty_highlands has three to six sectors
+PASS: misty_highlands sectors divide route distance evenly
+PASS: misty_highlands sectors divide route distance evenly
+PASS: misty_highlands sectors divide route distance evenly
+PASS: misty_highlands note inside route
+PASS: misty_highlands note inside route
+PASS: misty_highlands note inside route
+PASS: misty_highlands note inside route
+PASS: misty_highlands note inside route
+PASS: misty_highlands note inside route
+PASS: misty_highlands note inside route
+PASS: misty_highlands note inside route
+PASS: misty_highlands note inside route
+PASS: misty_highlands note inside route
+PASS: misty_highlands note inside route
+PASS: misty_highlands note inside route
+PASS: misty_highlands note inside route
+PASS: misty_highlands note inside route
+PASS: misty_highlands note inside route
+PASS: misty_highlands note inside route
+PASS: misty_highlands note inside route
+PASS: misty_highlands note inside route
+PASS: misty_highlands note inside route
+PASS: misty_highlands note inside route
+PASS: misty_highlands note inside route
+PASS: misty_highlands note inside route
+PASS: misty_highlands note inside route
+PASS: misty_highlands note inside route
+PASS: misty_highlands note inside route
+PASS: misty_highlands note inside route
+PASS: misty_highlands note inside route
+PASS: Unique challenge misty_highlands / F160
+PASS: Inclusive gold boundary
+PASS: Silver and bronze boundaries
+PASS: Invalid times cannot earn medals
+PASS: Unmeasured targets explicitly remain provisional
+PASS: Unique challenge misty_highlands / R200
+PASS: Inclusive gold boundary
+PASS: Silver and bronze boundaries
+PASS: Invalid times cannot earn medals
+PASS: Unmeasured targets explicitly remain provisional
+PASS: Unique challenge misty_highlands / A240
+PASS: Inclusive gold boundary
+PASS: Silver and bronze boundaries
+PASS: Invalid times cannot earn medals
+PASS: Unmeasured targets explicitly remain provisional
+PASS: Coast does not inherit sunset mud or puddles
+PASS: Coast does not inherit sunset narrowing or jump
+PASS: Vehicle geometry and dynamics share dimensions
+PASS: Each car owns its power and drivetrain
+PASS: Current base powers retain loose-ground assistance
+PASS: Catalog resources are isolated per session
+PASS: Vehicle geometry and dynamics share dimensions
+PASS: Each car owns its power and drivetrain
+PASS: Current base powers retain loose-ground assistance
+PASS: Catalog resources are isolated per session
+PASS: Vehicle geometry and dynamics share dimensions
+PASS: Each car owns its power and drivetrain
+PASS: Current base powers retain loose-ground assistance
+PASS: Catalog resources are isolated per session
+PASS: Unknown content rejected
+TEST RESULT: 154 checks, 0 failures

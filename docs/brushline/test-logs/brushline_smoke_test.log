@@ -1,0 +1,23 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Fixed physics step is 120 Hz
+PASS: Jolt backend is configured
+PASS: Physics interpolation is enabled
+PASS: Input action: throttle
+PASS: Input action: brake
+PASS: Input action: steer_left
+PASS: Input action: steer_right
+PASS: Input action: handbrake
+PASS: Input action: shift_up
+PASS: Input action: shift_down
+PASS: Input action: reset_vehicle
+PASS: Input action: change_camera
+PASS: Input action: toggle_telemetry
+Brushline Rally environment started | Godot 4.7.2-stable (official) | Jolt Physics | physics 120 Hz
+PASS: Collision probe starts above ground
+PASS: Jolt backend is active
+PASS: Rigid body rests on the ground
+PASS: Rigid body settles without continuous movement
+PASS: Terrain raycast reports contact
+PASS: Terrain contact matches the visual surface
+SMOKE TEST PASSED

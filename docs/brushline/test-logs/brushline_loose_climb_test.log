@@ -1,0 +1,27 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Assistance cannot shift up on inflated RPM alone
+PASS: Sustained driven-wheel slip progressively reduces engine input
+PASS: Returning to asphalt smoothly restores full driver input
+PASS: Airborne powered axle cannot activate assistance or shift
+PASS: Low-RPM launch recovers torque instead of disengaging the clutch
+PASS: Loose-ground assistance preserves manual gear selection
+LOOSE CLIMB: {"duration":20,"gear":2,"grade":0.1,"late_slip":0.175147220363689,"max_gear":2,"power_ps":220.0,"speed_at_20":61.8399398803711,"speed_kmh":61.8399398803711,"stuck_limiter_seconds":0.0,"surface":1,"vehicle":"F160"}
+PASS: F160 accelerates uphill and upshifts on gravel
+PASS: F160 avoids sustained first-gear limiter wheelspin
+LOOSE CLIMB: {"duration":20,"gear":3,"grade":0.1,"late_slip":0.127437739517178,"max_gear":3,"power_ps":240.0,"speed_at_20":101.514887237549,"speed_kmh":101.514887237549,"stuck_limiter_seconds":0.0,"surface":1,"vehicle":"R200"}
+PASS: R200 accelerates uphill and upshifts on gravel
+PASS: R200 avoids sustained first-gear limiter wheelspin
+LOOSE CLIMB: {"duration":20,"gear":4,"grade":0.1,"late_slip":0.0554119936338573,"max_gear":4,"power_ps":288.0,"speed_at_20":105.768402099609,"speed_kmh":105.768402099609,"stuck_limiter_seconds":0.0,"surface":1,"vehicle":"A240"}
+PASS: A240 accelerates uphill and upshifts on gravel
+PASS: A240 avoids sustained first-gear limiter wheelspin
+LOOSE CLIMB: {"duration":40,"gear":1,"grade":0.1,"late_slip":0.181906097078739,"max_gear":1,"power_ps":220.0,"speed_at_20":34.2658355712891,"speed_kmh":42.6858604431152,"stuck_limiter_seconds":0.0,"surface":2,"vehicle":"F160"}
+PASS: F160 keeps accelerating on the muddy incline
+PASS: F160 avoids sustained first-gear limiter wheelspin
+LOOSE CLIMB: {"duration":40,"gear":2,"grade":0.1,"late_slip":0.181222201735892,"max_gear":2,"power_ps":240.0,"speed_at_20":48.9563415527344,"speed_kmh":66.7838768005371,"stuck_limiter_seconds":0.0,"surface":2,"vehicle":"R200"}
+PASS: R200 keeps accelerating on the muddy incline
+PASS: R200 avoids sustained first-gear limiter wheelspin
+LOOSE CLIMB: {"duration":40,"gear":3,"grade":0.1,"late_slip":0.100598242401941,"max_gear":3,"power_ps":288.0,"speed_at_20":101.105296325684,"speed_kmh":103.606697845459,"stuck_limiter_seconds":0.0,"surface":2,"vehicle":"A240"}
+PASS: A240 keeps accelerating on the muddy incline
+PASS: A240 avoids sustained first-gear limiter wheelspin
+TEST RESULT: 18 checks, 0 failures

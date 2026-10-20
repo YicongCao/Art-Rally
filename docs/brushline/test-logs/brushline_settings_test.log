@@ -1,0 +1,10 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Settings clamp invalid values and restore safe defaults
+PASS: Settings save to local config
+PASS: Settings round-trip without modifying project resources
+PASS: Default input settings preserve approved baseline
+PASS: Light assistance keeps its faster throttle response
+PASS: Pause menu is keyboard/gamepad focusable
+PASS: Closing menu restores gameplay surface
+TEST RESULT: 7 checks, 0 failures

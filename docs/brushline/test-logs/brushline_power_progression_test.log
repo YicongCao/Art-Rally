@@ -1,0 +1,100 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: New players start with standard power
+PASS: Separate challenge and ghost identity: sunset_ridge@7|F160@fp4|time-trial-4
+PASS: Rated power and actual torque scale together
+PASS: Power variants retain vehicle mass and drivetrain
+PASS: Separate challenge and ghost identity: sunset_ridge@7|F160@fp4-p150|time-trial-4
+PASS: Rated power and actual torque scale together
+PASS: Power variants retain vehicle mass and drivetrain
+PASS: Separate challenge and ghost identity: sunset_ridge@7|F160@fp4-p200|time-trial-4
+PASS: Rated power and actual torque scale together
+PASS: Power variants retain vehicle mass and drivetrain
+PASS: Separate challenge and ghost identity: sunset_ridge@7|R200@fp3|time-trial-4
+PASS: Rated power and actual torque scale together
+PASS: Power variants retain vehicle mass and drivetrain
+PASS: Separate challenge and ghost identity: sunset_ridge@7|R200@fp3-p150|time-trial-4
+PASS: Rated power and actual torque scale together
+PASS: Power variants retain vehicle mass and drivetrain
+PASS: Separate challenge and ghost identity: sunset_ridge@7|R200@fp3-p200|time-trial-4
+PASS: Rated power and actual torque scale together
+PASS: Power variants retain vehicle mass and drivetrain
+PASS: Separate challenge and ghost identity: sunset_ridge@7|A240@fp3|time-trial-4
+PASS: Rated power and actual torque scale together
+PASS: Power variants retain vehicle mass and drivetrain
+PASS: Separate challenge and ghost identity: sunset_ridge@7|A240@fp3-p150|time-trial-4
+PASS: Rated power and actual torque scale together
+PASS: Power variants retain vehicle mass and drivetrain
+PASS: Separate challenge and ghost identity: sunset_ridge@7|A240@fp3-p200|time-trial-4
+PASS: Rated power and actual torque scale together
+PASS: Power variants retain vehicle mass and drivetrain
+PASS: Separate challenge and ghost identity: sunlit_cape@7|F160@fp4|time-trial-4
+PASS: Rated power and actual torque scale together
+PASS: Power variants retain vehicle mass and drivetrain
+PASS: Separate challenge and ghost identity: sunlit_cape@7|F160@fp4-p150|time-trial-4
+PASS: Rated power and actual torque scale together
+PASS: Power variants retain vehicle mass and drivetrain
+PASS: Separate challenge and ghost identity: sunlit_cape@7|F160@fp4-p200|time-trial-4
+PASS: Rated power and actual torque scale together
+PASS: Power variants retain vehicle mass and drivetrain
+PASS: Separate challenge and ghost identity: sunlit_cape@7|R200@fp3|time-trial-4
+PASS: Rated power and actual torque scale together
+PASS: Power variants retain vehicle mass and drivetrain
+PASS: Separate challenge and ghost identity: sunlit_cape@7|R200@fp3-p150|time-trial-4
+PASS: Rated power and actual torque scale together
+PASS: Power variants retain vehicle mass and drivetrain
+PASS: Separate challenge and ghost identity: sunlit_cape@7|R200@fp3-p200|time-trial-4
+PASS: Rated power and actual torque scale together
+PASS: Power variants retain vehicle mass and drivetrain
+PASS: Separate challenge and ghost identity: sunlit_cape@7|A240@fp3|time-trial-4
+PASS: Rated power and actual torque scale together
+PASS: Power variants retain vehicle mass and drivetrain
+PASS: Separate challenge and ghost identity: sunlit_cape@7|A240@fp3-p150|time-trial-4
+PASS: Rated power and actual torque scale together
+PASS: Power variants retain vehicle mass and drivetrain
+PASS: Separate challenge and ghost identity: sunlit_cape@7|A240@fp3-p200|time-trial-4
+PASS: Rated power and actual torque scale together
+PASS: Power variants retain vehicle mass and drivetrain
+PASS: Separate challenge and ghost identity: misty_highlands@8|F160@fp4|time-trial-4
+PASS: Rated power and actual torque scale together
+PASS: Power variants retain vehicle mass and drivetrain
+PASS: Separate challenge and ghost identity: misty_highlands@8|F160@fp4-p150|time-trial-4
+PASS: Rated power and actual torque scale together
+PASS: Power variants retain vehicle mass and drivetrain
+PASS: Separate challenge and ghost identity: misty_highlands@8|F160@fp4-p200|time-trial-4
+PASS: Rated power and actual torque scale together
+PASS: Power variants retain vehicle mass and drivetrain
+PASS: Separate challenge and ghost identity: misty_highlands@8|R200@fp3|time-trial-4
+PASS: Rated power and actual torque scale together
+PASS: Power variants retain vehicle mass and drivetrain
+PASS: Separate challenge and ghost identity: misty_highlands@8|R200@fp3-p150|time-trial-4
+PASS: Rated power and actual torque scale together
+PASS: Power variants retain vehicle mass and drivetrain
+PASS: Separate challenge and ghost identity: misty_highlands@8|R200@fp3-p200|time-trial-4
+PASS: Rated power and actual torque scale together
+PASS: Power variants retain vehicle mass and drivetrain
+PASS: Separate challenge and ghost identity: misty_highlands@8|A240@fp3|time-trial-4
+PASS: Rated power and actual torque scale together
+PASS: Power variants retain vehicle mass and drivetrain
+PASS: Separate challenge and ghost identity: misty_highlands@8|A240@fp3-p150|time-trial-4
+PASS: Rated power and actual torque scale together
+PASS: Power variants retain vehicle mass and drivetrain
+PASS: Separate challenge and ghost identity: misty_highlands@8|A240@fp3-p200|time-trial-4
+PASS: Rated power and actual torque scale together
+PASS: Power variants retain vehicle mass and drivetrain
+PASS: Locked variants cannot award progression
+PASS: Nonhuman gold cannot unlock power
+PASS: Nonhuman gold cannot unlock power
+PASS: Practice gold cannot unlock power
+PASS: Incomplete ghost cannot unlock power
+PASS: Standard gold unlocks all three +50% cars
+PASS: Repeated standard gold never skips to +100%
+PASS: Failed save cannot grant an unlock
+PASS: Gold with another car/stage at +50% unlocks all +100% cars
+PASS: Top-tier gold is capped at +100%
+PASS: Three power tiers preserve independent best ghosts
+PASS: Last chosen power tier persists
+PASS: Restart restores unlocks and selection
+PASS: Old earned gold migrates the +50% milestone without replacing old records
+PASS: Changed surface rules isolate old times and ghosts
+TEST RESULT: 97 checks, 0 failures

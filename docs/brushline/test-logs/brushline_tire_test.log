@@ -1,0 +1,15 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Airborne tire produces no contact force
+PASS: Airborne wheel still receives drive torque
+PASS: Combined slip stays inside friction circle and opposes lateral slip
+PASS: Low-speed brake solve remains finite without wheel reversal
+PASS: Tire has a progressive peak and nonzero sliding plateau
+PASS: Tire curve is sign-symmetric
+PASS: Load sensitivity increases force sublinearly
+PASS: Relaxation length delays force buildup at speed
+PASS: Anti-roll bar transfers support without creating total load
+PASS: Anti-roll bar cannot generate tensile road contact
+PASS: Tire force bounds hold across forward reverse rest and high wheelspin
+PASS: Solved left/right tire responses remain symmetric across velocity and load sweep
+TEST RESULT: 12 checks, 0 failures

@@ -1,0 +1,13 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Ordered physical gate crossings finish the challenge
+PASS: Exactly three splits emitted
+PASS: Recovery penalty is part of split clock
+PASS: Final split equals scored total
+PASS: Restart clears all split and penalty state
+PASS: Practice recovery carries no score penalty
+PASS: Remapped original key no longer activates action
+PASS: Mapped throttle reaches the actual driving filter
+PASS: Mapped brake reaches the actual driving filter
+PASS: Official challenge blocks mechanical developer shortcut
+TEST RESULT: 10 checks, 0 failures

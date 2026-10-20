@@ -1,0 +1,562 @@
+[
+  {
+    "test": "action_hierarchy_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 0.86,
+    "native": false,
+    "evidence": "test-logs/brushline_action_hierarchy_test.log"
+  },
+  {
+    "test": "atmosphere_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 2.71,
+    "native": false,
+    "evidence": "test-logs/brushline_atmosphere_test.log"
+  },
+  {
+    "test": "autopilot_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 9.6,
+    "native": false,
+    "evidence": "test-logs/brushline_autopilot_test.log"
+  },
+  {
+    "test": "brake_entry_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 22.72,
+    "native": false,
+    "evidence": "test-logs/brushline_brake_entry_test.log"
+  },
+  {
+    "test": "bridge_hop_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 18.16,
+    "native": false,
+    "evidence": "test-logs/brushline_bridge_hop_test.log"
+  },
+  {
+    "test": "brushline_assets_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 0.36,
+    "native": false,
+    "evidence": "test-logs/brushline_brushline_assets_test.log"
+  },
+  {
+    "test": "brushline_cliff_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 17.41,
+    "native": false,
+    "initial_passed": true,
+    "final_log": "logs/brushline_cliff_test.log",
+    "evidence": "test-logs/brushline_cliff_test.log"
+  },
+  {
+    "test": "brushline_profile_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 0.24,
+    "native": false,
+    "evidence": "test-logs/brushline_brushline_profile_test.log"
+  },
+  {
+    "test": "camera_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 0.25,
+    "native": false,
+    "evidence": "test-logs/brushline_camera_test.log"
+  },
+  {
+    "test": "checkpoint_body_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 0.25,
+    "native": false,
+    "evidence": "test-logs/brushline_checkpoint_body_test.log"
+  },
+  {
+    "test": "cinematic_polish_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 23.7,
+    "native": false,
+    "evidence": "test-logs/brushline_cinematic_polish_test.log"
+  },
+  {
+    "test": "cinematic_transition_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 0.73,
+    "native": false,
+    "evidence": "test-logs/brushline_cinematic_transition_test.log"
+  },
+  {
+    "test": "comic_presentation_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 0.35,
+    "native": false,
+    "evidence": "test-logs/brushline_comic_presentation_test.log"
+  },
+  {
+    "test": "compliant_vehicle_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 29.17,
+    "native": false,
+    "evidence": "test-logs/brushline_compliant_vehicle_test.log"
+  },
+  {
+    "test": "contact_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 12.69,
+    "native": false,
+    "evidence": "test-logs/brushline_contact_test.log"
+  },
+  {
+    "test": "content_catalog_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 0.25,
+    "native": false,
+    "evidence": "test-logs/brushline_content_catalog_test.log"
+  },
+  {
+    "test": "debug_panel_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 18.82,
+    "native": false,
+    "evidence": "test-logs/brushline_debug_panel_test.log"
+  },
+  {
+    "test": "drive_modes_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 43.6,
+    "native": false,
+    "evidence": "test-logs/brushline_drive_modes_test.log"
+  },
+  {
+    "test": "drivetrain_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 0.27,
+    "native": false,
+    "evidence": "test-logs/brushline_drivetrain_test.log"
+  },
+  {
+    "test": "driving_polish_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 16.41,
+    "native": false,
+    "evidence": "test-logs/brushline_driving_polish_test.log"
+  },
+  {
+    "test": "dynamics_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 157.94,
+    "native": false,
+    "evidence": "test-logs/brushline_dynamics_test.log"
+  },
+  {
+    "test": "experience_update_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 5.84,
+    "native": false,
+    "evidence": "test-logs/brushline_experience_update_test.log"
+  },
+  {
+    "test": "feedback_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 0.25,
+    "native": false,
+    "evidence": "test-logs/brushline_feedback_test.log"
+  },
+  {
+    "test": "first_playable_entry_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 0.84,
+    "native": false,
+    "initial_passed": true,
+    "final_log": "logs/brushline_first_playable_entry_test.log",
+    "evidence": "test-logs/brushline_first_playable_entry_test.log"
+  },
+  {
+    "test": "first_playable_flow_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 11.1,
+    "native": false,
+    "initial_passed": true,
+    "final_log": "logs/brushline_first_playable_flow_test.log",
+    "evidence": "test-logs/brushline_first_playable_flow_test.log"
+  },
+  {
+    "test": "first_playable_rules_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 0.24,
+    "native": false,
+    "evidence": "test-logs/brushline_first_playable_rules_test.log"
+  },
+  {
+    "test": "flag_render_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 1.27,
+    "native": true,
+    "evidence": "test-logs/brushline_flag_render_test.log"
+  },
+  {
+    "test": "flare_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 0.15,
+    "native": false,
+    "evidence": "test-logs/brushline_flare_test.log"
+  },
+  {
+    "test": "gravel_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 2.86,
+    "native": false,
+    "evidence": "test-logs/brushline_gravel_test.log"
+  },
+  {
+    "test": "highland_rockfall_test.gd",
+    "passed": true,
+    "exit": 1,
+    "seconds": 13.48,
+    "native": false,
+    "initial_passed": false,
+    "final_log": "logs/brushline_rockfall_diagnostic.log",
+    "evidence": "test-logs/brushline_rockfall_diagnostic.log"
+  },
+  {
+    "test": "hud_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 0.25,
+    "native": false,
+    "evidence": "test-logs/brushline_hud_test.log"
+  },
+  {
+    "test": "input_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 0.14,
+    "native": false,
+    "evidence": "test-logs/brushline_input_test.log"
+  },
+  {
+    "test": "loose_climb_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 192.32,
+    "native": false,
+    "evidence": "test-logs/brushline_loose_climb_test.log"
+  },
+  {
+    "test": "menu_controller_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 7.17,
+    "native": false,
+    "evidence": "test-logs/brushline_menu_controller_test.log"
+  },
+  {
+    "test": "patch_contact_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 10.2,
+    "native": false,
+    "evidence": "test-logs/brushline_patch_contact_test.log"
+  },
+  {
+    "test": "patch_substep_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 15.16,
+    "native": false,
+    "evidence": "test-logs/brushline_patch_substep_test.log"
+  },
+  {
+    "test": "patch_tire_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 0.16,
+    "native": false,
+    "evidence": "test-logs/brushline_patch_tire_test.log"
+  },
+  {
+    "test": "plate_identity_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 0.75,
+    "native": false,
+    "initial_passed": true,
+    "final_log": "logs/brushline_plate_identity_test.log",
+    "evidence": "test-logs/brushline_plate_identity_test.log"
+  },
+  {
+    "test": "power_gearing_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 60.17,
+    "native": false,
+    "evidence": "test-logs/brushline_power_gearing_test.log"
+  },
+  {
+    "test": "power_progression_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 0.26,
+    "native": false,
+    "evidence": "test-logs/brushline_power_progression_test.log"
+  },
+  {
+    "test": "presentation_expansion_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 21.68,
+    "native": false,
+    "evidence": "test-logs/brushline_presentation_expansion_test.log"
+  },
+  {
+    "test": "presentation_theme_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 21.45,
+    "native": false,
+    "evidence": "test-logs/brushline_presentation_theme_test.log"
+  },
+  {
+    "test": "profile_ghost_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 0.25,
+    "native": false,
+    "evidence": "test-logs/brushline_profile_ghost_test.log"
+  },
+  {
+    "test": "replay_album_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 5.92,
+    "native": false,
+    "evidence": "test-logs/brushline_replay_album_test.log"
+  },
+  {
+    "test": "route_jumps_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 27.42,
+    "native": false,
+    "evidence": "test-logs/brushline_route_jumps_test.log"
+  },
+  {
+    "test": "route_revision_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 24.42,
+    "native": false,
+    "evidence": "test-logs/brushline_route_revision_test.log"
+  },
+  {
+    "test": "screenprint_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 0.24,
+    "native": false,
+    "evidence": "test-logs/brushline_screenprint_test.log"
+  },
+  {
+    "test": "settings_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 0.24,
+    "native": false,
+    "evidence": "test-logs/brushline_settings_test.log"
+  },
+  {
+    "test": "shoulder_lod_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 8.88,
+    "native": false,
+    "evidence": "test-logs/brushline_shoulder_lod_test.log"
+  },
+  {
+    "test": "smoke_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 2.13,
+    "native": false,
+    "evidence": "test-logs/brushline_smoke_test.log"
+  },
+  {
+    "test": "stage_art_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 6.53,
+    "native": false,
+    "evidence": "test-logs/brushline_stage_art_test.log"
+  },
+  {
+    "test": "stage_geometry_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 2.07,
+    "native": false,
+    "evidence": "test-logs/brushline_stage_geometry_test.log"
+  },
+  {
+    "test": "stage_play_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 25.68,
+    "native": false,
+    "evidence": "test-logs/brushline_stage_play_test.log"
+  },
+  {
+    "test": "stage_result_store_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 0.25,
+    "native": false,
+    "evidence": "test-logs/brushline_stage_result_store_test.log"
+  },
+  {
+    "test": "stage_session_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 0.26,
+    "native": false,
+    "evidence": "test-logs/brushline_stage_session_test.log"
+  },
+  {
+    "test": "surface_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 73.52,
+    "native": false,
+    "evidence": "test-logs/brushline_surface_test.log"
+  },
+  {
+    "test": "tail_streaks_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 0.26,
+    "native": false,
+    "evidence": "test-logs/brushline_tail_streaks_test.log"
+  },
+  {
+    "test": "terrain_detail_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 22.61,
+    "native": false,
+    "evidence": "test-logs/brushline_terrain_detail_test.log"
+  },
+  {
+    "test": "tire_feedback_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 4.14,
+    "native": false,
+    "evidence": "test-logs/brushline_tire_feedback_test.log"
+  },
+  {
+    "test": "tire_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 0.16,
+    "native": false,
+    "evidence": "test-logs/brushline_tire_test.log"
+  },
+  {
+    "test": "tire_vertical_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 0.14,
+    "native": false,
+    "evidence": "test-logs/brushline_tire_vertical_test.log"
+  },
+  {
+    "test": "utility_line_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 21.89,
+    "native": false,
+    "evidence": "test-logs/brushline_utility_line_test.log"
+  },
+  {
+    "test": "v030_polish_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 0.35,
+    "native": false,
+    "evidence": "test-logs/brushline_v030_polish_test.log"
+  },
+  {
+    "test": "vehicle_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 48.14,
+    "native": false,
+    "evidence": "test-logs/brushline_vehicle_test.log"
+  },
+  {
+    "test": "visual_sample_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 4.53,
+    "native": false,
+    "evidence": "test-logs/brushline_visual_sample_test.log"
+  },
+  {
+    "test": "world_details_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 5.83,
+    "native": false,
+    "evidence": "test-logs/brushline_world_details_test.log"
+  },
+  {
+    "test": "world_test.gd",
+    "passed": true,
+    "exit": 0,
+    "seconds": 0.65,
+    "native": false,
+    "evidence": "test-logs/brushline_world_test.log"
+  },
+  {
+    "test": "brushline_menu_test.gd",
+    "passed": true,
+    "native": false,
+    "final_log": "logs/brushline_menu_test.log",
+    "evidence": "test-logs/brushline_menu_test.log"
+  },
+  {
+    "test": "brushline_demo_test.gd",
+    "passed": true,
+    "native": true,
+    "final_log": "logs/brushline-demo-native.log",
+    "evidence": "test-logs/brushline-demo-native.log"
+  }
+]

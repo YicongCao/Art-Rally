@@ -1,0 +1,8 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Visual gain independently controls finite tire squash
+PASS: Visual deformation controls cannot modify physical tire state
+PASS: F9 data exposes live tire deformation and patch dimensions
+PASS: Compliant feedback reads dissipated slip power and wet patch fraction
+PASS: Telemetry export appends compliant tire fields
+TEST RESULT: 5 checks, 0 failures

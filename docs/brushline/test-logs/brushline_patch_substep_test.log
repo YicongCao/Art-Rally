@@ -1,0 +1,5 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Four and eight tire substeps keep acceleration within two percent
+PASS: Four and eight tire substeps keep braking distance within two percent
+TEST RESULT: 2 checks, 0 failures

@@ -1,0 +1,53 @@
+[
+	{
+		"average_fps": 57.4859931389334,
+		"elapsed": 243.149999999943,
+		"finished": true,
+		"frame_p95_ms": 23.57,
+		"frame_p99_ms": 32.033,
+		"frames": 13808,
+		"physics_p95_ms": 3.805,
+		"renderer": "Apple M5 (Apple9)",
+		"resolution": [
+			1920,
+			1080
+		],
+		"stage": "sunset_ridge",
+		"vehicle": "A240",
+		"wall_seconds": 245.185945000001
+	},
+	{
+		"average_fps": 57.1935607215731,
+		"elapsed": 207.424999999976,
+		"finished": true,
+		"frame_p95_ms": 24.414,
+		"frame_p99_ms": 35.616,
+		"frames": 11686,
+		"physics_p95_ms": 3.561,
+		"renderer": "Apple M5 (Apple9)",
+		"resolution": [
+			1920,
+			1080
+		],
+		"stage": "sunlit_cape",
+		"vehicle": "A240",
+		"wall_seconds": 209.312114000001
+	},
+	{
+		"average_fps": 48.0997973045988,
+		"elapsed": 250.774999999936,
+		"finished": true,
+		"frame_p95_ms": 36.338,
+		"frame_p99_ms": 50.915,
+		"frames": 11928,
+		"physics_p95_ms": 5.136,
+		"renderer": "Apple M5 (Apple9)",
+		"resolution": [
+			1920,
+			1080
+		],
+		"stage": "misty_highlands",
+		"vehicle": "A240",
+		"wall_seconds": 252.963684000001
+	}
+]

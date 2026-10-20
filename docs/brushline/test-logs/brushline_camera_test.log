@@ -1,0 +1,8 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Camera mode 0 has finite pose and correct dashboard visibility
+PASS: Camera mode 1 has finite pose and correct dashboard visibility
+PASS: Camera mode 2 has finite pose and correct dashboard visibility
+PASS: Disabled cockpit motion adds no artificial vibration
+PASS: Cockpit steering wheel follows actual steering command
+TEST RESULT: 5 checks, 0 failures

@@ -1,0 +1,8 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Stationary car emits no aerodynamic streaks
+PASS: Both tail lights produce separate ribbons at driving speed
+PASS: A recovery teleport never draws a streak across the map
+PASS: Streak storage stays bounded during long driving
+PASS: Slow driving clears the residual fast trail
+TEST RESULT: 5 checks, 0 failures

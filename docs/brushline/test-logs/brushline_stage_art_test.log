@@ -1,0 +1,15 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: All prototype landmarks are hidden regardless of generated node names
+PASS: Every physical road chunk has a styled counterpart
+PASS: Approved vegetation and gravel cover full stage
+PASS: Legacy marker batch covers the remaining 70 percent of road
+PASS: Scenery uses bounded spatial batches instead of one draw object per placement
+PASS: All authored spectator groups are built
+PASS: Near-road obstacles retain shapes in a bounded number of static bodies
+PASS: Scenery does not intrude into driveable road center
+PASS: Spectator safety volume is active
+PASS: Safety capsule protects both ends of spectator row
+PASS: Spectator protection leaves normal road unobstructed
+PASS: Low setting hides small detail without deleting collision
+TEST RESULT: 12 checks, 0 failures

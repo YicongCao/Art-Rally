@@ -1,0 +1,10 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: A 1cm body overlap at the outer inflatable edge is credited
+PASS: A body entirely outside the inflatable is rejected
+PASS: A car flying high over the checkpoint is rejected
+PASS: Reverse travel cannot credit a gate
+PASS: Proximity without body-plane overlap is rejected
+PASS: An overlap already present advances when moving forward
+PASS: Runtime starts timing when the front bumper enters, before the car centre
+TEST RESULT: 7 checks, 0 failures

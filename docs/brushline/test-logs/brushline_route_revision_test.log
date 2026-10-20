@@ -1,0 +1,44 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: sunset_ridge has no crossing, unsafe grade or discontinuous frames
+PASS: sunset_ridge isolates old scores and ghosts after geometry changes
+PASS: sunset_ridge follows its authored climb/descent
+PASS: sunset_ridge width changes are visible and continuous
+PASS: sunset_ridge contains several distinct switchbacks
+PASS: sunset_ridge caution call corresponds to an actual constriction
+PASS: sunset_ridge caution call corresponds to an actual constriction
+PASS: sunset_ridge cut call has a widened driving corridor
+PASS: sunset_ridge caution call corresponds to an actual constriction
+PASS: sunset_ridge cut call has a widened driving corridor
+PASS: sunset_ridge caution call corresponds to an actual constriction
+PASS: Forest has five authored jumps and rolling connectors
+PASS: sunset_ridge has medical support and marshals
+PASS: sunset_ridge scenery collision leaves the full vehicle corridor clear
+PASS: sunset_ridge background floor cannot cover any route elevation
+PASS: Forest has a natural stone arch
+PASS: sunlit_cape has no crossing, unsafe grade or discontinuous frames
+PASS: sunlit_cape isolates old scores and ghosts after geometry changes
+PASS: sunlit_cape follows its authored climb/descent
+PASS: sunlit_cape width changes are visible and continuous
+PASS: sunlit_cape contains several distinct switchbacks
+PASS: sunlit_cape caution call corresponds to an actual constriction
+PASS: sunlit_cape cut call has a widened driving corridor
+PASS: sunlit_cape caution call corresponds to an actual constriction
+PASS: sunlit_cape cut call has a widened driving corridor
+PASS: sunlit_cape has medical support and marshals
+PASS: sunlit_cape scenery collision leaves the full vehicle corridor clear
+PASS: Coastal finale includes sailing bay, beach and spectator overlook
+PASS: misty_highlands has no crossing, unsafe grade or discontinuous frames
+PASS: misty_highlands isolates old scores and ghosts after geometry changes
+PASS: misty_highlands follows its authored climb/descent
+PASS: misty_highlands width changes are visible and continuous
+PASS: misty_highlands contains several distinct switchbacks
+PASS: misty_highlands caution call corresponds to an actual constriction
+PASS: misty_highlands cut call has a widened driving corridor
+PASS: misty_highlands caution call corresponds to an actual constriction
+PASS: misty_highlands cut call has a widened driving corridor
+PASS: misty_highlands has medical support and marshals
+PASS: misty_highlands scenery collision leaves the full vehicle corridor clear
+PASS: misty_highlands background floor cannot cover any route elevation
+PASS: Summit and clear foreground morning light exist
+TEST RESULT: 41 checks, 0 failures

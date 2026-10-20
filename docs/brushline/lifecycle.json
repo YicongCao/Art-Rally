@@ -1,0 +1,72 @@
+[
+	{
+		"cycle": 1,
+		"memory": 226525402,
+		"nodes": 81.0,
+		"orphans": 0.0,
+		"resources": 165.0
+	},
+	{
+		"cycle": 2,
+		"memory": 227330466,
+		"nodes": 81.0,
+		"orphans": 0.0,
+		"resources": 165.0
+	},
+	{
+		"cycle": 3,
+		"memory": 227344710,
+		"nodes": 81.0,
+		"orphans": 0.0,
+		"resources": 165.0
+	},
+	{
+		"cycle": 4,
+		"memory": 227376178,
+		"nodes": 81.0,
+		"orphans": 0.0,
+		"resources": 165.0
+	},
+	{
+		"cycle": 5,
+		"memory": 227377182,
+		"nodes": 81.0,
+		"orphans": 0.0,
+		"resources": 165.0
+	},
+	{
+		"cycle": 6,
+		"memory": 227377906,
+		"nodes": 81.0,
+		"orphans": 0.0,
+		"resources": 165.0
+	},
+	{
+		"cycle": 7,
+		"memory": 227378702,
+		"nodes": 81.0,
+		"orphans": 0.0,
+		"resources": 165.0
+	},
+	{
+		"cycle": 8,
+		"memory": 227440866,
+		"nodes": 81.0,
+		"orphans": 0.0,
+		"resources": 165.0
+	},
+	{
+		"cycle": 9,
+		"memory": 227441590,
+		"nodes": 81.0,
+		"orphans": 0.0,
+		"resources": 165.0
+	},
+	{
+		"cycle": 10,
+		"memory": 227442410,
+		"nodes": 81.0,
+		"orphans": 0.0,
+		"resources": 165.0
+	}
+]

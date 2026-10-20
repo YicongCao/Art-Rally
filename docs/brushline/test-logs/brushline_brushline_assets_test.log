@@ -1,0 +1,43 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: checkpoint imports visible authored meshes
+PASS: checkpoint presentation does not alter vehicle physics
+PASS: balloon imports visible authored meshes
+PASS: balloon presentation does not alter vehicle physics
+PASS: helicopter imports visible authored meshes
+PASS: helicopter presentation does not alter vehicle physics
+PASS: sailboat imports visible authored meshes
+PASS: sailboat presentation does not alter vehicle physics
+PASS: service_station imports visible authored meshes
+PASS: service_station presentation does not alter vehicle physics
+PASS: marshal imports visible authored meshes
+PASS: marshal presentation does not alter vehicle physics
+PASS: marshal has an animated shoulder and connected hand/flag
+PASS: spectator imports visible authored meshes
+PASS: spectator presentation does not alter vehicle physics
+PASS: spectator has an animated shoulder and connected hand/flag
+PASS: reindeer imports visible authored meshes
+PASS: reindeer presentation does not alter vehicle physics
+PASS: reindeer authored limbs stay attached in world space
+PASS: bear imports visible authored meshes
+PASS: bear presentation does not alter vehicle physics
+PASS: bear authored limbs stay attached in world space
+PASS: zebra imports visible authored meshes
+PASS: zebra presentation does not alter vehicle physics
+PASS: zebra authored limbs stay attached in world space
+PASS: ostrich imports visible authored meshes
+PASS: ostrich presentation does not alter vehicle physics
+PASS: ostrich authored limbs stay attached in world space
+PASS: kangaroo imports visible authored meshes
+PASS: kangaroo presentation does not alter vehicle physics
+PASS: kangaroo authored limbs stay attached in world space
+PASS: F160 retains emissive rear lenses at all LODs
+PASS: R200 retains emissive rear lenses at all LODs
+PASS: A240 retains emissive rear lenses at all LODs
+PASS: wordmark.svg imports without external dependencies
+PASS: icon.svg imports without external dependencies
+PASS: banner.png imports without external dependencies
+PASS: stage-artbook.png imports without external dependencies
+PASS: car-artbook.png imports without external dependencies
+PASS: road-wear.png imports without external dependencies
+TEST RESULT: 40 checks, 0 failures

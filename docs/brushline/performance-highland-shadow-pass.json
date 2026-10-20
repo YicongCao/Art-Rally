@@ -1,0 +1,19 @@
+[
+	{
+		"average_fps": 44.7983915711952,
+		"elapsed": 250.774999999936,
+		"finished": true,
+		"frame_p95_ms": 39.313,
+		"frame_p99_ms": 50.165,
+		"frames": 11109,
+		"physics_p95_ms": 2.942,
+		"renderer": "Apple M5 (Apple9)",
+		"resolution": [
+			1920,
+			1080
+		],
+		"stage": "misty_highlands",
+		"vehicle": "A240",
+		"wall_seconds": 252.964829999999
+	}
+]

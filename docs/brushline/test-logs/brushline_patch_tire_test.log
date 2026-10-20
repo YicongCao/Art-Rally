@@ -1,0 +1,11 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Patch brush produces no tangential force at zero slip
+PASS: Patch brush force signs follow longitudinal slip and lateral angle
+PASS: Distributed local friction limits preserve the global capacity on uniform asphalt
+PASS: Transport through the patch creates a finite pneumatic aligning moment
+PASS: Mixed-surface patch integrates local grip without averaging away the low-grip node
+PASS: Analytic patch relaxation builds finite longitudinal and lateral states
+PASS: Aligning moment is bounded and reported slip power is dissipative
+PASS: Airborne wheel clears stale patch shear force
+TEST RESULT: 8 checks, 0 failures

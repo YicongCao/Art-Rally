@@ -1,0 +1,14 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: sunset_ridge has continuous 1.2m shoulders on both sides, across width/surface changes
+PASS: sunset_ridge has ten crowd groups safely outside all nearby driving corridors
+PASS: sunlit_cape has continuous 1.2m shoulders on both sides, across width/surface changes
+PASS: sunlit_cape has ten crowd groups safely outside all nearby driving corridors
+PASS: misty_highlands has continuous 1.2m shoulders on both sides, across width/surface changes
+PASS: misty_highlands has ten crowd groups safely outside all nearby driving corridors
+PASS: Near and distant tree visibility grows exactly 30%
+PASS: Roadside detail visibility grows 30% too
+OFFROAD SLIDE before=(5.898886, 21.36891) after=(4.092894, 15.37313)
+PASS: Revised grass reduces lateral excursion and braking distance in actual vehicle physics
+PASS: Offroad recovery remains physically stable
+TEST RESULT: 10 checks, 0 failures

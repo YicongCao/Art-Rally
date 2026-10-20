@@ -1,0 +1,9 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Flare activates only when light projects near viewing direction
+PASS: Projected solar position follows camera rotation rather than fixed screen art
+PASS: Rear-facing sun fades flare to zero
+PASS: Off-axis light cannot produce ghosts
+PASS: Lens flare can be disabled independently
+PASS: Graybox comparison removes optical overlay
+TEST RESULT: 6 checks, 0 failures

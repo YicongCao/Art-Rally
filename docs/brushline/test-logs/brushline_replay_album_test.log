@@ -1,0 +1,30 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Eligible new best and ghost persist together
+PASS: Compatible fastest ghost reloads and is enabled by default
+PASS: Personal best renders during driving with no collision
+PASS: Overlapping ghost fades to protect the driver's view
+PASS: Another car cannot load this record
+PASS: Another horsepower specification cannot load this record
+PASS: Result background starts TV-follow replay while physics stays paused
+PASS: Replay suspends the live engine loops and wheel feedback
+PASS: A saved personal record triggers its title confetti
+PASS: Render-time replay cannot receive a second physics interpolation pass
+PASS: Replay camera keeps its sightline clear of scenery and tree crowns
+PASS: Four replay camera positions differ
+PASS: TV follow keeps its observation side instead of automatic cuts
+PASS: Replay reconstructs tire tracks on the physical road
+PASS: Replay reconstructs wheel dust from ground contact
+PASS: Recovery/seek clears trails without a teleport streak
+PASS: Recovery penalty gap hides replay car without interpolating a teleport
+PASS: Car reappears after recovery gap
+PASS: Replay pause holds time and never advances vehicle physics
+PASS: Immersive replay hides result text and keeps camera controls
+PASS: Controller cancel leaves immersive replay and restores result focus
+PASS: Retry removes replay and restores actual driving
+PASS: Aerial image and metadata save to the local album
+PASS: Album survives re-instantiation and decodes the stored photograph
+PASS: Album rejects paths outside its photo directory
+PASS: Title gallery reads the current player's saved album
+PASS: Gallery opens an individual photograph
+TEST RESULT: 27 checks, 0 failures

@@ -1,0 +1,19 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Full-throttle run reaches 80 km/h and shifts automatically
+PASS: 80 km/h braking stops within a bounded engineering envelope
+PASS: Braking produces bounded chassis pitch
+PASS: High-speed braking transitions to stable parked contact
+PASS: 25 m target skidpad converges to a bounded turn radius
+PASS: Right-hand turn transfers load to outside left wheels
+PASS: Handbrake slows rear wheels without locking front axle
+PASS: Slalom responds both ways with bounded roll
+PASS: Binary keyboard input with assistance completes repeated low-speed slalom
+PASS: Coasting drivetrain and rolling resistance remove energy
+PASS: Unbraked car remains at rest after braking without stale tire memory
+PASS: Single-wheel bump excites suspension without tunneling or explosion
+PASS: Continuous undulations remain bounded across repeated contacts
+PASS: Ramp launches vehicle and all four contacts recover after landing
+PASS: Overturned vehicle reset clears dynamic state
+DYNAMICS METRICS: {"brake_80_distance_m":25.5195846557617,"brake_max_pitch_deg":2.58201086241122,"circle_radius_m":26.3366897415394,"circle_roll_deg":1.38382225921909,"circle_speed_mps":7.91837930679321,"keyboard_slalom_crossings":4,"single_bump_travel_difference_m":0.0933132672309875,"vehicle_callback_p95_ms":5.273,"zero_to_80_seconds":6.11666666666667}
+TEST RESULT: 15 checks, 0 failures

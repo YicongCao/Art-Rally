@@ -1,0 +1,16 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Test ground builds shared visual and collision geometry
+PASS: Driveable surface at (0.0, 0.0, 12.0)
+PASS: Driveable surface at (0.0, 0.0, -600.0)
+PASS: Driveable surface at (90.0, 0.0, -80.0)
+PASS: Bump exists in collision geometry
+PASS: Playable scene records telemetry on physics ticks
+PASS: Pause blocks vehicle input
+PASS: Focus loss while already paused never resumes simulation
+PASS: Explicit resume clears blocked state
+PASS: Telemetry CSV and metadata export succeeds
+PASS: Telemetry header and sample columns match
+PASS: Telemetry retention is bounded
+PASS: Wrapped telemetry exports oldest retained frame first
+TEST RESULT: 13 checks, 0 failures

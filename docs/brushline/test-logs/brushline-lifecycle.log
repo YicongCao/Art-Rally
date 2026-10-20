@@ -1,0 +1,16 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+SCENE CYCLE: { "cycle": 1, "nodes": 81.0, "orphans": 0.0, "resources": 165.0, "memory": 226525402 }
+SCENE CYCLE: { "cycle": 2, "nodes": 81.0, "orphans": 0.0, "resources": 165.0, "memory": 227330466 }
+SCENE CYCLE: { "cycle": 3, "nodes": 81.0, "orphans": 0.0, "resources": 165.0, "memory": 227344710 }
+SCENE CYCLE: { "cycle": 4, "nodes": 81.0, "orphans": 0.0, "resources": 165.0, "memory": 227376178 }
+SCENE CYCLE: { "cycle": 5, "nodes": 81.0, "orphans": 0.0, "resources": 165.0, "memory": 227377182 }
+SCENE CYCLE: { "cycle": 6, "nodes": 81.0, "orphans": 0.0, "resources": 165.0, "memory": 227377906 }
+SCENE CYCLE: { "cycle": 7, "nodes": 81.0, "orphans": 0.0, "resources": 165.0, "memory": 227378702 }
+SCENE CYCLE: { "cycle": 8, "nodes": 81.0, "orphans": 0.0, "resources": 165.0, "memory": 227440866 }
+SCENE CYCLE: { "cycle": 9, "nodes": 81.0, "orphans": 0.0, "resources": 165.0, "memory": 227441590 }
+SCENE CYCLE: { "cycle": 10, "nodes": 81.0, "orphans": 0.0, "resources": 165.0, "memory": 227442410 }
+PASS: Ten scene switches retain no scene nodes
+PASS: Ten scene switches retain no orphan nodes
+PASS: Resources remain bounded after all three themes warm up
+TEST RESULT: 3 checks, 0 failures

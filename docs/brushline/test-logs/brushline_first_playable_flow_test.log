@@ -1,0 +1,33 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Game opens at main menu
+PASS: All front-end pages build
+PASS: Vehicle confirmation opens briefing inside actual loading page
+PASS: Loading fill contains no numeric percentage
+PASS: Loading page has three authored illustration panels
+PASS: Loading page does not embed gameplay screenshots
+PASS: Menu loads a playable challenge and hides its stationary background
+PASS: Selected vehicle physics survive settings application
+PASS: Selected mass applied
+PASS: Three splits configured
+PASS: Official challenge locks mechanical tuning
+PASS: Practice cannot be toggled into an eligible run
+PASS: Pause works
+PASS: Return frees race and resumes menu
+PASS: Each of three car cards contains its own three power choices
+PASS: Power choice is grouped inside its owning car card
+PASS: Power choice is grouped inside its owning car card
+PASS: Power choice is grouped inside its owning car card
+PASS: Power choice is grouped inside its owning car card
+PASS: Power choice is grouped inside its owning car card
+PASS: Power choice is grouped inside its owning car card
+PASS: Power choice is grouped inside its owning car card
+PASS: Power choice is grouped inside its owning car card
+PASS: Power choice is grouped inside its owning car card
+PASS: Manual +50% selection survives the page rebuild
+PASS: Manual +100% selection survives the page rebuild
+PASS: Another card changes the active car and retains the previous car's power choice
+PASS: Selected +100% F160 actually loads 440 PS into gameplay
+PASS: The loaded variant is the saved recent selection
+PASS: Fresh profiles cannot select locked power, even after a previous boosted session
+TEST RESULT: 30 checks, 0 failures

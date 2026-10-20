@@ -1,0 +1,21 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Surface blending is limited to tire footprint at boundary
+PASS: Left/right wheels can sample independent materials
+PASS: Surface 0 reaches controlled braking speed
+PASS: Surface 0 brakes without instability
+PASS: Surface 1 reaches controlled braking speed
+PASS: Surface 1 brakes without instability
+PASS: Surface 2 reaches controlled braking speed
+PASS: Surface 2 brakes without instability
+PASS: Baseline material curves produce distinct braking distances
+PASS: Symmetric water slows vehicle without unilateral yaw
+PASS: Left-side immersion causes yaw toward drag side
+PASS: Water drag dissipates energy and wet grip decreases
+PASS: Airborne wheel cannot receive water resistance
+PASS: Grass and soil remain driveable rather than an invisible barrier
+PASS: Physical left and right tire contacts retain split-surface identity
+PASS: Split-surface braking yaws toward high-grip side
+PASS: Material transition is continuous without geometry-induced launch
+SURFACE METRICS: { "Asphalt": 12.37575340271, "Gravel": 13.1306037902832, "Mud": 16.3544216156006 }
+TEST RESULT: 17 checks, 0 failures

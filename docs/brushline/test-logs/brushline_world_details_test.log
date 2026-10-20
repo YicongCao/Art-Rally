@@ -1,0 +1,30 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Road mix is 60% of the saved slider level
+PASS: Both timing boundaries have checkered inflatable arches
+PASS: Five distinct wildlife models are available
+PASS: Kangaroo has a grounded landing and a visible airborne apex
+PASS: reindeer stays visible across the road
+PASS: reindeer recedes over 60 metres before fading
+PASS: reindeer retires only after a complete fade
+PASS: bear stays visible across the road
+PASS: bear recedes over 60 metres before fading
+PASS: bear retires only after a complete fade
+PASS: zebra stays visible across the road
+PASS: zebra recedes over 60 metres before fading
+PASS: zebra retires only after a complete fade
+PASS: ostrich stays visible across the road
+PASS: ostrich recedes over 60 metres before fading
+PASS: ostrich retires only after a complete fade
+PASS: kangaroo stays visible across the road
+PASS: kangaroo recedes over 60 metres before fading
+PASS: kangaroo retires only after a complete fade
+PASS: Rotor envelope peak is 150% of the old 0.5 gain
+PASS: Helicopter still respects the quiet interval between passes
+PASS: New penalty rules isolate old best times and ghosts
+PASS: Live challenge automatically advances a missed balloon
+PASS: Five-second miss is recorded as a ghost timeline gap
+PASS: Missed gate split includes its penalty
+PASS: Finish-tick miss is recorded before the final trajectory is captured
+PASS: Saved best ghost already includes the finish-tick penalty gap
+TEST RESULT: 27 checks, 0 failures

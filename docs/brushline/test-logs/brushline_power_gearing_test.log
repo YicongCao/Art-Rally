@@ -1,0 +1,55 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Interpolated engine curve delivers at most 200 PS (147.1 kW)
+PASS: Peak engine torque is 260 Nm
+PASS: Rated full-throttle torque is available after internal engine drag
+PASS: FWD wheelspin at 25 km/h cannot trigger an upshift
+PASS: FWD spinning sixth gear lifts throttle instead of over-revving a downshift
+PASS: FWD synchronization cut removes engine power under held full throttle
+PASS: FWD returns directly to useful first gear once shaft speed is safe
+PASS: FWD normally coupled acceleration still upshifts
+PASS: FWD airborne engine revs do not shift automatically
+PASS: FWD only undriven axle touching ground cannot trigger automatic shifts
+PASS: FWD handbrake inhibits automatic shifting
+PASS: FWD high actual road speed prevents an inappropriate low-RPM downshift
+PASS: FWD shaft-speed guard rejects over-rev while sliding sideways
+PASS: FWD coasting downshift uses a relaxed road-RPM target despite high engine RPM
+PASS: AWD wheelspin at 25 km/h cannot trigger an upshift
+PASS: AWD spinning sixth gear lifts throttle instead of over-revving a downshift
+PASS: AWD synchronization cut removes engine power under held full throttle
+PASS: AWD returns directly to useful first gear once shaft speed is safe
+PASS: AWD normally coupled acceleration still upshifts
+PASS: AWD airborne engine revs do not shift automatically
+PASS: AWD handbrake inhibits automatic shifting
+PASS: AWD high actual road speed prevents an inappropriate low-RPM downshift
+PASS: AWD shaft-speed guard rejects over-rev while sliding sideways
+PASS: AWD coasting downshift uses a relaxed road-RPM target despite high engine RPM
+PASS: RWD wheelspin at 25 km/h cannot trigger an upshift
+PASS: RWD spinning sixth gear lifts throttle instead of over-revving a downshift
+PASS: RWD synchronization cut removes engine power under held full throttle
+PASS: RWD returns directly to useful first gear once shaft speed is safe
+PASS: RWD normally coupled acceleration still upshifts
+PASS: RWD airborne engine revs do not shift automatically
+PASS: RWD only undriven axle touching ground cannot trigger automatic shifts
+PASS: RWD handbrake inhibits automatic shifting
+PASS: RWD high actual road speed prevents an inappropriate low-RPM downshift
+PASS: RWD shaft-speed guard rejects over-rev while sliding sideways
+PASS: RWD coasting downshift uses a relaxed road-RPM target despite high engine RPM
+PASS: FWD shift sensing ignores undriven rear wheels
+PASS: RWD shift sensing ignores undriven front wheels
+PASS: AWD handbrake sensing uses decoupled front axle
+PASS: Manual gearbox keeps driver-selected gear
+PASS: Manual shift command takes priority over automatic recovery
+PASS: FWD sustained full-throttle mud run has no high gears below 30 km/h
+PASS: FWD 200 PS car accelerates on physical mud contacts
+POWER / GEAR METRIC: layout=FWD speed_kmh=44.3452560424805 gear=1 peak_rpm=7604.14793786199
+PASS: FWD physical sixth-gear wheelspin recovers useful gearing within two seconds
+PASS: AWD sustained full-throttle mud run has no high gears below 30 km/h
+PASS: AWD 200 PS car accelerates on physical mud contacts
+POWER / GEAR METRIC: layout=AWD speed_kmh=91.9607643127441 gear=3 peak_rpm=6804.64523632343
+PASS: AWD physical sixth-gear wheelspin recovers useful gearing within two seconds
+PASS: RWD sustained full-throttle mud run has no high gears below 30 km/h
+PASS: RWD 200 PS car accelerates on physical mud contacts
+POWER / GEAR METRIC: layout=RWD speed_kmh=58.1899314880371 gear=1 peak_rpm=7603.21548634218
+PASS: RWD physical sixth-gear wheelspin recovers useful gearing within two seconds
+TEST RESULT: 49 checks, 0 failures

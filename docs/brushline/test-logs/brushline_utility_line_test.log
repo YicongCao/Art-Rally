@@ -1,0 +1,21 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: sunset_ridge has one continuous three-wire route
+PASS: sunset_ridge supports stay outside recovery corridor
+PASS: sunset_ridge supports sit on rendered terrain
+PASS: sunset_ridge wooden poles remain plausible height
+PASS: sunset_ridge sagging wires stay above terrain
+UTILITY LINE sunset_ridge poles=64 max_height=9.54999976169349
+PASS: sunlit_cape has one continuous three-wire route
+PASS: sunlit_cape supports stay outside recovery corridor
+PASS: sunlit_cape supports sit on rendered terrain
+PASS: sunlit_cape wooden poles remain plausible height
+PASS: sunlit_cape sagging wires stay above terrain
+UTILITY LINE sunlit_cape poles=58 max_height=9.54999976169349
+PASS: misty_highlands has one continuous three-wire route
+PASS: misty_highlands supports stay outside recovery corridor
+PASS: misty_highlands supports sit on rendered terrain
+PASS: misty_highlands wooden poles remain plausible height
+PASS: misty_highlands sagging wires stay above terrain
+UTILITY LINE misty_highlands poles=102 max_height=12.861524495334
+TEST RESULT: 15 checks, 0 failures

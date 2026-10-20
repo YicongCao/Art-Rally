@@ -1,0 +1,14 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: First eligible human finish creates a personal best
+PASS: A slower human finish remains in history without replacing the best
+PASS: Virtual keyboard reference has an independent best
+PASS: Two automatic input references remain separated
+PASS: Mixed takeover is retained but cannot enter a best list
+PASS: Drive layout and calibration version isolate result buckets
+PASS: Practice finish never enters persistent history
+PASS: Inconsistent elapsed penalty and total time are rejected
+PASS: Recent completion history has a fixed bound
+PASS: Result store saves a versioned local file
+PASS: Results survive a new store instance
+TEST RESULT: 11 checks, 0 failures

@@ -1,0 +1,23 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: sunset_ridge sky and shadows share the actual light direction
+PASS: sunset_ridge painted sky is enabled in the actual driving scene
+PASS: sunset_ridge no legacy cloud meshes intersect the painted sky
+PASS: sunset_ridge cloud banks drift in the running scene
+PASS: sunset_ridge cloud drift pauses with the race
+PASS: Sunset uses low oblique light for long shadows
+PASS: Sunset combines warm direct light with cooler shade
+PASS: sunlit_cape sky and shadows share the actual light direction
+PASS: sunlit_cape painted sky is enabled in the actual driving scene
+PASS: sunlit_cape no legacy cloud meshes intersect the painted sky
+PASS: sunlit_cape cloud banks drift in the running scene
+PASS: sunlit_cape cloud drift pauses with the race
+PASS: Ocean glints use the actual coastal sun
+PASS: misty_highlands sky and shadows share the actual light direction
+PASS: misty_highlands painted sky is enabled in the actual driving scene
+PASS: misty_highlands no legacy cloud meshes intersect the painted sky
+PASS: misty_highlands cloud banks drift in the running scene
+PASS: misty_highlands cloud drift pauses with the race
+PASS: Morning mist occupies the lower valley
+PASS: Morning mist retains nearby road visibility and daylight
+TEST RESULT: 20 checks, 0 failures

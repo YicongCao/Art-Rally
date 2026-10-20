@@ -1,3 +1,5 @@
+> 历史阶段记录。当前 Brushline Rally 升级的实际证据与待验收项见 [本轮验证](brushline/VALIDATION.zh-CN.md)；本文件不代表新版本已通过人工或平台验收。
+
 # 首个完整试玩版实施记录
 
 范围以 [实施计划](FIRST_PLAYABLE_PLAN.zh-CN.md) 为准。当前是可玩开发候选版，不能将下面的未验收项标记为已完成。

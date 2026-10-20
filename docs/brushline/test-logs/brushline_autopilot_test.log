@@ -1,0 +1,18 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Virtual gamepad uses the shared input filter without claiming a hardware device
+PASS: Virtual gamepad shapes axes and cannot vibrate a fake device
+PASS: Virtual keyboard uses the keyboard ramp path
+PASS: Automatic source identifies the selected virtual device
+PASS: Human takeover permanently marks a mixed run
+PASS: Repeated human input cannot count a second takeover after automation is off
+PASS: Boosted autopilot scales its pedal, not the player's engine
+PASS: Boosted keyboard uses binary keys and regulates the actual filtered pedal near half throttle
+PASS: Stage feeds production automation through the virtual keyboard path
+PASS: Route pilot publishes live progress and target speed
+PASS: Restart preserves the selected automation mode but starts fresh provenance
+PASS: Real driving input immediately takes control
+PASS: F10 enables virtual keyboard automation
+PASS: F10 cycles to virtual gamepad automation
+PASS: F10 remains available while paused and keeps the menu synchronized
+TEST RESULT: 15 checks, 0 failures

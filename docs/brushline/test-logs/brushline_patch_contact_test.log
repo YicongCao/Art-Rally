@@ -1,0 +1,10 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Patch length and area increase with elastic deflection and load
+PASS: Patch dimensions remain inside configured tread bounds
+PASS: Discrete contact-patch pressure weights normalize to one
+PASS: Weighted footprint preserves dominant material and bounded mixed properties
+PASS: Flat ground keeps the minimum five-point contact budget
+PASS: Narrow height variation promotes contact sampling above five points
+PASS: Adaptive contact crosses a narrow bump without numerical failure
+TEST RESULT: 7 checks, 0 failures

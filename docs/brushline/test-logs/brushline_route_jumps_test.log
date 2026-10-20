@@ -1,0 +1,18 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+JUMP 360.0 airtime=0.16666666666667 landed=true
+PASS: Crest 360 actually lifts all four wheels at approach speed
+PASS: Crest 360 allows a stable landing
+JUMP 850.0 airtime=0.21666666666667 landed=true
+PASS: Crest 850 actually lifts all four wheels at approach speed
+PASS: Crest 850 allows a stable landing
+JUMP 1430.0 airtime=0.23333333333333 landed=true
+PASS: Crest 1430 actually lifts all four wheels at approach speed
+PASS: Crest 1430 allows a stable landing
+JUMP 2230.0 airtime=0.225 landed=true
+PASS: Crest 2230 actually lifts all four wheels at approach speed
+PASS: Crest 2230 allows a stable landing
+JUMP 2650.0 airtime=0.125 landed=true
+PASS: Crest 2650 actually lifts all four wheels at approach speed
+PASS: Crest 2650 allows a stable landing
+TEST RESULT: 10 checks, 0 failures

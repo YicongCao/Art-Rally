@@ -1,0 +1,36 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: sunset_ridge posts cover exactly 30% of distance
+PASS: sunset_ridge post positions repeat deterministically
+PASS: sunset_ridge paired post budget stays bounded
+PASS: sunlit_cape posts cover exactly 30% of distance
+PASS: sunlit_cape post positions repeat deterministically
+PASS: sunlit_cape paired post budget stays bounded
+PASS: misty_highlands posts cover exactly 30% of distance
+PASS: misty_highlands post positions repeat deterministically
+PASS: misty_highlands paired post budget stays bounded
+PASS: A body corner can snap a post
+PASS: Nearby post outside car envelope stays intact
+PASS: Post at different height cannot be hit
+PASS: Swept body catches fast crossing without tunnelling
+PASS: Recovery teleport does not mow down posts
+PASS: Rotated body uses longitudinal rather than lateral extent
+PASS: Left/right use identical mirrored artwork at 20.0
+PASS: Arrow region fits native atlas
+PASS: Left/right use identical mirrored artwork at 40.0
+PASS: Arrow region fits native atlas
+PASS: Left/right use identical mirrored artwork at 60.0
+PASS: Arrow region fits native atlas
+PASS: Left/right use identical mirrored artwork at 90.0
+PASS: Arrow region fits native atlas
+PASS: Left/right use identical mirrored artwork at 130.0
+PASS: Arrow region fits native atlas
+PASS: Left/right use identical mirrored artwork at 170.0
+PASS: Arrow region fits native atlas
+PASS: Six bend severities have distinct silhouettes
+PASS: Driving digits use the screen-space italic renderer
+PASS: Timer fits beside the red slash
+PASS: A post fractures once into three pieces
+PASS: Debris falls on terrain without snagging the car
+PASS: Repeated impacts keep a bounded debris pool
+TEST RESULT: 33 checks, 0 failures

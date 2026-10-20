@@ -1,0 +1,14 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Unloaded compliant tire produces no normal force
+PASS: Radial force increases monotonically with deflection
+PASS: Higher pressure raises configured radial stiffness
+PASS: Implicit series solve matches the linear analytic solution
+PASS: Solved tire and suspension forces balance
+PASS: Deflection and load rise with total closure
+PASS: Loaded and effective radii remain geometrically ordered
+PASS: Radial damping is passive and finite
+PASS: Negative closure releases unilateral tire contact
+PASS: Excess closure is bounded and reported
+PASS: Wheel reset clears compliance history and restores configured radius
+TEST RESULT: 11 checks, 0 failures

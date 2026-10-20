@@ -1,0 +1,38 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Right stick reaches view input through Viewport events
+PASS: Looking preserves throttle, steering and driving source
+PASS: Radial deadzone removes camera drift
+PASS: Pause clears held look input
+PASS: Disconnect clears held look input
+PASS: Right stick changes camera pose in mode 0
+PASS: Pause freezes orbit in mode 0
+PASS: View reset restores original framing in mode 0
+PASS: Right stick changes camera pose in mode 1
+PASS: Pause freezes orbit in mode 1
+PASS: View reset restores original framing in mode 1
+PASS: Right stick changes camera pose in mode 2
+PASS: Pause freezes orbit in mode 2
+PASS: View reset restores original framing in mode 2
+PASS: AT casing retains existing spin and deformation node
+PASS: Open five-spoke rims exist on both wheel faces
+PASS: AT casing retains existing spin and deformation node
+PASS: Open five-spoke rims exist on both wheel faces
+PASS: AT casing retains existing spin and deformation node
+PASS: Open five-spoke rims exist on both wheel faces
+PASS: AT casing retains existing spin and deformation node
+PASS: Open five-spoke rims exist on both wheel faces
+PASS: Wheel decoration adds no collision or physics changes
+PASS: Selected button keeps checkmark, fill and patina
+PASS: Deselection removes the patina
+PASS: Selection ornament never captures input or duplicates
+PASS: Settings sync removes stale selected ornament
+PASS: Animated fill never overshoots actual loading progress 0.0
+PASS: Animated fill settles on actual progress 0.0
+PASS: Animated fill never overshoots actual loading progress 45.0
+PASS: Progress width grows rather than jumping 45.0
+PASS: Animated fill settles on actual progress 45.0
+PASS: Animated fill never overshoots actual loading progress 100.0
+PASS: Progress width grows rather than jumping 100.0
+PASS: Animated fill settles on actual progress 100.0
+TEST RESULT: 35 checks, 0 failures

@@ -1,0 +1,11 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Two sparse, finite-distance cloud layers leave open sky
+PASS: Sky disc cloud shading and directional light share the sun vector
+PASS: Afternoon art direction uses a 24-degree solar elevation
+PASS: Clouds stay world anchored when camera moves and turns
+PASS: Lateral camera translation produces stronger near-layer parallax
+PASS: Cloud lobes have smooth normals rather than flat shards
+PASS: Cumulus banks retain vertical volume instead of flattened disks
+PASS: Graybox comparison hides finite cloud layers
+TEST RESULT: 8 checks, 0 failures

@@ -1,0 +1,31 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Metal 4.0 - Forward+ - Using Device #0: Apple - Apple M5 (Apple9)
+
+PASS: (1280, 720) phase 0 wind 0.0: correct rendered coverage
+PASS: (1280, 720) phase 0 wind 0.4: correct rendered coverage
+PASS: (1280, 720) phase 0 wind 0.8: correct rendered coverage
+PASS: (1280, 720) phase 1 wind 0.0: correct rendered coverage
+PASS: (1280, 720) phase 1 wind 0.4: correct rendered coverage
+PASS: (1280, 720) phase 1 wind 0.8: correct rendered coverage
+PASS: (1280, 720) phase 2 wind 0.0: correct rendered coverage
+PASS: (1280, 720) phase 2 wind 0.4: correct rendered coverage
+PASS: (1280, 720) phase 2 wind 0.8: correct rendered coverage
+PASS: (1280, 800) phase 0 wind 0.0: correct rendered coverage
+PASS: (1280, 800) phase 0 wind 0.4: correct rendered coverage
+PASS: (1280, 800) phase 0 wind 0.8: correct rendered coverage
+PASS: (1280, 800) phase 1 wind 0.0: correct rendered coverage
+PASS: (1280, 800) phase 1 wind 0.4: correct rendered coverage
+PASS: (1280, 800) phase 1 wind 0.8: correct rendered coverage
+PASS: (1280, 800) phase 2 wind 0.0: correct rendered coverage
+PASS: (1280, 800) phase 2 wind 0.4: correct rendered coverage
+PASS: (1280, 800) phase 2 wind 0.8: correct rendered coverage
+PASS: (1680, 720) phase 0 wind 0.0: correct rendered coverage
+PASS: (1680, 720) phase 0 wind 0.4: correct rendered coverage
+PASS: (1680, 720) phase 0 wind 0.8: correct rendered coverage
+PASS: (1680, 720) phase 1 wind 0.0: correct rendered coverage
+PASS: (1680, 720) phase 1 wind 0.4: correct rendered coverage
+PASS: (1680, 720) phase 1 wind 0.8: correct rendered coverage
+PASS: (1680, 720) phase 2 wind 0.0: correct rendered coverage
+PASS: (1680, 720) phase 2 wind 0.4: correct rendered coverage
+PASS: (1680, 720) phase 2 wind 0.8: correct rendered coverage
+TEST RESULT: 27 checks, 0 failures

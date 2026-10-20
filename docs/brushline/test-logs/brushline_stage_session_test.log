@@ -1,0 +1,23 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Countdown arms start without starting race clock
+PASS: Reverse crossing does not start stage
+PASS: Forward start crossing begins timing
+PASS: Miss decision waits until the entire body is beyond the gate
+PASS: Missing an ordinary gate costs exactly five seconds and advances without returning
+PASS: Continuing past the missed gate never charges twice
+PASS: Reversing over a retired gate cannot erase or repeat its penalty
+PASS: Recovery adds its own five seconds without erasing the missed gate penalty
+PASS: Recovery lands behind last passed safe gate
+PASS: All ordered forward gates complete stage
+PASS: Finish freezes result
+PASS: Restart clears time penalties gates and notes
+PASS: Practice recovery does not receive timed penalty
+PASS: Reversing never replays consumed pacenotes
+PASS: Active hazard note is not immediately overwritten by a future turn
+PASS: Long teleport across a gate is not credited as physical crossing
+PASS: Practice also advances missed checkpoints without a score penalty
+PASS: Driving beside the finish cannot automatically finish a stage
+PASS: Teleporting cannot retire skipped checkpoints
+PASS: Continuous driving retires every missed checkpoint exactly once with five seconds each
+TEST RESULT: 20 checks, 0 failures

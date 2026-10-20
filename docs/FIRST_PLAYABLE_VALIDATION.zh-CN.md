@@ -1,3 +1,5 @@
+> 历史阶段记录。当前 Brushline Rally 升级的实际证据与待验收项见 [本轮验证](brushline/VALIDATION.zh-CN.md)；本文件不代表新版本已通过人工或平台验收。
+
 # 首个完整试玩候选版验收报告
 
 日期：2026-10-18。Godot 4.7.2 / Metal Forward+ / Apple M5。当前为 0.3.0-dev，发布门槛未全部通过。

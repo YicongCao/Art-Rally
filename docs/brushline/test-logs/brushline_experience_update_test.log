@@ -1,0 +1,49 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Female co-driver defaults on and FPS defaults off
+PASS: Invalid voice restores a supported default
+PASS: All configurable fields have one categorized widget
+PASS: Settings category has a persistent selected state
+PASS: Voice and FPS survive a profile reload
+PASS: female has a bundled LEFT_MEDIUM call
+PASS: female has a bundled RIGHT_MEDIUM call
+PASS: female has a bundled LEFT_TIGHT call
+PASS: female has a bundled RIGHT_TIGHT call
+PASS: female has a bundled LOGS call
+PASS: female has a bundled ROCKFALL call
+PASS: female has a bundled CAUTION_NARROW call
+PASS: female has a bundled CUT call
+PASS: female has a bundled MUD_NARROW call
+PASS: female has a bundled WATER call
+PASS: female has a bundled ASPHALT call
+PASS: female has a bundled GRAVEL call
+PASS: female has a bundled CREST_JUMP call
+PASS: female has a bundled FINISH call
+PASS: male has a bundled LEFT_MEDIUM call
+PASS: male has a bundled RIGHT_MEDIUM call
+PASS: male has a bundled LEFT_TIGHT call
+PASS: male has a bundled RIGHT_TIGHT call
+PASS: male has a bundled LOGS call
+PASS: male has a bundled ROCKFALL call
+PASS: male has a bundled CAUTION_NARROW call
+PASS: male has a bundled CUT call
+PASS: male has a bundled MUD_NARROW call
+PASS: male has a bundled WATER call
+PASS: male has a bundled ASPHALT call
+PASS: male has a bundled GRAVEL call
+PASS: male has a bundled CREST_JUMP call
+PASS: male has a bundled FINISH call
+PASS: Voice off immediately cancels playback
+PASS: Forest contains two or three wildlife events and one sound source per river
+PASS: Crossing animal appears with adequate advance distance
+PASS: Animal remains visible through the middle of its crossing
+PASS: Animal fully fades only after departing far beyond the road
+PASS: River sound rises nearby and fades away with distance
+PASS: Ordinary checkpoints do not create sector popups
+PASS: First sector shows its time and fastest-run sector delta
+PASS: An intermediate checkpoint cannot restart a sector notification
+PASS: Second sector compares its own time, not cumulative elapsed time
+PASS: Bottom controls fade out when moving
+PASS: Bottom controls fade in when stopped
+PASS: Restart clears the previous segment notification
+TEST RESULT: 46 checks, 0 failures

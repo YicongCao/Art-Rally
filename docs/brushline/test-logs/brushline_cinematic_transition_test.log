@@ -1,0 +1,11 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Tutorial action is hidden from the title menu
+PASS: Slide completes without leaving an input shield
+PASS: Shared background stays outside sliding page content
+PASS: Interrupted navigation retires stale pages and restores the latest page
+PASS: Chequered flag completely covers the scene at the swap point
+PASS: Flag exits and restores input
+PASS: Menu construction remains hidden under a fully black overlay
+PASS: Menu fades in and accepts input again
+TEST RESULT: 8 checks, 0 failures

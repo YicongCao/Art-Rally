@@ -1,6 +1,6 @@
-# Art Rally — 素材与工具名单
+# Brushline Rally — 素材与工具名单
 
-- 游戏与车辆设计、原创涂装、程序地景：Art Rally。没有汽车厂商标志、真实赞助商或第三方车型模型。
+- 游戏、程序地景及 Blender 网格自主制作；现有赛车依用户指定的真实车型及赛车涂装参考建模，品牌权利归各自权利人，不含外部下载的整车模型。
 - 主菜单、金银铜奖牌及赛道符号 SVG 图标、三主题矢量场景插画：项目原创，源文件位于 `assets/ui/icons/` 与 `scripts/game/menu_backdrop.gd`。
 - 专属车牌输入、预览和三维文字共用 Chakra Petch Bold 英文／数字字形及 Noto Sans SC 中文回退，不依赖系统字体。
 - 车辆可编辑源：`art_source/vehicles/*.blend`，导出：`assets/vehicles/*.glb`，可用 `blender --background --python scripts/generate_vehicles.py` 重建。
@@ -30,3 +30,7 @@
 
 - 三辆参考赛车由项目 Blender 脚本自主建模，参考用户提供的 GTI／Red Bull、M3 E30／Mobil 1 和 quattro S1 照片与涂装要求；没有导入第三方下载的整车模型。车厂、车型与赞助名称及标识归各自权利人所有。
 - 漫画 HUD 外壳、金色弯道箭头 atlas（`assets/ui/comic_hud/atlas.png`）和手绘云带（`assets/sky/comic/cloud-banks.png`）使用内置 image_gen 生成并实际随游戏打包；原始透明 RGBA 保留，裁区、镜像与色调适配由运行时代码完成。提示词及来源记录见仓库 `docs/art-direction/comic-hud/imagegen-prompts.md`。
+
+## Brushline Rally 开发验证版（2026-10-21）
+
+新增品牌、画册及路面插画由内置 imagegen 生成；权威矢量字标、Blender 源文件、导出流程、动画挂点和逐项用途见 [本轮素材记录](brushline/ASSETS.zh-CN.md)。上方早期“无品牌／纯程序网格”描述仅适用于对应历史阶段；当前实际内容以 0.4.0 和本节记录为准。

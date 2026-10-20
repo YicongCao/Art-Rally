@@ -1,0 +1,46 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Stylized plate font keeps Chinese fallback
+PASS: menu contains a full offline music loop
+PASS: autumn contains a full offline music loop
+PASS: coast contains a full offline music loop
+PASS: highland contains a full offline music loop
+PASS: Four scenes use distinct compositions
+PASS: sunset_ridge has multiple surfaces and normalized ratios
+PASS: sunset_ridge has 1–3 river crossings
+PASS: sunset_ridge bridge narrows the driving corridor
+PASS: sunset_ridge bridge narrows the driving corridor
+PASS: sunset_ridge surface transition has continuous grip weights
+PASS: sunset_ridge surface transition has continuous grip weights
+PASS: sunset_ridge has a visible authored balloon group
+PASS: sunset_ridge distant seabird population is correct
+PASS: sunset_ridge river and bridge geometry loads
+PASS: sunset_ridge river and bridge geometry loads
+PASS: sunset_ridge helicopter makes four photographic passes
+PASS: sunlit_cape has multiple surfaces and normalized ratios
+PASS: sunlit_cape has 1–3 river crossings
+PASS: sunlit_cape bridge narrows the driving corridor
+PASS: sunlit_cape bridge narrows the driving corridor
+PASS: sunlit_cape surface transition has continuous grip weights
+PASS: sunlit_cape surface transition has continuous grip weights
+PASS: sunlit_cape has a visible authored balloon group
+PASS: sunlit_cape distant seabird population is correct
+PASS: sunlit_cape river and bridge geometry loads
+PASS: sunlit_cape river and bridge geometry loads
+PASS: Coastal sailing boats are present and animated
+PASS: sunlit_cape helicopter makes four photographic passes
+PASS: misty_highlands has multiple surfaces and normalized ratios
+PASS: misty_highlands has 1–3 river crossings
+PASS: misty_highlands bridge narrows the driving corridor
+PASS: misty_highlands bridge narrows the driving corridor
+PASS: misty_highlands bridge narrows the driving corridor
+PASS: misty_highlands surface transition has continuous grip weights
+PASS: misty_highlands surface transition has continuous grip weights
+PASS: misty_highlands surface transition has continuous grip weights
+PASS: misty_highlands has a visible authored balloon group
+PASS: misty_highlands distant seabird population is correct
+PASS: misty_highlands river and bridge geometry loads
+PASS: misty_highlands river and bridge geometry loads
+PASS: misty_highlands river and bridge geometry loads
+PASS: misty_highlands helicopter makes four photographic passes
+TEST RESULT: 43 checks, 0 failures

@@ -1,0 +1,27 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: New player can challenge Sunset
+PASS: New player's coast challenge is locked
+PASS: Practice bypasses challenge locks
+PASS: Unknown content cannot bypass locks
+PASS: Direct record cannot bypass a stage lock
+PASS: Demo cannot unlock stages
+PASS: Rejected run leaves unlocks unchanged
+PASS: Gold record commits successfully
+PASS: Sunset gold unlocks both challenges
+PASS: Stage unlock survives restart
+PASS: Brand migration succeeds with verified staging
+PASS: Legacy profile is never removed
+PASS: Gallery migrates with profile
+PASS: Existing played coast is grandfathered
+PASS: Unplayed legacy highland still needs gold
+PASS: Migration is idempotent and never overwrites new progress
+PASS: Cliff change separates highland ghosts
+PASS: Unchanged road challenge keeps compatible records
+PASS: Default discovery reads the old Art Rally directory
+PASS: Corrupt legacy data is reported without deleting it
+PASS: Valid legacy backup recovers damaged primary during migration
+PASS: Save failure cannot grant either track unlock
+PASS: Mixed takeover cannot unlock
+PASS: Practice cannot unlock
+TEST RESULT: 24 checks, 0 failures

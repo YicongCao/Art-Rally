@@ -1,10 +1,12 @@
-# Art Rally
+# Brushline Rally
+
+![Brushline Rally 品牌插画](assets/brushline/banner.png)
 
 ## 简介
 
-采用漫画套色画风、完全离线的计时拉力游戏。当前版本为 **[0.4.0](https://github.com/YicongCao/Art-Rally/releases/latest)**：三条主题赛道、大众 GTI／宝马 M3 E30／奥迪 quattro S1 三辆赛车、三档动力的 27 个独立挑战、奖牌与分段计时、个人幽灵、本地档案、赛后回放、航拍相册及声音。底层仍采用原有 120 Hz 车辆与轮胎系统。
+采用漫画套色画风、完全离线的计时拉力游戏。当前分支为 **Brushline Rally 开发验证版**（应用版本暂沿用 0.4.0，尚未发布新 Release）；上一正式发行版为 [Art Rally 0.4.0](https://github.com/YicongCao/Art-Rally/releases/tag/v0.4.0)：三条主题赛道、大众 GTI／宝马 M3 E30／奥迪 quattro S1 三辆赛车、三档动力的 27 个独立挑战、奖牌与分段计时、个人幽灵、本地档案、赛后回放、航拍相册及声音。底层仍采用原有 120 Hz 车辆与轮胎系统。
 
-[0.4.0 更新与发布验证](docs/validation/v040-release.zh-CN.md) · [0.3.0 候选版变化](docs/V0_3_0_RC.zh-CN.md) · [实施计划](docs/FIRST_PLAYABLE_PLAN.zh-CN.md) · [实施状态与未通过项](docs/FIRST_PLAYABLE_STATUS.zh-CN.md) · [实测验收报告](docs/FIRST_PLAYABLE_VALIDATION.zh-CN.md) · [操作说明](docs/PLAY_GUIDE.zh-CN.md) · [素材名单](docs/ASSET_CREDITS.md)
+[本轮改造与验收](docs/brushline/VALIDATION.zh-CN.md) · [品牌与资产](docs/brushline/ASSETS.zh-CN.md) · [历史 0.4.0 发布验证](docs/validation/v040-release.zh-CN.md) · [0.3.0 候选版变化](docs/V0_3_0_RC.zh-CN.md) · [实施计划](docs/FIRST_PLAYABLE_PLAN.zh-CN.md) · [实施状态与未通过项](docs/FIRST_PLAYABLE_STATUS.zh-CN.md) · [实测验收报告](docs/FIRST_PLAYABLE_VALIDATION.zh-CN.md) · [操作说明](docs/PLAY_GUIDE.zh-CN.md) · [素材名单](docs/ASSET_CREDITS.md)
 
 ## 直接玩游戏
 
@@ -14,42 +16,42 @@
 ./scripts/dev.sh run
 ```
 
-启动后进入标题菜单，可选择计时挑战、自由练习和设置。脚本会先导入资源、更新脚本缓存，首次启动会稍慢；终端会打印项目绝对路径。请确认进入的是最新版本所在的目录。
+启动后进入标题菜单，可选择计时挑战、自由练习、玩法演示和设置。松岭任一合法正式金牌解锁海岸及高地挑战；自由练习始终开放，已有有效成绩的老玩家保留赛道入口。脚本会先导入资源、更新脚本缓存，首次启动会稍慢；终端会打印项目绝对路径。请确认进入的是最新版本所在的目录。
 
-**无需开发环境：** 从 [最新发行版](https://github.com/YicongCao/Art-Rally/releases/latest) 下载对应系统的 ZIP，解压后打开 macOS 的 `Art Rally.app` 或 Windows 的 `Art Rally.exe`。0.4.0 macOS 包通过自动启动与驾驶检查；Windows 包完成交叉导出与结构校验，本轮未做人工试玩或真实 Windows 验收。奖牌阈值仍待熟练真人基准跑标定。
+**已发布旧版下载：** 从 [最新发行版](https://github.com/YicongCao/Art-Rally/releases/latest) 下载对应系统的 ZIP，解压后打开 macOS 的 `Art Rally.app` 或 Windows 的 `Art Rally.exe`。0.4.0 macOS 包通过自动启动与驾驶检查；Windows 包完成交叉导出与结构校验，该旧版发布未做人工试玩或真实 Windows 验收。奖牌阈值仍待熟练真人基准跑标定。
 
 <table>
   <tr>
     <td width="33%" align="center">
-      <a href="docs/previews/showcase-sunset_ridge.jpg"><img src="docs/previews/showcase-sunset_ridge.jpg" alt="Art Rally 0.3.1 实机画面：夕照松岭 · F160" width="100%"></a><br>
+      <a href="docs/previews/showcase-sunset_ridge.jpg"><img src="docs/previews/showcase-sunset_ridge.jpg" alt="Brushline Rally 开发验证版实机画面：夕照松岭 · F160" width="100%"></a><br>
       <sub><b>夕照松岭 · F160</b></sub>
     </td>
     <td width="33%" align="center">
-      <a href="docs/previews/showcase-sunlit_cape.jpg"><img src="docs/previews/showcase-sunlit_cape.jpg" alt="Art Rally 0.3.1 实机画面：晴岬海岸 · R200" width="100%"></a><br>
+      <a href="docs/previews/showcase-sunlit_cape.jpg"><img src="docs/previews/showcase-sunlit_cape.jpg" alt="Brushline Rally 开发验证版实机画面：晴岬海岸 · R200" width="100%"></a><br>
       <sub><b>晴岬海岸 · R200</b></sub>
     </td>
     <td width="33%" align="center">
-      <a href="docs/previews/showcase-misty_highlands.jpg"><img src="docs/previews/showcase-misty_highlands.jpg" alt="Art Rally 0.3.1 实机画面：雾杉高地 · A240" width="100%"></a><br>
+      <a href="docs/previews/showcase-misty_highlands.jpg"><img src="docs/previews/showcase-misty_highlands.jpg" alt="Brushline Rally 开发验证版实机画面：雾杉高地 · A240" width="100%"></a><br>
       <sub><b>雾杉高地 · A240</b></sub>
     </td>
   </tr>
   <tr>
     <td width="33%" align="center">
-      <a href="docs/previews/showcase-home.jpg"><img src="docs/previews/showcase-home.jpg" alt="Art Rally 0.3.1 实机画面：标题菜单" width="100%"></a><br>
+      <a href="docs/previews/showcase-home.jpg"><img src="docs/previews/showcase-home.jpg" alt="Brushline Rally 开发验证版实机画面：标题菜单" width="100%"></a><br>
       <sub><b>标题菜单</b></sub>
     </td>
     <td width="33%" align="center">
-      <a href="docs/previews/showcase-stages.jpg"><img src="docs/previews/showcase-stages.jpg" alt="Art Rally 0.3.1 实机画面：赛道选择" width="100%"></a><br>
+      <a href="docs/previews/showcase-stages.jpg"><img src="docs/previews/showcase-stages.jpg" alt="Brushline Rally 开发验证版实机画面：赛道选择" width="100%"></a><br>
       <sub><b>赛道选择</b></sub>
     </td>
     <td width="33%" align="center">
-      <a href="docs/previews/showcase-replay.jpg"><img src="docs/previews/showcase-replay.jpg" alt="Art Rally 0.3.1 实机画面：赛后回放 · 电视跟随" width="100%"></a><br>
+      <a href="docs/previews/showcase-replay.jpg"><img src="docs/previews/showcase-replay.jpg" alt="Brushline Rally 开发验证版实机画面：赛后回放 · 电视跟随" width="100%"></a><br>
       <sub><b>赛后回放 · 电视跟随</b></sub>
     </td>
   </tr>
 </table>
 
-六张均为当前版本实机截图，点击查看大图。三条赛道使用自动驾驶采集；赛后页展示实际轨迹的电视跟随回放。
+六张为本轮 Brushline Rally 实机截图，点击查看大图；其他分辨率与资产检查见 [验收记录](docs/brushline/VALIDATION.zh-CN.md)。三条赛道使用自动驾驶采集；赛后页展示实际轨迹的电视跟随回放。
 
 ## 开发环境
 
@@ -130,9 +132,9 @@ godot --path . --max-fps 60 --script res://scripts/dev/readme_showcase.gd -- --t
 
 `m6-perf` 需要真实 Metal 窗口并耗时约 12 分钟；它以生产自动驾驶连续跑三次，分别覆盖默认跟车、驾驶舱和 T 调试面板，输出原始帧间隔、60 帧节奏 P95/P99、Godot 总物理、车辆回调、draw call、三角元及内存趋势到 `logs/m6_performance.json`。性能报告与测量限制见 [M6 验收记录](docs/M6_VALIDATION.zh-CN.md)。
 
-macOS 导出要求安装与 `.godot-version` 完全一致的 4.7.2 模板；`doctor` 会显示模板状态。产物位于忽略版本控制的 `builds/macos/Art Rally.app` 和 `Art-Rally-macos-universal.zip`。当前包使用本机可验证的 ad-hoc 签名，不是 Developer ID 正式签名，也没有 Apple 公证；从网络下载或传到其他 Mac 后仍可能触发 Gatekeeper 提示。
+macOS 导出要求安装与 `.godot-version` 完全一致的 4.7.2 模板；`doctor` 会显示模板状态。产物位于忽略版本控制的 `builds/macos/Brushline Rally.app` 和 `Brushline-Rally-macos-universal.zip`。当前包使用本机可验证的 ad-hoc 签名，不是 Developer ID 正式签名，也没有 Apple 公证；从网络下载或传到其他 Mac 后仍可能触发 Gatekeeper 提示。
 
-Windows x86_64 包可由同一台 Mac 使用官方 4.7.2 模板交叉导出，不需要 Windows SDK。产物位于 `builds/windows/Art Rally/Art Rally.exe` 和 `Art-Rally-windows-x86_64.zip`，PCK 嵌入 EXE；目前没有 Authenticode 签名，可能触发 SmartScreen。macOS 只能校验 PE 结构和导出资源，不能运行 `.exe`；复制到 Windows 后执行 `powershell -ExecutionPolicy Bypass -File scripts/windows_smoke.ps1`，并重新完成 D3D12/Vulkan、镜头光斑、真实性能和手柄验收。
+Windows x86_64 包可由同一台 Mac 使用官方 4.7.2 模板交叉导出，不需要 Windows SDK。产物位于 `builds/windows/Brushline Rally/Brushline Rally.exe` 和 `Brushline-Rally-windows-x86_64.zip`，PCK 嵌入 EXE；目前没有 Authenticode 签名，可能触发 SmartScreen。macOS 只能校验 PE 结构和导出资源，不能运行 `.exe`；复制到 Windows 后执行 `powershell -ExecutionPolicy Bypass -File scripts/windows_smoke.ps1`，并重新完成 D3D12/Vulkan、镜头光斑、真实性能和手柄验收。
 
 启动日志位于 `logs/startup_import.log` 与 `logs/game.log`；其他检查日志也写入 `logs/`。
 

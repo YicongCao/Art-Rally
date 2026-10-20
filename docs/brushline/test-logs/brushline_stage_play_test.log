@@ -1,0 +1,16 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Playable stage completes countdown
+PASS: Stage starts on gravel with envelope contact enabled
+PASS: Brake hold keeps starting car stationary on generated slope
+PASS: Repeated reset events within same physics step cannot double charge
+PASS: Deferred recovery settles on last passed checkpoint approach
+PASS: Slope recovery keeps the service brake applied until a pedal is operated
+PASS: Throttle releases recovery hold and drives away normally
+PASS: Stage clock freezes while paused
+PASS: Finish edge saves one human result and refreshes the HUD summary
+PASS: Restart from pause restores clean stage
+PASS: Practice toggle restarts instead of editing an active race result
+PASS: Practice completion cannot append a stored result
+PASS: Out-of-bounds after finish preserves result and restores safe finish pose
+TEST RESULT: 13 checks, 0 failures

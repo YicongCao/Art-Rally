@@ -1,0 +1,19 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: F160 braking turn remains upright with bounded sideslip
+PASS: F160 braking turn remains upright with bounded sideslip
+PASS: F160 modest countersteer and throttle recover the braking slide
+PASS: F160 corner brake balance restores turn-in under heavy braking
+PASS: F160 front lock-up decreases
+PASS: R200 braking turn remains upright with bounded sideslip
+PASS: R200 braking turn remains upright with bounded sideslip
+PASS: R200 modest countersteer and throttle recover the braking slide
+PASS: R200 corner brake balance restores turn-in under heavy braking
+PASS: R200 front lock-up decreases
+PASS: A240 braking turn remains upright with bounded sideslip
+PASS: A240 braking turn remains upright with bounded sideslip
+PASS: A240 modest countersteer and throttle recover the braking slide
+PASS: A240 corner brake balance restores turn-in under heavy braking
+PASS: A240 front lock-up decreases
+BRAKE COMPARISON: {"A240":[{"balanced":false,"front_slip":0.828059396183501,"max_slip_degrees":4.62625054874043,"speed":11.959677696228,"yaw_degrees":20.2687156648291},{"balanced":true,"front_slip":0.0519718077562944,"max_slip_degrees":11.7725671133691,"speed":13.3404493331909,"yaw_degrees":33.2085161453011}],"F160":[{"balanced":false,"front_slip":0.763575723574225,"max_slip_degrees":5.12118073858209,"speed":11.7030334472656,"yaw_degrees":20.9186140610432},{"balanced":true,"front_slip":0.0406826767350909,"max_slip_degrees":14.2019799096012,"speed":13.1941795349121,"yaw_degrees":36.5242731770353}],"R200":[{"balanced":false,"front_slip":0.960992425578482,"max_slip_degrees":6.20600533652536,"speed":11.763617515564,"yaw_degrees":22.0758069857148},{"balanced":true,"front_slip":0.0439832945938313,"max_slip_degrees":11.9057939037257,"speed":13.4205274581909,"yaw_degrees":34.1401765974179}]}
+TEST RESULT: 15 checks, 0 failures

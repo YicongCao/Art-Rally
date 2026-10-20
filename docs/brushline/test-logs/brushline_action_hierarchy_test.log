@@ -1,0 +1,33 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: stages uses the common action layout
+PASS: stages back action stays on the left
+PASS: stages confirmation stays on the right
+PASS: stages confirmation fits without scrolling
+PASS: stages confirmation is larger than back
+PASS: vehicles uses the common action layout
+PASS: vehicles back action stays on the left
+PASS: vehicles confirmation stays on the right
+PASS: vehicles confirmation fits without scrolling
+PASS: vehicles confirmation is larger than back
+PASS: tutorial uses the common action layout
+PASS: tutorial back action stays on the left
+PASS: tutorial confirmation stays on the right
+PASS: tutorial confirmation is larger than back
+PASS: settings uses the common action layout
+PASS: settings back action stays on the left
+PASS: settings confirmation stays on the right
+PASS: settings confirmation is larger than back
+PASS: bindings uses the common action layout
+PASS: bindings back action stays on the left
+PASS: bindings confirmation stays on the right
+PASS: bindings confirmation is larger than back
+PASS: records uses the common action layout
+PASS: records back action stays on the left
+PASS: credits uses the common action layout
+PASS: credits back action stays on the left
+PASS: plate uses the common action layout
+PASS: plate back action stays on the left
+PASS: plate confirmation stays on the right
+PASS: plate confirmation is larger than back
+TEST RESULT: 30 checks, 0 failures

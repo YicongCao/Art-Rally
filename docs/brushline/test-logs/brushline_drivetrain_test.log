@@ -1,0 +1,16 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Cannot select neutral or reverse while moving
+PASS: Sequential upshift accepted
+PASS: Shift interrupts clutch torque
+PASS: Second shift rejected until shift interval ends
+PASS: Engine inertia and automatic clutch build launch torque
+PASS: Differentials conserve total input torque
+PASS: Axle limited slip opposes speed difference with finite lock torque
+PASS: Differential coupling dissipates relative wheel energy
+PASS: Handbrake decouples rear drive from front axle
+PASS: Automatic gearbox upshifts above threshold
+PASS: Downshift that would over-rev is rejected
+PASS: Rev limiter prevents runaway neutral engine speed
+PASS: Coasting wheels back-drive engine through clutch
+TEST RESULT: 13 checks, 0 failures

@@ -1,0 +1,21 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Stage length is approximately three kilometers
+PASS: Route passes slope continuity and nonadjacent clearance checks
+PASS: Collision chunks exist before driving begins
+GEOMETRY PROBES: misses=0 bad_height=0
+PASS: Road center edges and chunk seams share continuous visual collision geometry
+PASS: Stage surface zone at 200 m
+PASS: Stage surface zone at 1300 m
+PASS: Stage surface zone at 1800 m
+PASS: Stage surface zone at 2200 m
+PASS: Stage puddle overlays muddy road
+PASS: Off-road soil is distinct from main road
+PASS: Fixed definition regenerates identical road samples
+PASS: Route includes turns and explicit surface hazard notes
+PASS: Every checkpoint recovery pose has support under all four wheels
+PASS: Finish has at least one hundred meters of braking apron
+PASS: Fixed seed reproduces landmark placement independent of scene origin
+PASS: Optimized road footprint agrees with independent projection near water boundary
+STAGE GEOMETRY: length=3049.99389648438 samples=1526 chunks=77
+TEST RESULT: 16 checks, 0 failures
