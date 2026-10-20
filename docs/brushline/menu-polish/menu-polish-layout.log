@@ -1,0 +1,106 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Metal 4.0 - Forward+ - Using Device #0: Apple - Apple M5 (Apple9)
+
+PASS: stages 1280: no scrolling selection surface
+PASS: stages 1280: illustration stays fully inside screen
+PASS: stages 1280: 选择赛段 is reachable without scrolling
+PASS: stages 1280: illustration stays fully inside screen
+PASS: stages 1280: 松岭金牌解锁 is reachable without scrolling
+PASS: stages 1280: illustration stays fully inside screen
+PASS: stages 1280: 松岭金牌解锁 is reachable without scrolling
+PASS: stages 1280: ← 主菜单 is reachable without scrolling
+PASS: stages 1280: 确认赛道 → is reachable without scrolling
+PASS: stages: expected illustration count
+PASS: vehicles 1280: no scrolling selection surface
+PASS: vehicles 1280: illustration stays fully inside screen
+PASS: vehicles 1280: 220 PS is reachable without scrolling
+PASS: vehicles 1280: 330 PS is reachable without scrolling
+PASS: vehicles 1280: 440 PS is reachable without scrolling
+PASS: vehicles 1280: 选择 大众 GTI is reachable without scrolling
+PASS: vehicles 1280: illustration stays fully inside screen
+PASS: vehicles 1280: 240 PS is reachable without scrolling
+PASS: vehicles 1280: 360 PS is reachable without scrolling
+PASS: vehicles 1280: 480 PS is reachable without scrolling
+PASS: vehicles 1280: 选择 宝马 M3 E30 is reachable without scrolling
+PASS: vehicles 1280: illustration stays fully inside screen
+PASS: vehicles 1280: 288 PS is reachable without scrolling
+PASS: vehicles 1280: 432 PS is reachable without scrolling
+PASS: vehicles 1280: 576 PS is reachable without scrolling
+PASS: vehicles 1280: 选择 奥迪 quattro S1 is reachable without scrolling
+PASS: vehicles 1280: ← 选择赛道 is reachable without scrolling
+PASS: vehicles 1280: 驾驶 大众 GTI · 220 PS → is reachable without scrolling
+PASS: vehicles: expected illustration count
+PASS: loading 1280: no scrolling selection surface
+PASS: loading 1280: illustration stays fully inside screen
+PASS: loading 1280: illustration stays fully inside screen
+PASS: loading: expected illustration count
+PASS: stages 1920: no scrolling selection surface
+PASS: stages 1920: illustration stays fully inside screen
+PASS: stages 1920: 选择赛段 is reachable without scrolling
+PASS: stages 1920: illustration stays fully inside screen
+PASS: stages 1920: 松岭金牌解锁 is reachable without scrolling
+PASS: stages 1920: illustration stays fully inside screen
+PASS: stages 1920: 松岭金牌解锁 is reachable without scrolling
+PASS: stages 1920: ← 主菜单 is reachable without scrolling
+PASS: stages 1920: 确认赛道 → is reachable without scrolling
+PASS: stages: expected illustration count
+PASS: vehicles 1920: no scrolling selection surface
+PASS: vehicles 1920: illustration stays fully inside screen
+PASS: vehicles 1920: 220 PS is reachable without scrolling
+PASS: vehicles 1920: 330 PS is reachable without scrolling
+PASS: vehicles 1920: 440 PS is reachable without scrolling
+PASS: vehicles 1920: 选择 大众 GTI is reachable without scrolling
+PASS: vehicles 1920: illustration stays fully inside screen
+PASS: vehicles 1920: 240 PS is reachable without scrolling
+PASS: vehicles 1920: 360 PS is reachable without scrolling
+PASS: vehicles 1920: 480 PS is reachable without scrolling
+PASS: vehicles 1920: 选择 宝马 M3 E30 is reachable without scrolling
+PASS: vehicles 1920: illustration stays fully inside screen
+PASS: vehicles 1920: 288 PS is reachable without scrolling
+PASS: vehicles 1920: 432 PS is reachable without scrolling
+PASS: vehicles 1920: 576 PS is reachable without scrolling
+PASS: vehicles 1920: 选择 奥迪 quattro S1 is reachable without scrolling
+PASS: vehicles 1920: ← 选择赛道 is reachable without scrolling
+PASS: vehicles 1920: 驾驶 大众 GTI · 220 PS → is reachable without scrolling
+PASS: vehicles: expected illustration count
+PASS: loading 1920: no scrolling selection surface
+PASS: loading 1920: illustration stays fully inside screen
+PASS: loading 1920: illustration stays fully inside screen
+PASS: loading: expected illustration count
+PASS: stages 2560: no scrolling selection surface
+PASS: stages 2560: illustration stays fully inside screen
+PASS: stages 2560: 选择赛段 is reachable without scrolling
+PASS: stages 2560: illustration stays fully inside screen
+PASS: stages 2560: 松岭金牌解锁 is reachable without scrolling
+PASS: stages 2560: illustration stays fully inside screen
+PASS: stages 2560: 松岭金牌解锁 is reachable without scrolling
+PASS: stages 2560: ← 主菜单 is reachable without scrolling
+PASS: stages 2560: 确认赛道 → is reachable without scrolling
+PASS: stages: expected illustration count
+PASS: vehicles 2560: no scrolling selection surface
+PASS: vehicles 2560: illustration stays fully inside screen
+PASS: vehicles 2560: 220 PS is reachable without scrolling
+PASS: vehicles 2560: 330 PS is reachable without scrolling
+PASS: vehicles 2560: 440 PS is reachable without scrolling
+PASS: vehicles 2560: 选择 大众 GTI is reachable without scrolling
+PASS: vehicles 2560: illustration stays fully inside screen
+PASS: vehicles 2560: 240 PS is reachable without scrolling
+PASS: vehicles 2560: 360 PS is reachable without scrolling
+PASS: vehicles 2560: 480 PS is reachable without scrolling
+PASS: vehicles 2560: 选择 宝马 M3 E30 is reachable without scrolling
+PASS: vehicles 2560: illustration stays fully inside screen
+PASS: vehicles 2560: 288 PS is reachable without scrolling
+PASS: vehicles 2560: 432 PS is reachable without scrolling
+PASS: vehicles 2560: 576 PS is reachable without scrolling
+PASS: vehicles 2560: 选择 奥迪 quattro S1 is reachable without scrolling
+PASS: vehicles 2560: ← 选择赛道 is reachable without scrolling
+PASS: vehicles 2560: 驾驶 大众 GTI · 220 PS → is reachable without scrolling
+PASS: vehicles: expected illustration count
+PASS: loading 2560: no scrolling selection surface
+PASS: loading 2560: illustration stays fully inside screen
+PASS: loading 2560: illustration stays fully inside screen
+PASS: loading: expected illustration count
+PASS: Pause settings omit vehicle and mode shortcuts
+PASS: Real captured trajectory starts the results replay
+PASS: Results replay has no full-screen gradient veil
+TEST RESULT: 102 checks, 0 failures

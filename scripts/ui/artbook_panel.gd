@@ -7,6 +7,7 @@ var caption: String = ""
 var detail: bool = false
 var accent := Color("f05a28")
 var base_height: float=230.0
+var fit_available_height: bool=false
 
 func _ready() -> void:
 	mouse_filter=Control.MOUSE_FILTER_IGNORE
@@ -14,7 +15,10 @@ func _ready() -> void:
 	resized.connect(_resize_panel)
 
 func _resize_panel() -> void:
-	# Tall panels grow with wide layouts, so the car is never cropped into a strip.
+	if fit_available_height:
+		queue_redraw()
+		return
+	# Standalone illustrations retain their original responsive size.
 	var desired := clampf(size.x*.72,base_height,600)
 	if absf(custom_minimum_size.y-desired)>.5: custom_minimum_size.y=desired
 	queue_redraw()

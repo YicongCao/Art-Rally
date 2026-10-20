@@ -152,13 +152,19 @@ func _page(title: String, subtitle: String, name_id: String) -> void:
 	for side: String in ["left","right"]: margins.add_theme_constant_override("margin_"+side,48)
 	for side: String in ["top","bottom"]: margins.add_theme_constant_override("margin_"+side,28)
 	ui.add_child(margins)
-	var scroll := ScrollContainer.new()
-	scroll.follow_focus = true
-	margins.add_child(scroll)
+	# Selection cards share the available screen height instead of scrolling.
+	var fitted := name_id in ["stages","vehicles","loading"]
 	column = VBoxContainer.new()
 	column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	column.add_theme_constant_override("separation",10 if name_id in ["stages","vehicles","loading"] else 14)
-	scroll.add_child(column)
+	column.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	column.add_theme_constant_override("separation",10 if fitted else 14)
+	if fitted:
+		margins.add_child(column)
+	else:
+		var scroll := ScrollContainer.new()
+		scroll.follow_focus = true
+		margins.add_child(scroll)
+		scroll.add_child(column)
 	if name_id!="home":
 		_label(column,title,42,Color("20252b") if name_id in ["stages","vehicles"] else Color("eee2c5"))
 		if not subtitle.is_empty(): _label(column,subtitle,17,Color("566366") if paper or name_id in ["stages","vehicles"] else Color("c8d5c7"))
@@ -368,6 +374,7 @@ func show_stages() -> void:
 	if not profile.stage_unlocked(chosen_stage,practice): chosen_stage="sunset_ridge"
 	_page("选择一段旅途", "自由练习 · 不记录奖牌和个人最佳" if practice else "计时挑战", "stages")
 	var row := _row(column)
+	row.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	for id: String in RallyContentCatalog.STAGES:
 		var definition := RallyContentCatalog.stage(id)
 		var card := _card(row)
@@ -376,7 +383,9 @@ func show_stages() -> void:
 		var preview := RallyArtbookPanel.new()
 		preview.atlas=load("res://assets/brushline/stage-artbook.png")
 		preview.panel_index=RallyContentCatalog.STAGES.find(id)
-		preview.custom_minimum_size=Vector2(260,230)
+		preview.custom_minimum_size=Vector2(260,120)
+		preview.fit_available_height=true
+		preview.size_flags_vertical=Control.SIZE_EXPAND_FILL
 		card.add_child(preview)
 		_label(card,definition.title,26)
 		_label(card,definition.subtitle,16)
@@ -407,6 +416,7 @@ func show_vehicles() -> void:
 	chosen_power_tier = mini(chosen_power_tier,profile.unlocked_power_tier())
 	vehicle_power_choices[chosen_vehicle] = chosen_power_tier
 	var row := _row(column)
+	row.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	for id: String in RallyContentCatalog.VEHICLES:
 		var selected_tier := mini(int(vehicle_power_choices.get(id,0)),profile.unlocked_power_tier())
 		var vehicle := RallyContentCatalog.vehicle(id,selected_tier)
@@ -417,7 +427,9 @@ func show_vehicles() -> void:
 		var art := RallyArtbookPanel.new()
 		art.atlas=load("res://assets/brushline/car-artbook.png")
 		art.panel_index=RallyContentCatalog.VEHICLES.find(id)
-		art.custom_minimum_size=Vector2(270,235)
+		art.custom_minimum_size=Vector2(270,120)
+		art.fit_available_height=true
+		art.size_flags_vertical=Control.SIZE_EXPAND_FILL
 		card.add_child(art)
 		_vehicle_preview(art,vehicle)
 		_label(card,vehicle.title,24,vehicle.accent.lightened(.3))
@@ -514,17 +526,19 @@ func _loading_page() -> void:
 	progress_bar.custom_minimum_size.y = 26
 	column.add_child(progress_bar)
 	var layout := _row(column)
+	layout.size_flags_vertical=Control.SIZE_EXPAND_FILL
 	var stage_index := RallyContentCatalog.STAGES.find(chosen_stage)
-	for index: int in range(3):
+	for index: int in range(2):
 		var card := _card(layout)
 		var art := RallyArtbookPanel.new()
 		art.atlas=load("res://assets/brushline/car-artbook.png" if index==1 else "res://assets/brushline/stage-artbook.png")
 		art.panel_index=RallyContentCatalog.VEHICLES.find(chosen_vehicle) if index==1 else stage_index
-		art.custom_minimum_size=Vector2(260,290)
-		art.detail=index==2
-		art.caption=[challenge.stage.title,challenge.vehicle.short_title(),["林间木屋","海岬灯塔","暮色山口"][stage_index]][index]
+		art.custom_minimum_size=Vector2(260,160)
+		art.fit_available_height=true
+		art.size_flags_vertical=Control.SIZE_EXPAND_FILL
+		art.caption=[challenge.stage.title,challenge.vehicle.short_title()][index]
 		card.add_child(art)
-		_label(card,["%.2f km"%(challenge.stage.target_length/1000),"%d PS · %s"%[challenge.vehicle.power_ps,challenge.vehicle.drive_layout],"夕照 · 晴岬 · 暮色".split(" · ")[stage_index]][index],22)
+		_label(card,["%.2f km"%(challenge.stage.target_length/1000),"%d PS · %s"%[challenge.vehicle.power_ps,challenge.vehicle.drive_layout]][index],22)
 	var targets := challenge.thresholds()
 	var medals := _row(column)
 	for tier: int in [2,1,0]:
@@ -658,17 +672,11 @@ func show_results(result: Dictionary) -> void:
 	_page("新的个人纪录" if outcome.get("new_best",false) else "抵达终点",race.challenge.stage.title+" / "+chosen_vehicle+" / "+RallyContentCatalog.power_label(chosen_vehicle,chosen_power_tier),"results")
 	if replaying:
 		backdrop.visible = false
-		var wash := TextureRect.new()
-		wash.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		wash.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		var texture := GradientTexture2D.new()
-		var gradient := Gradient.new()
-		gradient.colors = PackedColorArray([Color(.02,.06,.055,.82),Color(.02,.06,.055,.18)])
-		texture.gradient = gradient
-		texture.fill_to = Vector2(1,0)
-		wash.texture = texture
-		ui.add_child(wash)
-		ui.move_child(wash,1)
+		# Keep headings readable over bright replay skies without dimming the scene.
+		for heading: Node in column.get_children():
+			if heading is Label:
+				heading.add_theme_color_override("font_outline_color",Color("20252b"))
+				heading.add_theme_constant_override("outline_size",4)
 	audio.cue("record" if outcome.get("new_best",false) else ("medal" if outcome.get("medal",0)>0 else "finish"))
 	var body := _row(column)
 	var info := _card(body)

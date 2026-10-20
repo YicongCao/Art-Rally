@@ -58,8 +58,6 @@ func build(settings: RallyGameSettings) -> void:
 	var buttons := HBoxContainer.new()
 	column.add_child(buttons)
 	button(buttons,"重跑赛段",func(): restart_requested.emit())
-	button(buttons,"计时 / 练习",func(): practice_requested.emit())
-	button(column,"更换车辆（确认后重开赛段）",func(): vehicle_requested.emit())
 	var auto_row := HBoxContainer.new()
 	column.add_child(auto_row)
 	var auto_label := Label.new()

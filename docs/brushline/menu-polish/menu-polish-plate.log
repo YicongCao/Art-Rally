@@ -1,0 +1,45 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Ten visible characters fit the plate limit
+PASS: Chinese and Latin characters use the bundled plate font
+PASS: Eleven characters are rejected by storage validation
+PASS: Empty identity cannot complete onboarding
+PASS: Control and invisible characters cannot enter plates
+PASS: Existing profiles without a plate remain compatible
+PASS: Saving normalizes outer spaces and keeps the chosen identity
+PASS: Restart restores the chosen plate
+PASS: Rejected length cannot alter the saved profile
+PASS: A save failure preserves the previous plate
+PASS: A fresh player reaches plate setup before the main menu
+PASS: Input shares the actual plate font and enforces the limit
+PASS: Live preview follows the editor
+PASS: Successful setup persists identity and opens the title menu
+PASS: Settings exposes plate editing
+PASS: Editing saves the new identity and returns to settings
+PASS: Swiss briefing loads all three vector medal icons
+PASS: Medal times retain a readable horizontal layout
+PASS: Loading retains essentials without rule explanations
+PASS: UI reports a failed save without applying the rejected edit
+PASS: F160 has matching front and rear plates in the shared font
+PASS: F160 plates face outward on both ends
+PASS: Plate keeps at least ten percent inset: RALLY
+PASS: Short plate type grows by twenty percent
+PASS: Plate keeps at least ten percent inset: WWWWWWWWWW
+PASS: Plate keeps at least ten percent inset: 沪A·山野拉力016
+PASS: F160 identity adds no collision or physics body
+PASS: R200 has matching front and rear plates in the shared font
+PASS: R200 plates face outward on both ends
+PASS: Plate keeps at least ten percent inset: RALLY
+PASS: Short plate type grows by twenty percent
+PASS: Plate keeps at least ten percent inset: WWWWWWWWWW
+PASS: Plate keeps at least ten percent inset: 沪A·山野拉力016
+PASS: R200 identity adds no collision or physics body
+PASS: A240 has matching front and rear plates in the shared font
+PASS: A240 plates face outward on both ends
+PASS: Plate keeps at least ten percent inset: RALLY
+PASS: Short plate type grows by twenty percent
+PASS: Plate keeps at least ten percent inset: WWWWWWWWWW
+PASS: Plate keeps at least ten percent inset: 沪A·山野拉力016
+PASS: A240 identity adds no collision or physics body
+PASS: Configured players bypass onboarding after restart
+TEST RESULT: 42 checks, 0 failures
