@@ -3,7 +3,7 @@
   "tag": "v0.5.0",
   "repository": "YicongCao/Brushline-Rally",
   "engine": "4.7.2",
-  "checks": 323,
+  "checks": 326,
   "native_ui_resolutions": [
     [
       1280,
@@ -32,5 +32,6 @@
       "bytes": 85924755,
       "sha256": "a36df35c5433be1fa5bf3293fc777b8a269b6cdaff67e974c7cbdcbea8014808"
     }
-  ]
+  ],
+  "capture_method": "Exact-size SubViewport; not constrained by macOS window limits"
 }

@@ -1,8 +1,16 @@
 extends "res://tests/test_suite.gd"
 
 func _run() -> void:
-	var view := root
+	var view := SubViewport.new()
 	view.size=Vector2i(1280,720)
+	view.handle_input_locally=true
+	view.render_target_update_mode=SubViewport.UPDATE_ALWAYS
+	root.add_child(view)
+	var display := TextureRect.new()
+	display.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	display.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+	display.texture=view.get_texture()
+	root.add_child(display)
 	var app: RallyGameApp=load("res://scenes/game/game.tscn").instantiate()
 	app.profile.path="user://v050-ui-%d/profile.json"%Time.get_ticks_usec()
 	view.add_child(app)
@@ -16,7 +24,7 @@ func _run() -> void:
 				app.profile.data.challenges[RallyContentCatalog.challenge(stage,car,tier).key()]={"medal":3,"best":{"total_time":999.999}}
 	for pixels: Vector2i in [Vector2i(1280,720),Vector2i(1920,1080),Vector2i(2560,1080)]:
 		view.size=pixels
-		if DisplayServer.get_name()!="headless": DisplayServer.window_set_size(pixels)
+		check(view.size==pixels,"Requested render resolution is exact: %s"%pixels)
 		for page: String in ["home","guide","records","credits"]:
 			app.call("show_"+page)
 			await create_timer(.25).timeout
@@ -83,6 +91,10 @@ func _run() -> void:
 			captured.save_png("res://docs/validation/v050/%s-wireframe.png"%("controller" if pad else "keyboard"))
 			diagram.free()
 		art.free()
+	app.transitions.finish_slide()
+	await create_timer(.2).timeout
 	app.free()
+	display.texture=null
+	view.free()
 	await process_frame
 	finish()
