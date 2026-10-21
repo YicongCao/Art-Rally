@@ -9,7 +9,7 @@ ROOT=Path(__file__).resolve().parents[1]
 if '--replace-checkpoint' not in sys.argv: raise RuntimeError('Use --replace-checkpoint to replace this authored source explicitly')
 exec((ROOT/'scripts/build_brushline_assets.py').read_text().split('# Refine tails')[0])
 bpy.ops.wm.read_factory_settings(use_empty=True)
-COLORS.update(AirIvory='eee3c7',AirOrange='df5428',AirInk='26363c',AirSeam='c9bda3',RibbonIvory='eee3c7',RibbonOrange='df5428',MachineTeal='295960',MachineDark='263239',MachineSteel='84938e',Sandbag='8c8368',StaticOrange='c54624')
+COLORS.update(AirIvory='eee3c7',AirOrange='df5428',AirInk='26363c',AirSeam='c9bda3',RibbonIvory='eee3c7',RibbonOrange='df5428',MachineTeal='295960',MachineDark='263239',MachineSteel='84938e',Sandbag='8c8368',StaticOrange='c54624',FanRotorOrange='f4b971')
 # Thin grille wires and hose ribs use un-beveled bars; silhouette budget matters
 # because the full assembly is instanced at every checkpoint.
 def beam(name,a,b,width,color):
@@ -90,9 +90,18 @@ for i in range(len(points)-1):
    v=p+(n*math.cos(k*math.tau/10)+up*math.sin(k*math.tau/10))*.115
    w=p+(n*math.cos((k+1)*math.tau/10)+up*math.sin((k+1)*math.tau/10))*.115
    beam('HoseRib',v,w,.016,'MachineSteel')
-marker('BlowerAudio',(0,.35,-1.06))
+# High-contrast visible rotor behind each protective inlet grille.
+for side in [-1,1]:
+ z=-1.06+side*.278
+ for blade in range(5):
+  a=blade*math.tau/5
+  points=[]
+  for radius,delta in [(.055,-.20),(.22,.08),(.20,.38),(.065,.30)]:
+   points.append((math.cos(a+delta)*radius,.35+math.sin(a+delta)*radius,z))
+  mesh('FanRotor',points,[(0,1,2,3)],'FanRotorOrange')
+marker('BlowerAudio' ,(0,.35,-1.06))
 marker('StreamerRoot',(.98,3.28,-.02))
-bpy.context.scene['checkpoint_revision']='pressure-gate-A-1'
+bpy.context.scene['checkpoint_revision']='pressure-gate-A-2'
 bpy.context.scene['orientation']='Local +X bends away from the driving corridor; origin is grounded base.'
 bpy.context.scene['animation']='Air* materials flex, Ribbon* flutter, other parts remain fixed.'
 bpy.context.scene.unit_settings.system='METRIC'

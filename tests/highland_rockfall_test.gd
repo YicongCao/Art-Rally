@@ -12,7 +12,7 @@ func _run() -> void:
 		else: mountain_right += section.y-section.x
 	check(is_equal_approx(modified/definition.target_length,.7),"Mountain/cliff corridor covers exactly 70% of the authored route")
 	check(mountain_left>mountain_right,"The ridge sits beside the left-hand edge for most transformed sections")
-	check(definition.stage_version=="8","Cliff collision change isolates previous highland records and ghosts")
+	check(definition.stage_version=="9","Cliff collision change isolates previous highland records and ghosts")
 	var expected := PackedFloat32Array([450,900,1480,1930,2490])
 	var actual: Array[float]=[]
 	for note: Dictionary in definition.hazard_notes:
@@ -26,6 +26,7 @@ func _run() -> void:
 	root.add_child(app)
 	app.profile.data=RallyProfileStore.fresh()
 	app.chosen_stage="misty_highlands"
+	app.practice=true
 	await app.start_race()
 	var scene: Node3D=app.race
 	check(scene.wildlife.events.is_empty(),"Highland does not generate crossing wildlife")

@@ -176,7 +176,11 @@ func _draw() -> void:
 		center_text("倒挡 · S/↓ 倒车 · W/↑ 前进",Vector2(640,578),17,AMBER)
 	if not str(model.warning).is_empty():
 		panel(Rect2(422,625,435,44),Color(0.15,0.08,0.05,0.94))
-		center_text(model.warning,Vector2(640,653),15,AMBER)
+		if model.get("recovery_hint",false):
+			draw_arc(Vector2(599,647),9,-PI*.8,PI*.75,24,AMBER,2,true)
+			draw_colored_polygon(PackedVector2Array([Vector2(590,650),Vector2(594,656),Vector2(599,649)]),AMBER)
+			center_text(model.warning,Vector2(651,653),15,AMBER)
+		else: center_text(model.warning,Vector2(640,653),15,AMBER)
 	elif int(model.get("camera_mode",0))!=2 and hint_alpha>0:
 		center_text("Esc 设置    C 视角    T 遥测 / 调试    F10 自动驾驶",Vector2(640,697),12,Color(PAPER,hint_alpha))
 	if model.paused:

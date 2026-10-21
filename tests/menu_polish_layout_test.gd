@@ -36,6 +36,15 @@ func _run() -> void:
 				if control is Button and control.is_visible_in_tree():
 					check(bounds.encloses(control.get_global_rect()),"%s %d: %s is reachable without scrolling"%[page,pixels.x,control.text])
 			check(art_count==(2 if page=="loading" else 3),"%s: expected illustration count"%page)
+			if page=="loading":
+				var cards: Control=app.ui.find_child("LoadingTriptych",true,false)
+				var medals: Control=app.ui.find_child("LoadingMedals",true,false)
+				var facts_count := 0
+				for child: Control in cards.find_children("*","Control",true,false):
+					if child is RallyStageFacts: facts_count+=1
+				check(cards.get_child_count()==3 and facts_count==1,"Loading contains two illustrations and one Swiss facts card")
+				check(cards.size.y<=330 and medals.get_global_rect().position.y-cards.get_global_rect().end.y<70,"Compact loading cards leave medal targets directly underneath")
+				check(bounds.encloses(medals.get_global_rect()),"All three colored medal targets remain inside the viewport")
 			if DisplayServer.get_name()!="headless":
 				await RenderingServer.frame_post_draw
 				view.get_texture().get_image().save_jpg("res://logs/menu-polish-%s-%d.jpg"%[page,pixels.x],.9)

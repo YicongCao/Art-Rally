@@ -1,0 +1,59 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Mountain/cliff corridor covers exactly 70% of the authored route
+PASS: The ridge sits beside the left-hand edge for most transformed sections
+PASS: Cliff collision change isolates previous highland records and ghosts
+PASS: All five event points have fixed rockfall pacenotes
+PASS: Rockfall 450 is backed by an authored ridge
+PASS: Rockfall 450 uses its section's mountain side
+PASS: Rockfall 900 is backed by an authored ridge
+PASS: Rockfall 900 uses its section's mountain side
+PASS: Rockfall 1480 is backed by an authored ridge
+PASS: Rockfall 1480 uses its section's mountain side
+PASS: Rockfall 1930 is backed by an authored ridge
+PASS: Rockfall 1930 uses its section's mountain side
+PASS: Rockfall 2490 is backed by an authored ridge
+PASS: Rockfall 2490 uses its section's mountain side
+PASS: Highland does not generate crossing wildlife
+PASS: Highland builds five decorative rockfall groups
+PASS: All five rockfall warnings survive runtime pacenote generation beside timber hazards
+PASS: A real session announces every rockfall warning along the route
+PASS: Mountain rise and cliff drop read from the roadside at 450m (road 48.8, left 69.4, right 12.9)
+PASS: Mountain rise and cliff drop read from the roadside at 900m (road 82.5, left 103.9, right 41.8)
+PASS: Mountain rise and cliff drop read from the roadside at 1930m (road 159.8, left 175.1, right 116.1)
+PASS: Mountain rise and cliff drop read from the roadside at 2490m (road 201.8, left 165.0, right 219.0)
+PASS: Rendered mountain triangles never cover the driveable lane (minimum clearance 1.75m)
+PASS: Neighboring switchbacks blend continuously instead of forming vertical terrain curtains (1 seams checked)
+PASS: The wide grass apron is masked in all four alpine sections
+PASS: Alpine scenery preserves the road vertex layout; outer collision apron is separately removed
+PASS: Rockfall stones have no collisions and remain outside the road and vehicle clearance
+PASS: Every sampled fall stays above the visible mountainside and outside the road
+PASS: Rocks descend from the adjacent mountainside
+PASS: Rockfall stones have no collisions and remain outside the road and vehicle clearance
+PASS: Every sampled fall stays above the visible mountainside and outside the road
+PASS: Rocks descend from the adjacent mountainside
+PASS: Rockfall stones have no collisions and remain outside the road and vehicle clearance
+PASS: Every sampled fall stays above the visible mountainside and outside the road
+PASS: Rocks descend from the adjacent mountainside
+PASS: Rockfall stones have no collisions and remain outside the road and vehicle clearance
+PASS: Every sampled fall stays above the visible mountainside and outside the road
+PASS: Rocks descend from the adjacent mountainside
+PASS: Rockfall stones have no collisions and remain outside the road and vehicle clearance
+PASS: Every sampled fall stays above the visible mountainside and outside the road
+PASS: Rocks descend from the adjacent mountainside
+PASS: Approaching each marked point starts its non-colliding fall
+PASS: Each fall settles and clears after its short animation
+PASS: Restart resets one-shot fall events
+PASS: Approaching each marked point starts its non-colliding fall
+PASS: Each fall settles and clears after its short animation
+PASS: Restart resets one-shot fall events
+PASS: Approaching each marked point starts its non-colliding fall
+PASS: Each fall settles and clears after its short animation
+PASS: Restart resets one-shot fall events
+PASS: Approaching each marked point starts its non-colliding fall
+PASS: Each fall settles and clears after its short animation
+PASS: Restart resets one-shot fall events
+PASS: Approaching each marked point starts its non-colliding fall
+PASS: Each fall settles and clears after its short animation
+PASS: Restart resets one-shot fall events
+TEST RESULT: 56 checks, 0 failures

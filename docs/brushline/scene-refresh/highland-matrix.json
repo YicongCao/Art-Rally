@@ -1,0 +1,53 @@
+[
+	{
+		"elapsed": 266.466666666589,
+		"finished": true,
+		"input": "vgamepad",
+		"max_lateral": 0.517343401908875,
+		"physics_p95_ms": 3.048,
+		"power_tier": 0,
+		"progress": 3168.24569507602,
+		"recoveries": 0,
+		"splits": [
+			84.7916666666802,
+			180.808333333333,
+			266.466666666589
+		],
+		"stage": "misty_highlands",
+		"vehicle": "F160"
+	},
+	{
+		"elapsed": 257.14999999993,
+		"finished": true,
+		"input": "vgamepad",
+		"max_lateral": 0.605732321739197,
+		"physics_p95_ms": 3.432,
+		"power_tier": 0,
+		"progress": 3167.971764347,
+		"recoveries": 0,
+		"splits": [
+			81.1500000000106,
+			173.43333333334,
+			257.14999999993
+		],
+		"stage": "misty_highlands",
+		"vehicle": "R200"
+	},
+	{
+		"elapsed": 249.274999999938,
+		"finished": true,
+		"input": "vgamepad",
+		"max_lateral": 0.606204390525818,
+		"physics_p95_ms": 3.785,
+		"power_tier": 0,
+		"progress": 3167.95987413226,
+		"recoveries": 0,
+		"splits": [
+			78.5166666666752,
+			168.416666666678,
+			249.274999999938
+		],
+		"stage": "misty_highlands",
+		"vehicle": "A240"
+	}
+]

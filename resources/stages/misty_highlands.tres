@@ -4,7 +4,7 @@
 
 [resource]
 script = ExtResource("1")
-stage_version = "8"
+stage_version = "9"
 stage_id = "misty_highlands"
 title = "雾杉高地"
 subtitle = "暮色山口 · 悬崖与灯光"
@@ -19,14 +19,14 @@ width_sections = PackedVector3Array(510,610,-0.8,900,1120,-0.3,1320,1450,1.2,205
 water_sections = PackedVector3Array(980,995,0.06,2190,2205,0.07)
 crests = PackedVector3Array()
 hazard_notes = Array[Dictionary]([{"s":450,"code":"ROCKFALL"},{"s":560,"code":"CAUTION_NARROW"},{"s":900,"code":"ROCKFALL"},{"s":980,"code":"WATER"},{"s":1390,"code":"CUT"},{"s":1480,"code":"ROCKFALL"},{"s":1930,"code":"ROCKFALL"},{"s":2110,"code":"CAUTION_NARROW"},{"s":2190,"code":"WATER"},{"s":2490,"code":"ROCKFALL"},{"s":2550,"code":"CUT"}])
-culverts = PackedFloat32Array(990,2195)
+culverts = PackedFloat32Array()
 guardrail_sections = PackedVector2Array(1520,1800)
 spectators = PackedFloat32Array(80,330,600,940,1260,1630,1970,2310,2700,3060)
 landmarks = Array[Dictionary]([{"s":1650.0,"kind":"stones","side":1.0}])
 
 elevation_profile = Vector2(15, 255)
 
-river_crossings = PackedVector3Array(760,16,4.0,1820,18,4.0,2720,16,4.0)
+river_crossings = PackedVector3Array()
 mountain_cliff_sections = PackedVector3Array(100,640,-1,740,1300,-1,1480,2040,-1,2180,2760,1)
 
 log_pile_stations = PackedFloat32Array(430,1190,1910,2390)

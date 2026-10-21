@@ -1,6 +1,9 @@
 extends "res://tests/test_suite.gd"
 func _run() -> void:
 	for id: String in RallyContentCatalog.STAGES:
+		if id=="misty_highlands":
+			check(RallyContentCatalog.stage(id).river_crossings.is_empty(),"Highland has no river or bridge hop after mountain-road revision")
+			continue
 		var world := Node3D.new()
 		root.add_child(world)
 		var generator := RallyStageGenerator.new()

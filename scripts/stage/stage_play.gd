@@ -22,6 +22,7 @@ var presentation := RallyStagePresentation.new()
 var preferences := RallyGameSettings.new()
 var pause_menu: RallyPauseMenu
 var feedback := RallyVehicleFeedback.new()
+var recovery_advice := RallyRecoveryAdvice.new()
 var recovery_notice: String = ""
 var recovery_notice_time: float = 0
 var has_driven: bool = false
@@ -53,7 +54,7 @@ func initialize_gameplay() -> void:
 	controls.focus_returned.connect(_restore_launch_focus)
 	controls.autopilot_requested.connect(_cycle_autopilot)
 	controls.human_drive_input.connect(_human_drive_input)
-	vehicle.reset_completed.connect(func(): respawn_wait = false)
+	vehicle.reset_completed.connect(func(): respawn_wait = false; recovery_advice.reset())
 	var layer := CanvasLayer.new()
 	layer.layer = 5
 	add_child(layer)
@@ -152,6 +153,7 @@ func _physics_process(dt: float) -> void:
 			vehicle.request_reset(generator.route.pose_at(session.gates[-1]+8))
 		else: _recover(10,"越界复位")
 		return
+	recovery_advice.update(dt,vehicle.linear_velocity.length(),vehicle.global_basis.y.dot(Vector3.UP),(-vehicle.global_basis.z).dot(generator.route.tangent_at(session.progress)),vehicle.command.throttle,vehicle.command.brake,session.phase==RallyStageSession.Phase.RUNNING and auto_driver.mode==RallyAutoDriver.Mode.OFF)
 	var previous_phase := session.phase
 	session.step(vehicle.position, vehicle.linear_velocity.length(), dt,vehicle.global_basis,vehicle.config.body_size)
 	if previous_phase!=RallyStageSession.Phase.FINISHED and session.phase==RallyStageSession.Phase.FINISHED:
@@ -189,6 +191,9 @@ func _process(dt: float) -> void:
 		data.merge(auto_driver.telemetry(controls.active_device),true)
 		data.merge(_result_hud_data(),true)
 		if recovery_notice_time>0: data["warning"] = recovery_notice
+		elif recovery_advice.visible:
+			data["warning"] = "Y 复位" if controls.active_device>=0 else "R 复位"
+			data["recovery_hint"] = true
 		game_hud.refresh(data)
 		debug_panel.set_driver_state(auto_driver.telemetry(controls.active_device))
 	presentation.update(dt)

@@ -469,31 +469,33 @@ func _loading_page() -> void:
 	progress_bar = RallyLoadingProgress.new()
 	progress_bar.custom_minimum_size.y = 26
 	column.add_child(progress_bar)
-	# Air around the model cards keeps the loading screen from becoming two giant tiles.
+	# Three compact panels; medals stay directly below the cards, not at screen bottom.
 	var surround := MarginContainer.new()
-	surround.size_flags_vertical=Control.SIZE_EXPAND_FILL
+	surround.custom_minimum_size.y=clampf(get_viewport().get_visible_rect().size.y*.37,248,330)
 	column.add_child(surround)
-	var update_insets := func():
-		surround.add_theme_constant_override("margin_left",int(column.size.x*.07))
-		surround.add_theme_constant_override("margin_right",int(column.size.x*.07))
-		surround.add_theme_constant_override("margin_top",int(surround.size.y*.08))
-		surround.add_theme_constant_override("margin_bottom",int(surround.size.y*.08))
-	surround.resized.connect(update_insets)
 	var layout := _row(surround)
+	layout.name="LoadingTriptych"
 	layout.size_flags_vertical=Control.SIZE_EXPAND_FILL
-	var stage_index := RallyContentCatalog.STAGES.find(chosen_stage)
-	for index: int in range(2):
+	for index: int in range(3):
 		var card := _card(layout)
+		card.get_parent().name="LoadingCard%d"%index
+		if index==2:
+			var facts := RallyStageFacts.new()
+			facts.definition=challenge.stage
+			facts.size_flags_vertical=Control.SIZE_EXPAND_FILL
+			card.add_child(facts)
+			continue
 		var art := RallyArtbookPanel.new()
 		art.texture=load("res://assets/ui/menu_models/"+(chosen_vehicle if index==1 else chosen_stage)+".png")
-		art.panel_index=RallyContentCatalog.VEHICLES.find(chosen_vehicle) if index==1 else stage_index
-		art.custom_minimum_size=Vector2(260,160)
+		art.panel_index=index
+		art.custom_minimum_size=Vector2(0,150)
 		art.size_flags_vertical=Control.SIZE_EXPAND_FILL
 		art.caption=[challenge.stage.title,challenge.vehicle.short_title()][index]
 		card.add_child(art)
 		_label(card,["%.2f km"%(challenge.stage.target_length/1000),"%d PS · %s"%[challenge.vehicle.power_ps,challenge.vehicle.drive_layout]][index],22)
 	var targets := challenge.thresholds()
 	var medals := _row(column)
+	medals.name="LoadingMedals"
 	for tier: int in [2,1,0]:
 		var group := _row(medals)
 		var icon := TextureRect.new()

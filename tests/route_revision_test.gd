@@ -6,7 +6,7 @@ func _run() -> void:
 		var route := RallyStageRoute.new()
 		route.build(definition)
 		check(route.validate().is_empty(),id+" has no crossing, unsafe grade or discontinuous frames")
-		check(definition.stage_version==("8" if id=="misty_highlands" else "7"),id+" isolates old scores and ghosts after geometry changes")
+		check(definition.stage_version==("9" if id=="misty_highlands" else "7"),id+" isolates old scores and ghosts after geometry changes")
 		var min_width := 100.0
 		var max_width := 0.0
 		var largest_step := 0.0
@@ -41,6 +41,7 @@ func _run() -> void:
 		app.profile.path = "user://route-revision-test/profile.json"
 		app.profile.data = RallyProfileStore.fresh()
 		app.chosen_stage = id
+		app.practice = true
 		await app.start_race()
 		var land: RallyStageScenery = app.race.presentation.scenery
 		check(land.dressing.has_node("MedicalAndMarshals"),id+" has medical support and marshals")

@@ -1,0 +1,10 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+BRIDGE HOP sunset_ridge air=0.05833333333333 landed=true
+PASS: sunset_ridge bridge creates a small bounded hop at 86 km/h
+PASS: sunset_ridge bridge landing remains upright
+BRIDGE HOP sunlit_cape air=0.06666666666667 landed=true
+PASS: sunlit_cape bridge creates a small bounded hop at 86 km/h
+PASS: sunlit_cape bridge landing remains upright
+PASS: Highland has no river or bridge hop after mountain-road revision
+TEST RESULT: 5 checks, 0 failures

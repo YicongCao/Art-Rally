@@ -105,7 +105,7 @@ func _tube_mesh(material: Material) -> ArrayMesh:
 				var original := part.mesh.surface_get_material(surface) as StandardMaterial3D
 				var color := original.albedo_color.srgb_to_linear() if original!=null else Color.WHITE
 				var tag := original.resource_name if original!=null else ""
-				var mask := 2.0 if tag.begins_with("Ribbon") else (1.0 if tag.begins_with("Air") else 0.0)
+				var mask := 3.0 if tag.begins_with("FanRotor") else (2.0 if tag.begins_with("Ribbon") else (1.0 if tag.begins_with("Air") else 0.0))
 				var count: int=arrays[Mesh.ARRAY_VERTEX].size()
 				var colors := PackedColorArray()
 				colors.resize(count); colors.fill(color)

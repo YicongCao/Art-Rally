@@ -58,7 +58,7 @@
   },
   "assets/screenprint/props/checkpoint.glb": {
     "source": "art_source/screenprint/props/checkpoint.blend",
-    "triangles": 9188,
+    "triangles": 9208,
     "lod": 0,
     "mounts": {
       "BlowerAudio": [
@@ -747,6 +747,23 @@
         0.79,
         -0.34,
         1.25
+      ]
+    }
+  },
+  "assets/screenprint/props/sky_bird.glb": {
+    "source": "art_source/screenprint/props/sky_bird.blend",
+    "triangles": 1157,
+    "lod": 0,
+    "mounts": {
+      "WingLeft": [
+        0.0,
+        0.0,
+        -0.0
+      ],
+      "WingRight": [
+        0.0,
+        0.0,
+        -0.0
       ]
     }
   }

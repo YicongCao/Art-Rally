@@ -4,6 +4,7 @@ func _run() -> void:
 	root.add_child(app)
 	app.profile.path = "user://matrix-test-%d/profile.json"%OS.get_process_id()
 	app.profile.data = RallyProfileStore.fresh()
+	app.practice = true # Exercise every stage independently of campaign unlocks.
 	var reports: Array = []
 	app.profile.data.unlocked_power_tier = 2
 	var tiers: Array = [0,1,2]

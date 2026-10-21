@@ -1,0 +1,24 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Metal 4.0 - Forward+ - Using Device #0: Apple - Apple M5 (Apple9)
+
+BIRD sunset_ridge station 548.998901367188 time 6.205454 from (-113.6404, 31.0887, -424.22) to (-31.18399, 37.0887, -553.3438) camera (-4.608305, 8.022502, -406.9879)
+BIRD_NODE true (-93.9604, 35.24672, -455.0381) screen (667.4725, 306.5337) behind false
+BIRD_NODE true (-93.9604, 35.69672, -452.6382) screen (655.8866, 302.6859) behind false
+BIRD_NODE true (-90.9604, 36.14672, -450.2382) screen (651.4767, 294.5646) behind false
+BIRD_NODE true (-96.9604, 36.59672, -447.8381) screen (625.3035, 298.9045) behind false
+BIRD_NODE true (-87.9604, 37.04672, -445.4381) screen (633.9538, 281.4529) behind false
+BIRD_NODE true (-99.9604, 37.49672, -443.0381) screen (595.1818, 295.1802) behind false
+BIRD sunlit_cape station 503.99859375 time 6.191866 from (286.6864, 120.8679, -188.9415) to (424.4332, 126.8679, -121.913) camera (243.8682, 106.8139, -138.9782)
+BIRD_NODE true (319.4906, 125.0179, -172.9787) screen (367.397, 281.0807) behind false
+BIRD_NODE true (319.4906, 125.4679, -170.5787) screen (385.6933, 277.9468) behind false
+BIRD_NODE true (322.4906, 125.9179, -168.1787) screen (412.0894, 280.1993) behind false
+BIRD_NODE true (316.4906, 126.3679, -165.7787) screen (414.0301, 265.7793) behind false
+BIRD_NODE true (325.4906, 126.8179, -163.3787) screen (453.2657, 279.3872) behind false
+BIRD_NODE true (313.4906, 127.2679, -160.9787) screen (444.5579, 252.671) behind false
+BIRD misty_highlands station 495.999165039063 time 6.16341 from (-28.16903, 77.05, -400.2585) to (69.7713, 83.05, -335.2065) camera (-107.602, 52.39846, -387.2367)
+BIRD_NODE true (-4.951859, 81.18341, -384.8376) screen (631.0628, 327.2965) behind false
+BIRD_NODE true (-4.951859, 81.63341, -382.4377) screen (643.7869, 325.1332) behind false
+BIRD_NODE true (-1.951859, 82.08341, -380.0377) screen (655.4124, 327.2665) behind false
+BIRD_NODE true (-7.951859, 82.53341, -377.6376) screen (670.5662, 316.2469) behind false
+BIRD_NODE true (1.048141, 82.98341, -375.2376) screen (678.3377, 327.2383) behind false
+BIRD_NODE true (-10.95186, 83.43341, -372.8376) screen (698.69, 306.9142) behind false

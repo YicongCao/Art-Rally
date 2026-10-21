@@ -1,0 +1,25 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Road stays supported at 450 m
+PASS: Cliff has no invisible road-height platform at 450 m
+PASS: Road stays supported at 900 m
+PASS: Cliff has no invisible road-height platform at 900 m
+PASS: Road stays supported at 1480 m
+PASS: Cliff has no invisible road-height platform at 1480 m
+PASS: Road stays supported at 1930 m
+PASS: Cliff has no invisible road-height platform at 1930 m
+PASS: Road stays supported at 2490 m
+PASS: Cliff has no invisible road-height platform at 2490 m
+PASS: A car beyond the cliff actually falls under gravity
+PASS: The fall is visible before one eventual recovery
+PASS: Cliff recovery applies exactly one reset after the visible fall
+PASS: F160 tier 0 stays visibly separated by 1.5 m at every speed
+PASS: F160 tier 1 stays visibly separated by 1.5 m at every speed
+PASS: F160 tier 2 stays visibly separated by 1.5 m at every speed
+PASS: R200 tier 0 stays visibly separated by 1.5 m at every speed
+PASS: R200 tier 1 stays visibly separated by 1.5 m at every speed
+PASS: R200 tier 2 stays visibly separated by 1.5 m at every speed
+PASS: A240 tier 0 stays visibly separated by 1.5 m at every speed
+PASS: A240 tier 1 stays visibly separated by 1.5 m at every speed
+PASS: A240 tier 2 stays visibly separated by 1.5 m at every speed
+TEST RESULT: 22 checks, 0 failures

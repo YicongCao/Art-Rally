@@ -1,0 +1,33 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Intentional idle does not demand recovery
+PASS: Persistent blocked throttle offers recovery
+PASS: Motion clears recovery advice
+PASS: Overturned car gets a recover hint
+PASS: Wrong-way hint clears in non-driving states
+PASS: Highland has no cross-road rivers or bridge profile
+PASS: Changed highland road uses new score compatibility version
+MOUNTAIN BANK RAYS: 1512 holes: 0 road intrusions: 0
+PASS: Mountain-side tire support has no shoulder-to-slope holes
+PASS: Terrain collision never rises through driving surface
+PASS: F160 physically stays supported on the mountain bank at 450 m
+PASS: F160 physically stays supported on the mountain bank at 900 m
+PASS: F160 physically stays supported on the mountain bank at 2490 m
+PASS: R200 physically stays supported on the mountain bank at 450 m
+PASS: R200 physically stays supported on the mountain bank at 900 m
+PASS: R200 physically stays supported on the mountain bank at 2490 m
+PASS: A240 physically stays supported on the mountain bank at 450 m
+PASS: A240 physically stays supported on the mountain bank at 900 m
+PASS: A240 physically stays supported on the mountain bank at 2490 m
+PASS: Three spaced flocks have six authored birds each
+PASS: Blender wing mounts survive export
+PASS: Highland flyby at 495 m has at least two unoccluded viewing samples (6/6)
+PASS: Highland flyby at 1567 m has at least two unoccluded viewing samples (6/6)
+PASS: Highland flyby at 2559 m has at least two unoccluded viewing samples (6/6)
+PASS: Birds wait for approach rather than expiring before arrival
+PASS: Visible flock advances through the flyby
+PASS: Flyby completes after its fade-out
+PASS: Restart rearms the sky events
+PASS: Generated wear atlas is bound and enabled on road material
+PASS: Painterly rock texture reaches actual terrain shader
+TEST RESULT: 29 checks, 0 failures

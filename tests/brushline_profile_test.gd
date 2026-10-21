@@ -36,8 +36,19 @@ func _run() -> void:
 	check(not reloaded.stage_unlocked("misty_highlands"),"Unplayed legacy highland still needs gold")
 	var hash_before := FileAccess.get_sha256(reloaded.path)
 	check(RallyBrandMigration.migrate(ProjectSettings.globalize_path(destination),ProjectSettings.globalize_path(legacy))==OK and hash_before==FileAccess.get_sha256(reloaded.path),"Migration is idempotent and never overwrites new progress")
-	check(RallyContentCatalog.stage("misty_highlands").stage_version=="8","Cliff change separates highland ghosts")
+	check(RallyContentCatalog.stage("misty_highlands").stage_version=="9","Cliff change separates highland ghosts")
 	check(RallyContentCatalog.stage("sunset_ridge").stage_version=="7","Unchanged road challenge keeps compatible records")
+	var highland := RallyContentCatalog.challenge("misty_highlands","F160")
+	var old_key := highland.key().replace("misty_highlands@9|","misty_highlands@8|")
+	var archived := RallyProfileStore.fresh()
+	archived.erase("unlocked_stages")
+	archived.challenges[old_key]={"best":result(),"medal":1,"recent":[result()]}
+	var archive_path := directory+"/v8/profile.json"
+	RallyProfileStore.atomic_json(archive_path,archived,false)
+	var archived_store := RallyProfileStore.new()
+	archived_store.path=archive_path
+	check(archived_store.load_file()==OK and archived_store.stage_unlocked("misty_highlands"),"Played highland v8 keeps challenge access after bridge removal")
+	check(not archived_store.result_for(old_key).is_empty() and archived_store.result_for(highland.key()).is_empty(),"Old highland scores remain archived, separate from version 9")
 	var root_path := ProjectSettings.globalize_path(directory+"/default-roots")
 	RallyProfileStore.atomic_json(root_path+"/Art Rally/player/profile.json",old,false)
 	check(RallyBrandMigration.migrate(root_path+"/Brushline Rally")==OK and FileAccess.file_exists(root_path+"/Brushline Rally/player/profile.json"),"Default discovery reads the old Art Rally directory")

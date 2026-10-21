@@ -1,0 +1,52 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Metal 4.0 - Forward+ - Using Device #0: Apple - Apple M5 (Apple9)
+
+PASS: sunset_ridge: authored checker/cloth/machine colors survive merging
+PASS: sunset_ridge: rigid, pressure cloth, streamer and rotating fan masks survive export
+PASS: sunset_ridge: pressure gate has intended height
+PASS: sunset_ridge: every intermediate gate has two complete assemblies
+PASS: sunset_ridge: both tips bend out of the road, including rotated corners
+PASS: sunset_ridge: static foot and full sway envelope clear the road
+PASS: sunset_ridge: presentation does not introduce checkpoint collision
+PASS: sunset_ridge: timing boundary arches remain
+PASS: sunset_ridge: active gate highlight preserves base palette
+PASS: sunset_ridge: rendered MultiMesh receives active state
+PASS: sunset_ridge: native spatial fan playback starts
+PASS: sunset_ridge: cloth clock and nearest fan pair advance
+PASS: sunset_ridge: pause freezes cloth and suspends spatial fans
+PASS: sunset_ridge: passed gate gets bounded streamer response
+PASS: sunset_ridge: only two reusable looping spatial fans
+PASS: sunset_ridge: distant fans stop
+PASS: sunlit_cape: authored checker/cloth/machine colors survive merging
+PASS: sunlit_cape: rigid, pressure cloth, streamer and rotating fan masks survive export
+PASS: sunlit_cape: pressure gate has intended height
+PASS: sunlit_cape: every intermediate gate has two complete assemblies
+PASS: sunlit_cape: both tips bend out of the road, including rotated corners
+PASS: sunlit_cape: static foot and full sway envelope clear the road
+PASS: sunlit_cape: presentation does not introduce checkpoint collision
+PASS: sunlit_cape: timing boundary arches remain
+PASS: sunlit_cape: active gate highlight preserves base palette
+PASS: sunlit_cape: rendered MultiMesh receives active state
+PASS: sunlit_cape: native spatial fan playback starts
+PASS: sunlit_cape: cloth clock and nearest fan pair advance
+PASS: sunlit_cape: pause freezes cloth and suspends spatial fans
+PASS: sunlit_cape: passed gate gets bounded streamer response
+PASS: sunlit_cape: only two reusable looping spatial fans
+PASS: sunlit_cape: distant fans stop
+PASS: misty_highlands: authored checker/cloth/machine colors survive merging
+PASS: misty_highlands: rigid, pressure cloth, streamer and rotating fan masks survive export
+PASS: misty_highlands: pressure gate has intended height
+PASS: misty_highlands: every intermediate gate has two complete assemblies
+PASS: misty_highlands: both tips bend out of the road, including rotated corners
+PASS: misty_highlands: static foot and full sway envelope clear the road
+PASS: misty_highlands: presentation does not introduce checkpoint collision
+PASS: misty_highlands: timing boundary arches remain
+PASS: misty_highlands: active gate highlight preserves base palette
+PASS: misty_highlands: rendered MultiMesh receives active state
+PASS: misty_highlands: native spatial fan playback starts
+PASS: misty_highlands: cloth clock and nearest fan pair advance
+PASS: misty_highlands: pause freezes cloth and suspends spatial fans
+PASS: misty_highlands: passed gate gets bounded streamer response
+PASS: misty_highlands: only two reusable looping spatial fans
+PASS: misty_highlands: distant fans stop
+TEST RESULT: 48 checks, 0 failures

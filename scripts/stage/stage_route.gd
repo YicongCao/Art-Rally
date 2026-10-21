@@ -10,6 +10,7 @@ var distances := PackedFloat64Array()
 var length: float = 0.0
 var spacing: float = 2.0
 var notes: Array[Dictionary] = []
+var turn_count: int = 0
 
 
 func build(settings: RallyStageDefinition) -> void:
@@ -95,6 +96,7 @@ func project(point: Vector3, hint: int = -1, radius: int = 35) -> Dictionary:
 
 
 func _build_notes() -> void:
+	turn_count=0
 	notes.clear()
 	var last_turn := -100.0
 	for i: int in range(10, points.size() - 10, 5):
@@ -103,6 +105,7 @@ func _build_notes() -> void:
 			var direction := "LEFT" if angle > 0 else "RIGHT"
 			var severity := "TIGHT" if absf(angle) > 0.75 else "MEDIUM"
 			notes.append({"s": distances[i], "code": direction + "_" + severity})
+			turn_count+=1
 			last_turn = distances[i]
 	var hazards := definition.hazard_notes.duplicate(true)
 	for station: float in definition.log_pile_stations: hazards.append({"s":station,"code":"LOGS"})

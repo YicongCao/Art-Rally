@@ -229,6 +229,7 @@ func _apply_materials() -> void:
 	var ground := ShaderMaterial.new()
 	ground.shader = preload("res://assets/shaders/stage_ground.gdshader")
 	ground.set_shader_parameter("road_mesh",true)
+	ground.set_shader_parameter("wear_strength",.48)
 	ground.set_shader_parameter("wear_atlas",preload("res://assets/brushline/road-wear.png"))
 	if not generator.definition.mountain_cliff_sections.is_empty():
 		ground.set_shader_parameter("mountain_section_count",generator.definition.mountain_cliff_sections.size())
@@ -285,13 +286,9 @@ func _build_terrain() -> void:
 				var center_at: Vector3=(vertices[a]+vertices[b+1])*.5
 				var near := nearest(center_at)
 				if float(near.distance)>85: continue
-				for tri: Array in [[a,a+1,b+1],[a,b+1,b]]:
-					var clear := true
-					for index: int in tri:
-						var frame := nearest(vertices[index])
-						if float(frame.distance)<route.width_at(frame.s)*.5+1.15: clear=false
-					if clear:
-						for index: int in tri: faces.append(vertices[index])
+				# Keep complete visible triangles below the road too. Dropping a triangle
+				# because ONE corner touched the shoulder left 4 m holes beside the road.
+				for index: int in [a,a+1,b+1,a,b+1,b]: faces.append(vertices[index])
 		var body := StaticBody3D.new()
 		body.name="AlpineTerrainCollision"
 		body.collision_layer=1
@@ -303,6 +300,60 @@ func _build_terrain() -> void:
 		collider.shape=shape
 		body.add_child(collider)
 		dressing.add_child(body)
+		_build_mountain_shoulders()
+
+
+func _build_mountain_shoulders() -> void:
+	# A matching visual/collision apron joins only the mountain bank to the road.
+	# The opposite bank stays open so the visible cliff remains a real drop.
+	var builder := SurfaceTool.new()
+	builder.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var count := 0
+	for i: int in range(route.points.size()-1):
+		var side := generator.definition.mountain_side_at(route.distances[i])
+		var next_side := generator.definition.mountain_side_at(route.distances[i+1])
+		if absf(side)<.01 or side*next_side<=0: continue
+		var rows: Array[PackedVector3Array] = []
+		for row: int in [i,i+1]:
+			var edge := generator.vertex_at(row,2 if side<0 else 6)
+			var across := route.rights[row]*signf(side)
+			var far := edge+across*5
+			far.y=rendered_height_at(far.x,far.z)+.025
+			var points := PackedVector3Array()
+			for j: int in range(6):
+				var p := edge.lerp(far,float(j)/5)
+				if j>0: p.y=maxf(p.y,rendered_height_at(p.x,p.z)+.025)
+				points.append(p)
+			rows.append(points)
+		for j: int in range(5):
+			var a: Vector3=rows[0][j]
+			var b: Vector3=rows[1][j]
+			var c: Vector3=rows[0][j+1]
+			var d: Vector3=rows[1][j+1]
+			var vertices: Array=[a,b,c,c,b,d] if side>0 else [a,c,b,c,d,b]
+			for vertex: Vector3 in vertices: builder.add_vertex(vertex)
+			count+=6
+	if count==0: return
+	builder.generate_normals()
+	var mesh := builder.commit()
+	var visual := MeshInstance3D.new()
+	visual.name="MountainShoulderJoin"
+	visual.mesh=mesh
+	var material := ShaderMaterial.new()
+	material.shader=preload("res://assets/shaders/stage_ground.gdshader")
+	material.set_shader_parameter("alpine_terrain",true)
+	_theme_ground(material)
+	visual.material_override=material
+	dressing.add_child(visual)
+	var body := StaticBody3D.new()
+	body.name="MountainShoulderCollision"
+	body.collision_layer=1
+	body.collision_mask=2
+	body.set_meta("surface_id",3)
+	var collision := CollisionShape3D.new()
+	collision.shape=mesh.create_trimesh_shape()
+	body.add_child(collision)
+	dressing.add_child(body)
 
 
 func _build_mountains() -> void:
@@ -330,6 +381,7 @@ func _build_mountains() -> void:
 			child.scale = Vector3(2.8,1.65,2.8)
 			child.position = center-child.scale*center
 			child.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			child.material_override = _rock_material(.012)
 		elif str(child.name) == "DistantValleyFloor":
 			child.scale = Vector3(1.5,1,1.5)
 			# The background floor must never intersect a lower section of the route.
@@ -339,6 +391,14 @@ func _build_mountains() -> void:
 			child.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	sample.dressing = null
 	sample.free()
+
+
+func _rock_material(scale_value: float) -> ShaderMaterial:
+	var material := ShaderMaterial.new()
+	material.shader=preload("res://assets/shaders/painted_mountain.gdshader")
+	material.set_shader_parameter("rock_albedo",preload("res://assets/brushline/mountain-rock.png"))
+	material.set_shader_parameter("rock_scale",scale_value)
+	return material
 
 
 func _build_highland_edges() -> void:
@@ -363,10 +423,7 @@ func _build_highland_edges() -> void:
 	face.name = "HighlandRidgeOutcrops"
 	face.mesh = rocks.finish()
 	face.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
-	var material := StandardMaterial3D.new()
-	material.vertex_color_use_as_albedo = true
-	material.roughness = 1
-	face.material_override = material
+	face.material_override = _rock_material(.10)
 	dressing.add_child(face)
 
 
@@ -486,6 +543,7 @@ func set_quality(low: bool) -> void:
 
 
 func _theme_ground(material: ShaderMaterial) -> void:
+	material.set_shader_parameter("rock_albedo",preload("res://assets/brushline/mountain-rock.png"))
 	var colors: Array=RallyScreenprintStyle.current().biome_palettes[generator.definition.environment_id]
 	material.set_shader_parameter("grass_dark",colors[0])
 	material.set_shader_parameter("grass_light",colors[1])

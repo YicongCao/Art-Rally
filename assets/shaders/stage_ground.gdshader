@@ -1,9 +1,11 @@
 shader_type spatial;
 render_mode diffuse_burley;
+#include "res://assets/shaders/painted_rock.gdshaderinc"
 
 varying vec3 world;
 varying vec4 zone;
 uniform bool road_mesh = false;
+uniform float wear_strength = .48;
 uniform sampler2D wear_atlas : source_color, filter_linear_mipmap_anisotropic;
 uniform bool alpine_terrain = false;
 uniform int mountain_section_count = 0;
@@ -65,10 +67,10 @@ void fragment() {
 	vec3 grass = mix(grass_dark,grass_light,large);
 	vec3 earth = mix(vec3(0.26, 0.22, 0.14), vec3(0.39, 0.33, 0.21), noise(world.xz * 0.31));
 	vec3 color = mix(grass, earth, smoothstep(0.44, 0.8, noise(world.xz * 0.11)) * 0.25);
-	if (alpine_terrain) {
+	if (!road_mesh) {
 		float slope = 1.0-abs((INV_VIEW_MATRIX*vec4(NORMAL,0.0)).y);
 		vec3 rock = mix(vec3(.25,.28,.36),vec3(.43,.46,.54),large);
-		rock *= .94+.06*sin(world.y*.7+noise(world.xz*.09)*2.0);
+		rock = painted_rock(world,normalize((INV_VIEW_MATRIX*vec4(NORMAL,0)).xyz),rock);
 		color = mix(color,rock,smoothstep(.16,.55,slope));
 	}
 	float road_bump = 0.0;
@@ -113,7 +115,7 @@ void fragment() {
 		vec2 seam=abs(fract(wear_uv)-.5)*2.0;
 		float patch=(1.0-smoothstep(.78,.99,max(seam.x,seam.y)))*smoothstep(.38,.68,noise(vec2(UV.x*.3,UV.y*.045)));
 		float fade=1.0-smoothstep(35.0,95.0,length(VERTEX));
-		gravel=mix(gravel,painted,patch*.48*fade);
+		gravel=mix(gravel,painted,patch*wear_strength*fade);
 		color = mix(color, gravel, on_road);
 	}
 	float wet = road_mesh ? clamp(zone.a*(.75+.25*noise(world.xz*1.8)),0.0,1.0) : 0.0;

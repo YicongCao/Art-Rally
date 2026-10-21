@@ -98,7 +98,7 @@ func update(dt: float) -> void:
 		# Slow bank drift; update only twice per second to amortize sky radiance updates.
 		if int(elapsed*2)!=int((elapsed-dt)*2):
 			environment.sky.sky_material.set_shader_parameter("cloud_drift",elapsed*.00035)
-		sky_life.advance(dt)
+		sky_life.advance(dt,scene.session.progress)
 		for i: int in range(welcome.size()):
 			for arm_id: String in ["FlagArm","CheerArm"]:
 				var arm := welcome[i].find_child(arm_id,true,false) as Node3D
@@ -173,6 +173,9 @@ func _apply_biome(sky: ShaderMaterial) -> void:
 		if backdrop is MeshInstance3D and str(backdrop.name).begins_with("MountainLayer"):
 			var painted := ShaderMaterial.new()
 			painted.shader = preload("res://assets/shaders/anime_mountain.gdshader")
+			painted.set_shader_parameter("rock_albedo",preload("res://assets/brushline/mountain-rock.png"))
+			painted.set_shader_parameter("rock_scale",.012)
+			painted.set_shader_parameter("rock_strength",.48)
 			painted.set_shader_parameter("sun_direction",atmosphere.sun_direction)
 			painted.set_shader_parameter("layer",float(str(backdrop.name).trim_prefix("MountainLayer")))
 			painted.set_shader_parameter("shade_color",Color("646da2"))
