@@ -1,0 +1,55 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: sunset_ridge: every intermediate gate has paired light beams
+PASS: sunset_ridge: all beams have projectors
+PASS: sunset_ridge: beams exclude timing boundary arches
+PASS: sunset_ridge: start and finish arches remain
+PASS: sunset_ridge: checkpoints remain non-colliding
+PASS: sunset_ridge: old fan sounds removed
+PASS: sunset_ridge: projector footprint clears every road edge
+PASS: sunset_ridge: light beams stay vertical on slopes and turns
+PASS: sunset_ridge: anchors follow shoulder elevation
+PASS: sunset_ridge: only required gate carries a symbol
+PASS: sunset_ridge: active beam brighter than future beams
+PASS: sunset_ridge: only two reusable nearby ground lights
+PASS: sunset_ridge: near gate casts coloured ground light
+PASS: sunset_ridge: animation freezes while paused
+PASS: sunset_ridge: passed gate dims and next gate lights up
+PASS: sunset_ridge: passage response is tied to the gate just crossed
+PASS: sunset_ridge: distant ground lights disable
+PASS: sunlit_cape: every intermediate gate has paired light beams
+PASS: sunlit_cape: all beams have projectors
+PASS: sunlit_cape: beams exclude timing boundary arches
+PASS: sunlit_cape: start and finish arches remain
+PASS: sunlit_cape: checkpoints remain non-colliding
+PASS: sunlit_cape: old fan sounds removed
+PASS: sunlit_cape: projector footprint clears every road edge
+PASS: sunlit_cape: light beams stay vertical on slopes and turns
+PASS: sunlit_cape: anchors follow shoulder elevation
+PASS: sunlit_cape: only required gate carries a symbol
+PASS: sunlit_cape: active beam brighter than future beams
+PASS: sunlit_cape: only two reusable nearby ground lights
+PASS: sunlit_cape: near gate casts coloured ground light
+PASS: sunlit_cape: animation freezes while paused
+PASS: sunlit_cape: passed gate dims and next gate lights up
+PASS: sunlit_cape: passage response is tied to the gate just crossed
+PASS: sunlit_cape: distant ground lights disable
+PASS: misty_highlands: every intermediate gate has paired light beams
+PASS: misty_highlands: all beams have projectors
+PASS: misty_highlands: beams exclude timing boundary arches
+PASS: misty_highlands: start and finish arches remain
+PASS: misty_highlands: checkpoints remain non-colliding
+PASS: misty_highlands: old fan sounds removed
+PASS: misty_highlands: projector footprint clears every road edge
+PASS: misty_highlands: light beams stay vertical on slopes and turns
+PASS: misty_highlands: anchors follow shoulder elevation
+PASS: misty_highlands: only required gate carries a symbol
+PASS: misty_highlands: active beam brighter than future beams
+PASS: misty_highlands: only two reusable nearby ground lights
+PASS: misty_highlands: near gate casts coloured ground light
+PASS: misty_highlands: animation freezes while paused
+PASS: misty_highlands: passed gate dims and next gate lights up
+PASS: misty_highlands: passage response is tied to the gate just crossed
+PASS: misty_highlands: distant ground lights disable
+PASS: All three environments have distinct light palettes
+TEST RESULT: 52 checks, 0 failures

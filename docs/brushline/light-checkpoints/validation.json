@@ -1,0 +1,46 @@
+{
+  "date": "2026-10-21",
+  "engine": "Godot 4.7.2",
+  "renderer": "Metal Forward+ / Apple M5",
+  "resolution": [
+    1600,
+    900
+  ],
+  "suites": {
+    "checkpoint_body": {
+      "passed": true,
+      "checks": 7
+    },
+    "stage_session": {
+      "passed": true,
+      "checks": 20
+    },
+    "stage_play": {
+      "passed": true,
+      "checks": 13
+    },
+    "driving_polish": {
+      "passed": true,
+      "checks": 23
+    },
+    "presentation_theme": {
+      "passed": true,
+      "checks": 20
+    },
+    "presentation_expansion": {
+      "passed": true,
+      "checks": 43
+    },
+    "light_checkpoint": {
+      "passed": true,
+      "checks": 52
+    },
+    "light_checkpoint_native": {
+      "passed": true,
+      "checks": 58
+    }
+  },
+  "total_checks": 236,
+  "failures": 0,
+  "capture": "Three stages and projector detail, inspected visually; no script or shader errors."
+}

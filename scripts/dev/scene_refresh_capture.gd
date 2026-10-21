@@ -63,7 +63,7 @@ func run() -> void:
 			material.set_shader_parameter("wear_strength",.48)
 			paused=false
 		var gates: RallyCheckpointMarkers=race.presentation.checkpoints
-		var stand := gates.tube_poses[gates.tube_gate_indices[4]]
+		var stand := gates.column_poses[gates.column_gate_indices[4]]
 		camera.position=stand*Vector3(-2.3,2.4,5)
 		camera.look_at(stand*Vector3(.25,1.6,-.15))
 		if id=="sunset_ridge":

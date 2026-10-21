@@ -40,7 +40,7 @@ func _run() -> void:
 		await snap(id)
 		if id=="sunset_ridge":
 			var markers: RallyCheckpointMarkers=scene.presentation.checkpoints
-			var stand := markers.tube_poses[markers.tube_gate_indices[gate]]
+			var stand := markers.column_poses[markers.column_gate_indices[gate]]
 			camera.position=stand*Vector3(-2.3,2.6,5)
 			camera.look_at(stand*Vector3(.25,1.5,-.15))
 			await snap("vortex-detail")
