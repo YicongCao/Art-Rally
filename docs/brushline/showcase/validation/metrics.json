@@ -1,0 +1,217 @@
+{
+  "animal_safety_gap_seconds": 3.0327619085766,
+  "camera_rates": [
+    {
+      "fps": 30,
+      "max_angle_per_frame_deg": 0.487787617890834,
+      "max_position_step_m": 0.907359063625336,
+      "min_ground_clearance_m": 6.27634963730816,
+      "shot": "side"
+    },
+    {
+      "fps": 30,
+      "max_angle_per_frame_deg": 0.542485587033294,
+      "max_position_step_m": 0.754301607608795,
+      "min_ground_clearance_m": 5.73542210215237,
+      "shot": "recovery"
+    },
+    {
+      "fps": 30,
+      "max_angle_per_frame_deg": 0.494164239811275,
+      "max_position_step_m": 1.01754605770111,
+      "min_ground_clearance_m": 3.78954164890456,
+      "shot": "hood"
+    },
+    {
+      "fps": 60,
+      "max_angle_per_frame_deg": 0.243893248656462,
+      "max_position_step_m": 0.453771352767944,
+      "min_ground_clearance_m": 6.25796571894898,
+      "shot": "side"
+    },
+    {
+      "fps": 60,
+      "max_angle_per_frame_deg": 0.274112406782978,
+      "max_position_step_m": 0.377292037010193,
+      "min_ground_clearance_m": 5.72587252641097,
+      "shot": "recovery"
+    },
+    {
+      "fps": 60,
+      "max_angle_per_frame_deg": 0.247081559616682,
+      "max_position_step_m": 0.509226441383362,
+      "min_ground_clearance_m": 3.78954164890456,
+      "shot": "hood"
+    },
+    {
+      "fps": 120,
+      "max_angle_per_frame_deg": 0.125114538102434,
+      "max_position_step_m": 0.226932615041733,
+      "min_ground_clearance_m": 6.25014218251454,
+      "shot": "side"
+    },
+    {
+      "fps": 120,
+      "max_angle_per_frame_deg": 0.137056110009996,
+      "max_position_step_m": 0.188814774155617,
+      "min_ground_clearance_m": 5.72225510835415,
+      "shot": "recovery"
+    },
+    {
+      "fps": 120,
+      "max_angle_per_frame_deg": 0.125114538102434,
+      "max_position_step_m": 0.254696369171143,
+      "min_ground_clearance_m": 3.78582644404378,
+      "shot": "hood"
+    }
+  ],
+  "collision_sweep": {
+    "animals": {
+      "contacts": [],
+      "max_speed_pose_error_mps": 0.0566877126693868
+    },
+    "bridge": {
+      "contacts": [],
+      "max_speed_pose_error_mps": 0.0628813505172729
+    },
+    "chase": {
+      "contacts": [],
+      "max_speed_pose_error_mps": 0.137092828750319
+    },
+    "cliff": {
+      "contacts": [],
+      "max_speed_pose_error_mps": 0.046234965324448
+    },
+    "coast_wide": {
+      "contacts": [],
+      "max_speed_pose_error_mps": 0.0696824789047064
+    },
+    "establish": {
+      "contacts": [],
+      "max_speed_pose_error_mps": 0.0566877126693868
+    },
+    "helicopter": {
+      "contacts": [],
+      "max_speed_pose_error_mps": 0.078185558319074
+    },
+    "hood": {
+      "contacts": [],
+      "max_speed_pose_error_mps": 0.0576486587524343
+    },
+    "night_chase": {
+      "contacts": [],
+      "max_speed_pose_error_mps": 0.062373518943744
+    },
+    "outro": {
+      "contacts": [],
+      "max_speed_pose_error_mps": 0.00513482093808548
+    },
+    "recovery": {
+      "contacts": [],
+      "max_speed_pose_error_mps": 0.0508657693862737
+    },
+    "side": {
+      "contacts": [],
+      "max_speed_pose_error_mps": 0.0683819055555936
+    }
+  },
+  "event_visibility": {
+    "animals": 5.96666666666666,
+    "bridge": 5.46666666666666,
+    "helicopter": 5.99999999999999
+  },
+  "recovery": {
+    "collisions": 0.0,
+    "continuous_under_4_deg_seconds": 4.99999999999999,
+    "countersteer": true,
+    "handbrake": false,
+    "peak_sideslip_deg": 15.3936778052862,
+    "peak_source_time": 10.8166666666667
+  },
+  "shots": [
+    {
+      "id": "establish",
+      "max_lateral_m": 0.624526977539062,
+      "speed_kph_max": 76.052478790283,
+      "speed_kph_median": 75.796071624756,
+      "speed_kph_min": 75.343723297119
+    },
+    {
+      "id": "chase",
+      "max_lateral_m": 1.47550344467163,
+      "speed_kph_max": 99.9684379577635,
+      "speed_kph_median": 91.8037010192872,
+      "speed_kph_min": 80.0253890991212
+    },
+    {
+      "id": "side",
+      "max_lateral_m": 1.84547007083893,
+      "speed_kph_max": 98.1680534362793,
+      "speed_kph_median": 69.2030250549317,
+      "speed_kph_min": 55.6302337646483
+    },
+    {
+      "id": "recovery",
+      "max_lateral_m": 2.58389186859131,
+      "speed_kph_max": 79.3211448669433,
+      "speed_kph_median": 71.2927207946776,
+      "speed_kph_min": 61.388971710205
+    },
+    {
+      "id": "animals",
+      "max_lateral_m": 0.624526977539062,
+      "speed_kph_max": 76.1337638854981,
+      "speed_kph_median": 75.8400100708007,
+      "speed_kph_min": 75.343723297119
+    },
+    {
+      "id": "coast_wide",
+      "max_lateral_m": 0.862137615680695,
+      "speed_kph_max": 103.528179931641,
+      "speed_kph_median": 95.1868034362793,
+      "speed_kph_min": 78.2987709045409
+    },
+    {
+      "id": "hood",
+      "max_lateral_m": 1.99501800537109,
+      "speed_kph_max": 110.035842132568,
+      "speed_kph_median": 88.3490089416505,
+      "speed_kph_min": 71.4610794067384
+    },
+    {
+      "id": "bridge",
+      "max_lateral_m": 2.31156778335571,
+      "speed_kph_max": 77.1633544921877,
+      "speed_kph_median": 75.742980194092,
+      "speed_kph_min": 67.5118515014647
+    },
+    {
+      "id": "helicopter",
+      "max_lateral_m": 0.857588768005371,
+      "speed_kph_max": 108.207641601562,
+      "speed_kph_median": 93.670236968994,
+      "speed_kph_min": 74.7166374206543
+    },
+    {
+      "id": "cliff",
+      "max_lateral_m": 0.311127215623856,
+      "speed_kph_max": 82.3541061401367,
+      "speed_kph_median": 82.3428245544433,
+      "speed_kph_min": 81.4423645019531
+    },
+    {
+      "id": "night_chase",
+      "max_lateral_m": 0.520613312721252,
+      "speed_kph_max": 82.4997093200683,
+      "speed_kph_median": 82.3393020629884,
+      "speed_kph_min": 81.9927864074707
+    },
+    {
+      "id": "outro",
+      "max_lateral_m": 0.523398280143738,
+      "speed_kph_max": 82.3489768981933,
+      "speed_kph_median": 82.330670928955,
+      "speed_kph_min": 82.2990577697755
+    }
+  ]
+}

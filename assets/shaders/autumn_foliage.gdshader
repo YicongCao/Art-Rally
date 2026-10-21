@@ -1,4 +1,6 @@
 shader_type spatial;
+uniform float cinematic_time = -1.0;
+float scene_time() { return cinematic_time >= 0.0 ? cinematic_time : TIME; }
 render_mode cull_disabled, diffuse_lambert_wrap, specular_disabled;
 
 uniform bool grass_blades = false;
@@ -8,7 +10,7 @@ void vertex() {
 	vec3 world = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 	canopy = smoothstep(2.0,5.5,VERTEX.y);
 	float weight = grass_blades ? clamp(VERTEX.y / 0.65, 0.0, 1.0) : smoothstep(2.0, 8.0, VERTEX.y);
-	float breeze = sin(world.x * 0.42 + world.z * 0.25 + TIME * 1.3);
+	float breeze = sin(world.x * 0.42 + world.z * 0.25 + scene_time() * 1.3);
 	VERTEX.x += breeze * weight * (grass_blades ? 0.045 : 0.065);
 	// Upward-biased blade normals keep a continuous golden carpet between tufts.
 	if (!grass_blades) NORMAL = normalize(mix(NORMAL,normalize(vec3(VERTEX.x,1.7,VERTEX.z)),.32*canopy));

@@ -1,8 +1,10 @@
 shader_type spatial;
+uniform float cinematic_time = -1.0;
+float scene_time() { return cinematic_time >= 0.0 ? cinematic_time : TIME; }
 render_mode cull_disabled;
 void vertex() {
 	float bend = smoothstep(0.0,5.5,VERTEX.y);
-	VERTEX.z += sin(TIME*1.5+VERTEX.x*.5)*bend*.035;
+	VERTEX.z += sin(scene_time()*1.5+VERTEX.x*.5)*bend*.035;
 }
 void fragment() {
 	float check = mod(floor(UV.x)+floor(UV.y*8.0),2.0);

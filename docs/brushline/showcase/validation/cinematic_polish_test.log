@@ -1,0 +1,26 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Replay velocity is continuous at sample boundaries
+PASS: Smooth replay still passes through recorded positions
+PASS: Smoothing cannot bridge recovery gaps
+PASS: Recovery discontinuity cannot contribute a tangent
+PASS: Wheel wrap cannot briefly spin a replay wheel backwards
+PASS: Fast wheels preserve turns larger than pi per sample
+PASS: Legacy wrapped wheel recordings interpolate across the angle seam
+PASS: Default music gain increases by 30 percent
+PASS: Plate and title share the display font with Chinese fallback
+PASS: sunset_ridge bridge geometry and raised physical roadway share their origin
+PASS: sunset_ridge bridge geometry and raised physical roadway share their origin
+PASS: sunset_ridge balloons have generous separation across the landscape
+PASS: sunset_ridge passing several trigger distances cannot cause back-to-back helicopters
+PASS: sunset_ridge next helicopter waits for its cooldown
+PASS: sunlit_cape bridge geometry and raised physical roadway share their origin
+PASS: sunlit_cape bridge geometry and raised physical roadway share their origin
+PASS: sunlit_cape balloons have generous separation across the landscape
+PASS: sunlit_cape passing several trigger distances cannot cause back-to-back helicopters
+PASS: sunlit_cape next helicopter waits for its cooldown
+PASS: Lighthouse spotlight rotates
+PASS: misty_highlands balloons have generous separation across the landscape
+PASS: misty_highlands passing several trigger distances cannot cause back-to-back helicopters
+PASS: misty_highlands next helicopter waits for its cooldown
+TEST RESULT: 23 checks, 0 failures

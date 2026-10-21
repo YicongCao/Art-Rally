@@ -1,0 +1,42 @@
+[
+  {
+    "capture": "full-movie",
+    "duration": 75.0,
+    "first_frame": 23,
+    "fps": 60,
+    "frames": 4500,
+    "last_drawn": 4522,
+    "start": 0.0,
+    "errors": false
+  },
+  {
+    "capture": "short30",
+    "duration": 17.0,
+    "first_frame": 23,
+    "fps": 30,
+    "frames": 510,
+    "last_drawn": 532,
+    "start": 11.0,
+    "errors": false
+  },
+  {
+    "capture": "critical120",
+    "duration": 35.0,
+    "first_frame": 23,
+    "fps": 120,
+    "frames": 4200,
+    "last_drawn": 4222,
+    "start": 11.0,
+    "errors": false
+  },
+  {
+    "capture": "hood30",
+    "duration": 6.0,
+    "first_frame": 23,
+    "fps": 30,
+    "frames": 180,
+    "last_drawn": 202,
+    "start": 40.0,
+    "errors": false
+  }
+]

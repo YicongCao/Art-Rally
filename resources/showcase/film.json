@@ -1,0 +1,162 @@
+{
+  "version": 1,
+  "duration": 75,
+  "clips": {
+    "ridge": "res://resources/showcase/ridge.json",
+    "recovery": "res://resources/showcase/recovery.json",
+    "animals": "res://resources/showcase/animals.json",
+    "coast": "res://resources/showcase/coast.json",
+    "coastwide": "res://resources/showcase/coastwide.json",
+    "bridge": "res://resources/showcase/bridge.json",
+    "highland": "res://resources/showcase/highland.json"
+  },
+  "shots": [
+    {
+      "id": "establish",
+      "start": 0,
+      "duration": 5,
+      "stage": "sunset_ridge",
+      "clip": "animals",
+      "source_in": 10,
+      "camera_rail": "establish",
+      "events": []
+    },
+    {
+      "id": "chase",
+      "start": 5,
+      "duration": 6,
+      "stage": "sunset_ridge",
+      "clip": "ridge",
+      "source_in": 9,
+      "camera_rail": "chase",
+      "events": [
+        "ice_cyan_checkpoints"
+      ]
+    },
+    {
+      "id": "side",
+      "start": 11,
+      "duration": 5,
+      "stage": "sunset_ridge",
+      "clip": "ridge",
+      "source_in": 15,
+      "camera_rail": "side",
+      "events": []
+    },
+    {
+      "id": "recovery",
+      "start": 16,
+      "duration": 12,
+      "stage": "sunset_ridge",
+      "clip": "recovery",
+      "source_in": 7,
+      "camera_rail": "recovery",
+      "events": []
+    },
+    {
+      "id": "animals",
+      "start": 28,
+      "duration": 6,
+      "stage": "sunset_ridge",
+      "clip": "animals",
+      "source_in": 11,
+      "camera_rail": "animals",
+      "events": [
+        "reindeer_crossing"
+      ]
+    },
+    {
+      "id": "coast_wide",
+      "start": 34,
+      "duration": 6,
+      "stage": "sunlit_cape",
+      "clip": "coastwide",
+      "source_in": 7.5,
+      "camera_rail": "coast_wide",
+      "events": []
+    },
+    {
+      "id": "hood",
+      "start": 40,
+      "duration": 6,
+      "stage": "sunlit_cape",
+      "clip": "coast",
+      "source_in": 9,
+      "camera_rail": "hood",
+      "events": []
+    },
+    {
+      "id": "bridge",
+      "start": 46,
+      "duration": 8,
+      "stage": "sunlit_cape",
+      "clip": "bridge",
+      "source_in": 9,
+      "camera_rail": "bridge",
+      "events": [
+        "river_770m"
+      ]
+    },
+    {
+      "id": "helicopter",
+      "start": 54,
+      "duration": 6,
+      "stage": "sunlit_cape",
+      "clip": "coastwide",
+      "source_in": 13,
+      "camera_rail": "helicopter",
+      "events": [
+        "news_helicopter"
+      ]
+    },
+    {
+      "id": "cliff",
+      "start": 60,
+      "duration": 6,
+      "stage": "misty_highlands",
+      "clip": "highland",
+      "source_in": 6,
+      "camera_rail": "cliff",
+      "events": []
+    },
+    {
+      "id": "night_chase",
+      "start": 66,
+      "duration": 6,
+      "stage": "misty_highlands",
+      "clip": "highland",
+      "source_in": 12,
+      "camera_rail": "night_chase",
+      "events": [
+        "amber_checkpoints",
+        "headlights"
+      ]
+    },
+    {
+      "id": "outro",
+      "start": 72,
+      "duration": 3,
+      "stage": "misty_highlands",
+      "clip": "highland",
+      "source_in": 18,
+      "camera_rail": "outro",
+      "events": []
+    }
+  ],
+  "telemetry_columns": [
+    "time_s",
+    "route_m",
+    "speed_mps",
+    "sideslip_deg",
+    "steering_command",
+    "throttle",
+    "brake",
+    "gear",
+    "rpm",
+    "lateral_m",
+    "handbrake",
+    "esp_active",
+    "tc_active"
+  ],
+  "playback_rate": 1.0
+}

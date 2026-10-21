@@ -1,0 +1,31 @@
+{
+  "capture": {
+    "first_frame": 683,
+    "frames": 300,
+    "fps": 60,
+    "start": 11,
+    "duration": 5
+  },
+  "media": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_type": "video",
+        "width": 1280,
+        "height": 720,
+        "r_frame_rate": "60/1",
+        "nb_read_frames": "300"
+      },
+      {
+        "codec_type": "audio",
+        "r_frame_rate": "0/0",
+        "nb_read_frames": "235"
+      }
+    ],
+    "format": {
+      "duration": "5.000000",
+      "size": "5843201"
+    }
+  }
+}

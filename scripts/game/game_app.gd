@@ -41,6 +41,7 @@ var transitions := RallyPageTransition.new()
 var focus_memory: Dictionary = {}
 var page_back: Callable
 var benchmark_requested: bool=false
+var showcase: RallyShowcaseDirector
 
 
 func _ready() -> void:
@@ -1077,7 +1078,7 @@ func _restore_page_focus(expected: String) -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if not event.is_action_pressed("ui_cancel") or event.is_echo(): return
 	if loading or transitions.busy or transitions.wipe.visible: return
-	if screen=="race": return # The visible pause menu owns cancel during driving.
+	if screen in ["race","showcase"]: return # Driving/showcase owns pause input.
 	if not binding_wait.is_empty():
 		binding_wait=""
 		show_bindings()
@@ -1099,13 +1100,65 @@ func _quit_game() -> void:
 
 
 func start_benchmark() -> void:
-	chosen_stage="sunset_ridge"
-	chosen_vehicle="R200"
-	chosen_power_tier=0
-	practice=true
-	tutorial=false
-	benchmark_requested=true
-	await start_race()
+	if loading or is_instance_valid(showcase): return
+	loading=true
+	_loading_page()
+	if transitions.sliding and transitions.sliding.is_running(): await transitions.sliding.finished
+	showcase=RallyShowcaseDirector.new()
+	layer.add_child(showcase)
+	showcase.hide()
+	showcase.preparation_progress.connect(func(value: float): progress_bar.value=value*100)
+	showcase.finished.connect(_showcase_finished)
+	showcase.exited.connect(_showcase_exit)
+	var success: bool=await showcase.prepare()
+	loading=false
+	if not success:
+		var message := showcase.failed_message
+		showcase.queue_free()
+		showcase=null
+		show_home()
+		_label(column,message,20)
+		return
+	ui.hide()
+	audio.stop_all()
+	screen="showcase"
+	showcase.show()
+	showcase.restart()
+	Input.mouse_mode=Input.MOUSE_MODE_HIDDEN
+
+
+func _showcase_finished() -> void:
+	showcase.hide()
+	for world: RallyShowcaseWorld in showcase.worlds.values(): world.deactivate()
+	Input.mouse_mode=Input.MOUSE_MODE_VISIBLE
+	audio.theme=""
+	audio.set_scene()
+	_page("沿途风景","Brushline Rally","showcase_result")
+	var actions := _actions("返回主菜单",_showcase_exit,"再看一次",_showcase_replay)
+	for entry: Array in [[actions.back_button,"exit"],[actions.primary_button,"replay"]]:
+		entry[0].icon=load("res://assets/ui/icons/%s.svg"%entry[1])
+		entry[0].expand_icon=true
+		entry[0].add_theme_constant_override("icon_max_width",24)
+	actions.primary_button.grab_focus.call_deferred()
+
+
+func _showcase_replay() -> void:
+	if not is_instance_valid(showcase): return
+	ui.hide()
+	audio.stop_all()
+	screen="showcase"
+	showcase.show()
+	showcase.restart()
+
+
+func _showcase_exit() -> void:
+	if is_instance_valid(showcase): showcase.queue_free()
+	showcase=null
+	Input.mouse_mode=Input.MOUSE_MODE_VISIBLE
+	audio.theme=""
+	audio.set_scene()
+	show_home()
+
 
 func show_benchmark_result(report: Dictionary) -> void:
 	var output := "user://benchmarks/demo-%d.json"%Time.get_unix_time_from_system()

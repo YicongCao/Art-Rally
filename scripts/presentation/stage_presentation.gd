@@ -90,7 +90,7 @@ func build(owner_scene: Node3D) -> void:
 	scene.get_viewport().screen_space_aa = Viewport.SCREEN_SPACE_AA_FXAA
 
 
-func update(dt: float) -> void:
+func update(dt: float,drive_camera: bool = true) -> void:
 	checkpoints.update(scene.session.next_gate)
 	checkpoints.advance(dt,scene.camera.global_position)
 	if not scene.get_tree().paused:
@@ -104,7 +104,7 @@ func update(dt: float) -> void:
 				var arm := welcome[i].find_child(arm_id,true,false) as Node3D
 				if arm!=null: arm.rotation.z=sin(elapsed*2.4+i)*.24
 		tail_streaks.update(scene.vehicle.get_global_transform_interpolated(),scene.vehicle.linear_velocity.length(),dt,scene.camera)
-	camera_rig.update(scene.camera,scene.vehicle,scene.camera_mode,scene.preferences.values.camera_motion,scene.get_tree().paused,dt,scene.controls.look_vector())
+	if drive_camera: camera_rig.update(scene.camera,scene.vehicle,scene.camera_mode,scene.preferences.values.camera_motion,scene.get_tree().paused,dt,scene.controls.look_vector())
 	for i: int in range(scenery.foliage.animated_arms.size()):
 		scenery.foliage.animated_arms[i].rotation.z = sin(elapsed*2.4+i)*0.2
 	for boat: Dictionary in scenery.sailboats:

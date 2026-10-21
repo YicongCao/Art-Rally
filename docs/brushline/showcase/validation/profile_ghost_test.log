@@ -1,0 +1,34 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Missing profile starts with safe defaults
+PASS: Checkpoint clocks are optional and valid within the result timeline
+PASS: Corrupt checkpoint clocks cannot enter saved bests
+PASS: Corrupt checkpoint clocks cannot enter saved bests
+PASS: Corrupt checkpoint clocks cannot enter saved bests
+PASS: Corrupt checkpoint clocks cannot enter saved bests
+PASS: Finite versioned trajectory accepted
+PASS: Ghost rejects wrong challenge or calibration version
+PASS: Ghost interpolates pose and wheel steering without physics
+PASS: Nonfinite ghost frame rejected
+PASS: Nonmonotonic ghost clock rejected
+PASS: Penalty interval hides ghost
+PASS: Ghost resumes at recovery pose without crossing the gap
+PASS: Ghost disappears after finish
+PASS: First player result and ghost save together
+PASS: Fresh process restores personal best
+PASS: Fresh process restores matching ghost
+PASS: Equal times do not replace the existing best
+PASS: Nonhuman source cannot award medals: autopilot_vkeyboard
+PASS: Nonhuman source cannot award medals: autopilot_vgamepad
+PASS: Nonhuman source cannot award medals: mixed_takeover
+PASS: Practice cannot award medals
+PASS: Time inconsistent with penalty rejected
+PASS: Strictly faster valid run replaces best
+PASS: Damaged main profile restores valid backup
+PASS: Backup still has a consistent previous score
+PASS: Backup-referenced ghost survives new-best cleanup
+PASS: Recovery never replaces a valid backup with corrupt main data
+PASS: Write failure preserves in-memory previous best
+PASS: Unknown or corrupt profile remains protected
+PASS: Failed load never silently overwrites original save
+TEST RESULT: 31 checks, 0 failures
