@@ -3,6 +3,10 @@ extends "res://tests/test_suite.gd"
 
 func _run() -> void:
 	var settings := RallyGameSettings.new()
+	check(settings.values.abs and settings.values.tc=="full" and settings.values.esp=="full","New profiles default to ABS on and full TC/ESP")
+	settings.set_value("tc","invalid")
+	settings.set_value("esp",null)
+	check(settings.values.tc=="full" and settings.values.esp=="full","Invalid aid preferences fall back to full")
 	settings.path = "user://m5_test_%d.cfg"%Time.get_ticks_usec()
 	settings.set_value("volume",4.0)
 	settings.set_value("tire_visual_gain",4.0)
@@ -24,6 +28,7 @@ func _run() -> void:
 	var controls := RallyInputController.new()
 	root.add_child(controls)
 	settings.reset()
+	check(settings.values.tc=="full" and settings.values.esp=="full","Restore defaults selects full aids")
 	settings.apply_input(controls,false)
 	check(controls.filter.profile.steering_rate==4 and controls.filter.profile.throttle_rise_seconds==0.30,"Default input settings preserve approved baseline")
 	settings.apply_input(controls,true)

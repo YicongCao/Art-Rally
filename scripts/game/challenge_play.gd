@@ -153,8 +153,8 @@ func _apply_preferences() -> void:
 		RallyGameSettings.new().apply_input(controls,false)
 		vehicle.drivetrain.automatic=true
 		vehicle.aids.abs_enabled=true
-		vehicle.aids.esp_mode=1
-		vehicle.drivetrain.tc_mode=1
+		vehicle.aids.esp_mode=2
+		vehicle.drivetrain.tc_mode=2
 	if audio_director!=null: audio_director.apply_settings(preferences)
 
 

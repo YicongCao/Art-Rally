@@ -4,7 +4,7 @@ extends RefCounted
 # Controllers command brake torque / engine demand only. No synthetic body forces.
 var abs_enabled := true
 var longitudinal_stiffness: float = 12.0
-var esp_mode: int = 1 # 0 off, 1 sport, 2 full
+var esp_mode: int = 2 # 0 off, 1 sport, 2 full
 var pressure := PackedFloat64Array([1,1,1,1])
 var abs_active := false
 var esp_active := false

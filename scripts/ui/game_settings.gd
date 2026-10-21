@@ -1,7 +1,7 @@
 class_name RallyGameSettings
 extends RefCounted
 
-const DEFAULTS := {"abs":true,"tc":"sport","esp":"sport","reduced_motion":false,"show_fps":false,"voice":"female","voice_volume":0.9,"ghost":true,"engine_volume":0.85,"road_volume":0.8,"environment_volume":0.65,"interface_volume":0.85,"music_volume":0.585,"drive_layout":"AWD","reverse_assist":true,"volume":0.65,"lens_flare":true,"camera_motion":false,"low_detail":false,"automatic":true,"vibration":true,"keyboard_light":false,"steering_response":1.0,"return_rate":5.0,"throttle_rise":0.30,"brake_rise":0.12,"stick_deadzone":0.12,"brake_bias":0.62,"spring_scale":1.0,"tire_visual_gain":1.0}
+const DEFAULTS := {"abs":true,"tc":"full","esp":"full","reduced_motion":false,"show_fps":false,"voice":"female","voice_volume":0.9,"ghost":true,"engine_volume":0.85,"road_volume":0.8,"environment_volume":0.65,"interface_volume":0.85,"music_volume":0.585,"drive_layout":"AWD","reverse_assist":true,"volume":0.65,"lens_flare":true,"camera_motion":false,"low_detail":false,"automatic":true,"vibration":true,"keyboard_light":false,"steering_response":1.0,"return_rate":5.0,"throttle_rise":0.30,"brake_rise":0.12,"stick_deadzone":0.12,"brake_bias":0.62,"spring_scale":1.0,"tire_visual_gain":1.0}
 const RANGES := {"voice_volume":Vector2(0,1),"engine_volume":Vector2(0,1),"road_volume":Vector2(0,1),"environment_volume":Vector2(0,1),"interface_volume":Vector2(0,1),"music_volume":Vector2(0,1),"volume":Vector2(0,1),"steering_response":Vector2(0.6,1.6),"return_rate":Vector2(2,8),"throttle_rise":Vector2(0.1,0.5),"brake_rise":Vector2(0.05,0.25),"stick_deadzone":Vector2(0.05,0.3),"brake_bias":Vector2(0.52,0.70),"spring_scale":Vector2(0.85,1.15),"tire_visual_gain":Vector2(0,2)}
 var values: Dictionary = DEFAULTS.duplicate()
 var path: String = "user://driving_settings.cfg"
@@ -10,7 +10,7 @@ var path: String = "user://driving_settings.cfg"
 func set_value(key: String,value: Variant) -> void:
 	if not DEFAULTS.has(key): return
 	if key in ["tc","esp"]:
-		values[key] = value if value is String and value in ["off","sport","full"] else "sport"
+		values[key] = value if value is String and value in ["off","sport","full"] else DEFAULTS[key]
 		return
 	if key=="voice":
 		values[key] = value if value is String and value in ["female","male","off"] else "female"
