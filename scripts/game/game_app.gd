@@ -115,7 +115,7 @@ func _page(title: String, subtitle: String, name_id: String) -> void:
 	backdrop.poster_mode = name_id in ["home","stages","vehicles","loading"]
 	backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	menu_background.add_child(backdrop)
-	if name_id in ["home","stages","vehicles","loading"]:
+	if name_id=="home":
 		var landscape := TextureRect.new()
 		var region := AtlasTexture.new()
 		region.atlas=preload("res://assets/brushline/banner.png")
@@ -381,10 +381,9 @@ func show_stages() -> void:
 		card.add_theme_constant_override("separation",10)
 		_selected_card(card,id == chosen_stage)
 		var preview := RallyArtbookPanel.new()
-		preview.atlas=load("res://assets/brushline/stage-artbook.png")
+		preview.texture=load("res://assets/ui/menu_models/"+id+".png")
 		preview.panel_index=RallyContentCatalog.STAGES.find(id)
 		preview.custom_minimum_size=Vector2(260,120)
-		preview.fit_available_height=true
 		preview.size_flags_vertical=Control.SIZE_EXPAND_FILL
 		card.add_child(preview)
 		_label(card,definition.title,26)
@@ -425,13 +424,11 @@ func show_vehicles() -> void:
 		card.add_theme_constant_override("separation",8)
 		_selected_card(card,id == chosen_vehicle)
 		var art := RallyArtbookPanel.new()
-		art.atlas=load("res://assets/brushline/car-artbook.png")
+		art.texture=load("res://assets/ui/menu_models/"+id+".png")
 		art.panel_index=RallyContentCatalog.VEHICLES.find(id)
 		art.custom_minimum_size=Vector2(270,120)
-		art.fit_available_height=true
 		art.size_flags_vertical=Control.SIZE_EXPAND_FILL
 		card.add_child(art)
-		_vehicle_preview(art,vehicle)
 		_label(card,vehicle.title,24,vehicle.accent.lightened(.3))
 		_label(card,"%s · %d PS · %d kg"%[vehicle.drive_layout,vehicle.power_ps,vehicle.mass_kg],17)
 		_label(card,vehicle.description,16)
@@ -465,59 +462,6 @@ func _select_vehicle_variant(id: String,tier: int) -> void:
 	show_vehicles()
 
 
-func _vehicle_preview(parent: Node,definition: RallyVehicleDefinition) -> void:
-	var container := TextureRect.new()
-	container.custom_minimum_size = Vector2(140,85)
-	container.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT)
-	container.position=Vector2(122,143)
-	container.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	container.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	container.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	parent.add_child(container)
-	var viewport := SubViewport.new()
-	viewport.size = Vector2i(640,360)
-	viewport.msaa_3d = Viewport.MSAA_4X
-	viewport.own_world_3d = true
-	viewport.transparent_bg = true
-	viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
-	container.add_child(viewport)
-	container.texture = viewport.get_texture()
-	var body := Node3D.new()
-	viewport.add_child(body)
-	if ResourceLoader.exists(definition.model_path):
-		body.add_child(RallyVehicleAppearance.build(definition))
-		RallyVehiclePlate.attach(body,definition,str(profile.data.get("plate","")))
-	for side: float in [-1,1]:
-		for axle: float in [-1,1]:
-			var wheel := MeshInstance3D.new()
-			wheel.mesh = RallyWheelMeshes.tire(.34)
-			wheel.rotation.z = PI/2
-			wheel.position = Vector3(side*definition.track_width/2,-.32,axle*definition.wheelbase/2)
-			body.add_child(wheel)
-			for face: float in [-1,1]:
-				var hub := MeshInstance3D.new()
-				hub.mesh=RallyWheelMeshes.five_spoke()
-				hub.position.y=face*.125
-				hub.rotation.x=PI if face<0 else 0
-				wheel.add_child(hub)
-	var light := DirectionalLight3D.new()
-	light.rotation_degrees = Vector3(-45,-25,0)
-	light.light_energy = 1.8
-	viewport.add_child(light)
-	var world := WorldEnvironment.new()
-	world.environment = Environment.new()
-	world.environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	world.environment.ambient_light_color = Color("c4d5dc")
-	world.environment.ambient_light_energy = .7
-	viewport.add_child(world)
-	var camera := Camera3D.new()
-	viewport.add_child(camera)
-	camera.position = Vector3(-4,1.8,5)
-	camera.look_at(Vector3(0,.3,0))
-	camera.projection = Camera3D.PROJECTION_ORTHOGONAL
-	camera.size = 3.6
-
-
 func _loading_page() -> void:
 	var challenge := RallyContentCatalog.challenge(chosen_stage,chosen_vehicle,chosen_power_tier)
 	_page(challenge.stage.title,("自由练习" if practice else "计时挑战")+" / "+RallyContentCatalog.power_label(chosen_vehicle,chosen_power_tier),"loading")
@@ -531,10 +475,9 @@ func _loading_page() -> void:
 	for index: int in range(2):
 		var card := _card(layout)
 		var art := RallyArtbookPanel.new()
-		art.atlas=load("res://assets/brushline/car-artbook.png" if index==1 else "res://assets/brushline/stage-artbook.png")
+		art.texture=load("res://assets/ui/menu_models/"+(chosen_vehicle if index==1 else chosen_stage)+".png")
 		art.panel_index=RallyContentCatalog.VEHICLES.find(chosen_vehicle) if index==1 else stage_index
 		art.custom_minimum_size=Vector2(260,160)
-		art.fit_available_height=true
 		art.size_flags_vertical=Control.SIZE_EXPAND_FILL
 		art.caption=[challenge.stage.title,challenge.vehicle.short_title()][index]
 		card.add_child(art)

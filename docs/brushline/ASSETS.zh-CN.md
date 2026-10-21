@@ -1,11 +1,13 @@
 # Brushline Rally 素材与制作记录
 
-本轮插画由 OpenAI 内置 imagegen 生成。以下是各次生成的任务规格摘要；PNG 为原始输出，未用图像处理脚本改绘。运行时通过图集区域选取、缩放和覆盖文字适配。插画不充当实机截图。
+以下为最初品牌升级的 imagegen 素材记录。赛道、车辆选择和加载页现已改用 [Blender 透明模型渲染](menu-models/README.zh-CN.md)，原图保留为历史设计资料。
 
-- `assets/brushline/stage-artbook.png`：1536 × 1024，三等宽旅行画册插页。秋林金草与木屋、青蓝黄金海岸与灯塔、蓝紫暮色临崖山道。复古套色、干笔刷、暖纸底；不含文字、UI、边框数据。用于赛道卡和加载插页。
-- `assets/brushline/car-artbook.png`：1536 × 1024，三等宽后侧四分之三赛车画册插页。深蓝 GTI／Red Bull 16、白色 E30／Mobil 1 三色条带 27、黄白 quattro S1 44；奶油色纸面、橙红套色底。用于选车和加载页。车厂及赞助标识仍属各自权利人；未下载外部整车模型。
+原插画由 OpenAI 内置 imagegen 生成。以下是各次生成的任务规格摘要；PNG 为原始输出，未用图像处理脚本改绘。运行时通过图集区域选取、缩放和覆盖文字适配。插画不充当实机截图。
+
+- `assets/brushline/stage-artbook.png`：1536 × 1024，三等宽旅行画册插页。秋林金草与木屋、青蓝黄金海岸与灯塔、蓝紫暮色临崖山道。复古套色、干笔刷、暖纸底；不含文字、UI、边框数据。原用于赛道卡和加载插页，现已替换。
+- `assets/brushline/car-artbook.png`：1536 × 1024，三等宽后侧四分之三赛车画册插页。深蓝 GTI／Red Bull 16、白色 E30／Mobil 1 三色条带 27、黄白 quattro S1 44；奶油色纸面、橙红套色底。原用于选车和加载页，现已替换。车厂及赞助标识仍属各自权利人；未下载外部整车模型。
 - `assets/brushline/key-art.png`：1536 × 1024，Brushline Rally 品牌提案，秋林、海岸和暮色山岳拼接，海报字样与扬尘赛车。用途为宣传设计参考。
-- `assets/brushline/banner.png`：2172 × 724，以上主视觉的横版再创作；左侧干笔刷字样，右侧海岸赛车、秋林与紫色远山。README 使用完整 banner；游戏背景仅截取右侧景物，正式标题由 Godot 字体绘制。
+- `assets/brushline/banner.png`：2172 × 724，以上主视觉的横版再创作；左侧干笔刷字样，右侧海岸赛车、秋林与紫色远山。README 使用完整 banner；标题页背景仅截取右侧景物，正式标题由 Godot 字体绘制。
 - `assets/brushline/road-wear.png`：1254 × 1254，2 × 2 无文字材质图集。柏油补丁、磨损砂石、方向性泥车辙、潮湿边缘；漫射平光、无投影。shader 用固定世界 UV、稀疏区域遮罩、mipmap 和 35–95 米淡出。路面物理参数不受贴图影响。
 
 ## 精确品牌与字体

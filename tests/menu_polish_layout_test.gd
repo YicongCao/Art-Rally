@@ -31,6 +31,7 @@ func _run() -> void:
 			for control: Control in app.ui.find_children("*","Control",true,false):
 				if control is RallyArtbookPanel:
 					art_count+=1
+					check(control.texture!=null and control.texture.resource_path.begins_with("res://assets/ui/menu_models/"),"%s: Blender render is imported and bound"%page)
 					check(control.size.y>=120 and bounds.encloses(control.get_global_rect()),"%s %d: illustration stays fully inside screen"%[page,pixels.x])
 				if control is Button and control.is_visible_in_tree():
 					check(bounds.encloses(control.get_global_rect()),"%s %d: %s is reachable without scrolling"%[page,pixels.x,control.text])

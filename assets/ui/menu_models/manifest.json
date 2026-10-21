@@ -1,0 +1,92 @@
+{
+  "sunset_ridge": {
+    "source": "art_source/menu_models/sunset_ridge.blend",
+    "render": "assets/ui/menu_models/sunset_ridge.png",
+    "sha256": "fd1cf7b4cea017ba5369b7274f909b5aae9a7548d15eafae8ddc0f060a5a2006",
+    "resolution": [
+      1024,
+      768
+    ],
+    "transparent_fraction": 0.6958,
+    "opaque_fraction": 0.299,
+    "engine": "Blender Cycles",
+    "samples": 40,
+    "alpha": "straight RGBA",
+    "purpose": "representative diorama, not a navigation map"
+  },
+  "sunlit_cape": {
+    "source": "art_source/menu_models/sunlit_cape.blend",
+    "render": "assets/ui/menu_models/sunlit_cape.png",
+    "sha256": "714f8a4948b4e7bc36a5b3518d092da862e260105ade6c986049a84ffc5aacc3",
+    "resolution": [
+      1024,
+      768
+    ],
+    "transparent_fraction": 0.6524,
+    "opaque_fraction": 0.342,
+    "engine": "Blender Cycles",
+    "samples": 40,
+    "alpha": "straight RGBA",
+    "purpose": "representative diorama, not a navigation map"
+  },
+  "misty_highlands": {
+    "source": "art_source/menu_models/misty_highlands.blend",
+    "render": "assets/ui/menu_models/misty_highlands.png",
+    "sha256": "f1f5515f9c040731877c39315b76505d2c42a2dff596afea7265be3574cc3c37",
+    "resolution": [
+      1024,
+      768
+    ],
+    "transparent_fraction": 0.5544,
+    "opaque_fraction": 0.4397,
+    "engine": "Blender Cycles",
+    "samples": 40,
+    "alpha": "straight RGBA",
+    "purpose": "representative diorama, not a navigation map"
+  },
+  "F160": {
+    "source": "art_source/menu_models/F160.blend",
+    "render": "assets/ui/menu_models/F160.png",
+    "sha256": "51c49f2c8c8bbd744856e1abbd571e72d5010e8e801e2c34a041d83d7b3cb979",
+    "resolution": [
+      1024,
+      768
+    ],
+    "transparent_fraction": 0.723,
+    "opaque_fraction": 0.2695,
+    "engine": "Blender Cycles",
+    "samples": 40,
+    "alpha": "straight RGBA",
+    "purpose": "vehicle display"
+  },
+  "R200": {
+    "source": "art_source/menu_models/R200.blend",
+    "render": "assets/ui/menu_models/R200.png",
+    "sha256": "65cb518bd8a0895bf7a9ded592f35dd3af54383a26730dfc63106dfa43322a54",
+    "resolution": [
+      1024,
+      768
+    ],
+    "transparent_fraction": 0.7125,
+    "opaque_fraction": 0.2802,
+    "engine": "Blender Cycles",
+    "samples": 40,
+    "alpha": "straight RGBA",
+    "purpose": "vehicle display"
+  },
+  "A240": {
+    "source": "art_source/menu_models/A240.blend",
+    "render": "assets/ui/menu_models/A240.png",
+    "sha256": "3f05debe352c4b5f474926869fb143617896bee60e34d5ceba92b83b4533d240",
+    "resolution": [
+      1024,
+      768
+    ],
+    "transparent_fraction": 0.6647,
+    "opaque_fraction": 0.3273,
+    "engine": "Blender Cycles",
+    "samples": 40,
+    "alpha": "straight RGBA",
+    "purpose": "vehicle display"
+  }
+}
