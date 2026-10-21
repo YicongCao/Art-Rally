@@ -1,6 +1,7 @@
 .godot/
 .DS_Store
 builds/
+/exports/
 logs/*
 !logs/.gdignore
 *.tmp

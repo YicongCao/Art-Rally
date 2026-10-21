@@ -289,3 +289,55 @@ v0.2 轮胎模型已按 [技术方案](docs/V0.2_TIRE_CONTACT_DEFORMATION.zh-CN.
 其他 Blender 安装位置可设置 `BLENDER_BIN`。旧 `scripts/generate_vehicles.py` 仅生成旧版模型，新外观不读取其产物。一次性源文件初始化脚本会跳过已存在的 `.blend`；日常修改只需导出。
 
 [改造计划](docs/SCREENPRINT_ART_PLAN.zh-CN.md) · [实现与验收记录](docs/art-direction/screenprint/IMPLEMENTATION.md)
+
+## Gallery 画廊
+
+75 秒玩法演示的 12 个实机镜头，穿行于松岭、海岸与高地。点击图片可查看原图；[完整分镜与演示说明](docs/brushline/showcase/index.html)。
+
+### 松岭 · 速度与救车
+
+**01 · 00–05 秒｜秋色中发现赛车** · **02 · 05–11 秒｜低位追拍与冰青光柱**
+
+<p>
+  <a href="docs/brushline/showcase/previews/01-establish.jpg"><img src="docs/brushline/showcase/previews/01-establish.jpg" width="49%" alt="01：松岭秋色中的 R200，高位斜俯建立镜头"></a>
+  <a href="docs/brushline/showcase/previews/02-chase.jpg"><img src="docs/brushline/showcase/previews/02-chase.jpg" width="49%" alt="02：低位追拍 R200 穿越冰青光柱"></a>
+</p>
+
+**03 · 11–16 秒｜稳定侧拍与制动准备** · **04 · 16–28 秒｜后驱外甩、反打与救回**
+
+<p>
+  <a href="docs/brushline/showcase/previews/03-side.jpg"><img src="docs/brushline/showcase/previews/03-side.jpg" width="49%" alt="03：R200 入弯前的稳定侧拍"></a>
+  <a href="docs/brushline/showcase/previews/04-recovery.jpg"><img src="docs/brushline/showcase/previews/04-recovery.jpg" width="49%" alt="04：R200 后驱过度转向与反打救车"></a>
+</p>
+
+### 松岭到海岸 · 沿途风景
+
+**05 · 28–34 秒｜驯鹿横穿** · **06 · 34–40 秒｜海湾与沿岸公路**
+
+<p>
+  <a href="docs/brushline/showcase/previews/05-animals.jpg"><img src="docs/brushline/showcase/previews/05-animals.jpg" width="49%" alt="05：驯鹿穿过松岭道路，走入彩色树林"></a>
+  <a href="docs/brushline/showcase/previews/06-coast_wide.jpg"><img src="docs/brushline/showcase/previews/06-coast_wide.jpg" width="49%" alt="06：F160 驶入晴岬海岸的蓝色海湾公路"></a>
+</p>
+
+**07 · 40–46 秒｜引擎盖视角** · **08 · 46–54 秒｜河流与桥梁**
+
+<p>
+  <a href="docs/brushline/showcase/previews/07-hood.jpg"><img src="docs/brushline/showcase/previews/07-hood.jpg" width="49%" alt="07：F160 引擎盖视角下的海岸弯道"></a>
+  <a href="docs/brushline/showcase/previews/08-bridge.jpg"><img src="docs/brushline/showcase/previews/08-bridge.jpg" width="49%" alt="08：F160 通过连接河流两岸的桥梁"></a>
+</p>
+
+### 海岸到高地 · 从伴飞到暮色
+
+**09 · 54–60 秒｜直升机伴飞** · **10 · 60–66 秒｜暮色悬崖公路**
+
+<p>
+  <a href="docs/brushline/showcase/previews/09-helicopter.jpg"><img src="docs/brushline/showcase/previews/09-helicopter.jpg" width="49%" alt="09：新闻直升机与公路上的 F160 同框伴飞"></a>
+  <a href="docs/brushline/showcase/previews/10-cliff.jpg"><img src="docs/brushline/showcase/previews/10-cliff.jpg" width="49%" alt="10：A240 行驶于雾杉高地的暮色悬崖公路"></a>
+</p>
+
+**11 · 66–72 秒｜车灯与琥珀光柱** · **12 · 72–75 秒｜拉远收尾**
+
+<p>
+  <a href="docs/brushline/showcase/previews/11-night_chase.jpg"><img src="docs/brushline/showcase/previews/11-night_chase.jpg" width="49%" alt="11：A240 的车灯照亮路面，穿越琥珀金光柱"></a>
+  <a href="docs/brushline/showcase/previews/12-outro.jpg"><img src="docs/brushline/showcase/previews/12-outro.jpg" width="49%" alt="12：镜头抬升拉远，A240 驶向暮色远山"></a>
+</p>
