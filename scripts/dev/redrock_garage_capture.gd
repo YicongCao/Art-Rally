@@ -59,7 +59,7 @@ func _run() -> void:
  app.race.add_child(camera)
  camera.current=true
  var route: RallyStageRoute=app.race.generator.route
- for shot: Array in [["canyon-reveal",900.0,Vector3(8,5,17),65.0],["arch",2740.0,Vector3(0,28,75),20.0],["mesa",3430.0,Vector3(6,30,15),-1450.0],["driver",1130.0,Vector3(0,1.7,2),60.0]]:
+ for shot: Array in [["canyon-reveal",900.0,Vector3(8,5,17),65.0],["arch",2740.0,Vector3(0,28,75),20.0],["mesa",3430.0,Vector3(6,30,15),-1450.0],["driver",1130.0,Vector3(0,3.5,7),60.0]]:
   var s: float=shot[1]
   var pose:=route.pose_at(s,0)
   app.race.vehicle.global_transform=pose
