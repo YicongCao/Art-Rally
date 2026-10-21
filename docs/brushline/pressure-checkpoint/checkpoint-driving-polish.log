@@ -1,0 +1,26 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Releasing an arrow does not cancel a held WASD alias
+PASS: Opposing arrow/WASD steering cancels without doubled input
+PASS: Menu arrows cannot latch vehicle braking
+PASS: Initial window focus return needs no hidden Space/handbrake acknowledgement
+PASS: Throttle alone releases launch hold without touching handbrake
+PASS: Arrow throttle drives away immediately
+PASS: Focus loss after driving still requires explicit safe resume
+PASS: Timed out-of-bounds penalty also applies before crossing the start gate
+PASS: Legitimate airborne jump over road is not treated as out of bounds
+PASS: Lateral edge triggers before the physical road ribbon ends
+PASS: Prediction catches high-speed edge crossing before support is lost
+PASS: Automatic boundary recovery charges exactly ten seconds once
+PASS: Boundary recovery occurs within a few physics ticks, before falling
+PASS: Paired checkpoint markers highlight only the required symbol
+PASS: Intermediate checkpoint tubes share one instanced draw batch; timing boundaries use arches
+PASS: Batched checkpoint tubes carry per-instance highlight colors
+PASS: HUD identifies the required checkpoint and distance after recovery
+PASS: Cockpit contains a live twelve-segment shift-light bank
+PASS: Normal rolling on gravel leaves four subtle ground marks
+PASS: Recovery or teleport cannot draw long connecting skid strips
+PASS: Tire-mark instance pool remains bounded
+PASS: Old marks fade without changing road geometry
+PASS: Full restart can clear all marks
+TEST RESULT: 23 checks, 0 failures

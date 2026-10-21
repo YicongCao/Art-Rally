@@ -16,6 +16,8 @@
 
 ## Blender 权威源
 
+检查点最新资产为 [高压弯角气柱 A](pressure-checkpoint/README.zh-CN.md)，独立制作脚本 `build_pressure_checkpoint.py`；不要使用旧的批量建模脚本覆盖该精修源文件。
+
 `art_source/screenprint/vehicles/*.blend` 与 `props/*.blend` 是可编辑源；`assets/screenprint/` 是 GLB 交付。`build_brushline_assets.py` 保存本轮建模步骤，`refine_brushline_tail_lenses.py` 保存尾灯修整；日常只运行 `export_screenprint.py`，避免覆盖后续手工编辑。
 
 - 三车尾部：灯罩和透镜、尾门缝／锁扣、后挡泥板、扩散器、连接杆、色带与通风口。去除原有 `RearModel` 大字。

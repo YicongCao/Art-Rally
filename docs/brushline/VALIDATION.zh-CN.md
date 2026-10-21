@@ -1,5 +1,7 @@
 # Brushline Rally 本轮实施与验收
 
+最新检查点资产与验证见 [高压弯角气柱](pressure-checkpoint/README.zh-CN.md)。
+
 最新车辆展示及泥地诊断见 [车辆展示修整](vehicle-polish/README.zh-CN.md)。
 
 最新菜单素材见 [Blender 透明模型渲染](menu-models/README.zh-CN.md)。

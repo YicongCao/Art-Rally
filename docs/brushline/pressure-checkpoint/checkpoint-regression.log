@@ -1,0 +1,182 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: A 1cm body overlap at the outer inflatable edge is credited
+PASS: A body entirely outside the inflatable is rejected
+PASS: A car flying high over the checkpoint is rejected
+PASS: Reverse travel cannot credit a gate
+PASS: Proximity without body-plane overlap is rejected
+PASS: An overlap already present advances when moving forward
+PASS: Runtime starts timing when the front bumper enters, before the car centre
+TEST RESULT: 7 checks, 0 failures
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Countdown arms start without starting race clock
+PASS: Reverse crossing does not start stage
+PASS: Forward start crossing begins timing
+PASS: Miss decision waits until the entire body is beyond the gate
+PASS: Missing an ordinary gate costs exactly five seconds and advances without returning
+PASS: Continuing past the missed gate never charges twice
+PASS: Reversing over a retired gate cannot erase or repeat its penalty
+PASS: Recovery adds its own five seconds without erasing the missed gate penalty
+PASS: Recovery lands behind last passed safe gate
+PASS: All ordered forward gates complete stage
+PASS: Finish freezes result
+PASS: Restart clears time penalties gates and notes
+PASS: Practice recovery does not receive timed penalty
+PASS: Reversing never replays consumed pacenotes
+PASS: Active hazard note is not immediately overwritten by a future turn
+PASS: Long teleport across a gate is not credited as physical crossing
+PASS: Practice also advances missed checkpoints without a score penalty
+PASS: Driving beside the finish cannot automatically finish a stage
+PASS: Teleporting cannot retire skipped checkpoints
+PASS: Continuous driving retires every missed checkpoint exactly once with five seconds each
+TEST RESULT: 20 checks, 0 failures
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: checkpoint imports visible authored meshes
+PASS: checkpoint presentation does not alter vehicle physics
+PASS: balloon imports visible authored meshes
+PASS: balloon presentation does not alter vehicle physics
+PASS: helicopter imports visible authored meshes
+PASS: helicopter presentation does not alter vehicle physics
+PASS: sailboat imports visible authored meshes
+PASS: sailboat presentation does not alter vehicle physics
+PASS: service_station imports visible authored meshes
+PASS: service_station presentation does not alter vehicle physics
+PASS: marshal imports visible authored meshes
+PASS: marshal presentation does not alter vehicle physics
+PASS: marshal has an animated shoulder and connected hand/flag
+PASS: spectator imports visible authored meshes
+PASS: spectator presentation does not alter vehicle physics
+PASS: spectator has an animated shoulder and connected hand/flag
+PASS: reindeer imports visible authored meshes
+PASS: reindeer presentation does not alter vehicle physics
+PASS: reindeer authored limbs stay attached in world space
+PASS: bear imports visible authored meshes
+PASS: bear presentation does not alter vehicle physics
+PASS: bear authored limbs stay attached in world space
+PASS: zebra imports visible authored meshes
+PASS: zebra presentation does not alter vehicle physics
+PASS: zebra authored limbs stay attached in world space
+PASS: ostrich imports visible authored meshes
+PASS: ostrich presentation does not alter vehicle physics
+PASS: ostrich authored limbs stay attached in world space
+PASS: kangaroo imports visible authored meshes
+PASS: kangaroo presentation does not alter vehicle physics
+PASS: kangaroo authored limbs stay attached in world space
+PASS: F160 retains emissive rear lenses at all LODs
+PASS: R200 retains emissive rear lenses at all LODs
+PASS: A240 retains emissive rear lenses at all LODs
+PASS: wordmark.svg imports without external dependencies
+PASS: icon.svg imports without external dependencies
+PASS: banner.png imports without external dependencies
+PASS: stage-artbook.png imports without external dependencies
+PASS: car-artbook.png imports without external dependencies
+PASS: road-wear.png imports without external dependencies
+TEST RESULT: 40 checks, 0 failures
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Approved mechanical resource: resources/content/A240.tres
+PASS: Approved mechanical resource: resources/content/F160.tres
+PASS: Approved mechanical resource: resources/content/R200.tres
+PASS: Approved mechanical resource: resources/content/challenge_targets.json
+PASS: Approved mechanical resource: resources/stages/misty_highlands.tres
+PASS: Approved mechanical resource: resources/stages/sunlit_cape.tres
+PASS: Approved mechanical resource: resources/stages/sunset_ridge.tres
+PASS: Authored asset imports: assets/screenprint/props/arch.glb
+PASS: Authored asset imports: assets/screenprint/props/arch_foot.glb
+PASS: Authored asset imports: assets/screenprint/props/balloon.glb
+PASS: Authored asset imports: assets/screenprint/props/bear.glb
+PASS: Authored asset imports: assets/screenprint/props/bridge_post.glb
+PASS: Authored asset imports: assets/screenprint/props/cabin.glb
+PASS: Authored asset imports: assets/screenprint/props/checkpoint.glb
+PASS: Authored asset imports: assets/screenprint/props/helicopter.glb
+PASS: Authored asset imports: assets/screenprint/props/kangaroo.glb
+PASS: Authored asset imports: assets/screenprint/props/lighthouse.glb
+PASS: Authored asset imports: assets/screenprint/props/marshal.glb
+PASS: Authored asset imports: assets/screenprint/props/medical.glb
+PASS: Authored asset imports: assets/screenprint/props/ostrich.glb
+PASS: Authored asset imports: assets/screenprint/props/reindeer.glb
+PASS: Authored asset imports: assets/screenprint/props/sailboat.glb
+PASS: Authored asset imports: assets/screenprint/props/service_station.glb
+PASS: Authored asset imports: assets/screenprint/props/spectator.glb
+PASS: Authored asset imports: assets/screenprint/props/wheel_rim.glb
+PASS: Authored asset imports: assets/screenprint/props/wheel_tire.glb
+PASS: Authored asset imports: assets/screenprint/props/zebra.glb
+PASS: Authored asset imports: assets/screenprint/vehicles/A240-lod0.glb
+PASS: Vehicle triangle budget: assets/screenprint/vehicles/A240-lod0.glb
+PASS: Authored asset imports: assets/screenprint/vehicles/A240-lod1.glb
+PASS: Vehicle triangle budget: assets/screenprint/vehicles/A240-lod1.glb
+PASS: Authored asset imports: assets/screenprint/vehicles/A240-lod2.glb
+PASS: Vehicle triangle budget: assets/screenprint/vehicles/A240-lod2.glb
+PASS: Authored asset imports: assets/screenprint/vehicles/F160-lod0.glb
+PASS: Vehicle triangle budget: assets/screenprint/vehicles/F160-lod0.glb
+PASS: Authored asset imports: assets/screenprint/vehicles/F160-lod1.glb
+PASS: Vehicle triangle budget: assets/screenprint/vehicles/F160-lod1.glb
+PASS: Authored asset imports: assets/screenprint/vehicles/F160-lod2.glb
+PASS: Vehicle triangle budget: assets/screenprint/vehicles/F160-lod2.glb
+PASS: Authored asset imports: assets/screenprint/vehicles/R200-lod0.glb
+PASS: Vehicle triangle budget: assets/screenprint/vehicles/R200-lod0.glb
+PASS: Authored asset imports: assets/screenprint/vehicles/R200-lod1.glb
+PASS: Vehicle triangle budget: assets/screenprint/vehicles/R200-lod1.glb
+PASS: Authored asset imports: assets/screenprint/vehicles/R200-lod2.glb
+PASS: Vehicle triangle budget: assets/screenprint/vehicles/R200-lod2.glb
+PASS: Reference name reaches selection and confirmation: F160
+PASS: Three body LODs: F160
+PASS: Cockpit mount preserves camera position: F160
+PASS: Hood mount preserves camera position: F160
+PASS: Rear plate sits outside body: F160
+PASS: Paired lamp edge mounts: F160
+PASS: Car outline uses dedicated shader
+PASS: Car outline uses dedicated shader
+PASS: Car outline uses dedicated shader
+PASS: Art revision does not invalidate ghosts: F1600
+PASS: Art revision does not invalidate ghosts: F1601
+PASS: Art revision does not invalidate ghosts: F1602
+PASS: Reference name reaches selection and confirmation: R200
+PASS: Three body LODs: R200
+PASS: Cockpit mount preserves camera position: R200
+PASS: Hood mount preserves camera position: R200
+PASS: Rear plate sits outside body: R200
+PASS: Paired lamp edge mounts: R200
+PASS: Car outline uses dedicated shader
+PASS: Car outline uses dedicated shader
+PASS: Car outline uses dedicated shader
+PASS: Art revision does not invalidate ghosts: R2000
+PASS: Art revision does not invalidate ghosts: R2001
+PASS: Art revision does not invalidate ghosts: R2002
+PASS: Reference name reaches selection and confirmation: A240
+PASS: Three body LODs: A240
+PASS: Cockpit mount preserves camera position: A240
+PASS: Hood mount preserves camera position: A240
+PASS: Rear plate sits outside body: A240
+PASS: Paired lamp edge mounts: A240
+PASS: Car outline uses dedicated shader
+PASS: Car outline uses dedicated shader
+PASS: Car outline uses dedicated shader
+PASS: Art revision does not invalidate ghosts: A2400
+PASS: Art revision does not invalidate ghosts: A2401
+PASS: Art revision does not invalidate ghosts: A2402
+PASS: Four authored AT tires and rims fit 12k triangle budget
+PASS: World prop loaded: cabin
+PASS: Visual prop never changes collision: cabin
+PASS: Environment has no ink outlines: cabin
+PASS: World prop loaded: lighthouse
+PASS: Visual prop never changes collision: lighthouse
+PASS: Environment has no ink outlines: lighthouse
+PASS: World prop loaded: medical
+PASS: Visual prop never changes collision: medical
+PASS: Environment has no ink outlines: medical
+PASS: World prop loaded: sailboat
+PASS: Visual prop never changes collision: sailboat
+PASS: Environment has no ink outlines: sailboat
+PASS: World prop loaded: helicopter
+PASS: Visual prop never changes collision: helicopter
+PASS: Environment has no ink outlines: helicopter
+PASS: World prop loaded: arch
+PASS: Visual prop never changes collision: arch
+PASS: Environment has no ink outlines: arch
+PASS: World prop loaded: bridge_post
+PASS: Visual prop never changes collision: bridge_post
+PASS: Environment has no ink outlines: bridge_post
+TEST RESULT: 103 checks, 0 failures

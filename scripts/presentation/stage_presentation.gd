@@ -92,6 +92,7 @@ func build(owner_scene: Node3D) -> void:
 
 func update(dt: float) -> void:
 	checkpoints.update(scene.session.next_gate)
+	checkpoints.advance(dt,scene.camera.global_position)
 	if not scene.get_tree().paused:
 		elapsed += dt
 		# Slow bank drift; update only twice per second to amortize sky radiance updates.
