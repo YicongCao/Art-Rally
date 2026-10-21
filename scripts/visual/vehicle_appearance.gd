@@ -2,7 +2,7 @@ class_name RallyVehicleAppearance
 extends Resource
 
 # Visual revision is deliberately independent of physics/challenge/ghost versions.
-@export var visual_revision: String = "brushline-tail-1"
+@export var visual_revision: String = "brushline-tail-livery-2"
 @export var model_directory: String = "res://assets/screenprint/vehicles"
 @export var lod_distances := Vector3(35,85,250)
 static var material_cache: Dictionary = {}

@@ -228,7 +228,7 @@
   },
   "assets/screenprint/vehicles/A240-lod0.glb": {
     "source": "art_source/screenprint/vehicles/A240.blend",
-    "triangles": 29144,
+    "triangles": 28727,
     "lod": 0,
     "mounts": {
       "TailLeft": [
@@ -285,7 +285,7 @@
   },
   "assets/screenprint/vehicles/A240-lod1.glb": {
     "source": "art_source/screenprint/vehicles/A240.blend",
-    "triangles": 15644,
+    "triangles": 15476,
     "lod": 1,
     "mounts": {
       "TailLeft": [
@@ -342,7 +342,7 @@
   },
   "assets/screenprint/vehicles/A240-lod2.glb": {
     "source": "art_source/screenprint/vehicles/A240.blend",
-    "triangles": 7415,
+    "triangles": 7403,
     "lod": 2,
     "mounts": {
       "TailLeft": [
@@ -399,7 +399,7 @@
   },
   "assets/screenprint/vehicles/F160-lod0.glb": {
     "source": "art_source/screenprint/vehicles/F160.blend",
-    "triangles": 21222,
+    "triangles": 21234,
     "lod": 0,
     "mounts": {
       "TailLeft": [
@@ -456,7 +456,7 @@
   },
   "assets/screenprint/vehicles/F160-lod1.glb": {
     "source": "art_source/screenprint/vehicles/F160.blend",
-    "triangles": 11277,
+    "triangles": 11289,
     "lod": 1,
     "mounts": {
       "TailLeft": [
@@ -513,7 +513,7 @@
   },
   "assets/screenprint/vehicles/F160-lod2.glb": {
     "source": "art_source/screenprint/vehicles/F160.blend",
-    "triangles": 5223,
+    "triangles": 5235,
     "lod": 2,
     "mounts": {
       "TailLeft": [
@@ -570,7 +570,7 @@
   },
   "assets/screenprint/vehicles/R200-lod0.glb": {
     "source": "art_source/screenprint/vehicles/R200.blend",
-    "triangles": 24324,
+    "triangles": 24444,
     "lod": 0,
     "mounts": {
       "TailLeft": [
@@ -627,7 +627,7 @@
   },
   "assets/screenprint/vehicles/R200-lod1.glb": {
     "source": "art_source/screenprint/vehicles/R200.blend",
-    "triangles": 12983,
+    "triangles": 13103,
     "lod": 1,
     "mounts": {
       "TailLeft": [
@@ -684,7 +684,7 @@
   },
   "assets/screenprint/vehicles/R200-lod2.glb": {
     "source": "art_source/screenprint/vehicles/R200.blend",
-    "triangles": 6067,
+    "triangles": 6187,
     "lod": 2,
     "mounts": {
       "TailLeft": [

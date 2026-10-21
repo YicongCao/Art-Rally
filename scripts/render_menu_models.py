@@ -251,7 +251,7 @@ def stage(kind):
 def vehicle(ident):
  reset();car(ident)
  light('Broad warm key',(-3,-5,6),700,5,(1,.91,.80));light('Cool rim',(4,3,5),950,4,(.72,.85,1));light('Rear fill',(1,-5,2),180,3,(1,.8,.65))
- camera((-5.8,-8.4,3.5),(0,-.05,.22),5.1)
+ camera((-5.8,8.4,3.5),(0,.05,.22),5.1)
  bpy.context.scene.world.node_tree.nodes.get('Background').inputs[1].default_value=.55
  bpy.context.scene['vehicle_id']=ident
 

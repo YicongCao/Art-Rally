@@ -2,7 +2,7 @@
   "sunset_ridge": {
     "source": "art_source/menu_models/sunset_ridge.blend",
     "render": "assets/ui/menu_models/sunset_ridge.png",
-    "sha256": "fd1cf7b4cea017ba5369b7274f909b5aae9a7548d15eafae8ddc0f060a5a2006",
+    "sha256": "08063195f1b80a06a6bc69bbaf29fa92ebe3250cef6dd25cd22270c28e0b168a",
     "resolution": [
       1024,
       768
@@ -17,7 +17,7 @@
   "sunlit_cape": {
     "source": "art_source/menu_models/sunlit_cape.blend",
     "render": "assets/ui/menu_models/sunlit_cape.png",
-    "sha256": "714f8a4948b4e7bc36a5b3518d092da862e260105ade6c986049a84ffc5aacc3",
+    "sha256": "882e1c1eadb73b1d6feecc6bb1dca789d0a2b13f9675f04e45825fbfcbf04ae8",
     "resolution": [
       1024,
       768
@@ -32,7 +32,7 @@
   "misty_highlands": {
     "source": "art_source/menu_models/misty_highlands.blend",
     "render": "assets/ui/menu_models/misty_highlands.png",
-    "sha256": "f1f5515f9c040731877c39315b76505d2c42a2dff596afea7265be3574cc3c37",
+    "sha256": "5cf215a2779f884a27e2feea967e32f24fea6e39c75c31a8c42603dd7d0771eb",
     "resolution": [
       1024,
       768
@@ -47,13 +47,13 @@
   "F160": {
     "source": "art_source/menu_models/F160.blend",
     "render": "assets/ui/menu_models/F160.png",
-    "sha256": "51c49f2c8c8bbd744856e1abbd571e72d5010e8e801e2c34a041d83d7b3cb979",
+    "sha256": "2da89968ceb5b7511ded159908c8afb423bddde1c960a38d42f892d00dd331d3",
     "resolution": [
       1024,
       768
     ],
-    "transparent_fraction": 0.723,
-    "opaque_fraction": 0.2695,
+    "transparent_fraction": 0.7032,
+    "opaque_fraction": 0.288,
     "engine": "Blender Cycles",
     "samples": 40,
     "alpha": "straight RGBA",
@@ -62,13 +62,13 @@
   "R200": {
     "source": "art_source/menu_models/R200.blend",
     "render": "assets/ui/menu_models/R200.png",
-    "sha256": "65cb518bd8a0895bf7a9ded592f35dd3af54383a26730dfc63106dfa43322a54",
+    "sha256": "7af2470d05757bcc06bf06426f8909939e985980d763abcfa2a01ff70a12f8d1",
     "resolution": [
       1024,
       768
     ],
-    "transparent_fraction": 0.7125,
-    "opaque_fraction": 0.2802,
+    "transparent_fraction": 0.7041,
+    "opaque_fraction": 0.2874,
     "engine": "Blender Cycles",
     "samples": 40,
     "alpha": "straight RGBA",
@@ -77,13 +77,13 @@
   "A240": {
     "source": "art_source/menu_models/A240.blend",
     "render": "assets/ui/menu_models/A240.png",
-    "sha256": "3f05debe352c4b5f474926869fb143617896bee60e34d5ceba92b83b4533d240",
+    "sha256": "16d43fc3b5ff5b0af4399a4abdc1619003f3c52b47443d46166fa9181a799252",
     "resolution": [
       1024,
       768
     ],
-    "transparent_fraction": 0.6647,
-    "opaque_fraction": 0.3273,
+    "transparent_fraction": 0.623,
+    "opaque_fraction": 0.3681,
     "engine": "Blender Cycles",
     "samples": 40,
     "alpha": "straight RGBA",

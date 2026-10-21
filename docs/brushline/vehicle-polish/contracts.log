@@ -1,0 +1,106 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Approved mechanical resource: resources/content/A240.tres
+PASS: Approved mechanical resource: resources/content/F160.tres
+PASS: Approved mechanical resource: resources/content/R200.tres
+PASS: Approved mechanical resource: resources/content/challenge_targets.json
+PASS: Approved mechanical resource: resources/stages/misty_highlands.tres
+PASS: Approved mechanical resource: resources/stages/sunlit_cape.tres
+PASS: Approved mechanical resource: resources/stages/sunset_ridge.tres
+PASS: Authored asset imports: assets/screenprint/props/arch.glb
+PASS: Authored asset imports: assets/screenprint/props/arch_foot.glb
+PASS: Authored asset imports: assets/screenprint/props/balloon.glb
+PASS: Authored asset imports: assets/screenprint/props/bear.glb
+PASS: Authored asset imports: assets/screenprint/props/bridge_post.glb
+PASS: Authored asset imports: assets/screenprint/props/cabin.glb
+PASS: Authored asset imports: assets/screenprint/props/checkpoint.glb
+PASS: Authored asset imports: assets/screenprint/props/helicopter.glb
+PASS: Authored asset imports: assets/screenprint/props/kangaroo.glb
+PASS: Authored asset imports: assets/screenprint/props/lighthouse.glb
+PASS: Authored asset imports: assets/screenprint/props/marshal.glb
+PASS: Authored asset imports: assets/screenprint/props/medical.glb
+PASS: Authored asset imports: assets/screenprint/props/ostrich.glb
+PASS: Authored asset imports: assets/screenprint/props/reindeer.glb
+PASS: Authored asset imports: assets/screenprint/props/sailboat.glb
+PASS: Authored asset imports: assets/screenprint/props/service_station.glb
+PASS: Authored asset imports: assets/screenprint/props/spectator.glb
+PASS: Authored asset imports: assets/screenprint/props/wheel_rim.glb
+PASS: Authored asset imports: assets/screenprint/props/wheel_tire.glb
+PASS: Authored asset imports: assets/screenprint/props/zebra.glb
+PASS: Authored asset imports: assets/screenprint/vehicles/A240-lod0.glb
+PASS: Vehicle triangle budget: assets/screenprint/vehicles/A240-lod0.glb
+PASS: Authored asset imports: assets/screenprint/vehicles/A240-lod1.glb
+PASS: Vehicle triangle budget: assets/screenprint/vehicles/A240-lod1.glb
+PASS: Authored asset imports: assets/screenprint/vehicles/A240-lod2.glb
+PASS: Vehicle triangle budget: assets/screenprint/vehicles/A240-lod2.glb
+PASS: Authored asset imports: assets/screenprint/vehicles/F160-lod0.glb
+PASS: Vehicle triangle budget: assets/screenprint/vehicles/F160-lod0.glb
+PASS: Authored asset imports: assets/screenprint/vehicles/F160-lod1.glb
+PASS: Vehicle triangle budget: assets/screenprint/vehicles/F160-lod1.glb
+PASS: Authored asset imports: assets/screenprint/vehicles/F160-lod2.glb
+PASS: Vehicle triangle budget: assets/screenprint/vehicles/F160-lod2.glb
+PASS: Authored asset imports: assets/screenprint/vehicles/R200-lod0.glb
+PASS: Vehicle triangle budget: assets/screenprint/vehicles/R200-lod0.glb
+PASS: Authored asset imports: assets/screenprint/vehicles/R200-lod1.glb
+PASS: Vehicle triangle budget: assets/screenprint/vehicles/R200-lod1.glb
+PASS: Authored asset imports: assets/screenprint/vehicles/R200-lod2.glb
+PASS: Vehicle triangle budget: assets/screenprint/vehicles/R200-lod2.glb
+PASS: Reference name reaches selection and confirmation: F160
+PASS: Three body LODs: F160
+PASS: Cockpit mount preserves camera position: F160
+PASS: Hood mount preserves camera position: F160
+PASS: Rear plate sits outside body: F160
+PASS: Paired lamp edge mounts: F160
+PASS: Car outline uses dedicated shader
+PASS: Car outline uses dedicated shader
+PASS: Car outline uses dedicated shader
+PASS: Art revision does not invalidate ghosts: F1600
+PASS: Art revision does not invalidate ghosts: F1601
+PASS: Art revision does not invalidate ghosts: F1602
+PASS: Reference name reaches selection and confirmation: R200
+PASS: Three body LODs: R200
+PASS: Cockpit mount preserves camera position: R200
+PASS: Hood mount preserves camera position: R200
+PASS: Rear plate sits outside body: R200
+PASS: Paired lamp edge mounts: R200
+PASS: Car outline uses dedicated shader
+PASS: Car outline uses dedicated shader
+PASS: Car outline uses dedicated shader
+PASS: Art revision does not invalidate ghosts: R2000
+PASS: Art revision does not invalidate ghosts: R2001
+PASS: Art revision does not invalidate ghosts: R2002
+PASS: Reference name reaches selection and confirmation: A240
+PASS: Three body LODs: A240
+PASS: Cockpit mount preserves camera position: A240
+PASS: Hood mount preserves camera position: A240
+PASS: Rear plate sits outside body: A240
+PASS: Paired lamp edge mounts: A240
+PASS: Car outline uses dedicated shader
+PASS: Car outline uses dedicated shader
+PASS: Car outline uses dedicated shader
+PASS: Art revision does not invalidate ghosts: A2400
+PASS: Art revision does not invalidate ghosts: A2401
+PASS: Art revision does not invalidate ghosts: A2402
+PASS: Four authored AT tires and rims fit 12k triangle budget
+PASS: World prop loaded: cabin
+PASS: Visual prop never changes collision: cabin
+PASS: Environment has no ink outlines: cabin
+PASS: World prop loaded: lighthouse
+PASS: Visual prop never changes collision: lighthouse
+PASS: Environment has no ink outlines: lighthouse
+PASS: World prop loaded: medical
+PASS: Visual prop never changes collision: medical
+PASS: Environment has no ink outlines: medical
+PASS: World prop loaded: sailboat
+PASS: Visual prop never changes collision: sailboat
+PASS: Environment has no ink outlines: sailboat
+PASS: World prop loaded: helicopter
+PASS: Visual prop never changes collision: helicopter
+PASS: Environment has no ink outlines: helicopter
+PASS: World prop loaded: arch
+PASS: Visual prop never changes collision: arch
+PASS: Environment has no ink outlines: arch
+PASS: World prop loaded: bridge_post
+PASS: Visual prop never changes collision: bridge_post
+PASS: Environment has no ink outlines: bridge_post
+TEST RESULT: 103 checks, 0 failures

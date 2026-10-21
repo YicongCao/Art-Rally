@@ -469,7 +469,17 @@ func _loading_page() -> void:
 	progress_bar = RallyLoadingProgress.new()
 	progress_bar.custom_minimum_size.y = 26
 	column.add_child(progress_bar)
-	var layout := _row(column)
+	# Air around the model cards keeps the loading screen from becoming two giant tiles.
+	var surround := MarginContainer.new()
+	surround.size_flags_vertical=Control.SIZE_EXPAND_FILL
+	column.add_child(surround)
+	var update_insets := func():
+		surround.add_theme_constant_override("margin_left",int(column.size.x*.07))
+		surround.add_theme_constant_override("margin_right",int(column.size.x*.07))
+		surround.add_theme_constant_override("margin_top",int(surround.size.y*.08))
+		surround.add_theme_constant_override("margin_bottom",int(surround.size.y*.08))
+	surround.resized.connect(update_insets)
+	var layout := _row(surround)
 	layout.size_flags_vertical=Control.SIZE_EXPAND_FILL
 	var stage_index := RallyContentCatalog.STAGES.find(chosen_stage)
 	for index: int in range(2):

@@ -1,5 +1,7 @@
 # Brushline Rally 本轮实施与验收
 
+最新车辆展示及泥地诊断见 [车辆展示修整](vehicle-polish/README.zh-CN.md)。
+
 最新菜单素材见 [Blender 透明模型渲染](menu-models/README.zh-CN.md)。
 
 后续界面修正见 [菜单与回放验收](menu-polish/README.zh-CN.md)，本页性能与验证包数据仍对应原批次。
