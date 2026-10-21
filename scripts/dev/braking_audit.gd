@@ -14,7 +14,8 @@ func run() -> void:
 				var def := RallyContentCatalog.vehicle(id)
 				var car := RallyVehicle.new()
 				car.config=def.physics_config()
-				car.config.corner_brake_balance=mode!="heavy_unassisted"
+				car.aids.abs_enabled=mode!="heavy_unassisted"
+				car.aids.esp_mode=0 if mode=="heavy_unassisted" else 1
 				car.drivetrain.config=def.drivetrain_config()
 				world.add_child(car)
 				car.request_reset(Transform3D(Basis.IDENTITY,Vector3(0,.8,0)))
@@ -40,6 +41,6 @@ func run() -> void:
 				samples.append(record)
 				car.free();await process_frame
 				print("AUDIT ",id," ",surface," ",mode)
-	var file := FileAccess.open("res://docs/brushline/scene-refresh/braking-audit.json",FileAccess.WRITE)
+	var file := FileAccess.open("res://logs/braking-audit-current.json",FileAccess.WRITE)
 	file.store_string(JSON.stringify(samples,"\t"))
 	world.free();quit()

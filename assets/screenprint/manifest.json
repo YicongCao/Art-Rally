@@ -58,18 +58,13 @@
   },
   "assets/screenprint/props/checkpoint.glb": {
     "source": "art_source/screenprint/props/checkpoint.blend",
-    "triangles": 9208,
+    "triangles": 7954,
     "lod": 0,
     "mounts": {
       "BlowerAudio": [
         0.0,
         0.35,
         -1.06
-      ],
-      "StreamerRoot": [
-        0.98,
-        3.28,
-        -0.02
       ]
     }
   },

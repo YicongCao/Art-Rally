@@ -14,6 +14,12 @@ void vertex() {
 	float distance_fade = 1.0-smoothstep(25.0,95.0,distance((MODEL_MATRIX*vec4(VERTEX,1.0)).xyz,CAMERA_POSITION_WORLD));
 	float flex = pow(clamp((VERTEX.y-.55)/2.9,0.0,1.0),2.0);
 	float wake = int(INSTANCE_CUSTOM.y+.5)==flutter_gate ? exp(-max(air_time-flutter_time,0.0)*3.0) : 0.0;
+	if (UV2.x>3.5) {
+		float angle=air_time*1.8+phase+.08*sin(air_time*2.7+phase);
+		mat2 spin=mat2(vec2(cos(angle),sin(angle)),vec2(-sin(angle),cos(angle)));
+		VERTEX.xz=spin*VERTEX.xz;
+		NORMAL.xz=spin*NORMAL.xz;
+	}
 	if (UV2.x>.5 && UV2.x<2.5) {
 		// Raise the pre-bent fabric into a pressurized stance. Pressure pulses
 		// move the tip 30 cm, rather than the old barely visible 5 cm vibration.
@@ -27,7 +33,7 @@ void vertex() {
 		VERTEX.z += sin(air_time*17.0-free_tip*10.0+phase)*free_tip*.16*distance_fade;
 		VERTEX.y += sin(air_time*11.0-free_tip*8.0+phase)*free_tip*.075*distance_fade;
 	}
-	if (UV2.x>2.5) {
+	if (UV2.x>2.5 && UV2.x<3.5) {
 		float angle=air_time*21.0+phase;
 		vec2 rotor=VERTEX.xy-vec2(0,.35);
 		VERTEX.xy=vec2(cos(angle)*rotor.x-sin(angle)*rotor.y,sin(angle)*rotor.x+cos(angle)*rotor.y)+vec2(0,.35);

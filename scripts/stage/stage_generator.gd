@@ -71,7 +71,7 @@ func _surface_at_coordinates(s: float, lateral: float) -> RallySurfaceSample:
 	var amounts := PackedFloat64Array()
 	for surface: int in range(3):
 		if weights[surface]>.0001:
-			samples.append(RallySurfaceSample.from_profile(RallySurfaceQuery.PROFILES[surface],depth))
+			samples.append(RallySurfaceQuery.road_sample(surface,depth))
 			amounts.append(weights[surface])
 	var road := samples[0] if samples.size()==1 else RallySurfaceSample.weighted_average(samples,amounts)
 	var outside := absf(lateral)-half

@@ -2,6 +2,7 @@ class_name RallyRockfall
 extends Node
 
 const ROCKFALL_DURATION := 2.8
+const ROLL_DURATION := 8.0
 const ROCKFALL_SITES := [450.0,900.0,1480.0,1930.0,2490.0]
 
 var scene: Node3D
@@ -114,9 +115,9 @@ func advance(dt: float) -> void:
 	var progress: float = scene.session.progress
 	var speed: float = scene.vehicle.linear_velocity.length()
 	for event: Dictionary in events:
-		if float(event.elapsed)>=ROCKFALL_DURATION+2.0: continue
+		if float(event.elapsed)>=ROCKFALL_DURATION+ROLL_DURATION: continue
 		if float(event.elapsed)<0 and progress>float(event.s)+60:
-			event.elapsed=ROCKFALL_DURATION+2.0
+			event.elapsed=ROCKFALL_DURATION+ROLL_DURATION
 			event.impact=true
 			continue
 		if float(event.elapsed)<0 and progress>=float(event.s)-clampf(speed*2.0,12,46):
@@ -125,7 +126,7 @@ func advance(dt: float) -> void:
 			event.near_miss=speed>5.0 and scene.vehicle.linear_velocity.dot(-scene.vehicle.global_basis.z)>4.0
 			for stone: MeshInstance3D in event.items: stone.show()
 		if float(event.elapsed)<0: continue
-		event.elapsed=minf(ROCKFALL_DURATION+2.0,float(event.elapsed)+dt)
+		event.elapsed=minf(ROCKFALL_DURATION+ROLL_DURATION,float(event.elapsed)+dt)
 		var weight := smoothstep(0,1,minf(1,float(event.elapsed)/ROCKFALL_DURATION))
 		for stone: MeshInstance3D in event.items:
 			var candidate := position_at_weight(stone,weight)
@@ -141,7 +142,8 @@ func advance(dt: float) -> void:
 				var target := alternative.lerp(rear,smoothstep(1,5,forward_speed))
 				# Blend continuously into the last arc; no disappearing safety trick.
 				candidate=candidate.lerp(target,smoothstep(.15,1,weight))
-			if stone.has_meta("landed"): candidate=stone.get_meta("landed")
+			if stone.has_meta("landed"):
+				candidate=_roll_down(stone,float(event.elapsed)-ROCKFALL_DURATION,float(event.side))
 			# Expanded oriented chassis envelope. Continuous displacement to the
 			# mountain/upward escape side keeps every stone visible, never clipping.
 			var local: Vector3=scene.vehicle.to_local(candidate)
@@ -157,9 +159,9 @@ func advance(dt: float) -> void:
 			closest_clearance=minf(closest_clearance,measured_local.distance_to(measured_local.clamp(-half,half))-radius)
 			if weight>=1 and not stone.has_meta("landed"): stone.set_meta("landed",candidate)
 			stone.global_position=candidate
-			var spin := float(stone.get_meta("spin"))*weight
+			var spin := float(stone.get_meta("spin"))*(weight+maxf(0,float(event.elapsed)-ROCKFALL_DURATION)*1.6)
 			stone.rotation=Vector3(spin*.45,spin,spin*.3)
-			stone.transparency=smoothstep(ROCKFALL_DURATION+.8,ROCKFALL_DURATION+2.0,float(event.elapsed))
+			stone.transparency=smoothstep(ROCKFALL_DURATION+ROLL_DURATION-1,ROCKFALL_DURATION+ROLL_DURATION,float(event.elapsed))
 		if weight>=.98 and not event.impact:
 			event.impact=true
 			impact.global_position=event.items[0].global_position
@@ -167,8 +169,33 @@ func advance(dt: float) -> void:
 			impact.volume_db=2
 			if DisplayServer.get_name()!="headless": impact.play()
 			_dust(impact.global_position)
-		if float(event.elapsed)>=ROCKFALL_DURATION+2:
+		if float(event.elapsed)>=ROCKFALL_DURATION+ROLL_DURATION:
 			for stone: MeshInstance3D in event.items: stone.hide()
+
+func _roll_down(stone: MeshInstance3D,time: float,mountain_side: float) -> Vector3:
+	var landed: Vector3=stone.get_meta("landed")
+	var route: RallyStageRoute=scene.generator.route
+	var projected: Dictionary=scene.presentation.scenery.nearest(landed)
+	var pose := route.pose_at(projected.s,0)
+	var radius := maxf(stone.scale.x,maxf(stone.scale.y,stone.scale.z))
+	var cliff_side := -mountain_side
+	var lateral_start: float=(landed-pose.origin).dot(pose.basis.x)
+	var target_lateral := cliff_side*(route.width_at(projected.s)*.5+32)
+	var travel := clampf(pow(maxf(time,0)/4.2,1.3),0,1)
+	var point := landed+pose.basis.x*(target_lateral-lateral_start)*travel
+	var lateral: float=lateral_start+(target_lateral-lateral_start)*travel
+	var edge := route.width_at(projected.s)*.5+1.2
+	var edge_fraction := clampf((cliff_side*edge-lateral_start)/(target_lateral-lateral_start),0,1)
+	var edge_time := 4.2*pow(edge_fraction,1/1.3)
+	var drop := maxf(0,time-edge_time)
+	var floor_y: float=scene.presentation.scenery.rendered_height_at(point.x,point.z)+radius
+	if absf(lateral)<edge:
+		floor_y=maxf(floor_y,scene.generator.surface_position_at(projected.s,lateral).y+radius)
+	# Roll across the shoulder, then gravity carries the rock down the visible
+	# cliff. Fade only at the remote end, rather than vanishing at the bumper.
+	point.y=maxf(floor_y,landed.y-4.9*drop*drop)+sin(minf(time,edge_time)*7)*.12*maxf(0,1-drop)
+	return point
+
 
 func _dust(at: Vector3) -> void:
 	var puff := GPUParticles3D.new()

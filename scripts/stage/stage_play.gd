@@ -315,6 +315,9 @@ func _apply_preferences() -> void:
 	light_assist = preferences.values.keyboard_light
 	preferences.apply_input(controls,light_assist)
 	vehicle.drivetrain.automatic = preferences.values.automatic
+	vehicle.aids.abs_enabled=preferences.values.abs
+	vehicle.aids.esp_mode=["off","sport","full"].find(preferences.values.esp)
+	vehicle.drivetrain.tc_mode=["off","sport","full"].find(preferences.values.tc)
 	vehicle.config.front_brake_bias = preferences.values.brake_bias
 	vehicle.config.static_compression = 0.13/float(preferences.values.spring_scale)
 	vehicle.visual_deformation_gain = preferences.values.tire_visual_gain

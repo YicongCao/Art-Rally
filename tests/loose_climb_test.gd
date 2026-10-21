@@ -59,7 +59,7 @@ func _run() -> void:
 		floor_root.free()
 		await ticks(2)
 	world.free()
-	var file := FileAccess.open("res://docs/validation/loose-climb-after.json",FileAccess.WRITE)
+	var file := FileAccess.open("res://logs/loose-climb-current.json",FileAccess.WRITE)
 	file.store_string(JSON.stringify(reports,"\t"))
 	await process_frame
 	finish()
@@ -88,7 +88,10 @@ func assist_guards() -> void:
 	for wheel: RallyWheelState in wheels: wheel.surface=RallySurfaceSample.from_profile(load("res://resources/surfaces/asphalt.tres"))
 	drive.begin_tick(command,6,.34,wheels)
 	for i: int in range(120): drive._update_traction(command,wheels,1.0/120)
-	check(is_equal_approx(drive.traction_scale,1),"Returning to asphalt smoothly restores full driver input")
+	check(drive.traction_scale<.5,"TC also controls wheelspin on asphalt")
+	for wheel: RallyWheelState in wheels: wheel.omega=wheel.longitudinal_speed/wheel.effective_radius
+	for i: int in range(240): drive._update_traction(command,wheels,1.0/120)
+	check(is_equal_approx(drive.traction_scale,1),"Regaining wheel traction smoothly restores full driver input")
 	for i: int in range(2):
 		wheels[i].surface=RallySurfaceSample.from_profile(load("res://resources/surfaces/gravel.tres"))
 		wheels[i].grounded=false

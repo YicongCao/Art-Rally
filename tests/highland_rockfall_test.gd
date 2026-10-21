@@ -127,7 +127,16 @@ func _run() -> void:
 		scene.rockfall.advance(.1)
 		check(float(event.elapsed)>0 and event.items.any(func(stone: MeshInstance3D)->bool:return stone.visible),"Approaching each marked point starts its non-colliding fall")
 		for frame: int in range(50): scene.rockfall.advance(.1)
-		check(event.items.all(func(stone: MeshInstance3D)->bool:return not stone.visible),"Each fall settles and clears after its short animation")
+		check(event.items.any(func(stone: MeshInstance3D)->bool:return stone.visible),"Rocks keep rolling instead of disappearing at five seconds")
+		var hero: MeshInstance3D=event.items[0]
+		var landing: Vector3=hero.get_meta("landed")
+		for frame: int in range(45): scene.rockfall.advance(.1)
+		var final_point: Vector3=hero.global_position
+		var frame: Transform3D=scene.generator.route.pose_at(float(event.s),0)
+		var travel: float=(final_point-landing).dot(frame.basis.x)*-float(event.side)
+		check(travel>12 and final_point.y<landing.y-5,"Rock %dm rolls to the cliff and descends before fade (%.1fm sideways / %.1fm down)"%[event.s,travel,landing.y-final_point.y])
+		for tail: int in range(20): scene.rockfall.advance(.1)
+		check(event.items.all(func(stone: MeshInstance3D)->bool:return not stone.visible),"Rocks clear only after the extended cliff descent")
 		scene.rockfall.reset()
 		check(float(event.elapsed)<0,"Restart resets one-shot fall events")
 	await app.leave_race()

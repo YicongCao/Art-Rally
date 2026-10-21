@@ -18,7 +18,7 @@ func _run() -> void:
 		for c: Color in colors: palette[c.to_html()]=true
 		for mask: Vector2 in masks: groups[int(mask.x)]=true
 		check(palette.size()>=9,id+": authored checker/cloth/machine colors survive merging")
-		check(groups.has(0) and groups.has(1) and groups.has(2) and groups.has(3),id+": rigid, pressure cloth, streamer and rotating fan masks survive export")
+		check(groups.has(0) and groups.has(3) and groups.has(4),id+": rigid, vortex sails and rotating fan masks survive export")
 		check(mesh.get_aabb().size.y>3.2 and mesh.get_aabb().size.y<3.8,id+": pressure gate has intended height")
 		check(markers.tube_multimesh.instance_count==(session.gates.size()-2)*2,id+": every intermediate gate has two complete assemblies")
 		var outward := true
@@ -31,7 +31,7 @@ func _run() -> void:
 				# Static mesh + worst inward sway never enters the road corridor.
 				var vertices: PackedVector3Array=arrays[Mesh.ARRAY_VERTEX]
 				for vertex: int in range(vertices.size()):
-					var flex := .43*pow(clampf((vertices[vertex].y-.55)/2.9,0,1),2) if masks[vertex].x>.5 and masks[vertex].x<2.5 else 0.0
+					var flex := vertices[vertex].x+Vector2(vertices[vertex].x,vertices[vertex].z).length() if masks[vertex].x>3.5 else 0.0
 					clearance=clearance and .85+vertices[vertex].x-flex>.15
 		check(outward,id+": both tips bend out of the road, including rotated corners")
 		check(clearance,id+": static foot and full sway envelope clear the road")

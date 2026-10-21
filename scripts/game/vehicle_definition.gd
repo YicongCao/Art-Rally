@@ -34,8 +34,9 @@ func physics_config() -> RallyVehicleConfig:
 	result.body_inertia = Vector3(650,1750,1850)*(mass_kg/1250.0)
 	result.body_inertia.y *= pow(wheelbase/2.6,2)
 	result.body_inertia.z *= pow(track_width/1.6,2)
-	result.corner_brake_balance = true
-	result.front_brake_bias = {"FWD":.60,"RWD":.61,"AWD":.61}[drive_layout]
+	result.center_of_mass.z = -wheelbase*{"FWD":.10,"RWD":.02,"AWD":.06}[drive_layout]
+	result.corner_brake_balance = false
+	result.front_brake_bias = {"FWD":.62,"RWD":.59,"AWD":.61}[drive_layout]
 	result.rear_anti_roll = {"FWD":5600.0,"RWD":4800.0,"AWD":5200.0}[drive_layout]
 	result.contact_envelope = true
 	return result

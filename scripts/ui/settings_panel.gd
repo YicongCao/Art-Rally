@@ -7,15 +7,15 @@ var prefs: RallyGameSettings
 var widgets: Dictionary = {}
 var pages: Array[Control] = []
 var tabs: Array[Button] = []
-const CATEGORIES := [["驾驶","settings_drive"],["画面与显示","settings_display"],["声音与领航","settings_audio"],["机械调校","settings_tuning"]]
+const CATEGORIES := [["驾驶","settings_drive"],["画面与显示","settings_display"],["声音与领航","settings_audio"],["机械调校","settings_tuning"],["电子辅助","settings_assist"]]
 const SLIDERS := [
 	[["steering_response","转向响应"],["return_rate","回正速度"],["throttle_rise","油门响应"],["brake_rise","制动响应"],["stick_deadzone","摇杆死区"]],
 	[["tire_visual_gain","轮胎形变"]],
 	[["volume","总音量"],["engine_volume","发动机"],["road_volume","轮胎与路面"],["environment_volume","环境"],["interface_volume","界面提示"],["music_volume","音乐"],["voice_volume","语音路书"]],
-	[["brake_bias","前轮制动比例"],["spring_scale","悬架弹簧"]]]
+	[["brake_bias","前轮制动比例"],["spring_scale","悬架弹簧"]],[]]
 const TOGGLES := [
 	[["automatic","自动换挡"],["reverse_assist","停稳制动挂倒挡"],["keyboard_light","键盘辅助"],["vibration","手柄震动"]],
-	[["reduced_motion","减少界面动态"],["ghost","个人幽灵"],["show_fps","显示帧率"],["low_detail","简化植被"],["camera_motion","驾驶舱震动"],["lens_flare","镜头光斑"]],[],[]]
+	[["reduced_motion","减少界面动态"],["ghost","个人幽灵"],["show_fps","显示帧率"],["low_detail","简化植被"],["camera_motion","驾驶舱震动"],["lens_flare","镜头光斑"]],[],[],[["abs","ABS 防抱死"]]]
 
 func build(settings: RallyGameSettings,height: float = 330) -> void:
 	prefs = settings
@@ -62,6 +62,23 @@ func build(settings: RallyGameSettings,height: float = 330) -> void:
 			toggle.toggled.connect(func(on: bool): RallyRacingPatina.select_mark(toggle,on))
 			widgets[entry[0]] = toggle
 		for entry: Array in SLIDERS[i]: _slider(list,entry)
+		if i==4:
+			for key: String in ["tc","esp"]:
+				var row := HBoxContainer.new()
+				list.add_child(row)
+				var label := Label.new()
+				label.text="TC 牵引力" if key=="tc" else "ESP 稳定控制"
+				label.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+				row.add_child(label)
+				var mode := OptionButton.new()
+				for title: String in ["关闭","运动","完整"]: mode.add_item(title)
+				mode.select(["off","sport","full"].find(prefs.values[key]))
+				mode.item_selected.connect(func(index: int): setting_changed.emit(key,["off","sport","full"][index]))
+				row.add_child(mode);widgets[key]=mode
+			var hint := Label.new()
+			hint.text="运动：保留适度滑移，临近失控时介入。"
+			hint.add_theme_font_size_override("font_size",13)
+			list.add_child(hint)
 		if i==2:
 			var row := HBoxContainer.new()
 			list.add_child(row)
@@ -120,7 +137,8 @@ func sync() -> void:
 		if widget is Slider:
 			widget.set_value_no_signal(prefs.values[key])
 			widget.get_parent().get_child(2).text = "%.2f"%prefs.values[key]
-		elif widget is OptionButton: widget.select(["female","male","off"].find(prefs.values.voice))
+		elif widget is OptionButton:
+			widget.select((["female","male","off"] if key=="voice" else ["off","sport","full"]).find(prefs.values[key]))
 		else:
 			widget.set_pressed_no_signal(prefs.values[key])
 			RallyRacingPatina.select_mark(widget,widget.button_pressed)

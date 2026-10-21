@@ -1,0 +1,224 @@
+[
+	{
+		"active": false,
+		"car": "F160",
+		"gear": 4,
+		"kind": "launch",
+		"largest_demand_step": 0.0,
+		"slip": 0.89632104578425,
+		"speed_kmh": 134.149713134766,
+		"tc": 0,
+		"water": 0.0
+	},
+	{
+		"active": true,
+		"car": "F160",
+		"gear": 4,
+		"kind": "launch",
+		"largest_demand_step": 0.0333333350718021,
+		"slip": 0.229211303879704,
+		"speed_kmh": 127.101832580566,
+		"tc": 1,
+		"water": 0.0
+	},
+	{
+		"active": false,
+		"car": "F160",
+		"gear": 2,
+		"kind": "launch",
+		"largest_demand_step": 0.0,
+		"slip": 1.46347566545074,
+		"speed_kmh": 63.5127937316895,
+		"tc": 0,
+		"water": 0.015
+	},
+	{
+		"active": true,
+		"car": "F160",
+		"gear": 2,
+		"kind": "launch",
+		"largest_demand_step": 0.0333333350718021,
+		"slip": 0.349605412487504,
+		"speed_kmh": 62.8855499267578,
+		"tc": 1,
+		"water": 0.015
+	},
+	{
+		"active": false,
+		"car": "F160",
+		"gear": 1,
+		"kind": "launch",
+		"largest_demand_step": 0.0,
+		"slip": 3.03333528767616,
+		"speed_kmh": 25.5232332229614,
+		"tc": 0,
+		"water": 0.07
+	},
+	{
+		"active": true,
+		"car": "F160",
+		"gear": 1,
+		"kind": "launch",
+		"largest_demand_step": 0.0333333350718021,
+		"slip": 0.790854182644093,
+		"speed_kmh": 26.5515140533447,
+		"tc": 1,
+		"water": 0.07
+	},
+	{
+		"active": false,
+		"car": "R200",
+		"gear": 5,
+		"kind": "launch",
+		"largest_demand_step": 0.0,
+		"slip": 0.751129511443983,
+		"speed_kmh": 142.113647460938,
+		"tc": 0,
+		"water": 0.0
+	},
+	{
+		"active": true,
+		"car": "R200",
+		"gear": 4,
+		"kind": "launch",
+		"largest_demand_step": 0.0333333350718021,
+		"slip": 0.197789650320659,
+		"speed_kmh": 137.046876525879,
+		"tc": 1,
+		"water": 0.0
+	},
+	{
+		"active": false,
+		"car": "R200",
+		"gear": 2,
+		"kind": "launch",
+		"largest_demand_step": 0.0,
+		"slip": 1.48693422466093,
+		"speed_kmh": 60.4454452514648,
+		"tc": 0,
+		"water": 0.015
+	},
+	{
+		"active": true,
+		"car": "R200",
+		"gear": 2,
+		"kind": "launch",
+		"largest_demand_step": 0.0333333350718021,
+		"slip": 0.368103275251855,
+		"speed_kmh": 60.2331962585449,
+		"tc": 1,
+		"water": 0.015
+	},
+	{
+		"active": false,
+		"car": "R200",
+		"gear": 1,
+		"kind": "launch",
+		"largest_demand_step": 0.0,
+		"slip": 3.47774006679147,
+		"speed_kmh": 22.6823472976685,
+		"tc": 0,
+		"water": 0.07
+	},
+	{
+		"active": true,
+		"car": "R200",
+		"gear": 1,
+		"kind": "launch",
+		"largest_demand_step": 0.0333333350718021,
+		"slip": 1.29986505771165,
+		"speed_kmh": 24.0463514328003,
+		"tc": 1,
+		"water": 0.07
+	},
+	{
+		"active": false,
+		"car": "A240",
+		"gear": 5,
+		"kind": "launch",
+		"largest_demand_step": 0.0,
+		"slip": 0.113154380164343,
+		"speed_kmh": 168.307978820801,
+		"tc": 0,
+		"water": 0.0
+	},
+	{
+		"active": true,
+		"car": "A240",
+		"gear": 5,
+		"kind": "launch",
+		"largest_demand_step": 0.0186383616810935,
+		"slip": 0.0790842850512268,
+		"speed_kmh": 165.168099975586,
+		"tc": 1,
+		"water": 0.0
+	},
+	{
+		"active": false,
+		"car": "A240",
+		"gear": 3,
+		"kind": "launch",
+		"largest_demand_step": 0.0,
+		"slip": 0.507479766503675,
+		"speed_kmh": 100.293097686768,
+		"tc": 0,
+		"water": 0.015
+	},
+	{
+		"active": true,
+		"car": "A240",
+		"gear": 3,
+		"kind": "launch",
+		"largest_demand_step": 0.0333333350718021,
+		"slip": 0.167791000487917,
+		"speed_kmh": 99.8632301330566,
+		"tc": 1,
+		"water": 0.015
+	},
+	{
+		"active": false,
+		"car": "A240",
+		"gear": 1,
+		"kind": "launch",
+		"largest_demand_step": 0.0,
+		"slip": 1.45100008177091,
+		"speed_kmh": 40.6799011230469,
+		"tc": 0,
+		"water": 0.07
+	},
+	{
+		"active": true,
+		"car": "A240",
+		"gear": 1,
+		"kind": "launch",
+		"largest_demand_step": 0.0333333350718021,
+		"slip": 0.341985637292903,
+		"speed_kmh": 42.2875545501709,
+		"tc": 1,
+		"water": 0.07
+	},
+	{
+		"active_frames": 0,
+		"brake_impulse": 0.0,
+		"final_beta_deg": 71.7851345569792,
+		"kind": "yaw_recovery",
+		"max_beta_deg": 71.7851345569792,
+		"mode": 0
+	},
+	{
+		"active_frames": 360,
+		"brake_impulse": 1198.35576949673,
+		"final_beta_deg": 20.9778530177353,
+		"kind": "yaw_recovery",
+		"max_beta_deg": 28.3905196760979,
+		"mode": 1
+	},
+	{
+		"active_frames": 359,
+		"brake_impulse": 1322.08083939067,
+		"final_beta_deg": 1.16470586099874,
+		"kind": "yaw_recovery",
+		"max_beta_deg": 13.1989870348347,
+		"mode": 2
+	}
+]

@@ -16,6 +16,11 @@ var output_torque: float = 0
 var effective_throttle: float = 0
 var traction_scale: float = 1
 var loose_contact: bool = false
+var longitudinal_stiffness: float = 12.0
+var tc_mode: int = 1
+var tc_active := false
+var esp_scale: float = 1
+var filtered_slip: float = 0
 
 
 func rpm() -> float:
@@ -40,6 +45,9 @@ func reset() -> void:
 	output_torque = 0
 	effective_throttle = 0
 	traction_scale = 1
+	tc_active=false
+	filtered_slip=0
+	esp_scale=1
 	loose_contact = false
 
 
@@ -140,7 +148,7 @@ func step(command: DriverCommand, wheels: Array[RallyWheelState], dt: float) -> 
 	var capacity := config.clutch_capacity * clutch
 	clutch_torque = clampf((engine_omega - engaged_speed) * config.clutch_coupling, -capacity, capacity)
 	_update_traction(command,wheels,dt)
-	effective_throttle = command.throttle*traction_scale if shift_remaining <= 0 and rpm() < config.redline_rpm and not auto_shift_cut else 0.0
+	effective_throttle = command.throttle*traction_scale*esp_scale if shift_remaining <= 0 and rpm() < config.redline_rpm and not auto_shift_cut else 0.0
 	var idle_governor := clampf((config.idle_rpm - rpm()) * 0.5, 0, 130)
 	var drag := 20.0 + engine_omega * 0.045
 	# The published torque curve is net shaft torque; retain closed-throttle engine braking.
@@ -151,26 +159,35 @@ func step(command: DriverCommand, wheels: Array[RallyWheelState], dt: float) -> 
 
 
 func _update_traction(command: DriverCommand,wheels: Array[RallyWheelState],dt: float) -> void:
-	# Regulate engine input rather than wheel speed or tire force. Keep useful slip
-	# for loose-surface driving, and release smoothly as the tires regain purchase.
-	if not config.loose_surface_assist or not loose_contact or gear<=0 or command.handbrake>.1 or command.brake>.1 or command.throttle<.1:
-		traction_scale=move_toward(traction_scale,1,dt*2)
+	if tc_mode==0 or gear==0 or command.handbrake>.1 or command.brake>.1 or command.throttle<.1:
+		traction_scale=1;filtered_slip=0;tc_active=false
 		return
 	var slip := 0.0
+	var target := 0.0
 	var supported_load := 0.0
+	var speed := 0.0
 	for i: int in range(wheels.size()):
 		if (config.drive_layout=="FWD" and i>=2) or (config.drive_layout=="RWD" and i<2): continue
 		var wheel := wheels[i]
 		if not wheel.grounded or wheel.load<50: continue
-		var excess := maxf(0,wheel.omega*wheel.effective_radius-wheel.longitudinal_speed)/maxf(absf(wheel.longitudinal_speed),3)
+		var excess := maxf(0,absf(wheel.omega*wheel.effective_radius)-absf(wheel.longitudinal_speed))/maxf(absf(wheel.longitudinal_speed),3)
 		slip+=excess*wheel.load
+		target+=clampf(1.15/maxf(.01,longitudinal_stiffness*wheel.surface.longitudinal_scale),.10,.24)*wheel.load
+		speed+=absf(wheel.longitudinal_speed)*wheel.load
 		supported_load+=wheel.load
-	if supported_load<=0: return
-	# Preserve the automatic clutch's launch band: cutting below it can trap a
-	# front-drive car in a repeated idle / disengage cycle on a steep incline.
-	if rpm()<2400:
-		traction_scale=move_toward(traction_scale,1,dt*3)
+	if supported_load<=0:
+		traction_scale=move_toward(traction_scale,1,dt);tc_active=false
 		return
-	slip/=supported_load
-	var change := clampf((.18-slip)*3,-6,.7)
-	traction_scale=clampf(traction_scale+change*dt,.05,1)
+	slip/=supported_load;target/=supported_load;speed/=supported_load
+	if tc_mode==1: target*=1.2
+	filtered_slip=lerpf(filtered_slip,slip,1-exp(-dt*18))
+	# Smooth launch margin instead of a 2400 rpm on/off cliff. The clutch can
+	# build torque while high slip still reduces demand, even below 2400 rpm.
+	target+=.12*(1-smoothstep(0,5,speed))
+	var error := filtered_slip-target
+	# Preserve clutch engagement torque while crawling uphill. Fade this reserve
+	# continuously with road speed; it cannot reinstate full throttle at an RPM threshold.
+	var launch_reserve := lerpf(.45,.12,smoothstep(0,8,speed))
+	if error>.025: traction_scale=maxf(launch_reserve,traction_scale-dt*minf(4,error*4))
+	elif error<-.025: traction_scale=minf(1,traction_scale+dt*.75)
+	tc_active=traction_scale<.95

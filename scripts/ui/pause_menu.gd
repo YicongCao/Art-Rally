@@ -58,18 +58,6 @@ func build(settings: RallyGameSettings) -> void:
 	var buttons := HBoxContainer.new()
 	column.add_child(buttons)
 	button(buttons,"重跑赛段",func(): restart_requested.emit())
-	var auto_row := HBoxContainer.new()
-	column.add_child(auto_row)
-	var auto_label := Label.new()
-	auto_label.text = "自动驾驶"
-	auto_label.custom_minimum_size.x = 165
-	auto_row.add_child(auto_label)
-	autopilot_selector = OptionButton.new()
-	autopilot_selector.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	for option_title: String in ["关闭（真人驾驶）","虚拟键盘","虚拟手柄"]:
-		autopilot_selector.add_item(option_title)
-	autopilot_selector.item_selected.connect(func(index: int): autopilot_changed.emit(["off","vkeyboard","vgamepad"][index]))
-	auto_row.add_child(autopilot_selector)
 	categories = RallySettingsPanel.new()
 	column.add_child(categories)
 	categories.build(prefs,clampf(get_viewport().get_visible_rect().size.y-370,180,300))
@@ -78,7 +66,7 @@ func build(settings: RallyGameSettings) -> void:
 	widgets = categories.widgets
 	button(column,"恢复默认设置",func(): defaults_requested.emit(); sync())
 	message = Label.new()
-	message.text = "设置保存在本机 · F10 切换自动驾驶 · Esc / Start 继续"
+	message.text = "设置保存在本机 · Esc / Start 继续"
 	message.add_theme_font_size_override("font_size",12)
 	column.add_child(message)
 	actions = RallyActionBar.create(column,"",Callable(),"继续驾驶 →",func(): resume_requested.emit(),true)

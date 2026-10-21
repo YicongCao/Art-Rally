@@ -11,7 +11,8 @@ func _run() -> void:
 			var definition := RallyContentCatalog.vehicle(id)
 			var car := RallyVehicle.new()
 			car.config = definition.physics_config()
-			car.config.corner_brake_balance = balanced
+			car.aids.abs_enabled = balanced
+			car.aids.esp_mode = 1 if balanced else 0
 			car.drivetrain.config = definition.drivetrain_config()
 			world.add_child(car)
 			car.request_reset(Transform3D(Basis.IDENTITY,Vector3(0,.8,0)))
@@ -45,7 +46,7 @@ func _run() -> void:
 			car.free()
 			await process_frame
 		report[id]=runs
-		check(runs[1].yaw_degrees>runs[0].yaw_degrees*1.03,id+" corner brake balance restores turn-in under heavy braking")
+		check(runs[1].yaw_degrees>runs[0].yaw_degrees*1.03,id+" ABS/Sport restores turn-in under heavy braking")
 		check(runs[1].front_slip<runs[0].front_slip,id+" front lock-up decreases")
 	print("BRAKE COMPARISON: ",JSON.stringify(report))
 	world.free()

@@ -6,6 +6,7 @@ signal reset_completed
 @export var config: RallyVehicleConfig = preload("res://resources/vehicles/baseline.tres")
 @export var tire: RallyTireConfig = preload("res://resources/vehicles/asphalt_tire.tres")
 var drivetrain := RallyDrivetrain.new()
+var aids := RallyDriverAids.new()
 var wheels: Array[RallyWheelState] = []
 var command := DriverCommand.new()
 var command_source: Callable
@@ -24,6 +25,8 @@ func _ready() -> void:
 	inertia = config.body_inertia
 	center_of_mass_mode = RigidBody3D.CENTER_OF_MASS_MODE_CUSTOM
 	center_of_mass = config.center_of_mass
+	linear_damp_mode = RigidBody3D.DAMP_MODE_REPLACE
+	angular_damp_mode = RigidBody3D.DAMP_MODE_REPLACE
 	linear_damp = 0
 	angular_damp = 0
 	can_sleep = false
@@ -70,6 +73,7 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 		for wheel: RallyWheelState in wheels: wheel.reset(config.wheel_radius)
 		command = DriverCommand.new()
 		drivetrain.reset()
+		aids.reset()
 		reset_pending = false
 	if command_source.is_valid():
 		command = command_source.call(state.linear_velocity.length(), state.step)
@@ -82,6 +86,9 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 	RallySuspension.anti_roll(wheels[2], wheels[3], config.rear_anti_roll)
 	drivetrain.begin_tick(command, state.linear_velocity.length(), _driven_radius(command.handbrake>0.1), wheels, state.linear_velocity.dot(-state.transform.basis.z))
 	command.shift = 0
+	drivetrain.longitudinal_stiffness=tire.longitudinal_stiffness
+	aids.begin_tick(self,state)
+	drivetrain.esp_scale=aids.engine_scale
 	var brake_torques := PackedFloat64Array()
 	for i: int in range(4):
 		var wheel := wheels[i]
@@ -93,8 +100,7 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 		wheel.lateral_speed = velocity.dot(wheel.right)
 		var brake_share := config.front_brake_bias if i < 2 else 1.0 - config.front_brake_bias
 		var brake_torque := command.brake * config.total_brake_torque * brake_share * 0.5
-		brake_torque = RallyBrakeBalance.service_torque(brake_torque,wheel,i<2,command.steer,state.linear_velocity.length(),drivetrain.config.drive_layout,config,tire)
-		if i >= 2: brake_torque += command.handbrake * config.handbrake_torque
+		brake_torque += aids.esp_brakes[i]
 		brake_torques.append(brake_torque)
 	var forces: Array[Vector2] = [Vector2.ZERO, Vector2.ZERO, Vector2.ZERO, Vector2.ZERO]
 	var aligning_moments := PackedFloat64Array([0,0,0,0])
@@ -103,7 +109,9 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 	for substep: int in range(config.tire_substeps):
 		var torques := drivetrain.step(command,wheels,substep_dt)
 		for i: int in range(4):
-			var solved := RallyTireModel.solve(wheels[i],torques[i],brake_torques[i],substep_dt,config,tire)
+			var service := aids.brake(i,wheels[i],brake_torques[i],substep_dt)
+			var hand := command.handbrake*config.handbrake_torque if i>=2 else 0.0
+			var solved := RallyTireModel.solve(wheels[i],torques[i],service+hand,substep_dt,config,tire)
 			forces[i] += solved/config.tire_substeps
 			wheels[i].longitudinal_speed += solved.x * state.step / config.body_mass
 			wheels[i].lateral_speed += solved.y * state.step / config.body_mass

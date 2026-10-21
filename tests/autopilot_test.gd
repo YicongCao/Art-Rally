@@ -63,7 +63,7 @@ func _run() -> void:
 	check(scene.auto_driver.mode==RallyAutoDriver.Mode.VIRTUAL_GAMEPAD,"F10 cycles to virtual gamepad automation")
 	scene._toggle_pause()
 	scene.controls._unhandled_input(shortcut)
-	check(scene.auto_driver.mode==RallyAutoDriver.Mode.OFF and scene.pause_menu.autopilot_selector.selected==0,"F10 remains available while paused and keeps the menu synchronized")
+	check(scene.auto_driver.mode==RallyAutoDriver.Mode.OFF and scene.pause_menu.autopilot_selector==null,"F10 remains a development shortcut while its menu option stays hidden")
 	scene._toggle_pause()
 	scene.queue_free()
 	paused = false

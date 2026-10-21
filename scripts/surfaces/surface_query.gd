@@ -26,3 +26,13 @@ static func footprint(collider: Object, point: Vector3, forward: Vector3, right:
 	for offset: Vector3 in [forward * 0.12, -forward * 0.12, right * 0.09, -right * 0.09]:
 		samples.append(point_sample(collider, point + offset))
 	return RallySurfaceSample.average(samples)
+
+
+static func road_sample(id: int,depth: float) -> RallySurfaceSample:
+	if id!=2: return RallySurfaceSample.from_profile(PROFILES[id],depth)
+	var packed := RallySurfaceSample.from_profile(preload("res://resources/surfaces/packed_dirt.tres"),depth)
+	var wet := RallySurfaceSample.from_profile(preload("res://resources/surfaces/wet_soil.tres"),depth)
+	var soft := RallySurfaceSample.from_profile(PROFILES[2],depth)
+	var moisture := smoothstep(0,.02,depth)
+	var mud := smoothstep(.025,.07,depth)
+	return RallySurfaceSample.weighted_average([packed,wet,soft],PackedFloat64Array([(1-moisture)*(1-mud),moisture*(1-mud),mud]))

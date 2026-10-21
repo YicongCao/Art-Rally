@@ -36,6 +36,7 @@ var hint_alpha: float = 1
 var sector_clock: float = 99
 var seen_sectors: int = 0
 var sector: Dictionary = {}
+var aid_hold := {"abs":0.0,"tc":0.0,"esp":0.0}
 
 
 func _ready() -> void:
@@ -70,6 +71,7 @@ static func data_for(car: RallyVehicle, session: RallyStageSession, paused: bool
 		elif car.linear_velocity.dot(session.route.tangent_at(session.progress)) < -2: warning = "逆行 · 请掉头"
 	return {"speed":car.linear_velocity.length()*3.6,"rpm":car.drivetrain.rpm(),"redline":car.drivetrain.config.redline_rpm,
 		"gear":"R" if car.drivetrain.gear<0 else ("N" if car.drivetrain.gear==0 else str(car.drivetrain.gear)),"drive_layout":car.drivetrain.config.drive_layout,
+		"abs_on":car.aids.abs_enabled,"abs_active":car.aids.abs_active,"tc_on":car.drivetrain.tc_mode>0,"tc_active":car.drivetrain.tc_active,"esp_on":car.aids.esp_mode>0,"esp_active":car.aids.esp_active,
 		"automatic":car.drivetrain.automatic,"throttle":car.command.throttle,"brake":car.command.brake,"handbrake":car.command.handbrake,
 		"shift_sync":car.drivetrain.auto_shift_cut,"wheelspin":car.drivetrain.wheelspin > car.drivetrain.config.max_upshift_slip and car.command.throttle > 0.2 and car.drivetrain.gear > 0,
 		"time":session.total_time(),"penalty":session.penalty,"progress":session.progress,"length":session.route.length-30,
@@ -119,6 +121,8 @@ func refresh(value: Dictionary) -> void:
 
 func _process(dt: float) -> void:
 	if model.is_empty() or model.get("paused",false): return
+	for key: String in aid_hold:
+		aid_hold[key]=.16 if model.get(key+"_active",false) else maxf(0,float(aid_hold[key])-dt)
 	sector_clock += dt
 	hint_alpha = move_toward(hint_alpha,1.0 if float(model.get("speed",0))<.8 else 0.0,dt/.14)
 	queue_redraw()
@@ -301,6 +305,15 @@ func _draw_gauge() -> void:
 	center_text("KM/H",Vector2(1138,646),14,PAPER,gauge_font)
 	var status := "handbrake" if model.handbrake>.1 else ("shift" if model.get("shift_sync",false) else "")
 	if not status.is_empty(): draw_texture_rect(HANDBRAKE_ICON if status=="handbrake" else SHIFT_ICON,Rect2(1215,641,20,20),false,RED if status=="handbrake" else AMBER)
+	for i: int in range(3):
+		var key: String=["abs","tc","esp"][i]
+		var on: bool=model.get(key+"_on",false)
+		var active: bool=(model.get(key+"_active",false) or float(aid_hold[key])>0) and on
+		var x := 1092+i*49
+		var ink := AMBER if active else Color(PAPER,.45 if on else .22)
+		draw_style_box(_aid_frame(ink,active),Rect2(x-20,652,40,17))
+		center_text(key.to_upper(),Vector2(x,665),11,Color("172027") if active else ink,gauge_font)
+		if not on: draw_line(Vector2(x-18,669),Vector2(x+18,653),ink,1.5,true)
 	for i: int in range(16):
 		var x := 1074+i*8.0
 		var color := AMBER if i<model.throttle*16 else Color(PAPER,.28)
@@ -357,3 +370,12 @@ func _draw_sector() -> void:
 	text("%02d  %s"%[sector.number,time_text(sector.seconds)],Vector2(526,159),20,Color(PAPER,opacity),number_font)
 	if sector.has("delta"):
 		text("%+.2f s"%sector.delta,Vector2(526,190),19,Color(Color("91d5b2") if sector.delta<=0 else RED,opacity),number_font)
+
+
+func _aid_frame(ink: Color,active: bool) -> StyleBoxFlat:
+	var frame := StyleBoxFlat.new()
+	frame.bg_color=ink if active else Color(0,0,0,0)
+	frame.border_color=ink
+	frame.set_border_width_all(1)
+	frame.set_corner_radius_all(3)
+	return frame

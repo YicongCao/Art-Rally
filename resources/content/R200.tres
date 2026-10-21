@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1")
+revision = "fp5"
 vehicle_id = "R200"
 model_path = "res://assets/vehicles/R200.glb"
 title = "宝马 M3 E30 · Mobil 1"

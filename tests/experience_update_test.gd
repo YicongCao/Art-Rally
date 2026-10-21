@@ -10,7 +10,7 @@ func _run() -> void:
 	app.profile.data = RallyProfileStore.fresh()
 	app.show_settings()
 	var categories: RallySettingsPanel = app.ui.find_children("*","RallySettingsPanel",true,false)[0]
-	check(categories.pages.size()==4 and categories.widgets.size()==RallyGameSettings.DEFAULTS.size()-1,"All configurable fields have one categorized widget")
+	check(categories.pages.size()==5 and categories.widgets.size()==RallyGameSettings.DEFAULTS.size()-1,"All configurable fields have one categorized widget")
 	categories.select(2)
 	check(categories.pages[2].visible and not categories.pages[0].visible and categories.tabs[2].button_pressed,"Settings category has a persistent selected state")
 	app.prefs.set_value("voice","male")

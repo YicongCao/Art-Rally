@@ -5,6 +5,7 @@ func _run() -> void:
  var mechanics: Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/vehicle-mechanics-hashes.json"))
  var approved: Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/v040-mechanics-hashes.json"))
  var brushline: Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/brushline-mechanics-hashes.json"))
+ var fp5: Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/fp5-mechanics-hashes.json"))
  for path: String in baseline:
   var actual := FileAccess.get_sha256("res://"+path)
   var expected: String=baseline[path]
@@ -21,6 +22,8 @@ func _run() -> void:
   if approved.has(path): expected=approved[path]
   # Approved twilight/cliff revision changes highland only. Vehicle mechanics remain protected.
   if brushline.has(path): expected=brushline[path]
+  # Approved driver-aid and soil calibration supersedes the art-only baselines.
+  if fp5.has(path): expected=fp5[path]
   check(actual==expected,"Approved mechanical resource: "+path)
  var manifest: Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://assets/screenprint/manifest.json"))
  for path: String in manifest:

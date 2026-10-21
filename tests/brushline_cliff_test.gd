@@ -50,7 +50,7 @@ func _run() -> void:
 				race.vehicle.global_position+=pose.basis.x*float(race.rockfall.events[0].side)*4.5
 				race.vehicle.linear_velocity=-pose.basis.z*speed
 				race.session.progress=450
-				for i: int in range(170): race.rockfall.advance(1.0/60)
+				for i: int in range(600): race.rockfall.advance(1.0/60)
 				if race.rockfall.closest_clearance<1.49: safe=false
 				if speed>0 and race.rockfall.closest_clearance>3.0: safe=false
 				if not race.rockfall.events[0].items[0].visible: safe=false
