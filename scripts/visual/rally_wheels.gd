@@ -5,11 +5,12 @@ static var tires: Dictionary = {}
 static var rim: ArrayMesh
 
 # Local Y is the axle, matching the existing tire deformation/spin transform.
-static func tire(radius: float) -> ArrayMesh:
-	if tires.has(radius): return tires[radius]
+static func tire(radius: float,compound: String = "stock") -> ArrayMesh:
+	var key := str(radius)+compound
+	if tires.has(key): return tires[key]
 	var authored := authored_mesh("wheel_tire")
-	if authored!=null and is_equal_approx(radius,.34):
-		tires[radius]=authored
+	if authored!=null and is_equal_approx(radius,.34) and compound=="stock":
+		tires[key]=authored
 		return authored
 	var b := RallySampleMeshes.new()
 	var rubber := Color("29302e")
@@ -20,7 +21,7 @@ static func tire(radius: float) -> ArrayMesh:
 	casing.ring_segments=12
 	b.append(casing,Transform3D(Basis.IDENTITY.scaled(Vector3(1,1.7,1)),Vector3.ZERO),rubber)
 	# Four staggered rows of actual tread blocks with open drainage channels.
-	for row: int in range(44):
+	for row: int in range(0 if compound=="road" else 44):
 		for lane: int in range(4):
 			var angle: float = (row+(.44 if lane%2 else 0))*TAU/44
 			var at := Vector3(cos(angle)*(radius-.007),(lane-1.5)*.049,sin(angle)*(radius-.007))
@@ -28,15 +29,15 @@ static func tire(radius: float) -> ArrayMesh:
 			var tangent := Vector3(-sin(angle),0,cos(angle))
 			var basis := Basis(tangent,Vector3.UP,-radial)*Basis(Vector3.FORWARD,.22 if lane<2 else -.22)
 			var block := BoxMesh.new()
-			block.size=Vector3(.033,.036,.014)
+			block.size=Vector3(.044 if compound=="sand" else .033,.036,.024 if compound=="sand" else .014)
 			b.append(block,Transform3D(basis,at),Color("38403a").darkened(.035*(row%3)))
 	# Sidewall shoulder lugs continue the AT pattern down both sides.
 	for side: float in [-1,1]:
-		for i: int in range(22):
+		for i: int in range(0 if compound=="road" else 22):
 			var angle := i*TAU/22
 			b.box(Vector3(.043,.012,.021),Vector3(cos(angle)*radius*.84,side*.105,sin(angle)*radius*.84),Color("353c37"),Vector3(0,-angle,0))
 	var mesh := b.finish()
-	tires[radius]=mesh
+	tires[key]=mesh
 	return mesh
 
 static func five_spoke() -> ArrayMesh:

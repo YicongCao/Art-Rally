@@ -1,0 +1,46 @@
+[gd_resource type="Resource" script_class="RallyVehicleDefinition" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/game/vehicle_definition.gd" id="1"]
+[resource]
+script = ExtResource("1")
+vehicle_id = "WRX"
+revision = "exp1"
+title = "Subaru WRX STI 2015"
+description = "稳定从容 · 六速水平对置四驱"
+drive_layout = "AWD"
+power_ps = 309
+mass_kg = 1535
+wheelbase = 2.65
+track_width = 1.535
+body_size = Vector3(1.795, 0.46, 4.595)
+paint = Color(0.09803921568627451, 0.3568627450980392, 0.7333333333333333, 1)
+accent = Color(0.9098039215686274, 0.7450980392156863, 0.21176470588235294, 1)
+number = 15
+model_path = "res://assets/screenprint/vehicles/WRX-lod0.glb"
+physics_overrides = {
+"center_of_mass": Vector3(0, -0.1, -0.2384999999999999),
+"compression_damping": 2900,
+"rebound_damping": 4000,
+"max_steer_radians": 0.55,
+"total_brake_torque": 6800,
+"wheel_radius": 0.34,
+"suspension_rest": 0.48,
+"drag_coefficient_area": 0.85
+}
+drivetrain_overrides = {
+"torque_rpms": PackedFloat64Array(900, 2000, 3000, 4000, 5000, 6000, 7000),
+"torque_values": PackedFloat64Array(110, 205, 350, 393, 382, 361, 260),
+"ratios": PackedFloat64Array(3.636, 2.375, 1.761, 1.346, 0.971, 0.756),
+"final_drive": 3.9,
+"redline_rpm": 7000,
+"upshift_rpm": 6300,
+"downshift_rpm": 2400,
+"idle_rpm": 950,
+"reverse_ratio": -3.1,
+"clutch_capacity": 800,
+"axle_lock_limit": 260,
+"center_lock_limit": 420,
+"regen_torque": 85
+}
+electric = false
+cockpit_offset = Vector3(-0.3, 0.7, -0.43)
+hood_offset = Vector3(0.0, 0.6, -1.9375)

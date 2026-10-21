@@ -761,5 +761,860 @@
         -0.0
       ]
     }
+  },
+  "assets/screenprint/vehicles/I20-lod0.glb": {
+    "source": "art_source/screenprint/vehicles/I20.blend",
+    "triangles": 22976,
+    "lod": 0,
+    "mounts": {
+      "TailLeft": [
+        -0.78,
+        0.23,
+        2.06
+      ],
+      "TailRight": [
+        0.78,
+        0.23,
+        2.06
+      ],
+      "PlateRear": [
+        0.0,
+        -0.025,
+        2.095
+      ],
+      "PlateFront": [
+        0.0,
+        -0.025,
+        -2.095
+      ],
+      "CameraCockpit": [
+        -0.3,
+        0.7,
+        -0.52
+      ],
+      "CameraHood": [
+        0.0,
+        0.6,
+        -1.66
+      ],
+      "WheelMount0": [
+        -0.8,
+        -0.34,
+        -1.28
+      ],
+      "WheelMount1": [
+        0.8,
+        -0.34,
+        -1.28
+      ],
+      "WheelMount2": [
+        -0.8,
+        -0.34,
+        1.28
+      ],
+      "WheelMount3": [
+        0.8,
+        -0.34,
+        1.28
+      ]
+    }
+  },
+  "assets/screenprint/vehicles/I20-lod1.glb": {
+    "source": "art_source/screenprint/vehicles/I20.blend",
+    "triangles": 11994,
+    "lod": 1,
+    "mounts": {
+      "TailLeft": [
+        -0.78,
+        0.23,
+        2.06
+      ],
+      "TailRight": [
+        0.78,
+        0.23,
+        2.06
+      ],
+      "PlateRear": [
+        0.0,
+        -0.025,
+        2.095
+      ],
+      "PlateFront": [
+        0.0,
+        -0.025,
+        -2.095
+      ],
+      "CameraCockpit": [
+        -0.3,
+        0.7,
+        -0.52
+      ],
+      "CameraHood": [
+        0.0,
+        0.6,
+        -1.66
+      ],
+      "WheelMount0": [
+        -0.8,
+        -0.34,
+        -1.28
+      ],
+      "WheelMount1": [
+        0.8,
+        -0.34,
+        -1.28
+      ],
+      "WheelMount2": [
+        -0.8,
+        -0.34,
+        1.28
+      ],
+      "WheelMount3": [
+        0.8,
+        -0.34,
+        1.28
+      ]
+    }
+  },
+  "assets/screenprint/vehicles/I20-lod2.glb": {
+    "source": "art_source/screenprint/vehicles/I20.blend",
+    "triangles": 5219,
+    "lod": 2,
+    "mounts": {
+      "TailLeft": [
+        -0.78,
+        0.23,
+        2.06
+      ],
+      "TailRight": [
+        0.78,
+        0.23,
+        2.06
+      ],
+      "PlateRear": [
+        0.0,
+        -0.025,
+        2.095
+      ],
+      "PlateFront": [
+        0.0,
+        -0.025,
+        -2.095
+      ],
+      "CameraCockpit": [
+        -0.3,
+        0.7,
+        -0.52
+      ],
+      "CameraHood": [
+        0.0,
+        0.6,
+        -1.66
+      ],
+      "WheelMount0": [
+        -0.8,
+        -0.34,
+        -1.28
+      ],
+      "WheelMount1": [
+        0.8,
+        -0.34,
+        -1.28
+      ],
+      "WheelMount2": [
+        -0.8,
+        -0.34,
+        1.28
+      ],
+      "WheelMount3": [
+        0.8,
+        -0.34,
+        1.28
+      ]
+    }
+  },
+  "assets/screenprint/vehicles/DELTA-lod0.glb": {
+    "source": "art_source/screenprint/vehicles/DELTA.blend",
+    "triangles": 12888,
+    "lod": 0,
+    "mounts": {
+      "TailLeft": [
+        -0.755,
+        0.23,
+        1.99
+      ],
+      "TailRight": [
+        0.755,
+        0.23,
+        1.99
+      ],
+      "PlateRear": [
+        0.0,
+        -0.025,
+        2.025
+      ],
+      "PlateFront": [
+        0.0,
+        -0.025,
+        -2.025
+      ],
+      "CameraCockpit": [
+        -0.3,
+        0.7,
+        -0.55
+      ],
+      "CameraHood": [
+        0.0,
+        0.6,
+        -1.59
+      ],
+      "WheelMount0": [
+        -0.75,
+        -0.34,
+        -1.24
+      ],
+      "WheelMount1": [
+        0.75,
+        -0.34,
+        -1.24
+      ],
+      "WheelMount2": [
+        -0.75,
+        -0.34,
+        1.24
+      ],
+      "WheelMount3": [
+        0.75,
+        -0.34,
+        1.24
+      ]
+    }
+  },
+  "assets/screenprint/vehicles/DELTA-lod1.glb": {
+    "source": "art_source/screenprint/vehicles/DELTA.blend",
+    "triangles": 6740,
+    "lod": 1,
+    "mounts": {
+      "TailLeft": [
+        -0.755,
+        0.23,
+        1.99
+      ],
+      "TailRight": [
+        0.755,
+        0.23,
+        1.99
+      ],
+      "PlateRear": [
+        0.0,
+        -0.025,
+        2.025
+      ],
+      "PlateFront": [
+        0.0,
+        -0.025,
+        -2.025
+      ],
+      "CameraCockpit": [
+        -0.3,
+        0.7,
+        -0.55
+      ],
+      "CameraHood": [
+        0.0,
+        0.6,
+        -1.59
+      ],
+      "WheelMount0": [
+        -0.75,
+        -0.34,
+        -1.24
+      ],
+      "WheelMount1": [
+        0.75,
+        -0.34,
+        -1.24
+      ],
+      "WheelMount2": [
+        -0.75,
+        -0.34,
+        1.24
+      ],
+      "WheelMount3": [
+        0.75,
+        -0.34,
+        1.24
+      ]
+    }
+  },
+  "assets/screenprint/vehicles/DELTA-lod2.glb": {
+    "source": "art_source/screenprint/vehicles/DELTA.blend",
+    "triangles": 2987,
+    "lod": 2,
+    "mounts": {
+      "TailLeft": [
+        -0.755,
+        0.23,
+        1.99
+      ],
+      "TailRight": [
+        0.755,
+        0.23,
+        1.99
+      ],
+      "PlateRear": [
+        0.0,
+        -0.025,
+        2.025
+      ],
+      "PlateFront": [
+        0.0,
+        -0.025,
+        -2.025
+      ],
+      "CameraCockpit": [
+        -0.3,
+        0.7,
+        -0.55
+      ],
+      "CameraHood": [
+        0.0,
+        0.6,
+        -1.59
+      ],
+      "WheelMount0": [
+        -0.75,
+        -0.34,
+        -1.24
+      ],
+      "WheelMount1": [
+        0.75,
+        -0.34,
+        -1.24
+      ],
+      "WheelMount2": [
+        -0.75,
+        -0.34,
+        1.24
+      ],
+      "WheelMount3": [
+        0.75,
+        -0.34,
+        1.24
+      ]
+    }
+  },
+  "assets/screenprint/vehicles/EVO6-lod0.glb": {
+    "source": "art_source/screenprint/vehicles/EVO6.blend",
+    "triangles": 16956,
+    "lod": 0,
+    "mounts": {
+      "TailLeft": [
+        -0.755,
+        0.23,
+        2.215
+      ],
+      "TailRight": [
+        0.755,
+        0.23,
+        2.215
+      ],
+      "PlateRear": [
+        0.0,
+        -0.025,
+        2.25
+      ],
+      "PlateFront": [
+        0.0,
+        -0.025,
+        -2.25
+      ],
+      "CameraCockpit": [
+        -0.3,
+        0.7,
+        -0.5
+      ],
+      "CameraHood": [
+        0.0,
+        0.6,
+        -1.815
+      ],
+      "WheelMount0": [
+        -0.755,
+        -0.34,
+        -1.255
+      ],
+      "WheelMount1": [
+        0.755,
+        -0.34,
+        -1.255
+      ],
+      "WheelMount2": [
+        -0.755,
+        -0.34,
+        1.255
+      ],
+      "WheelMount3": [
+        0.755,
+        -0.34,
+        1.255
+      ]
+    }
+  },
+  "assets/screenprint/vehicles/EVO6-lod1.glb": {
+    "source": "art_source/screenprint/vehicles/EVO6.blend",
+    "triangles": 8798,
+    "lod": 1,
+    "mounts": {
+      "TailLeft": [
+        -0.755,
+        0.23,
+        2.215
+      ],
+      "TailRight": [
+        0.755,
+        0.23,
+        2.215
+      ],
+      "PlateRear": [
+        0.0,
+        -0.025,
+        2.25
+      ],
+      "PlateFront": [
+        0.0,
+        -0.025,
+        -2.25
+      ],
+      "CameraCockpit": [
+        -0.3,
+        0.7,
+        -0.5
+      ],
+      "CameraHood": [
+        0.0,
+        0.6,
+        -1.815
+      ],
+      "WheelMount0": [
+        -0.755,
+        -0.34,
+        -1.255
+      ],
+      "WheelMount1": [
+        0.755,
+        -0.34,
+        -1.255
+      ],
+      "WheelMount2": [
+        -0.755,
+        -0.34,
+        1.255
+      ],
+      "WheelMount3": [
+        0.755,
+        -0.34,
+        1.255
+      ]
+    }
+  },
+  "assets/screenprint/vehicles/EVO6-lod2.glb": {
+    "source": "art_source/screenprint/vehicles/EVO6.blend",
+    "triangles": 3808,
+    "lod": 2,
+    "mounts": {
+      "TailLeft": [
+        -0.755,
+        0.23,
+        2.215
+      ],
+      "TailRight": [
+        0.755,
+        0.23,
+        2.215
+      ],
+      "PlateRear": [
+        0.0,
+        -0.025,
+        2.25
+      ],
+      "PlateFront": [
+        0.0,
+        -0.025,
+        -2.25
+      ],
+      "CameraCockpit": [
+        -0.3,
+        0.7,
+        -0.5
+      ],
+      "CameraHood": [
+        0.0,
+        0.6,
+        -1.815
+      ],
+      "WheelMount0": [
+        -0.755,
+        -0.34,
+        -1.255
+      ],
+      "WheelMount1": [
+        0.755,
+        -0.34,
+        -1.255
+      ],
+      "WheelMount2": [
+        -0.755,
+        -0.34,
+        1.255
+      ],
+      "WheelMount3": [
+        0.755,
+        -0.34,
+        1.255
+      ]
+    }
+  },
+  "assets/screenprint/vehicles/WRX-lod0.glb": {
+    "source": "art_source/screenprint/vehicles/WRX.blend",
+    "triangles": 16056,
+    "lod": 0,
+    "mounts": {
+      "TailLeft": [
+        -0.7675,
+        0.23,
+        2.3375
+      ],
+      "TailRight": [
+        0.7675,
+        0.23,
+        2.3375
+      ],
+      "PlateRear": [
+        0.0,
+        -0.025,
+        2.3725
+      ],
+      "PlateFront": [
+        0.0,
+        -0.025,
+        -2.3725
+      ],
+      "CameraCockpit": [
+        -0.3,
+        0.7,
+        -0.43
+      ],
+      "CameraHood": [
+        0.0,
+        0.6,
+        -1.9375
+      ],
+      "WheelMount0": [
+        -0.7675,
+        -0.34,
+        -1.325
+      ],
+      "WheelMount1": [
+        0.7675,
+        -0.34,
+        -1.325
+      ],
+      "WheelMount2": [
+        -0.7675,
+        -0.34,
+        1.325
+      ],
+      "WheelMount3": [
+        0.7675,
+        -0.34,
+        1.325
+      ]
+    }
+  },
+  "assets/screenprint/vehicles/WRX-lod1.glb": {
+    "source": "art_source/screenprint/vehicles/WRX.blend",
+    "triangles": 8356,
+    "lod": 1,
+    "mounts": {
+      "TailLeft": [
+        -0.7675,
+        0.23,
+        2.3375
+      ],
+      "TailRight": [
+        0.7675,
+        0.23,
+        2.3375
+      ],
+      "PlateRear": [
+        0.0,
+        -0.025,
+        2.3725
+      ],
+      "PlateFront": [
+        0.0,
+        -0.025,
+        -2.3725
+      ],
+      "CameraCockpit": [
+        -0.3,
+        0.7,
+        -0.43
+      ],
+      "CameraHood": [
+        0.0,
+        0.6,
+        -1.9375
+      ],
+      "WheelMount0": [
+        -0.7675,
+        -0.34,
+        -1.325
+      ],
+      "WheelMount1": [
+        0.7675,
+        -0.34,
+        -1.325
+      ],
+      "WheelMount2": [
+        -0.7675,
+        -0.34,
+        1.325
+      ],
+      "WheelMount3": [
+        0.7675,
+        -0.34,
+        1.325
+      ]
+    }
+  },
+  "assets/screenprint/vehicles/WRX-lod2.glb": {
+    "source": "art_source/screenprint/vehicles/WRX.blend",
+    "triangles": 3635,
+    "lod": 2,
+    "mounts": {
+      "TailLeft": [
+        -0.7675,
+        0.23,
+        2.3375
+      ],
+      "TailRight": [
+        0.7675,
+        0.23,
+        2.3375
+      ],
+      "PlateRear": [
+        0.0,
+        -0.025,
+        2.3725
+      ],
+      "PlateFront": [
+        0.0,
+        -0.025,
+        -2.3725
+      ],
+      "CameraCockpit": [
+        -0.3,
+        0.7,
+        -0.43
+      ],
+      "CameraHood": [
+        0.0,
+        0.6,
+        -1.9375
+      ],
+      "WheelMount0": [
+        -0.7675,
+        -0.34,
+        -1.325
+      ],
+      "WheelMount1": [
+        0.7675,
+        -0.34,
+        -1.325
+      ],
+      "WheelMount2": [
+        -0.7675,
+        -0.34,
+        1.325
+      ],
+      "WheelMount3": [
+        0.7675,
+        -0.34,
+        1.325
+      ]
+    }
+  },
+  "assets/screenprint/vehicles/P7-lod0.glb": {
+    "source": "art_source/screenprint/vehicles/P7.blend",
+    "triangles": 15166,
+    "lod": 0,
+    "mounts": {
+      "TailLeft": [
+        -0.855,
+        0.23,
+        2.5485
+      ],
+      "TailRight": [
+        0.855,
+        0.23,
+        2.5485
+      ],
+      "PlateRear": [
+        0.0,
+        -0.025,
+        2.5835
+      ],
+      "PlateFront": [
+        0.0,
+        -0.025,
+        -2.5835
+      ],
+      "CameraCockpit": [
+        -0.3,
+        0.7,
+        -0.7
+      ],
+      "CameraHood": [
+        0.0,
+        0.6,
+        -2.1485
+      ],
+      "WheelMount0": [
+        -0.83,
+        -0.34,
+        -1.504
+      ],
+      "WheelMount1": [
+        0.83,
+        -0.34,
+        -1.504
+      ],
+      "WheelMount2": [
+        -0.83,
+        -0.34,
+        1.504
+      ],
+      "WheelMount3": [
+        0.83,
+        -0.34,
+        1.504
+      ]
+    }
+  },
+  "assets/screenprint/vehicles/P7-lod1.glb": {
+    "source": "art_source/screenprint/vehicles/P7.blend",
+    "triangles": 7899,
+    "lod": 1,
+    "mounts": {
+      "TailLeft": [
+        -0.855,
+        0.23,
+        2.5485
+      ],
+      "TailRight": [
+        0.855,
+        0.23,
+        2.5485
+      ],
+      "PlateRear": [
+        0.0,
+        -0.025,
+        2.5835
+      ],
+      "PlateFront": [
+        0.0,
+        -0.025,
+        -2.5835
+      ],
+      "CameraCockpit": [
+        -0.3,
+        0.7,
+        -0.7
+      ],
+      "CameraHood": [
+        0.0,
+        0.6,
+        -2.1485
+      ],
+      "WheelMount0": [
+        -0.83,
+        -0.34,
+        -1.504
+      ],
+      "WheelMount1": [
+        0.83,
+        -0.34,
+        -1.504
+      ],
+      "WheelMount2": [
+        -0.83,
+        -0.34,
+        1.504
+      ],
+      "WheelMount3": [
+        0.83,
+        -0.34,
+        1.504
+      ]
+    }
+  },
+  "assets/screenprint/vehicles/P7-lod2.glb": {
+    "source": "art_source/screenprint/vehicles/P7.blend",
+    "triangles": 3446,
+    "lod": 2,
+    "mounts": {
+      "TailLeft": [
+        -0.855,
+        0.23,
+        2.5485
+      ],
+      "TailRight": [
+        0.855,
+        0.23,
+        2.5485
+      ],
+      "PlateRear": [
+        0.0,
+        -0.025,
+        2.5835
+      ],
+      "PlateFront": [
+        0.0,
+        -0.025,
+        -2.5835
+      ],
+      "CameraCockpit": [
+        -0.3,
+        0.7,
+        -0.7
+      ],
+      "CameraHood": [
+        0.0,
+        0.6,
+        -2.1485
+      ],
+      "WheelMount0": [
+        -0.83,
+        -0.34,
+        -1.504
+      ],
+      "WheelMount1": [
+        0.83,
+        -0.34,
+        -1.504
+      ],
+      "WheelMount2": [
+        -0.83,
+        -0.34,
+        1.504
+      ],
+      "WheelMount3": [
+        0.83,
+        -0.34,
+        1.504
+      ]
+    }
   }
 }

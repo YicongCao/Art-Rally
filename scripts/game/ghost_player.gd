@@ -10,6 +10,11 @@ var outline_materials: Array[ShaderMaterial] = []
 
 
 func build(vehicle: RallyVehicleDefinition, data: Dictionary,translucent: bool = true) -> void:
+	for child: Node in get_children():
+		remove_child(child)
+		child.queue_free()
+	wheels.clear()
+	outline_materials.clear()
 	physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
 	solid = not translucent
 	definition = vehicle
@@ -33,8 +38,9 @@ func build(vehicle: RallyVehicleDefinition, data: Dictionary,translucent: bool =
 		add_child(pivot)
 		wheels.append(pivot)
 		var tire := MeshInstance3D.new()
-		tire.mesh = RallyWheelMeshes.tire(.34)
+		tire.mesh = RallyWheelMeshes.tire(vehicle.physics_config().wheel_radius,vehicle.tire_config().compound)
 		tire.rotation.z = PI/2
+		tire.scale.y=vehicle.tire_config().section_width/.23
 		pivot.add_child(tire)
 		for side: float in [-1,1]:
 			var hub := MeshInstance3D.new()

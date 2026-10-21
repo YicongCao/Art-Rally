@@ -1,0 +1,135 @@
+[
+  {
+    "label": "baseline",
+    "attempt": 0,
+    "average_fps": 56.9593071317989,
+    "frames": 600,
+    "max_fps": 82.7266710787558,
+    "min_fps": 8.09421668218058,
+    "p95_ms": 23.372,
+    "p99_ms": 31.407,
+    "physics_p95_ms": 2.817,
+    "pixels": [
+      1920,
+      1080
+    ],
+    "progress": 83.4181095162449,
+    "renderer": "Apple M5 (Apple9)",
+    "stage": "sunlit_cape",
+    "vehicle": "A240"
+  },
+  {
+    "label": "expanded",
+    "attempt": 0,
+    "average_fps": 59.9726344868836,
+    "frames": 600,
+    "max_fps": 85.5505175806314,
+    "min_fps": 45.0267909406097,
+    "p95_ms": 17.434,
+    "p99_ms": 18.418,
+    "physics_p95_ms": 1.072,
+    "pixels": [
+      1920,
+      1080
+    ],
+    "progress": 83.4181095162449,
+    "renderer": "Apple M5 (Apple9)",
+    "stage": "sunlit_cape",
+    "vehicle": "A240"
+  },
+  {
+    "label": "baseline",
+    "attempt": 1,
+    "average_fps": 59.9765012068272,
+    "frames": 600,
+    "max_fps": 99.2161920825479,
+    "min_fps": 41.7745843428858,
+    "p95_ms": 17.575,
+    "p99_ms": 18.907,
+    "physics_p95_ms": 1.026,
+    "pixels": [
+      1920,
+      1080
+    ],
+    "progress": 83.4181095162449,
+    "renderer": "Apple M5 (Apple9)",
+    "stage": "sunlit_cape",
+    "vehicle": "A240"
+  },
+  {
+    "label": "expanded",
+    "attempt": 1,
+    "average_fps": 59.9675695383936,
+    "frames": 600,
+    "max_fps": 80.8865162177465,
+    "min_fps": 46.5939800577765,
+    "p95_ms": 17.401,
+    "p99_ms": 19.338,
+    "physics_p95_ms": 1.056,
+    "pixels": [
+      1920,
+      1080
+    ],
+    "progress": 83.4181095162449,
+    "renderer": "Apple M5 (Apple9)",
+    "stage": "sunlit_cape",
+    "vehicle": "A240"
+  },
+  {
+    "label": "baseline",
+    "attempt": 2,
+    "average_fps": 59.9718192421381,
+    "frames": 600,
+    "max_fps": 89.078923926599,
+    "min_fps": 42.5604358188628,
+    "p95_ms": 17.374,
+    "p99_ms": 18.06,
+    "physics_p95_ms": 1.012,
+    "pixels": [
+      1920,
+      1080
+    ],
+    "progress": 83.4181095162449,
+    "renderer": "Apple M5 (Apple9)",
+    "stage": "sunlit_cape",
+    "vehicle": "A240"
+  },
+  {
+    "label": "expanded",
+    "attempt": 2,
+    "average_fps": 59.9785216913823,
+    "frames": 600,
+    "max_fps": 88.8494002665482,
+    "min_fps": 45.160998961297,
+    "p95_ms": 17.496,
+    "p99_ms": 19.514,
+    "physics_p95_ms": 1.064,
+    "pixels": [
+      1920,
+      1080
+    ],
+    "progress": 83.4181095162449,
+    "renderer": "Apple M5 (Apple9)",
+    "stage": "sunlit_cape",
+    "vehicle": "A240"
+  },
+  {
+    "label": "redrock-p7",
+    "attempt": 0,
+    "average_fps": 59.9692897267309,
+    "frames": 600,
+    "max_fps": 91.432751211484,
+    "min_fps": 44.6408642471318,
+    "p95_ms": 17.287,
+    "p99_ms": 19.299,
+    "physics_p95_ms": 1.301,
+    "pixels": [
+      1920,
+      1080
+    ],
+    "progress": 66.2637684401859,
+    "renderer": "Apple M5 (Apple9)",
+    "stage": "redrock_canyon",
+    "vehicle": "P7"
+  }
+]

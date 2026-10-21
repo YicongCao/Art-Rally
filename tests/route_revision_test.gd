@@ -6,7 +6,7 @@ func _run() -> void:
 		var route := RallyStageRoute.new()
 		route.build(definition)
 		check(route.validate().is_empty(),id+" has no crossing, unsafe grade or discontinuous frames")
-		check(definition.stage_version==("9" if id=="misty_highlands" else "7"),id+" isolates old scores and ghosts after geometry changes")
+		check(definition.stage_version=={"sunset_ridge":"7","sunlit_cape":"7","misty_highlands":"9","redrock_canyon":"1"}[id],id+" isolates old scores and ghosts after geometry changes")
 		var min_width := 100.0
 		var max_width := 0.0
 		var largest_step := 0.0
@@ -30,7 +30,9 @@ func _run() -> void:
 					last_hairpin=s
 		check(direction_ok,id+" follows its authored climb/descent")
 		check(min_width>=RallyContentCatalog.vehicle("A240").body_size.x+2.0 and max_width-min_width>1.6 and largest_step<.25,id+" width changes are visible and continuous")
-		check(hairpin_groups>=2,id+" contains several distinct switchbacks")
+		if id=="redrock_canyon":
+			check(route.position_at(route.length-20).y>route.position_at(2400).y+10 and route.turn_count>=8,"Desert ends in a climbing series of technical bends")
+		else: check(hairpin_groups>=2,id+" contains several distinct switchbacks")
 		for note: Dictionary in definition.hazard_notes:
 			if note.code=="CAUTION_NARROW": check(route.width_at(note.s)<definition.road_width-.5,id+" caution call corresponds to an actual constriction")
 			if note.code=="CUT": check(route.width_at(note.s)>definition.road_width+.7,id+" cut call has a widened driving corridor")
@@ -44,7 +46,7 @@ func _run() -> void:
 		app.practice = true
 		await app.start_race()
 		var land: RallyStageScenery = app.race.presentation.scenery
-		check(land.dressing.has_node("MedicalAndMarshals"),id+" has medical support and marshals")
+		check(land.dressing.has_node("MiningServiceStation" if id=="redrock_canyon" else "MedicalAndMarshals"),id+" has medical support and marshals")
 		await ticks(2)
 		var corridor_clear := true
 		var space: PhysicsDirectSpaceState3D = app.race.vehicle.get_world_3d().direct_space_state
@@ -54,7 +56,7 @@ func _run() -> void:
 				var hit: Dictionary = space.intersect_ray(PhysicsRayQueryParameters3D.create(at+Vector3.UP*1.7,at+Vector3.UP*.15,4))
 				if not hit.is_empty(): corridor_clear=false
 		check(corridor_clear,id+" scenery collision leaves the full vehicle corridor clear")
-		if id!="sunlit_cape":
+		if id not in ["sunlit_cape","redrock_canyon"]:
 			var minimum := route.points[0].y
 			for point: Vector3 in route.points: minimum=minf(minimum,point.y)
 			check(land.dressing.get_node("DistantValleyFloor").position.y<minimum-50,id+" background floor cannot cover any route elevation")

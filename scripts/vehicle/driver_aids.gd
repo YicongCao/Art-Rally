@@ -20,7 +20,7 @@ func reset() -> void:
 	pressure.fill(1);esp_brakes.fill(0);requested_brakes.fill(0);applied_brakes.fill(0)
 	abs_active=false;esp_active=false;engine_scale=1;beta=0;yaw_target=0;yaw_error=0
 
-func begin_tick(car: RallyVehicle,state: PhysicsDirectBodyState3D) -> void:
+func begin_tick(car: RigidBody3D,state: PhysicsDirectBodyState3D) -> void:
 	abs_active=false
 	longitudinal_stiffness=car.tire.longitudinal_stiffness
 	var local := state.transform.basis.inverse()*state.linear_velocity
@@ -30,7 +30,7 @@ func begin_tick(car: RallyVehicle,state: PhysicsDirectBodyState3D) -> void:
 	var support := 0
 	for wheel: RallyWheelState in car.wheels:
 		if wheel.grounded and wheel.load>100:
-			grip+=wheel.surface.grip(speed)*car.tire.friction
+			grip+=wheel.surface.grip(speed)*car.tire.friction*car.tire.grip_for(wheel.surface)
 			support+=1
 	grip/=maxi(support,1)
 	var yaw: float=state.angular_velocity.dot(state.transform.basis.y)
@@ -51,8 +51,8 @@ func begin_tick(car: RallyVehicle,state: PhysicsDirectBodyState3D) -> void:
 		var understeer := demand*yaw_target>0 and absf(yaw)<absf(yaw_target) and absf(beta)<deg_to_rad(14)
 		active_index=(2 if demand>0 else 3) if understeer else (0 if demand>0 else 1)
 	for i: int in range(4):
-		var wheel := car.wheels[i]
-		var limit := RallyTireModel.capacity(wheel.load,car.tire)*wheel.surface.grip(speed)*wheel.effective_radius
+		var wheel: RallyWheelState = car.wheels[i]
+		var limit: float = RallyTireModel.capacity(wheel.load,car.tire)*wheel.surface.grip(speed)*wheel.effective_radius*car.tire.grip_for(wheel.surface)
 		var target := minf(absf(demand)*car.config.body_mass*.9,limit*(.28 if esp_mode==1 else .45)) if i==active_index else 0.0
 		esp_brakes[i]=move_toward(esp_brakes[i],target,state.step*2200)
 		if esp_mode==0 or car.command.handbrake>.05 or support<3: esp_brakes[i]=0

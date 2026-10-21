@@ -2,6 +2,8 @@ class_name RallySurfaceSample
 extends RefCounted
 
 var surface_id: int = 0
+# Empty means a single surface; mixtures preserve compound response at borders.
+var blend_weights := PackedFloat64Array()
 var friction_scale: float = 1.0
 var longitudinal_scale: float = 1.0
 var lateral_scale: float = 1.0
@@ -13,6 +15,7 @@ var water_depth: float = 0.0
 
 func reset() -> void:
 	surface_id = 0
+	blend_weights.clear()
 	friction_scale = 1.0
 	longitudinal_scale = 1.0
 	lateral_scale = 1.0
@@ -52,7 +55,8 @@ static func weighted_average(samples: Array[RallySurfaceSample],weights: PackedF
 	var result := RallySurfaceSample.new()
 	if samples.is_empty() or weights.size()!=samples.size(): return result
 	var weight_sum := 0.0
-	var id_weights := PackedFloat64Array([0,0,0,0])
+	var id_weights := PackedFloat64Array()
+	id_weights.resize(RallySurfaceQuery.PROFILES.size())
 	for i: int in range(samples.size()):
 		var weight := maxf(0.0,weights[i])
 		weight_sum += weight
@@ -62,6 +66,13 @@ static func weighted_average(samples: Array[RallySurfaceSample],weights: PackedF
 	for i: int in range(1,id_weights.size()):
 		if id_weights[i]>id_weights[dominant]: dominant = i
 	result.surface_id = dominant
+	result.blend_weights.resize(id_weights.size())
+	for i: int in range(samples.size()):
+		var weight := maxf(0.0,weights[i])/weight_sum
+		if samples[i].blend_weights.is_empty():
+			result.blend_weights[clampi(samples[i].surface_id,0,id_weights.size()-1)] += weight
+		else:
+			for j: int in range(id_weights.size()): result.blend_weights[j] += samples[i].blend_weights[j]*weight
 	for field: String in ["friction_scale", "longitudinal_scale", "lateral_scale", "sliding_scale", "rolling_extra", "wet_grip", "water_depth"]:
 		var sum := 0.0
 		for i: int in range(samples.size()): sum += float(samples[i].get(field))*maxf(0.0,weights[i])

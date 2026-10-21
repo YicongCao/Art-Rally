@@ -1,0 +1,1634 @@
+[
+  {
+    "elapsed": 239.574999999946,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.603402614593506,
+    "physics_p95_ms": 1.913,
+    "power_tier": 0,
+    "progress": 3018.22933326685,
+    "recoveries": 0,
+    "splits": [
+      71.6333333333364,
+      163.666666666682,
+      239.574999999946
+    ],
+    "stage": "sunset_ridge",
+    "vehicle": "F160"
+  },
+  {
+    "elapsed": 238.80833333328,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.627922236919403,
+    "physics_p95_ms": 2.798,
+    "power_tier": 0,
+    "progress": 3017.97225172714,
+    "recoveries": 0,
+    "splits": [
+      71.2333333333361,
+      163.316666666682,
+      238.80833333328
+    ],
+    "stage": "sunset_ridge",
+    "vehicle": "R200"
+  },
+  {
+    "elapsed": 235.183333333284,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.685419619083405,
+    "physics_p95_ms": 3.685,
+    "power_tier": 0,
+    "progress": 3017.90196366825,
+    "recoveries": 0,
+    "splits": [
+      70.4833333333355,
+      160.416666666685,
+      235.183333333284
+    ],
+    "stage": "sunset_ridge",
+    "vehicle": "A240"
+  },
+  {
+    "elapsed": 235.433333333284,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.674401044845581,
+    "physics_p95_ms": 3.328,
+    "power_tier": 0,
+    "progress": 3018.06753652086,
+    "recoveries": 0,
+    "splits": [
+      70.5500000000022,
+      160.575000000018,
+      235.433333333284
+    ],
+    "stage": "sunset_ridge",
+    "vehicle": "I20"
+  },
+  {
+    "elapsed": 239.424999999947,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.564722955226898,
+    "physics_p95_ms": 3.999,
+    "power_tier": 0,
+    "progress": 3018.11475325228,
+    "recoveries": 0,
+    "splits": [
+      71.5666666666697,
+      163.458333333349,
+      239.424999999947
+    ],
+    "stage": "sunset_ridge",
+    "vehicle": "DELTA"
+  },
+  {
+    "elapsed": 235.716666666617,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.609223365783691,
+    "physics_p95_ms": 5.011,
+    "power_tier": 0,
+    "progress": 3017.87798968224,
+    "recoveries": 0,
+    "splits": [
+      70.7000000000023,
+      160.758333333351,
+      235.716666666617
+    ],
+    "stage": "sunset_ridge",
+    "vehicle": "EVO6"
+  },
+  {
+    "elapsed": 235.566666666617,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.602188050746918,
+    "physics_p95_ms": 3.991,
+    "power_tier": 0,
+    "progress": 3017.72668873976,
+    "recoveries": 0,
+    "splits": [
+      70.8166666666691,
+      160.666666666685,
+      235.566666666617
+    ],
+    "stage": "sunset_ridge",
+    "vehicle": "WRX"
+  },
+  {
+    "elapsed": 235.72499999995,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.630877315998077,
+    "physics_p95_ms": 5.215,
+    "power_tier": 0,
+    "progress": 3017.4970580271,
+    "recoveries": 0,
+    "splits": [
+      70.5583333333356,
+      160.775000000018,
+      235.72499999995
+    ],
+    "stage": "sunset_ridge",
+    "vehicle": "P7"
+  },
+  {
+    "elapsed": 240.008333333279,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.591509819030762,
+    "physics_p95_ms": 2.148,
+    "power_tier": 1,
+    "progress": 3018.1992511569,
+    "recoveries": 0,
+    "splits": [
+      71.7750000000032,
+      163.966666666682,
+      240.008333333279
+    ],
+    "stage": "sunset_ridge",
+    "vehicle": "F160"
+  },
+  {
+    "elapsed": 239.224999999947,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.628657937049866,
+    "physics_p95_ms": 2.388,
+    "power_tier": 1,
+    "progress": 3017.99396052126,
+    "recoveries": 0,
+    "splits": [
+      71.3583333333362,
+      163.608333333349,
+      239.224999999947
+    ],
+    "stage": "sunset_ridge",
+    "vehicle": "R200"
+  },
+  {
+    "elapsed": 235.566666666617,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.6839679479599,
+    "physics_p95_ms": 2.479,
+    "power_tier": 1,
+    "progress": 3017.91008548316,
+    "recoveries": 0,
+    "splits": [
+      70.5916666666689,
+      160.675000000018,
+      235.566666666617
+    ],
+    "stage": "sunset_ridge",
+    "vehicle": "A240"
+  },
+  {
+    "elapsed": 235.841666666617,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.66765969991684,
+    "physics_p95_ms": 2.184,
+    "power_tier": 1,
+    "progress": 3018.06106937294,
+    "recoveries": 0,
+    "splits": [
+      70.666666666669,
+      160.850000000018,
+      235.841666666617
+    ],
+    "stage": "sunset_ridge",
+    "vehicle": "I20"
+  },
+  {
+    "elapsed": 240.174999999946,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.562343299388885,
+    "physics_p95_ms": 2.438,
+    "power_tier": 1,
+    "progress": 3018.12335218061,
+    "recoveries": 0,
+    "splits": [
+      71.8000000000032,
+      164.000000000015,
+      240.174999999946
+    ],
+    "stage": "sunset_ridge",
+    "vehicle": "DELTA"
+  },
+  {
+    "elapsed": 236.166666666616,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.583177268505096,
+    "physics_p95_ms": 2.558,
+    "power_tier": 1,
+    "progress": 3017.86166571041,
+    "recoveries": 0,
+    "splits": [
+      70.8333333333358,
+      161.066666666685,
+      236.166666666616
+    ],
+    "stage": "sunset_ridge",
+    "vehicle": "EVO6"
+  },
+  {
+    "elapsed": 235.97499999995,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.592465162277222,
+    "physics_p95_ms": 2.877,
+    "power_tier": 1,
+    "progress": 3017.80367629764,
+    "recoveries": 0,
+    "splits": [
+      70.9333333333359,
+      160.958333333351,
+      235.97499999995
+    ],
+    "stage": "sunset_ridge",
+    "vehicle": "WRX"
+  },
+  {
+    "elapsed": 236.108333333283,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.630005955696106,
+    "physics_p95_ms": 2.845,
+    "power_tier": 1,
+    "progress": 3017.49737415028,
+    "recoveries": 0,
+    "splits": [
+      70.6500000000023,
+      161.033333333351,
+      236.108333333283
+    ],
+    "stage": "sunset_ridge",
+    "vehicle": "P7"
+  },
+  {
+    "elapsed": 240.249999999946,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.588004112243652,
+    "physics_p95_ms": 2.976,
+    "power_tier": 2,
+    "progress": 3018.17809449669,
+    "recoveries": 0,
+    "splits": [
+      71.8666666666699,
+      164.133333333348,
+      240.249999999946
+    ],
+    "stage": "sunset_ridge",
+    "vehicle": "F160"
+  },
+  {
+    "elapsed": 239.45833333328,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.621652781963348,
+    "physics_p95_ms": 2.38,
+    "power_tier": 2,
+    "progress": 3017.9343398318,
+    "recoveries": 0,
+    "splits": [
+      71.4250000000029,
+      163.766666666682,
+      239.45833333328
+    ],
+    "stage": "sunset_ridge",
+    "vehicle": "R200"
+  },
+  {
+    "elapsed": 235.77499999995,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.682284295558929,
+    "physics_p95_ms": 2.612,
+    "power_tier": 2,
+    "progress": 3017.93485216116,
+    "recoveries": 0,
+    "splits": [
+      70.641666666669,
+      160.808333333351,
+      235.77499999995
+    ],
+    "stage": "sunset_ridge",
+    "vehicle": "A240"
+  },
+  {
+    "elapsed": 236.058333333283,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.660705804824829,
+    "physics_p95_ms": 2.922,
+    "power_tier": 2,
+    "progress": 3018.0230621987,
+    "recoveries": 0,
+    "splits": [
+      70.7250000000024,
+      161.000000000018,
+      236.058333333283
+    ],
+    "stage": "sunset_ridge",
+    "vehicle": "I20"
+  },
+  {
+    "elapsed": 240.583333333279,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.561760485172272,
+    "physics_p95_ms": 4.252,
+    "power_tier": 2,
+    "progress": 3018.07187680765,
+    "recoveries": 0,
+    "splits": [
+      71.9333333333366,
+      164.291666666682,
+      240.583333333279
+    ],
+    "stage": "sunset_ridge",
+    "vehicle": "DELTA"
+  },
+  {
+    "elapsed": 236.408333333283,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.573567390441895,
+    "physics_p95_ms": 3.129,
+    "power_tier": 2,
+    "progress": 3017.90102459644,
+    "recoveries": 0,
+    "splits": [
+      70.9166666666692,
+      161.225000000018,
+      236.408333333283
+    ],
+    "stage": "sunset_ridge",
+    "vehicle": "EVO6"
+  },
+  {
+    "elapsed": 236.183333333283,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.593159973621368,
+    "physics_p95_ms": 3.046,
+    "power_tier": 2,
+    "progress": 3017.69233907114,
+    "recoveries": 0,
+    "splits": [
+      71.0000000000026,
+      161.100000000018,
+      236.183333333283
+    ],
+    "stage": "sunset_ridge",
+    "vehicle": "WRX"
+  },
+  {
+    "elapsed": 236.316666666616,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.628751456737518,
+    "physics_p95_ms": 3.192,
+    "power_tier": 2,
+    "progress": 3017.59783874184,
+    "recoveries": 0,
+    "splits": [
+      70.7083333333357,
+      161.183333333351,
+      236.316666666616
+    ],
+    "stage": "sunset_ridge",
+    "vehicle": "P7"
+  },
+  {
+    "elapsed": 204.824999999978,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.595532536506653,
+    "physics_p95_ms": 1.76,
+    "power_tier": 0,
+    "progress": 2768.27919492229,
+    "recoveries": 0,
+    "splits": [
+      67.1416666666662,
+      135.608333333374,
+      204.824999999978
+    ],
+    "stage": "sunlit_cape",
+    "vehicle": "F160"
+  },
+  {
+    "elapsed": 203.849999999979,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.61922949552536,
+    "physics_p95_ms": 2.233,
+    "power_tier": 0,
+    "progress": 2767.97212901493,
+    "recoveries": 0,
+    "splits": [
+      66.6999999999992,
+      134.908333333375,
+      203.849999999979
+    ],
+    "stage": "sunlit_cape",
+    "vehicle": "R200"
+  },
+  {
+    "elapsed": 202.024999999981,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.627142131328583,
+    "physics_p95_ms": 3.121,
+    "power_tier": 0,
+    "progress": 2767.9665633981,
+    "recoveries": 0,
+    "splits": [
+      65.9249999999985,
+      133.583333333376,
+      202.024999999981
+    ],
+    "stage": "sunlit_cape",
+    "vehicle": "A240"
+  },
+  {
+    "elapsed": 202.533333333313,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.61439973115921,
+    "physics_p95_ms": 3.474,
+    "power_tier": 0,
+    "progress": 2768.07818983864,
+    "recoveries": 0,
+    "splits": [
+      66.0916666666653,
+      133.925000000043,
+      202.533333333313
+    ],
+    "stage": "sunlit_cape",
+    "vehicle": "I20"
+  },
+  {
+    "elapsed": 204.616666666645,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.599543392658234,
+    "physics_p95_ms": 3.486,
+    "power_tier": 0,
+    "progress": 2768.1313596948,
+    "recoveries": 0,
+    "splits": [
+      66.9333333333327,
+      135.433333333374,
+      204.616666666645
+    ],
+    "stage": "sunlit_cape",
+    "vehicle": "DELTA"
+  },
+  {
+    "elapsed": 202.433333333314,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.610985994338989,
+    "physics_p95_ms": 4.039,
+    "power_tier": 0,
+    "progress": 2767.82371625266,
+    "recoveries": 0,
+    "splits": [
+      66.0749999999987,
+      133.866666666709,
+      202.433333333314
+    ],
+    "stage": "sunlit_cape",
+    "vehicle": "EVO6"
+  },
+  {
+    "elapsed": 202.191666666647,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.634158909320831,
+    "physics_p95_ms": 4.875,
+    "power_tier": 0,
+    "progress": 2767.77246167855,
+    "recoveries": 0,
+    "splits": [
+      65.9916666666653,
+      133.675000000043,
+      202.191666666647
+    ],
+    "stage": "sunlit_cape",
+    "vehicle": "WRX"
+  },
+  {
+    "elapsed": 201.908333333314,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.668892800807953,
+    "physics_p95_ms": 5.339,
+    "power_tier": 0,
+    "progress": 2767.59480338367,
+    "recoveries": 0,
+    "splits": [
+      65.9583333333319,
+      133.550000000043,
+      201.908333333314
+    ],
+    "stage": "sunlit_cape",
+    "vehicle": "P7"
+  },
+  {
+    "elapsed": 205.099999999978,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.595436632633209,
+    "physics_p95_ms": 3.4,
+    "power_tier": 1,
+    "progress": 2768.22298199873,
+    "recoveries": 0,
+    "splits": [
+      67.2166666666662,
+      135.791666666707,
+      205.099999999978
+    ],
+    "stage": "sunlit_cape",
+    "vehicle": "F160"
+  },
+  {
+    "elapsed": 204.074999999979,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.616507351398468,
+    "physics_p95_ms": 3.614,
+    "power_tier": 1,
+    "progress": 2767.96894900223,
+    "recoveries": 0,
+    "splits": [
+      66.7333333333325,
+      135.041666666708,
+      204.074999999979
+    ],
+    "stage": "sunlit_cape",
+    "vehicle": "R200"
+  },
+  {
+    "elapsed": 202.29999999998,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.62655508518219,
+    "physics_p95_ms": 1.902,
+    "power_tier": 1,
+    "progress": 2767.99613626802,
+    "recoveries": 0,
+    "splits": [
+      66.0249999999986,
+      133.775000000043,
+      202.29999999998
+    ],
+    "stage": "sunlit_cape",
+    "vehicle": "A240"
+  },
+  {
+    "elapsed": 202.816666666647,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.615301072597504,
+    "physics_p95_ms": 2.552,
+    "power_tier": 1,
+    "progress": 2768.04142316942,
+    "recoveries": 0,
+    "splits": [
+      66.1916666666654,
+      134.116666666709,
+      202.816666666647
+    ],
+    "stage": "sunlit_cape",
+    "vehicle": "I20"
+  },
+  {
+    "elapsed": 205.008333333311,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.599196076393127,
+    "physics_p95_ms": 2.824,
+    "power_tier": 1,
+    "progress": 2768.09807258456,
+    "recoveries": 0,
+    "splits": [
+      67.0916666666661,
+      135.716666666708,
+      205.008333333311
+    ],
+    "stage": "sunlit_cape",
+    "vehicle": "DELTA"
+  },
+  {
+    "elapsed": 202.733333333313,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.611162841320038,
+    "physics_p95_ms": 2.742,
+    "power_tier": 1,
+    "progress": 2767.9294193276,
+    "recoveries": 0,
+    "splits": [
+      66.1916666666654,
+      134.066666666709,
+      202.733333333313
+    ],
+    "stage": "sunlit_cape",
+    "vehicle": "EVO6"
+  },
+  {
+    "elapsed": 202.483333333314,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.633748710155487,
+    "physics_p95_ms": 2.443,
+    "power_tier": 1,
+    "progress": 2767.77789552822,
+    "recoveries": 0,
+    "splits": [
+      66.0916666666653,
+      133.883333333376,
+      202.483333333314
+    ],
+    "stage": "sunlit_cape",
+    "vehicle": "WRX"
+  },
+  {
+    "elapsed": 202.133333333314,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.668671131134033,
+    "physics_p95_ms": 2.649,
+    "power_tier": 1,
+    "progress": 2767.51350280331,
+    "recoveries": 0,
+    "splits": [
+      66.033333333332,
+      133.708333333376,
+      202.133333333314
+    ],
+    "stage": "sunlit_cape",
+    "vehicle": "P7"
+  },
+  {
+    "elapsed": 205.258333333311,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.593981266021729,
+    "physics_p95_ms": 2.097,
+    "power_tier": 2,
+    "progress": 2768.24312112647,
+    "recoveries": 0,
+    "splits": [
+      67.2666666666663,
+      135.900000000041,
+      205.258333333311
+    ],
+    "stage": "sunlit_cape",
+    "vehicle": "F160"
+  },
+  {
+    "elapsed": 204.233333333312,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.615905404090881,
+    "physics_p95_ms": 2.218,
+    "power_tier": 2,
+    "progress": 2768.00154724221,
+    "recoveries": 0,
+    "splits": [
+      66.7833333333325,
+      135.150000000041,
+      204.233333333312
+    ],
+    "stage": "sunlit_cape",
+    "vehicle": "R200"
+  },
+  {
+    "elapsed": 202.433333333314,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.62699830532074,
+    "physics_p95_ms": 2.174,
+    "power_tier": 2,
+    "progress": 2767.96107270303,
+    "recoveries": 0,
+    "splits": [
+      66.058333333332,
+      133.858333333376,
+      202.433333333314
+    ],
+    "stage": "sunlit_cape",
+    "vehicle": "A240"
+  },
+  {
+    "elapsed": 202.958333333313,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.613070070743561,
+    "physics_p95_ms": 2.349,
+    "power_tier": 2,
+    "progress": 2767.9790800898,
+    "recoveries": 0,
+    "splits": [
+      66.2416666666655,
+      134.225000000042,
+      202.958333333313
+    ],
+    "stage": "sunlit_cape",
+    "vehicle": "I20"
+  },
+  {
+    "elapsed": 205.224999999978,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.600902915000916,
+    "physics_p95_ms": 3.067,
+    "power_tier": 2,
+    "progress": 2768.09858014294,
+    "recoveries": 0,
+    "splits": [
+      67.1916666666662,
+      135.875000000041,
+      205.224999999978
+    ],
+    "stage": "sunlit_cape",
+    "vehicle": "DELTA"
+  },
+  {
+    "elapsed": 202.87499999998,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.611207664012909,
+    "physics_p95_ms": 2.774,
+    "power_tier": 2,
+    "progress": 2767.89737065066,
+    "recoveries": 0,
+    "splits": [
+      66.2416666666655,
+      134.166666666709,
+      202.87499999998
+    ],
+    "stage": "sunlit_cape",
+    "vehicle": "EVO6"
+  },
+  {
+    "elapsed": 202.616666666647,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.635820984840393,
+    "physics_p95_ms": 2.893,
+    "power_tier": 2,
+    "progress": 2767.72162856911,
+    "recoveries": 0,
+    "splits": [
+      66.1499999999987,
+      133.983333333376,
+      202.616666666647
+    ],
+    "stage": "sunlit_cape",
+    "vehicle": "WRX"
+  },
+  {
+    "elapsed": 202.258333333314,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.665206372737885,
+    "physics_p95_ms": 3.218,
+    "power_tier": 2,
+    "progress": 2767.52475462534,
+    "recoveries": 0,
+    "splits": [
+      66.0749999999987,
+      133.791666666709,
+      202.258333333314
+    ],
+    "stage": "sunlit_cape",
+    "vehicle": "P7"
+  },
+  {
+    "elapsed": 244.941666666608,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.560677051544189,
+    "physics_p95_ms": 3.843,
+    "power_tier": 0,
+    "progress": 3168.18088275618,
+    "recoveries": 0,
+    "splits": [
+      77.6083333333412,
+      166.333333333346,
+      244.941666666608
+    ],
+    "stage": "misty_highlands",
+    "vehicle": "F160"
+  },
+  {
+    "elapsed": 244.008333333276,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.510555446147919,
+    "physics_p95_ms": 2.576,
+    "power_tier": 0,
+    "progress": 3167.97757737249,
+    "recoveries": 0,
+    "splits": [
+      77.3000000000076,
+      165.425000000014,
+      244.008333333276
+    ],
+    "stage": "misty_highlands",
+    "vehicle": "R200"
+  },
+  {
+    "elapsed": 239.83333333328,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.646596193313599,
+    "physics_p95_ms": 2.646,
+    "power_tier": 0,
+    "progress": 3167.94547044915,
+    "recoveries": 0,
+    "splits": [
+      75.6583333333396,
+      162.275000000017,
+      239.83333333328
+    ],
+    "stage": "misty_highlands",
+    "vehicle": "A240"
+  },
+  {
+    "elapsed": 239.874999999946,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.648429214954376,
+    "physics_p95_ms": 2.702,
+    "power_tier": 0,
+    "progress": 3168.07032150682,
+    "recoveries": 0,
+    "splits": [
+      75.691666666673,
+      162.33333333335,
+      239.874999999946
+    ],
+    "stage": "misty_highlands",
+    "vehicle": "I20"
+  },
+  {
+    "elapsed": 246.058333333274,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.578830122947693,
+    "physics_p95_ms": 3.017,
+    "power_tier": 0,
+    "progress": 3168.08221601443,
+    "recoveries": 0,
+    "splits": [
+      77.8416666666747,
+      166.708333333346,
+      246.058333333274
+    ],
+    "stage": "misty_highlands",
+    "vehicle": "DELTA"
+  },
+  {
+    "elapsed": 240.708333333279,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.563375771045685,
+    "physics_p95_ms": 4.067,
+    "power_tier": 0,
+    "progress": 3167.85957940501,
+    "recoveries": 0,
+    "splits": [
+      75.9333333333398,
+      162.841666666683,
+      240.708333333279
+    ],
+    "stage": "misty_highlands",
+    "vehicle": "EVO6"
+  },
+  {
+    "elapsed": 241.316666666612,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.512471914291382,
+    "physics_p95_ms": 4.614,
+    "power_tier": 0,
+    "progress": 3167.74495272674,
+    "recoveries": 0,
+    "splits": [
+      76.4333333333402,
+      163.400000000016,
+      241.316666666612
+    ],
+    "stage": "misty_highlands",
+    "vehicle": "WRX"
+  },
+  {
+    "elapsed": 241.674999999945,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.479276895523071,
+    "physics_p95_ms": 5.195,
+    "power_tier": 0,
+    "progress": 3167.5720568349,
+    "recoveries": 0,
+    "splits": [
+      76.1916666666734,
+      163.525000000016,
+      241.674999999945
+    ],
+    "stage": "misty_highlands",
+    "vehicle": "P7"
+  },
+  {
+    "elapsed": 245.624999999941,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.532638013362885,
+    "physics_p95_ms": 4.474,
+    "power_tier": 1,
+    "progress": 3168.19472056823,
+    "recoveries": 0,
+    "splits": [
+      77.8166666666747,
+      166.766666666679,
+      245.624999999941
+    ],
+    "stage": "misty_highlands",
+    "vehicle": "F160"
+  },
+  {
+    "elapsed": 244.591666666609,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.504327356815338,
+    "physics_p95_ms": 4.256,
+    "power_tier": 1,
+    "progress": 3168.01312848036,
+    "recoveries": 0,
+    "splits": [
+      77.4500000000077,
+      165.758333333347,
+      244.591666666609
+    ],
+    "stage": "misty_highlands",
+    "vehicle": "R200"
+  },
+  {
+    "elapsed": 240.433333333279,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.632437586784363,
+    "physics_p95_ms": 4.644,
+    "power_tier": 1,
+    "progress": 3167.95954060773,
+    "recoveries": 0,
+    "splits": [
+      75.8500000000064,
+      162.68333333335,
+      240.433333333279
+    ],
+    "stage": "misty_highlands",
+    "vehicle": "A240"
+  },
+  {
+    "elapsed": 240.516666666612,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.639444708824158,
+    "physics_p95_ms": 4.523,
+    "power_tier": 1,
+    "progress": 3168.03552512428,
+    "recoveries": 0,
+    "splits": [
+      75.8916666666731,
+      162.766666666683,
+      240.516666666612
+    ],
+    "stage": "misty_highlands",
+    "vehicle": "I20"
+  },
+  {
+    "elapsed": 247.216666666606,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.552154958248138,
+    "physics_p95_ms": 5.094,
+    "power_tier": 1,
+    "progress": 3168.06027370694,
+    "recoveries": 0,
+    "splits": [
+      78.291666666675,
+      167.533333333345,
+      247.216666666606
+    ],
+    "stage": "misty_highlands",
+    "vehicle": "DELTA"
+  },
+  {
+    "elapsed": 241.408333333278,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.570632040500641,
+    "physics_p95_ms": 5.307,
+    "power_tier": 1,
+    "progress": 3167.84819475323,
+    "recoveries": 0,
+    "splits": [
+      76.1666666666734,
+      163.325000000016,
+      241.408333333278
+    ],
+    "stage": "misty_highlands",
+    "vehicle": "EVO6"
+  },
+  {
+    "elapsed": 241.199999999945,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.498953074216843,
+    "physics_p95_ms": 5.52,
+    "power_tier": 1,
+    "progress": 3167.71571283386,
+    "recoveries": 0,
+    "splits": [
+      76.2416666666734,
+      163.191666666683,
+      241.199999999945
+    ],
+    "stage": "misty_highlands",
+    "vehicle": "WRX"
+  },
+  {
+    "elapsed": 242.316666666611,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.481501191854477,
+    "physics_p95_ms": 4.747,
+    "power_tier": 1,
+    "progress": 3167.59233424899,
+    "recoveries": 0,
+    "splits": [
+      76.3833333333402,
+      163.941666666682,
+      242.316666666611
+    ],
+    "stage": "misty_highlands",
+    "vehicle": "P7"
+  },
+  {
+    "elapsed": 245.999999999941,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.524111568927765,
+    "physics_p95_ms": 4.764,
+    "power_tier": 2,
+    "progress": 3168.24556835439,
+    "recoveries": 0,
+    "splits": [
+      77.9333333333414,
+      166.991666666679,
+      245.999999999941
+    ],
+    "stage": "misty_highlands",
+    "vehicle": "F160"
+  },
+  {
+    "elapsed": 244.933333333275,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.500928938388824,
+    "physics_p95_ms": 3.1,
+    "power_tier": 2,
+    "progress": 3168.02410234882,
+    "recoveries": 0,
+    "splits": [
+      77.5333333333411,
+      165.975000000013,
+      244.933333333275
+    ],
+    "stage": "misty_highlands",
+    "vehicle": "R200"
+  },
+  {
+    "elapsed": 240.758333333279,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.62633228302002,
+    "physics_p95_ms": 4.259,
+    "power_tier": 2,
+    "progress": 3167.98753876494,
+    "recoveries": 0,
+    "splits": [
+      75.9500000000065,
+      162.900000000016,
+      240.758333333279
+    ],
+    "stage": "misty_highlands",
+    "vehicle": "A240"
+  },
+  {
+    "elapsed": 240.849999999945,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.635453224182129,
+    "physics_p95_ms": 3.636,
+    "power_tier": 2,
+    "progress": 3167.98585750727,
+    "recoveries": 0,
+    "splits": [
+      75.9916666666732,
+      162.991666666683,
+      240.849999999945
+    ],
+    "stage": "misty_highlands",
+    "vehicle": "I20"
+  },
+  {
+    "elapsed": 247.849999999939,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.540655910968781,
+    "physics_p95_ms": 3.879,
+    "power_tier": 2,
+    "progress": 3168.10032577786,
+    "recoveries": 0,
+    "splits": [
+      78.5500000000086,
+      167.983333333345,
+      247.849999999939
+    ],
+    "stage": "misty_highlands",
+    "vehicle": "DELTA"
+  },
+  {
+    "elapsed": 241.791666666611,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.566780149936676,
+    "physics_p95_ms": 2.443,
+    "power_tier": 2,
+    "progress": 3167.94673115528,
+    "recoveries": 0,
+    "splits": [
+      76.3000000000068,
+      163.583333333349,
+      241.791666666611
+    ],
+    "stage": "misty_highlands",
+    "vehicle": "EVO6"
+  },
+  {
+    "elapsed": 241.374999999945,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.496334582567215,
+    "physics_p95_ms": 2.581,
+    "power_tier": 2,
+    "progress": 3167.80321980613,
+    "recoveries": 0,
+    "splits": [
+      76.18333333334,
+      163.250000000016,
+      241.374999999945
+    ],
+    "stage": "misty_highlands",
+    "vehicle": "WRX"
+  },
+  {
+    "elapsed": 242.633333333277,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.480822175741196,
+    "physics_p95_ms": 2.866,
+    "power_tier": 2,
+    "progress": 3167.50401889768,
+    "recoveries": 0,
+    "splits": [
+      76.4750000000069,
+      164.150000000015,
+      242.633333333277
+    ],
+    "stage": "misty_highlands",
+    "vehicle": "P7"
+  },
+  {
+    "elapsed": 242.624999999944,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.591244578361511,
+    "physics_p95_ms": 2.324,
+    "power_tier": 0,
+    "progress": 3568.27313474574,
+    "recoveries": 0,
+    "splits": [
+      80.5000000000101,
+      164.841666666681,
+      242.624999999944
+    ],
+    "stage": "redrock_canyon",
+    "vehicle": "F160"
+  },
+  {
+    "elapsed": 241.949999999944,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.676391184329987,
+    "physics_p95_ms": 2.893,
+    "power_tier": 0,
+    "progress": 3567.95391043248,
+    "recoveries": 0,
+    "splits": [
+      80.2166666666766,
+      164.333333333348,
+      241.949999999944
+    ],
+    "stage": "redrock_canyon",
+    "vehicle": "R200"
+  },
+  {
+    "elapsed": 239.966666666613,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.718954920768738,
+    "physics_p95_ms": 2.811,
+    "power_tier": 0,
+    "progress": 3567.98593487697,
+    "recoveries": 0,
+    "splits": [
+      79.5000000000093,
+      162.716666666683,
+      239.966666666613
+    ],
+    "stage": "redrock_canyon",
+    "vehicle": "A240"
+  },
+  {
+    "elapsed": 240.108333333279,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.709894895553589,
+    "physics_p95_ms": 3.013,
+    "power_tier": 0,
+    "progress": 3568.00807397544,
+    "recoveries": 0,
+    "splits": [
+      79.5500000000094,
+      162.816666666683,
+      240.108333333279
+    ],
+    "stage": "redrock_canyon",
+    "vehicle": "I20"
+  },
+  {
+    "elapsed": 242.974999999943,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.557838916778564,
+    "physics_p95_ms": 3.143,
+    "power_tier": 0,
+    "progress": 3568.16051399911,
+    "recoveries": 0,
+    "splits": [
+      80.6750000000103,
+      164.933333333348,
+      242.974999999943
+    ],
+    "stage": "redrock_canyon",
+    "vehicle": "DELTA"
+  },
+  {
+    "elapsed": 240.708333333279,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.564448118209839,
+    "physics_p95_ms": 4.447,
+    "power_tier": 0,
+    "progress": 3567.83876012589,
+    "recoveries": 0,
+    "splits": [
+      79.7833333333429,
+      163.250000000016,
+      240.708333333279
+    ],
+    "stage": "redrock_canyon",
+    "vehicle": "EVO6"
+  },
+  {
+    "elapsed": 241.341666666612,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.451840907335281,
+    "physics_p95_ms": 4.512,
+    "power_tier": 0,
+    "progress": 3567.79565276616,
+    "recoveries": 0,
+    "splits": [
+      79.883333333343,
+      163.766666666682,
+      241.341666666612
+    ],
+    "stage": "redrock_canyon",
+    "vehicle": "WRX"
+  },
+  {
+    "elapsed": 240.816666666612,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.481262743473053,
+    "physics_p95_ms": 4.766,
+    "power_tier": 0,
+    "progress": 3567.56895178228,
+    "recoveries": 0,
+    "splits": [
+      79.6833333333428,
+      163.458333333349,
+      240.816666666612
+    ],
+    "stage": "redrock_canyon",
+    "vehicle": "P7"
+  },
+  {
+    "elapsed": 243.21666666661,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.588521778583527,
+    "physics_p95_ms": 3.91,
+    "power_tier": 1,
+    "progress": 3568.20477230175,
+    "recoveries": 0,
+    "splits": [
+      80.716666666677,
+      165.250000000014,
+      243.21666666661
+    ],
+    "stage": "redrock_canyon",
+    "vehicle": "F160"
+  },
+  {
+    "elapsed": 242.458333333277,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.66916036605835,
+    "physics_p95_ms": 3.237,
+    "power_tier": 1,
+    "progress": 3567.98838622416,
+    "recoveries": 0,
+    "splits": [
+      80.3916666666767,
+      164.675000000015,
+      242.458333333277
+    ],
+    "stage": "redrock_canyon",
+    "vehicle": "R200"
+  },
+  {
+    "elapsed": 240.366666666612,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.717994451522827,
+    "physics_p95_ms": 3.284,
+    "power_tier": 1,
+    "progress": 3567.98122133529,
+    "recoveries": 0,
+    "splits": [
+      79.6416666666761,
+      162.991666666683,
+      240.366666666612
+    ],
+    "stage": "redrock_canyon",
+    "vehicle": "A240"
+  },
+  {
+    "elapsed": 240.516666666612,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.704669833183289,
+    "physics_p95_ms": 3.604,
+    "power_tier": 1,
+    "progress": 3568.02097958924,
+    "recoveries": 0,
+    "splits": [
+      79.6833333333428,
+      163.100000000016,
+      240.516666666612
+    ],
+    "stage": "redrock_canyon",
+    "vehicle": "I20"
+  },
+  {
+    "elapsed": 243.624999999943,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.54776793718338,
+    "physics_p95_ms": 4.693,
+    "power_tier": 1,
+    "progress": 3568.07637144453,
+    "recoveries": 0,
+    "splits": [
+      80.9500000000105,
+      165.408333333347,
+      243.624999999943
+    ],
+    "stage": "redrock_canyon",
+    "vehicle": "DELTA"
+  },
+  {
+    "elapsed": 241.174999999945,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.550768733024597,
+    "physics_p95_ms": 4.637,
+    "power_tier": 1,
+    "progress": 3567.82402375938,
+    "recoveries": 0,
+    "splits": [
+      79.958333333343,
+      163.583333333349,
+      241.174999999945
+    ],
+    "stage": "redrock_canyon",
+    "vehicle": "EVO6"
+  },
+  {
+    "elapsed": 241.733333333278,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.448653936386108,
+    "physics_p95_ms": 4.748,
+    "power_tier": 1,
+    "progress": 3567.73908477633,
+    "recoveries": 0,
+    "splits": [
+      80.0250000000098,
+      164.058333333348,
+      241.733333333278
+    ],
+    "stage": "redrock_canyon",
+    "vehicle": "WRX"
+  },
+  {
+    "elapsed": 241.224999999945,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.466110110282898,
+    "physics_p95_ms": 4.502,
+    "power_tier": 1,
+    "progress": 3567.57723129959,
+    "recoveries": 0,
+    "splits": [
+      79.8083333333429,
+      163.750000000015,
+      241.224999999945
+    ],
+    "stage": "redrock_canyon",
+    "vehicle": "P7"
+  },
+  {
+    "elapsed": 243.54166666661,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.604767560958862,
+    "physics_p95_ms": 3.397,
+    "power_tier": 2,
+    "progress": 3568.23905236346,
+    "recoveries": 0,
+    "splits": [
+      80.8250000000104,
+      165.466666666681,
+      243.54166666661
+    ],
+    "stage": "redrock_canyon",
+    "vehicle": "F160"
+  },
+  {
+    "elapsed": 242.71666666661,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.663938164710999,
+    "physics_p95_ms": 3.39,
+    "power_tier": 2,
+    "progress": 3568.01285577917,
+    "recoveries": 0,
+    "splits": [
+      80.4750000000101,
+      164.850000000014,
+      242.71666666661
+    ],
+    "stage": "redrock_canyon",
+    "vehicle": "R200"
+  },
+  {
+    "elapsed": 240.566666666612,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.715253889560699,
+    "physics_p95_ms": 2.922,
+    "power_tier": 2,
+    "progress": 3567.99271895435,
+    "recoveries": 0,
+    "splits": [
+      79.7083333333428,
+      163.133333333349,
+      240.566666666612
+    ],
+    "stage": "redrock_canyon",
+    "vehicle": "A240"
+  },
+  {
+    "elapsed": 240.741666666612,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.701065182685852,
+    "physics_p95_ms": 2.841,
+    "power_tier": 2,
+    "progress": 3568.02837972272,
+    "recoveries": 0,
+    "splits": [
+      79.7583333333429,
+      163.250000000016,
+      240.741666666612
+    ],
+    "stage": "redrock_canyon",
+    "vehicle": "I20"
+  },
+  {
+    "elapsed": 243.974999999942,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.537824392318726,
+    "physics_p95_ms": 4.147,
+    "power_tier": 2,
+    "progress": 3568.10715749956,
+    "recoveries": 0,
+    "splits": [
+      81.0916666666773,
+      165.66666666668,
+      243.974999999942
+    ],
+    "stage": "redrock_canyon",
+    "vehicle": "DELTA"
+  },
+  {
+    "elapsed": 241.433333333278,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.549761235713959,
+    "physics_p95_ms": 3.673,
+    "power_tier": 2,
+    "progress": 3567.92610295911,
+    "recoveries": 0,
+    "splits": [
+      80.0500000000098,
+      163.758333333349,
+      241.433333333278
+    ],
+    "stage": "redrock_canyon",
+    "vehicle": "EVO6"
+  },
+  {
+    "elapsed": 241.949999999944,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.447911739349365,
+    "physics_p95_ms": 3.353,
+    "power_tier": 2,
+    "progress": 3567.73125862877,
+    "recoveries": 0,
+    "splits": [
+      80.1083333333432,
+      164.216666666682,
+      241.949999999944
+    ],
+    "stage": "redrock_canyon",
+    "vehicle": "WRX"
+  },
+  {
+    "elapsed": 241.449999999945,
+    "finished": true,
+    "input": "vgamepad",
+    "max_lateral": 0.462850570678711,
+    "physics_p95_ms": 3.536,
+    "power_tier": 2,
+    "progress": 3567.57774374225,
+    "recoveries": 0,
+    "splits": [
+      79.883333333343,
+      163.916666666682,
+      241.449999999945
+    ],
+    "stage": "redrock_canyon",
+    "vehicle": "P7"
+  }
+]

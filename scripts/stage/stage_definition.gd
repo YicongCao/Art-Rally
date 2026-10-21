@@ -23,10 +23,11 @@ extends Resource
 
 
 @export var stage_version: String = "7"
-@export_enum("autumn", "coast", "highland") var environment_id: String = "autumn"
+@export_enum("autumn", "coast", "highland", "desert") var environment_id: String = "autumn"
 @export var subtitle: String = "秋日山林 · 混合路面"
 @export var surface_sections := PackedVector3Array([Vector3(1150,1650,2),Vector3(1650,2100,0)])
 @export var default_surface: int = 1
+@export var shoulder_surface: int = 3
 @export var width_sections := PackedVector3Array([Vector3(1150,1650,-0.5)])
 @export var water_sections := PackedVector3Array([Vector3(1270,1290,0.07),Vector3(1480,1508,0.11)])
 @export var crests := PackedVector3Array([Vector3(360,1.3,7),Vector3(850,1.45,8),Vector3(1430,1.4,7),Vector3(2230,1.5,8),Vector3(2650,1.3,7)])
@@ -78,17 +79,22 @@ func water_depth(distance: float, lateral: float) -> float:
 	return depth
 
 
-func surface_weights(distance: float,lateral: float = 0) -> Vector3:
-	var weights := Vector3.ZERO
+func surface_distribution(distance: float,lateral: float = 0) -> PackedFloat64Array:
+	var weights := PackedFloat64Array()
+	weights.resize(RallySurfaceQuery.PROFILES.size())
 	weights[default_surface] = 1
-	# Twelve metres of dragged gravel, worn asphalt and mud, rather than a hard seam.
 	var worn_s := distance+sin(lateral*2.3+distance*.11)*1.6+sin(lateral*5.1)*.6
 	for section: Vector3 in surface_sections:
 		var amount := smoothstep(section.x-6,section.x+6,worn_s)*(1-smoothstep(section.y-6,section.y+6,worn_s))
-		var next := Vector3.ZERO
-		next[int(section.z)] = 1
-		weights = weights.lerp(next,amount)
+		for i: int in range(weights.size()):
+			weights[i] = lerpf(weights[i],1.0 if i==int(section.z) else 0.0,amount)
 	return weights
+
+
+# Existing three-channel road shaders keep their original vertex contract.
+func surface_weights(distance: float,lateral: float = 0) -> Vector3:
+	var weights := surface_distribution(distance,lateral)
+	return Vector3(weights[0],weights[1]+weights[4]+weights[5],weights[2])
 
 
 func wetness(distance: float,lateral: float) -> float:
@@ -101,22 +107,26 @@ func wetness(distance: float,lateral: float) -> float:
 
 func surface_proportions() -> Vector3:
 	var totals := Vector3.ZERO
-	for i: int in range(int(ceilf(target_length))): totals[surface_id(float(i)+.5)]+=1
+	for i: int in range(int(ceilf(target_length))):
+		var id := surface_id(float(i)+.5)
+		totals[1 if id>=3 else id]+=1
 	return totals/float(ceilf(target_length))
 
 
 func surface_summary() -> String:
-	var weights := surface_proportions()
+	var totals := PackedFloat64Array()
+	totals.resize(RallySurfaceQuery.PROFILES.size())
+	for i: int in range(int(ceilf(target_length))): totals[surface_id(float(i)+.5)]+=1
 	var bits: Array[String] = []
-	var remaining := 100
 	var present: Array[int] = []
-	for i: int in range(3):
-		if weights[i]>.001: present.append(i)
+	for i: int in range(totals.size()):
+		if totals[i]>0: present.append(i)
+	var remaining := 100
 	for n: int in range(present.size()):
 		var i := present[n]
-		var percent := remaining if n==present.size()-1 else roundi(weights[i]*100)
-		remaining-=percent
-		bits.append("%s %d%%"%[["柏油","砂石","泥地"][i],percent])
+		var percent := remaining if n==present.size()-1 else roundi(totals[i]/ceilf(target_length)*100)
+		remaining -= percent
+		bits.append("%s %d%%"%[RallySurfaceQuery.LABELS[i],percent])
 	return " / ".join(bits)
 
 

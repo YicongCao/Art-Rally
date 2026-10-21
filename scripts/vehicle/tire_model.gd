@@ -16,7 +16,7 @@ static func curve(slip: float, stiffness: float, sliding_ratio: float = 0.78) ->
 static func solve(wheel: RallyWheelState, drive: float, brake: float, dt: float, config: RallyVehicleConfig, tire: RallyTireConfig) -> Vector2:
 	var radius := wheel.effective_radius if config.tire_contact_model=="COMPLIANT_PATCH" else config.wheel_radius
 	var inertia := config.wheel_inertia
-	var limit := capacity(wheel.load, tire) * wheel.surface.grip(wheel.longitudinal_speed)
+	var limit := capacity(wheel.load, tire) * wheel.surface.grip(wheel.longitudinal_speed) * tire.grip_for(wheel.surface)
 	var patch_brush := config.tire_contact_model=="COMPLIANT_PATCH" and wheel.patch!=null and wheel.patch.grounded
 	var longitudinal_stiffness := tire.longitudinal_stiffness * wheel.surface.longitudinal_scale
 	var lateral_stiffness := tire.lateral_stiffness * wheel.surface.lateral_scale
@@ -83,7 +83,7 @@ static func correct_patch_force(wheel: RallyWheelState,aggregate_force: Vector2,
 		return aggregate_force
 	var response := _patch_response(wheel,wheel.relaxed_slip,wheel.relaxed_angle,tire)
 	var denominator := maxf(absf(wheel.longitudinal_speed),tire.low_speed_reference)
-	var limit := capacity(wheel.load,tire)*wheel.surface.grip(wheel.longitudinal_speed)
+	var limit := capacity(wheel.load,tire)*wheel.surface.grip(wheel.longitudinal_speed) * tire.grip_for(wheel.surface)
 	var lateral_stiffness := tire.lateral_stiffness*wheel.surface.lateral_scale
 	var lateral_scale := 1.0/(1.0+limit*lateral_stiffness*dt/(denominator*(config.body_mass/4.0)))
 	var corrected := Vector2(response.x,response.y*lateral_scale)
@@ -115,7 +115,7 @@ static func _patch_response(wheel: RallyWheelState,longitudinal_slip: float,late
 		if not sample.supported or sample.pressure_weight<=0.0: continue
 		var transport := clampf(patch.half_length-direction*sample.local.x,0.0,2.0*patch.half_length)
 		var transport_scale := transport/transport_mean
-		var local_limit := base_capacity*sample.pressure_weight*sample.surface.grip(wheel.longitudinal_speed)
+		var local_limit := base_capacity*sample.pressure_weight*sample.surface.grip(wheel.longitudinal_speed) * tire.grip_for(sample.surface)
 		if local_limit<=0.0: continue
 		var local_sliding := clampf(tire.sliding_ratio*sample.surface.sliding_scale,0.1,1.0)
 		var trial := Vector2(
@@ -132,7 +132,7 @@ static func _patch_response(wheel: RallyWheelState,longitudinal_slip: float,late
 
 
 static func _uniform_patch_response(wheel: RallyWheelState,longitudinal_slip: float,lateral_angle: float,tire: RallyTireConfig,base_capacity: float) -> Vector3:
-	var local_limit := base_capacity*wheel.surface.grip(wheel.longitudinal_speed)
+	var local_limit := base_capacity*wheel.surface.grip(wheel.longitudinal_speed) * tire.grip_for(wheel.surface)
 	if local_limit<=0.0: return Vector3.ZERO
 	var sliding := clampf(tire.sliding_ratio*wheel.surface.sliding_scale,0.1,1.0)
 	var response := Vector2(

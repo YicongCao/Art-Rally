@@ -21,6 +21,23 @@ var wildlife := RallyWildlife.new()
 var rockfall := RallyRockfall.new()
 var river_audio: Array[AudioStreamPlayer3D] = []
 var photo_album: RallyPhotoAlbum
+var garage_store: RallyGarageStore
+var modified_mode:=false
+var garage_test:=false
+var test_metrics:=RallyGarageTestMetrics.new()
+func active_ghost() -> Dictionary:
+	return garage_store.load_ghost(challenge,garage_test) if modified_mode else profile.load_ghost(challenge)
+func setup_ghost() -> void:
+	var recording:=active_ghost()
+	var ghost_car:=challenge.vehicle
+	if modified_mode and not recording.is_empty():
+		ghost_car=RallyGarageCatalog.resolve(RallyContentCatalog.vehicle(challenge.vehicle.vehicle_id),recording.setup)
+	ghost.build(ghost_car,recording)
+func result_bucket() -> Dictionary:
+	return garage_store.bucket(challenge,garage_test) if modified_mode else profile.result_for(challenge.key())
+func recording_key() -> String:
+	return RallyGarageStore.key(challenge) if modified_mode else challenge.key()
+
 
 
 func start() -> void:
@@ -33,13 +50,14 @@ func start() -> void:
 	RallyVehiclePlate.attach(presentation.car_style.body,challenge.vehicle,plate)
 	session.practice = free_practice or tutorial
 	_apply_preferences()
-	controls.allow_mechanical_shortcuts = session.practice and not demonstration
+	controls.allow_mechanical_shortcuts = session.practice and not demonstration and not modified_mode
 	controls.bindings = profile.data.bindings.duplicate()
 	# Official challenges retain fixed mechanical setup. Developer tools remain in the lab.
 	for key: String in ["brake_bias","spring_scale"]:
-		pause_menu.widgets[key].editable = session.practice and not demonstration
-	pause_menu.actions.add_back("返回赛道选择",func(): return_requested.emit(),true)
+		pause_menu.widgets[key].editable = session.practice and not demonstration and not modified_mode
+	pause_menu.actions.add_back("返回车库" if modified_mode else "返回赛道选择",func(): return_requested.emit(),true)
 	pause_menu.message.text = "练习不计入奖牌与个人纪录" if session.practice else "正式挑战 · 机械调校固定 · 自动驾驶跑段不计成绩"
+	if modified_mode: pause_menu.message.text="改装试跑 · 配件与调校来自当前车库草稿"
 	_build_spatial_ambience()
 	_build_river_audio()
 	add_child(wildlife)
@@ -48,14 +66,14 @@ func start() -> void:
 	rockfall.build(self)
 	pause_menu.voice_preview.connect(func(): if audio_director!=null: audio_director.speak_note("preview",true))
 	add_child(ghost)
-	ghost.build(challenge.vehicle,profile.load_ghost(challenge))
+	setup_ghost()
 	if photo_album==null:
 		photo_album = RallyPhotoAlbum.new()
 		photo_album.directory = profile.path.get_base_dir()+"/gallery"
 	add_child(broadcast)
 	broadcast.build(self,photo_album)
-	var bucket := profile.result_for(challenge.key())
-	result_summary = {"human_best":bucket.get("best",{})}
+	var bucket := result_bucket()
+	result_summary = {"human_best":bucket.get("last" if garage_test else "best",{})}
 	if not profile.message.is_empty():
 		recovery_notice = profile.message
 		recovery_notice_time = 8
@@ -79,7 +97,9 @@ func start() -> void:
 func _physics_process(dt: float) -> void:
 	super._physics_process(dt)
 	if not is_instance_valid(vehicle) or get_tree().paused or respawn_wait: return
-	if session.phase==RallyStageSession.Phase.RUNNING: trajectory.capture(session.total_time(),vehicle)
+	if session.phase==RallyStageSession.Phase.RUNNING:
+		trajectory.capture(session.total_time(),vehicle)
+		if garage_test: test_metrics.step(vehicle,session.progress)
 	if tutorial:
 		if tutorial_step==0 and vehicle.linear_velocity.length()>5: tutorial_step = 1
 		elif tutorial_step==1 and vehicle.command.brake>0.3 and vehicle.linear_velocity.length()<4: tutorial_step = 2
@@ -114,12 +134,16 @@ func _record_finish() -> void:
 	finish_recorded = true
 	trajectory.capture(session.total_time(),vehicle,true)
 	var result := {"elapsed":session.elapsed,"penalty":session.penalty,"total_time":session.total_time(),"splits":Array(session.split_times),"gate_times":session.gate_times.duplicate(),"source":auto_driver.source_name(controls.active_device),"reset_count":session.reset_count,"practice":session.practice,"recorded_at":Time.get_unix_time_from_system()}
-	var outcome := profile.record(challenge,result,trajectory.payload(challenge.key(),session.total_time()))
+	if garage_test: result["test_metrics"]=test_metrics.values.duplicate(true)
+	var outcome: Dictionary
+	if modified_mode: outcome=garage_store.record(challenge,result,trajectory.payload(recording_key(),session.total_time()),garage_test)
+	else: outcome=profile.record(challenge,result,trajectory.payload(challenge.key(),session.total_time()))
 	result["outcome"] = outcome
 	completed.emit.call_deferred(result)
 
 
 func _recover(seconds: float,reason: String) -> void:
+	if garage_test: test_metrics.recovered()
 	var before := session.total_time()
 	super._recover(seconds,reason)
 	if session.total_time()>before: trajectory.recovery(before,session.total_time())
@@ -136,8 +160,10 @@ func _restart() -> void:
 	previous_note = 0
 	if audio_director!=null: audio_director.voice.stop()
 	trajectory.reset()
+	test_metrics.reset()
 	super._restart()
-	ghost.recording = profile.load_ghost(challenge)
+	if modified_mode: setup_ghost()
+	else: ghost.recording = active_ghost()
 	if demonstration:
 		var demo := get_node_or_null("BenchmarkDemo")
 		if demo!=null: demo.restart()
@@ -145,7 +171,7 @@ func _restart() -> void:
 
 func _apply_preferences() -> void:
 	super._apply_preferences()
-	if (not session.practice or demonstration) and vehicle_definition!=null:
+	if (not session.practice or demonstration or modified_mode) and vehicle_definition!=null:
 		var baseline := vehicle_definition.physics_config()
 		vehicle.config.front_brake_bias = baseline.front_brake_bias
 		vehicle.config.static_compression = baseline.static_compression
@@ -199,7 +225,7 @@ func _build_spatial_ambience() -> void:
 	if biome=="highland": stations.assign(challenge.stage.culverts)
 	for station: float in stations:
 		var player := AudioStreamPlayer3D.new()
-		player.stream = RallyAudioDirector.asset({"autumn":"forest","coast":"coast","highland":"highland"}[biome],true)
+		player.stream = RallyAudioDirector.asset({"autumn":"forest","coast":"coast","highland":"highland","desert":"highland"}[biome],true)
 		player.bus = "Environment"
 		player.volume_db = -16
 		player.unit_size = 18
@@ -211,7 +237,7 @@ func _build_spatial_ambience() -> void:
 
 
 func _refresh_result_summary() -> void:
-	if profile!=null and challenge!=null: result_summary = {"human_best":profile.result_for(challenge.key()).get("best",{})}
+	if profile!=null and challenge!=null: result_summary = {"human_best":result_bucket().get("last" if garage_test else "best",{})}
 
 
 func _safety_pause() -> void:

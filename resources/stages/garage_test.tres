@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="RallyStageDefinition" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/stage/stage_definition.gd" id="1"]
+[resource]
+script = ExtResource("1")
+stage_id = "garage_test"
+title = "车库试车场"
+stage_version = "1"
+target_length = 600.0
+road_width = 8.0
+control_points = PackedVector3Array(0,0,0, 0,0,-180, 0,0,-260, 20,0,-300, 65,0,-320, 110,0,-300, 135,0,-260, 135,0,-180, 150,0,-80, 160,0,0)
+environment_id = "desert"
+default_surface = 0
+shoulder_surface = 5
+surface_sections = PackedVector3Array(440,600,4)
+width_sections = PackedVector3Array()
+water_sections = PackedVector3Array()
+river_crossings = PackedVector3Array()
+culverts = PackedFloat32Array()
+guardrail_sections = PackedVector2Array()
+spectators = PackedFloat32Array()
+landmarks = Array[Dictionary]([])
+crests = PackedVector3Array()
+rough_patches = PackedVector3Array(470,70,0.065, 555,40,0.08)
+hazard_notes = Array[Dictionary]([{"s":160,"code":"CAUTION_NARROW"},{"s":425,"code":"SAND"}])

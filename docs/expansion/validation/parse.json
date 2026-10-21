@@ -1,0 +1,1166 @@
+[
+  {
+    "path": "scripts/dev/anime_direction_capture.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/braking_audit.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/brushline_asset_capture.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/brushline_capture.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/brushline_ui_sizes.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/cinematic_capture.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/comic_direction_capture.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/comic_hud_capture.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/driving_aids_capture.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/driving_lab.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/dust_capture.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/environment_check.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/expansion_capture.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/expansion_frame_probe.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/expansion_models.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/expansion_perf_probe.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/experience_capture.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/first_playable_capture.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/flag_capture.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/gauge_capture.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/highland_rockfall_capture.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/identity_capture.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/kinetic_capture.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/light_checkpoint_capture.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/mud_drive_diagnostic.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/package_smoke.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/playback_capture.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/pressure_checkpoint_capture.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/readme_showcase.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/readout_capture.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/record_showcase.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/redrock_garage_capture.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/redrock_sample.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/reference_cars_capture.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/rockfall_roll_capture.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/route_revision_capture.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/scene_refresh_capture.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/screenprint_capture.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/screenprint_contract_snapshot.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/screenprint_replay_capture.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/screenprint_showcase.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/screenprint_ui_capture.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/showcase_capture.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/showcase_movie.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/showcase_performance_capture.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/showcase_scout.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/terrain_detail_capture.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/utility_capture.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/v030_capture.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/v030_polish_capture.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/vehicle_livery_capture.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/dev/world_details_capture.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/game/audio_director.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/game/benchmark_demo.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/game/brand_migration.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/game/challenge_definition.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/game/challenge_play.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/game/content_catalog.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/game/driving_runtime.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/game/game_app.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/game/ghost_player.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/game/ghost_recording.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/game/menu_backdrop.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/game/photo_album.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/game/plate_text.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/game/profile_store.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/game/recovery_advice.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/game/replay_controller.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/game/vehicle_definition.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/garage/garage_catalog.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/garage/garage_page.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/garage/garage_store.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/garage/garage_view.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/garage/test_metrics.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/input/auto_driver.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/input/driver_command.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/input/input_controller.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/input/input_filter.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/input/input_profile.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/input/reverse_assist.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/input/route_pilot.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/presentation/breakable_posts.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/presentation/broadcast_helicopter.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/presentation/camera_rig.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/presentation/checkpoint_markers.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/presentation/finish_arch.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/presentation/gate_symbols.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/presentation/lighthouse_beacon.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/presentation/log_piles.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/presentation/redrock_scenery.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/presentation/replay_surface_fx.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/presentation/river_bridges.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/presentation/rockfall.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/presentation/sky_life.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/presentation/stage_landmarks.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/presentation/stage_presentation.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/presentation/stage_scenery.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/presentation/synth_audio.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/presentation/tail_streaks.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/presentation/tire_marks.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/presentation/utility_line.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/presentation/vehicle_feedback.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/presentation/wildlife.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/presentation/wildlife_model.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/showcase/showcase_audio.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/showcase/showcase_camera.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/showcase/showcase_director.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/showcase/showcase_hud.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/showcase/showcase_instruments.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/showcase/showcase_metrics.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/showcase/showcase_results.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/showcase/showcase_world.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/stage/stage_bounds.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/stage/stage_definition.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/stage/stage_generator.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/stage/stage_play.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/stage/stage_result_store.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/stage/stage_route.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/stage/stage_session.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/surfaces/surface_field.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/surfaces/surface_profile.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/surfaces/surface_query.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/surfaces/surface_sample.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/ui/acrylic_panels.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/ui/action_bar.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/ui/artbook_panel.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/ui/cockpit_display.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/ui/comic_hud_art.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/ui/comic_hud_skins.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/ui/control_guide.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/ui/debug_panel.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/ui/fonts.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/ui/game_settings.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/ui/gauge_patina.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/ui/loading_progress.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/ui/menu_input.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/ui/page_transition.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/ui/pause_menu.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/ui/plate_preview.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/ui/racing_patina.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/ui/rally_hud.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/ui/record_confetti.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/ui/screenprint_paper.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/ui/selection_style.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/ui/settings_panel.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/ui/stage_facts.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/ui/title_logo.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/ui/vehicle_selector.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/vehicle/brake_balance.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/vehicle/contact_sampler.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/vehicle/driver_aids.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/vehicle/drivetrain_config.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/vehicle/drivetrain_model.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/vehicle/rally_vehicle.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/vehicle/suspension_model.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/vehicle/telemetry_recorder.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/vehicle/tire_config.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/vehicle/tire_model.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/vehicle/tire_vertical_model.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/vehicle/vehicle_config.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/vehicle/wheel_contact_patch.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/vehicle/wheel_contact_sample.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/vehicle/wheel_state.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/visual/rally_wheels.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/visual/sample_atmosphere.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/visual/sample_car.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/visual/sample_dressing.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/visual/sample_effects.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/visual/sample_flare.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/visual/sample_gravel.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/visual/sample_landscape.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/visual/sample_meshes.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/visual/screenprint_props.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/visual/screenprint_style.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/visual/vehicle_appearance.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/visual/vehicle_plate.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/visual/visual_sample.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/world/graybox_geometry.gd",
+    "passed": true
+  },
+  {
+    "path": "scripts/world/test_ground.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/action_hierarchy_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/atmosphere_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/autopilot_render_check.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/autopilot_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/autumn_capture.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/brake_entry_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/bridge_hop_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/brushline_assets_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/brushline_cliff_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/brushline_demo_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/brushline_menu_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/brushline_profile_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/camera_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/checkpoint_body_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/cinematic_polish_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/cinematic_transition_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/comic_presentation_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/compliant_vehicle_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/contact_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/content_catalog_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/controller_probe.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/debug_panel_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/drive_choice_render_check.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/drive_modes_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/driver_aids_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/drivetrain_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/driving_polish_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/dynamics_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/electric_drive_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/expansion_foundation_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/experience_update_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/feedback_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/first_playable_audio_check.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/first_playable_entry_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/first_playable_flow_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/first_playable_lifecycle.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/first_playable_matrix.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/first_playable_perf.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/first_playable_rules_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/flag_render_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/flare_render_check.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/flare_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/fp5_profile_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/frame_rate_probe.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/garage_camera_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/garage_flow_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/garage_physics_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/garage_records_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/garage_store_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/garage_ui_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/gravel_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/highland_rockfall_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/hud_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/input_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/light_checkpoint_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/loose_climb_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/m5_capture.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/m5_render_check.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/m6_performance_check.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/m6_release_check.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/menu_controller_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/menu_polish_layout_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/pacenote_render_check.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/patch_contact_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/patch_substep_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/patch_tire_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/plate_identity_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/power_gearing_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/power_progression_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/presentation_expansion_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/presentation_theme_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/preview_drive.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/profile_ghost_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/readme_capture.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/redrock_sample_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/replay_album_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/result_render_check.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/route_jumps_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/route_revision_performance.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/route_revision_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/sample_capture.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/sand_physics_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/scene_refresh_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/screenprint_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/settings_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/shoulder_lod_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/showcase_telemetry_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/showcase_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/smoke_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/stage_art_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/stage_drive.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/stage_geometry_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/stage_play_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/stage_result_store_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/stage_session_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/surface_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/tail_streaks_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/terrain_detail_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/test_suite.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/tire_feedback_render_check.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/tire_feedback_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/tire_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/tire_vertical_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/utility_line_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/v030_lod_performance.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/v030_polish_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/v050_ui_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/vehicle_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/visual_capture.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/visual_sample_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/world_details_test.gd",
+    "passed": true
+  },
+  {
+    "path": "tests/world_test.gd",
+    "passed": true
+  }
+]

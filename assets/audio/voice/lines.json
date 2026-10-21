@@ -208,5 +208,19 @@
     "code": "ROCKFALL",
     "text": "注意落石。",
     "seconds": 1.0858333333333334
+  },
+  {
+    "voice": "female",
+    "speaker": "zf_001",
+    "code": "SAND",
+    "text": "进入沙地。",
+    "seconds": 0.9759166666666667
+  },
+  {
+    "voice": "male",
+    "speaker": "zm_010",
+    "code": "SAND",
+    "text": "进入沙地。",
+    "seconds": 1.0462083333333334
   }
 ]

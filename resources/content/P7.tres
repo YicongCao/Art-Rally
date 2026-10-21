@@ -1,0 +1,46 @@
+[gd_resource type="Resource" script_class="RallyVehicleDefinition" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/game/vehicle_definition.gd" id="1"]
+[resource]
+script = ExtResource("1")
+vehicle_id = "P7"
+revision = "exp1"
+title = "XPENG 新 P7 AWD"
+description = "双电机四驱 · 单速 · 拉力轮胎"
+drive_layout = "AWD"
+power_ps = 594.1546467618062
+mass_kg = 2210
+wheelbase = 3.008
+track_width = 1.66
+body_size = Vector3(1.97, 0.46, 5.017)
+paint = Color(0.7098039215686275, 0.7490196078431373, 0.7607843137254902, 1)
+accent = Color(0.13725490196078433, 0.5450980392156862, 0.5490196078431373, 1)
+number = 7
+model_path = "res://assets/screenprint/vehicles/P7-lod0.glb"
+physics_overrides = {
+"center_of_mass": Vector3(0, -0.22, 0.030080000000000027),
+"compression_damping": 3500,
+"rebound_damping": 4700,
+"max_steer_radians": 0.52,
+"total_brake_torque": 9500,
+"wheel_radius": 0.37,
+"suspension_rest": 0.51,
+"drag_coefficient_area": 0.56
+}
+drivetrain_overrides = {
+"torque_rpms": PackedFloat64Array(0, 1000, 3000, 6000, 9000, 12000, 16000),
+"torque_values": PackedFloat64Array(695, 695, 695, 695, 463, 347, 230),
+"ratios": PackedFloat64Array(1.0),
+"final_drive": 9.0,
+"redline_rpm": 16000,
+"upshift_rpm": 14400,
+"downshift_rpm": 2400,
+"idle_rpm": 0,
+"reverse_ratio": -1.0,
+"clutch_capacity": 800,
+"axle_lock_limit": 260,
+"center_lock_limit": 420,
+"regen_torque": 85
+}
+electric = true
+cockpit_offset = Vector3(-0.3, 0.7, -0.7)
+hood_offset = Vector3(0.0, 0.6, -2.1485)

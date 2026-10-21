@@ -31,7 +31,7 @@ func _run() -> void:
 		await process_frame
 		quit()
 		return
-	for stage: String in RallyContentCatalog.STAGES:
+	for stage: String in ["sunset_ridge","sunlit_cape","misty_highlands"]:
 		app.chosen_stage = stage
 		app.chosen_vehicle = "A240"
 		app.chosen_power_tier = 0

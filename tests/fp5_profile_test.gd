@@ -6,8 +6,8 @@ func _run() -> void:
 	store.data.unlocked_power_tier=2
 	store.data.unlocked_stages=RallyContentCatalog.STAGES.duplicate()
 	store.data.settings={"abs":false,"tc":"off","esp":"full"}
-	for stage: String in RallyContentCatalog.STAGES:
-		for id: String in RallyContentCatalog.VEHICLES:
+	for stage: String in ["sunset_ridge","sunlit_cape","misty_highlands"]:
+		for id: String in ["F160","R200","A240"]:
 			for tier: int in range(3):
 				var current := RallyContentCatalog.challenge(stage,id,tier)
 				var old_key := current.key().replace("fp5","fp4" if id=="F160" else "fp3")

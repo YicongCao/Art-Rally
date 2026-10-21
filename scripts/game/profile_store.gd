@@ -74,8 +74,7 @@ func unlocked_power_tier() -> int:
 
 
 func _migrate_stage_access() -> void:
-	if data.has("unlocked_stages"): return
-	var unlocked: Array = ["sunset_ridge"]
+	var unlocked: Array = data.get("unlocked_stages",["sunset_ridge"]).duplicate()
 	for key: String in data.challenges:
 		var bucket: Dictionary = data.challenges[key]
 		if not valid_result(bucket.get("best",null)): continue

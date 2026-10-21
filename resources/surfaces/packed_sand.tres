@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="RallySurfaceProfile" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/surfaces/surface_profile.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+surface_id = 4
+label = "Packed sand"
+color = Color(0.78, 0.58, 0.31, 1)
+friction_scale = 0.76
+longitudinal_scale = 0.74
+lateral_scale = 0.70
+sliding_scale = 0.92
+rolling_extra = 0.032
+wet_grip = 0.85

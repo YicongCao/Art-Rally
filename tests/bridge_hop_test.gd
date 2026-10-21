@@ -1,8 +1,8 @@
 extends "res://tests/test_suite.gd"
 func _run() -> void:
 	for id: String in RallyContentCatalog.STAGES:
-		if id=="misty_highlands":
-			check(RallyContentCatalog.stage(id).river_crossings.is_empty(),"Highland has no river or bridge hop after mountain-road revision")
+		if id in ["misty_highlands","redrock_canyon"]:
+			check(RallyContentCatalog.stage(id).river_crossings.is_empty(),id+" has no river bridge hop")
 			continue
 		var world := Node3D.new()
 		root.add_child(world)
@@ -18,7 +18,7 @@ func _run() -> void:
 		await ticks(180)
 		car.linear_velocity = generator.route.tangent_at(start)*24
 		for wheel: RallyWheelState in car.wheels: wheel.omega=24/car.config.wheel_radius
-		car.drivetrain.gear = 3
+		car.drivetrain.gear = mini(3,car.drivetrain.config.ratios.size())
 		car.drivetrain.engine_omega=24/car.config.wheel_radius*car.drivetrain.ratio()
 		var pilot := RallyRoutePilot.new()
 		pilot.reset(generator.route,car.position)

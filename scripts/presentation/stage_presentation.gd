@@ -139,6 +139,15 @@ func _apply_biome(sky: ShaderMaterial) -> void:
 		environment.fog_density = .00032
 		cloud_light = Color("ffe6ac")
 		cloud_shadow = Color("a18abd")
+	elif biome=="desert":
+		palette = [Color("f6bf78"),Color("8bcbd4"),Color("347aa6")]
+		sun.light_color=Color("ffdcaa")
+		sun.light_energy=1.65
+		atmosphere.sun_direction=Vector3(-.6,.33,-.55).normalized()
+		environment.ambient_light_color=Color("8caabb")
+		environment.ambient_light_energy=.42
+		environment.fog_light_color=Color("c6a084")
+		environment.fog_density=.00038
 	elif biome=="coast":
 		palette = [Color("ffe8b0"),Color("8ddadf"),Color("278dca")]
 		sun.light_color = Color("fff3d9")

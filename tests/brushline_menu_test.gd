@@ -10,7 +10,7 @@ func _run() -> void:
 	var unavailable := 0
 	for button: Button in app.ui.find_children("*","Button",true,false):
 		if button.disabled: unavailable+=1
-	check(unavailable==2,"Fresh title presents two visibly locked stage cards")
+	check(unavailable==RallyContentCatalog.STAGES.size()-1,"Fresh title visibly locks all nonstarter stage cards")
 	app.chosen_stage="sunlit_cape"
 	await app.start_race()
 	check(app.race==null and app.screen=="stages","Direct launch cannot bypass the same stage access rule")

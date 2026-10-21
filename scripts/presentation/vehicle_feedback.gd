@@ -67,7 +67,7 @@ static func mix_for(car: RallyVehicle) -> Dictionary:
 		var dissipation_slip := clampf(wheel.slip_dissipation/15000.0,0,1)
 		var slip := dissipation_slip if car.config.tire_contact_model=="COMPLIANT_PATCH" else kinematic_slip
 		var wet := clampf(wheel.patch.wet_fraction,0,1) if car.config.tire_contact_model=="COMPLIANT_PATCH" else clampf(wheel.surface.water_depth/0.08,0,1)
-		var key: String = ["asphalt","gravel","mud","gravel"][wheel.surface.surface_id]
+		var key: String = ["asphalt","gravel","mud","gravel","gravel","gravel"][wheel.surface.surface_id]
 		result[key] += speed*(0.035+slip*0.13)*(1-wet*0.6)
 		result.water += speed*wet*0.14
 		result.slip += slip*0.25
@@ -93,6 +93,8 @@ func update(car: RallyVehicle, settings: RallyGameSettings, controls: RallyInput
 		var rpm := car.drivetrain.rpm()
 		var load_value := car.command.throttle
 		var mix := {"idle":1-smoothstep(900,1800,rpm),"low":maxf(0,1-absf(rpm-2100)/1700)*load_value,"mid":maxf(0,1-absf(rpm-3800)/2200)*load_value,"high":smoothstep(4000,6500,rpm)*load_value,"lift":(1-load_value)*smoothstep(1000,2200,rpm)}
+		if car.drivetrain.config.electric:
+			mix={"idle":0.0,"low":load_value*.5,"mid":load_value*smoothstep(1500,6000,rpm),"high":load_value*smoothstep(6500,13000,rpm)*.5,"lift":(1-load_value)*smoothstep(500,2500,rpm)*.25}
 		for kind: String in engine_layers:
 			var player: AudioStreamPlayer = engine_layers[kind]
 			player.pitch_scale = clampf(rpm/3000,0.28,2.65)
@@ -103,7 +105,7 @@ func update(car: RallyVehicle, settings: RallyGameSettings, controls: RallyInput
 			one_shot.volume_db = -26
 			if DisplayServer.get_name()!="headless": one_shot.play()
 		was_braking = braking
-		if last_gear!=car.drivetrain.gear:
+		if last_gear!=car.drivetrain.gear and not car.drivetrain.config.electric:
 			one_shot.stream = RallyAudioDirector.asset("shift")
 			one_shot.volume_db = -15
 			if DisplayServer.get_name()!="headless": one_shot.play()
@@ -126,7 +128,7 @@ func update(car: RallyVehicle, settings: RallyGameSettings, controls: RallyInput
 		var wheel := car.wheels[entry.wheel]
 		var active := wheel.grounded and wheel.load>50 and absf(wheel.longitudinal_speed)>3
 		var kind: String = entry.kind
-		active = active and ((kind=="dust" and wheel.surface.surface_id in [1,3] and wheel.surface.water_depth<0.005) or (kind=="mud" and wheel.surface.surface_id==2 and wheel.surface.water_depth<0.015) or (kind=="water" and wheel.surface.water_depth>0.005))
+		active = active and ((kind=="dust" and wheel.surface.surface_id in [1,3,4,5] and wheel.surface.water_depth<0.005) or (kind=="mud" and wheel.surface.surface_id==2 and wheel.surface.water_depth<0.015) or (kind=="water" and wheel.surface.water_depth>0.005))
 		var emitter: GPUParticles3D = entry.emitter
 		emitter.global_position = wheel.point+Vector3.UP*0.10
 		emitter.global_basis = car.global_basis

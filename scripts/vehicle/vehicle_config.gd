@@ -12,6 +12,7 @@ extends Resource
 @export var suspension_rest: float = 0.48
 @export var suspension_min: float = 0.12
 @export var static_compression: float = 0.13
+@export var spring_multiplier: float = 1.0
 @export var compression_damping: float = 2400.0
 @export var rebound_damping: float = 3400.0
 @export var bump_stiffness: float = 180000.0
@@ -30,7 +31,7 @@ extends Resource
 
 
 func spring_rate() -> float:
-	return body_mass * 9.81 / 4.0 / static_compression
+	return body_mass * 9.81 / 4.0 / static_compression * spring_multiplier
 
 
 func wheel_mount(index: int) -> Vector3:

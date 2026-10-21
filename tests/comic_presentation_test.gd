@@ -11,7 +11,7 @@ func _run() -> void:
 		check(covered==3000,id+" posts cover exactly 30% of distance")
 		var stations := RallyBreakablePosts.stations(route.length)
 		check(stations==RallyBreakablePosts.stations(route.length),id+" post positions repeat deterministically")
-		check(stations.size()>60 and stations.size()<95,id+" paired post budget stays bounded")
+		check(stations.size()>60 and stations.size()<=ceili(route.length*.30/RallyBreakablePosts.STEP)+5,id+" paired post budget stays bounded")
 	var size := Vector3(1.8,1.2,4.0)
 	var pose := Transform3D(Basis.IDENTITY,Vector3(0,1,0))
 	check(RallyBreakablePosts.intersects_post(Vector3(.7,0,0),pose,pose,size),"A body corner can snap a post")

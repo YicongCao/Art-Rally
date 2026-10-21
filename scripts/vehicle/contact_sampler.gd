@@ -111,7 +111,7 @@ static func _finalize(patch: RallyWheelContactPatch,up: Vector3,tire: RallyTireC
 		center_weight += sample.shape_weight
 		patch.center += sample.point*sample.shape_weight
 		normal_sum += sample.normal*sample.shape_weight
-		surface_mask |= 1<<clampi(sample.surface.surface_id,0,3)
+		surface_mask |= 1<<clampi(sample.surface.surface_id,0,RallySurfaceQuery.PROFILES.size()-1)
 	patch.support_ratio = clampf(supported_shape/total_shape,0.0,1.0)
 	if patch.support_ratio<0.999: patch.flags |= RallyWheelContactPatch.FLAG_PARTIAL_SUPPORT
 	if (surface_mask&(surface_mask-1))!=0: patch.flags |= RallyWheelContactPatch.FLAG_MIXED_SURFACE

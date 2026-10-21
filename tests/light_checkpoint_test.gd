@@ -54,6 +54,6 @@ func _run() -> void:
 			check(is_equal_approx(markers.column_multimesh.get_instance_custom_data(2).r,1),id+": renderer receives active beam state")
 			check(is_equal_approx(markers.base_multimesh.get_instance_custom_data(2).r,1),id+": projector state matches beam")
 		host.free()
-	check(colors.size()==3,"All three environments have distinct light palettes")
+	check(colors.size()==RallyContentCatalog.STAGES.size(),"All environments have distinct light palettes")
 	await process_frame
 	finish()

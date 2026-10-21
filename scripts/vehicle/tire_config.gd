@@ -2,6 +2,19 @@ class_name RallyTireConfig
 extends Resource
 
 @export var friction: float = 1.05
+@export var compound: String = "stock"
+@export var surface_grip := PackedFloat64Array([1,1,1,1,1,1])
+
+func grip_factor(surface: int) -> float:
+	return surface_grip[surface] if surface>=0 and surface<surface_grip.size() else 1.0
+
+func grip_for(sample: RallySurfaceSample) -> float:
+	# Stock remains exactly the legacy coefficient; tuned tires interpolate.
+	if compound=="stock" or sample.blend_weights.is_empty(): return grip_factor(sample.surface_id)
+	var result := 0.0
+	for i: int in range(sample.blend_weights.size()): result += sample.blend_weights[i]*grip_factor(i)
+	return result
+
 @export var longitudinal_stiffness: float = 12.0
 @export var lateral_stiffness: float = 8.0
 @export var low_speed_reference: float = 3.0

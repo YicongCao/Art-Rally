@@ -4,8 +4,10 @@ extends RefCounted
 const PROFILES: Array[RallySurfaceProfile] = [
 	preload("res://resources/surfaces/asphalt.tres"), preload("res://resources/surfaces/gravel.tres"),
 	preload("res://resources/surfaces/mud.tres"), preload("res://resources/surfaces/grass.tres"),
+	preload("res://resources/surfaces/packed_sand.tres"), preload("res://resources/surfaces/soft_sand.tres"),
 ]
 
+const LABELS := ["柏油","砂石","泥地","草地","压实沙地","松软沙地"]
 
 static func point_sample(collider: Object, point: Vector3) -> RallySurfaceSample:
 	if collider.has_meta("surface_provider"):

@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="RallyStageDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/stage/stage_definition.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+stage_id = "redrock_canyon"
+title = "赤岩峡谷"
+subtitle = "裂谷沙海 · 岩拱与台地"
+stage_version = "1"
+target_length = 3600.0
+road_width = 6.8
+seed_value = 86204
+environment_id = "desert"
+default_surface = 4
+shoulder_surface = 5
+control_points = PackedVector3Array(0,0,0, 0,0,-160, 70,0,-280, 150,0,-410, 80,0,-560, -20,0,-700, 40,0,-850, 210,0,-970, 390,0,-1040, 560,0,-1180, 600,0,-1370, 470,0,-1510, 280,0,-1600, 150,0,-1760, 230,0,-1940, 400,0,-2040, 570,0,-2170, 640,0,-2360, 540,0,-2500, 350,0,-2580, 290,0,-2720, 410,0,-2810, 560,0,-2750, 690,0,-2830, 720,0,-3000)
+elevation_profile = Vector2(90,135)
+rolling_amplitude = 4.0
+surface_sections = PackedVector3Array(0,880,1, 2250,2900,1, 3200,3600,1)
+width_sections = PackedVector3Array(160,780,-0.8, 960,2100,1.2, 2310,2850,-0.2)
+water_sections = PackedVector3Array()
+river_crossings = PackedVector3Array()
+culverts = PackedFloat32Array()
+guardrail_sections = PackedVector2Array(3140,3500)
+spectators = PackedFloat32Array(80,850,2180,3010,3480)
+landmarks = Array[Dictionary]([])
+crests = PackedVector3Array(1280,0.65,12, 1740,0.8,13)
+rough_patches = PackedVector3Array(1090,55,0.045, 1440,65,0.055, 2450,65,0.065, 2650,75,0.075, 2830,50,0.045)
+bank_sections = PackedVector3Array(1360,1480,0.08, 2560,2670,-0.07)
+hazard_notes = Array[Dictionary]([{"s":850,"code":"SAND"},{"s":1280,"code":"CREST_JUMP"},{"s":2250,"code":"GRAVEL"},{"s":650,"code":"CAUTION_NARROW"}])

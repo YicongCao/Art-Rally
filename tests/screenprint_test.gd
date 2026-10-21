@@ -24,7 +24,14 @@ func _run() -> void:
   if brushline.has(path): expected=brushline[path]
   # Approved driver-aid and soil calibration supersedes the art-only baselines.
   if fp5.has(path): expected=fp5[path]
-  check(actual==expected,"Approved mechanical resource: "+path)
+  if path=="resources/content/challenge_targets.json":
+   var original: Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/pre-expansion-targets.json"))
+   var expanded: Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://"+path))
+   check(FileAccess.get_sha256("res://tests/fixtures/pre-expansion-targets.json")==expected,"Legacy target fixture matches protected fp5 hash")
+   var unchanged: bool=original.rules_version==expanded.rules_version
+   for key: String in original.challenges: unchanged=unchanged and original.challenges[key]==expanded.challenges.get(key)
+   check(unchanged,"All 27 original challenge targets are unchanged")
+  else: check(actual==expected,"Approved mechanical resource: "+path)
  var manifest: Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://assets/screenprint/manifest.json"))
  for path: String in manifest:
   var item: Dictionary=manifest[path]
@@ -32,7 +39,7 @@ func _run() -> void:
   if "/vehicles/" in path: check(int(item.triangles)<=40000,"Vehicle triangle budget: "+path)
  for id: String in RallyContentCatalog.VEHICLES:
   var definition := RallyContentCatalog.vehicle(id)
-  var expected_names := {"F160":"大众 GTI", "R200":"宝马 M3 E30", "A240":"奥迪 quattro S1"}
+  var expected_names := {"F160":"大众 GTI", "R200":"宝马 M3 E30", "A240":"奥迪 quattro S1", "I20":"Hyundai i20 N Rally2", "DELTA":"Lancia Delta HF Integrale", "EVO6":"Mitsubishi Lancer Evolution VI", "WRX":"Subaru WRX STI 2015", "P7":"XPENG 新 P7 AWD"}
   check(definition.short_title()==expected_names[id],"Reference name reaches selection and confirmation: "+id)
   var body := RallyVehicleAppearance.build(definition)
   root.add_child(body)

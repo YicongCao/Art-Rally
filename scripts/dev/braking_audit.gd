@@ -25,7 +25,7 @@ func run() -> void:
 				var entry_speed := 36.0 if mode=="heavy_fast" else 24.0
 				car.linear_velocity=Vector3(0,0,-entry_speed)
 				for wheel: RallyWheelState in car.wheels: wheel.omega=entry_speed/car.config.wheel_radius
-				car.drivetrain.gear=3
+				car.drivetrain.gear=mini(3,car.drivetrain.config.ratios.size())
 				car.drivetrain.engine_omega=entry_speed/car.config.wheel_radius*car.drivetrain.ratio()
 				var record := {"vehicle":id,"surface":surface,"mode":mode,"static_front":static_front,"static_rear":static_rear,"frames":[]}
 				for frame: int in range(180):

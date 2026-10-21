@@ -35,7 +35,7 @@ func _run() -> void:
 					check(control.size.y>=120 and bounds.encloses(control.get_global_rect()),"%s %d: illustration stays fully inside screen"%[page,pixels.x])
 				if control is Button and control.is_visible_in_tree():
 					check(bounds.encloses(control.get_global_rect()),"%s %d: %s is reachable without scrolling"%[page,pixels.x,control.text])
-			check(art_count==(2 if page=="loading" else 3),"%s: expected illustration count"%page)
+			check(art_count==(2 if page=="loading" else (RallyContentCatalog.STAGES.size() if page=="stages" else 3)),"%s: expected illustration count"%page)
 			if page=="loading":
 				var cards: Control=app.ui.find_child("LoadingTriptych",true,false)
 				var medals: Control=app.ui.find_child("LoadingMedals",true,false)

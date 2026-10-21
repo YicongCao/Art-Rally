@@ -1,0 +1,46 @@
+[gd_resource type="Resource" script_class="RallyVehicleDefinition" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/game/vehicle_definition.gd" id="1"]
+[resource]
+script = ExtResource("1")
+vehicle_id = "I20"
+revision = "exp1"
+title = "Hyundai i20 N Rally2"
+description = "紧凑敏捷 · 五速序列式四驱"
+drive_layout = "AWD"
+power_ps = 300
+mass_kg = 1230
+wheelbase = 2.56
+track_width = 1.6
+body_size = Vector3(1.82, 0.46, 4.04)
+paint = Color(0.4666666666666667, 0.6196078431372549, 0.6901960784313725, 1)
+accent = Color(0.9098039215686274, 0.2627450980392157, 0.21176470588235294, 1)
+number = 20
+model_path = "res://assets/screenprint/vehicles/I20-lod0.glb"
+physics_overrides = {
+"center_of_mass": Vector3(0, -0.1, -0.07680000000000008),
+"compression_damping": 2600,
+"rebound_damping": 3600,
+"max_steer_radians": 0.55,
+"total_brake_torque": 6800,
+"wheel_radius": 0.34,
+"suspension_rest": 0.48,
+"drag_coefficient_area": 0.85
+}
+drivetrain_overrides = {
+"torque_rpms": PackedFloat64Array(900, 2000, 3500, 5000, 6000, 7000, 7600),
+"torque_values": PackedFloat64Array(120, 320, 350, 350, 345, 290, 220),
+"ratios": PackedFloat64Array(2.846, 2.0, 1.556, 1.25, 1.043),
+"final_drive": 4.7,
+"redline_rpm": 7600,
+"upshift_rpm": 6840,
+"downshift_rpm": 2400,
+"idle_rpm": 950,
+"reverse_ratio": -3.1,
+"clutch_capacity": 800,
+"axle_lock_limit": 260,
+"center_lock_limit": 420,
+"regen_torque": 85
+}
+electric = false
+cockpit_offset = Vector3(-0.3, 0.7, -0.52)
+hood_offset = Vector3(0.0, 0.6, -1.66)

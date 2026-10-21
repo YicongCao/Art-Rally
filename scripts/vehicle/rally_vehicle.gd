@@ -48,7 +48,7 @@ func _ready() -> void:
 		wheels.append(wheel_state)
 		var pivot := Node3D.new()
 		var visual := MeshInstance3D.new()
-		visual.mesh = RallyWheelMeshes.tire(config.wheel_radius)
+		visual.mesh = RallyWheelMeshes.tire(config.wheel_radius,tire.compound)
 		visual.rotation.z = PI * 0.5
 		pivot.add_child(visual)
 		for side: float in [-1.0, 1.0]:
@@ -152,9 +152,10 @@ func _driven_radius(handbrake: bool) -> float:
 
 
 func tire_visual_scale(wheel: RallyWheelState) -> Vector3:
-	if config.tire_contact_model!="COMPLIANT_PATCH" or visual_deformation_gain<=0.0: return Vector3.ONE
+	var width := tire.section_width/.23
+	if config.tire_contact_model!="COMPLIANT_PATCH" or visual_deformation_gain<=0.0: return Vector3(1,width,1)
 	var ratio := clampf(wheel.radial_deflection/maxf(config.wheel_radius,0.001)*visual_deformation_gain,0.0,0.25)
-	return Vector3(1.0-ratio,1.0,1.0+ratio*0.35)
+	return Vector3(1.0-ratio,width,1.0+ratio*0.35)
 
 
 func _complete_reset() -> void:

@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="RallyStageDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/stage/stage_definition.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+stage_id = "redrock_sample"
+title = "赤岩峡谷 · 沙地样板"
+subtitle = "裂谷沙海 · 岩拱与台地"
+stage_version = "1"
+target_length = 400.0
+road_width = 6.8
+seed_value = 86204
+environment_id = "desert"
+default_surface = 4
+shoulder_surface = 5
+control_points = PackedVector3Array(0,0,0, 0,0,-60, 20,0,-120, 70,0,-180, 100,0,-240, 70,0,-300, 40,0,-360)
+elevation_profile = Vector2(20,22)
+rolling_amplitude = 0.5
+surface_sections = PackedVector3Array(0,80,1)
+width_sections = PackedVector3Array()
+water_sections = PackedVector3Array()
+river_crossings = PackedVector3Array()
+culverts = PackedFloat32Array()
+guardrail_sections = PackedVector2Array()
+spectators = PackedFloat32Array()
+landmarks = Array[Dictionary]([])
+crests = PackedVector3Array(250,0.5,12)
+rough_patches = PackedVector3Array(280,65,0.06)
+bank_sections = PackedVector3Array()
+hazard_notes = Array[Dictionary]([{"s":65,"code":"SAND"}])

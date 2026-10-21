@@ -1,7 +1,7 @@
 extends "res://tests/test_suite.gd"
 
 func _run() -> void:
-	for stage_id: String in RallyContentCatalog.STAGES:
+	for stage_id: String in ["sunset_ridge","sunlit_cape","misty_highlands"]: # Desert has an abandoned mining route, no utility line.
 		var app: RallyGameApp=load("res://scenes/game/game.tscn").instantiate()
 		app.profile.path="user://utility-test-%s/profile.json"%Time.get_ticks_usec()
 		root.add_child(app)

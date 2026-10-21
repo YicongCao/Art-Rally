@@ -48,7 +48,7 @@ func _run() -> void:
 			reports.append(report)
 			print("LOOSE CLIMB: ",JSON.stringify(report))
 			if surface==1:
-				check(report.speed_kmh>45 and max_gear>=2,id+" accelerates uphill and upshifts on gravel")
+				check(report.speed_kmh>45 and (max_gear>=2 or definition.electric),id+" accelerates uphill with valid gearing on gravel")
 			else:
 				# Mud on a 10% incline can remain traction-limited in first;
 				# require continued real acceleration, not a cosmetic gear change.

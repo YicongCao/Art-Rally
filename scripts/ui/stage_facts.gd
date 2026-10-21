@@ -31,11 +31,11 @@ func _draw() -> void:
 		var percent := roundi(proportions[i]*100) if i<2 else remaining
 		remaining-=percent
 		draw_rect(Rect2(i*w/3,68,4,26),COLORS[i])
-		draw_string(RallyFonts.regular(),Vector2(i*w/3+10,78),["柏油","砂石","泥地"][i],HORIZONTAL_ALIGNMENT_LEFT,-1,13,MUTED)
+		draw_string(RallyFonts.regular(),Vector2(i*w/3+10,78),["柏油","沙地／砂石" if definition.environment_id=="desert" else "砂石","泥地"][i],HORIZONTAL_ALIGNMENT_LEFT,-1,13,MUTED)
 		draw_string(RallyFonts.DISPLAY,Vector2(i*w/3+10,100),"%d%%"%percent,HORIZONTAL_ALIGNMENT_LEFT,-1,21,PAPER)
 	var theme_id := definition.environment_id
-	var daytime: String={"autumn":"夕照","coast":"晴日","highland":"暮色"}[theme_id]
-	var weather: String={"autumn":"晴 · 林风","coast":"晴 · 海风","highland":"薄雾 · 山风"}[theme_id]
+	var daytime: String={"autumn":"夕照","coast":"晴日","highland":"暮色","desert":"暖阳"}[theme_id]
+	var weather: String={"autumn":"晴 · 林风","coast":"晴 · 海风","highland":"薄雾 · 山风","desert":"晴 · 干燥"}[theme_id]
 	for i: int in range(3):
 		var y := 128+i*33
 		draw_line(Vector2(0,y-15),Vector2(w,y-15),Color(MUTED,.25),1)

@@ -1,0 +1,46 @@
+[gd_resource type="Resource" script_class="RallyVehicleDefinition" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/game/vehicle_definition.gd" id="1"]
+[resource]
+script = ExtResource("1")
+vehicle_id = "EVO6"
+revision = "exp1"
+title = "Mitsubishi Lancer Evolution VI"
+description = "转向直接 · 红白竞技轮廓"
+drive_layout = "AWD"
+power_ps = 280
+mass_kg = 1360
+wheelbase = 2.51
+track_width = 1.51
+body_size = Vector3(1.77, 0.46, 4.35)
+paint = Color(0.7215686274509804, 0.1803921568627451, 0.18823529411764706, 1)
+accent = Color(0.9333333333333333, 0.9058823529411765, 0.8431372549019608, 1)
+number = 6
+model_path = "res://assets/screenprint/vehicles/EVO6-lod0.glb"
+physics_overrides = {
+"center_of_mass": Vector3(0, -0.1, -0.17569999999999986),
+"compression_damping": 2700,
+"rebound_damping": 3700,
+"max_steer_radians": 0.55,
+"total_brake_torque": 6800,
+"wheel_radius": 0.34,
+"suspension_rest": 0.48,
+"drag_coefficient_area": 0.85
+}
+drivetrain_overrides = {
+"torque_rpms": PackedFloat64Array(900, 1800, 3000, 4000, 5000, 6500, 7500),
+"torque_values": PackedFloat64Array(100, 210, 340, 373, 360, 302, 210),
+"ratios": PackedFloat64Array(2.928, 1.95, 1.407, 1.031, 0.761),
+"final_drive": 4.529,
+"redline_rpm": 7500,
+"upshift_rpm": 6750,
+"downshift_rpm": 2400,
+"idle_rpm": 950,
+"reverse_ratio": -3.1,
+"clutch_capacity": 800,
+"axle_lock_limit": 340,
+"center_lock_limit": 420,
+"regen_torque": 85
+}
+electric = false
+cockpit_offset = Vector3(-0.3, 0.7, -0.5)
+hood_offset = Vector3(0.0, 0.6, -1.815)

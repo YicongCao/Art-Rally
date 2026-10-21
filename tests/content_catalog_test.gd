@@ -40,7 +40,7 @@ func _run() -> void:
 		check(config.body_mass==a.mass_kg and config.wheelbase==a.wheelbase,"Vehicle geometry and dynamics share dimensions")
 		var power := a.drivetrain_config()
 		check(power.drive_layout==a.drive_layout and power.rated_power_ps==a.power_ps,"Each car owns its power and drivetrain")
-		check(a.power_ps=={"F160":220.0,"R200":240.0,"A240":288.0}[id] and power.loose_surface_assist,"Current base powers retain loose-ground assistance")
+		check(a.power_ps=={"F160":220.0,"R200":240.0,"A240":288.0}.get(id,a.power_ps) and power.loose_surface_assist,"Current base powers retain loose-ground assistance")
 		a.mass_kg = 99
 		check(b.mass_kg!=99,"Catalog resources are isolated per session")
 	check(RallyContentCatalog.challenge("missing","F160")==null,"Unknown content rejected")

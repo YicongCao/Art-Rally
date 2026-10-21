@@ -27,7 +27,7 @@ func _run() -> void:
 		elif id == "sunlit_cape":
 			var sea := scene.presentation.scenery.dressing.get_node("CoastalOcean") as MeshInstance3D
 			check(sea.material_override.get_shader_parameter("sun_direction").is_equal_approx(direction),"Ocean glints use the actual coastal sun")
-		else:
+		elif id=="misty_highlands":
 			var environment: Environment = scene.presentation.environment
 			check(environment.fog_enabled and environment.fog_height < scene.generator.route.points[0].y,"Morning mist occupies the lower valley")
 			check(environment.fog_density <= .0007 and direction.y > 0,"Morning mist retains nearby road visibility and daylight")

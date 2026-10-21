@@ -42,6 +42,10 @@ func build(stage: RallyStageGenerator) -> void:
 		river_frames.append({"origin":pose.origin,"right":pose.basis.x,"forward":-pose.basis.z,"span":river.y})
 	_apply_materials()
 	_build_terrain()
+	if generator.definition.environment_id=="desert":
+		RallyRedrockScenery.build(self)
+		_build_guardrails()
+		return
 	_build_mountains()
 	_build_highland_edges()
 	utility_line.plan(self)
@@ -143,6 +147,11 @@ func _height_for_frame(p: Dictionary,x: float,z: float) -> float:
 	var d: float = p.distance
 	var half := route.width_at(p.s)*0.5
 	var close: float = p.point.y-minf(maxf(d-half,0)*0.18,2.3)
+	if generator.definition.environment_id=="desert":
+		var dunes: float = p.point.y-4+sin(x*.018+sin(z*.008)*2)*10+sin(z*.027+x*.006)*6
+		var hill := smoothstep(2900,3500,float(p.s))*-36.0*smoothstep(30,110,d)
+		return lerpf(close, dunes+hill, smoothstep(22,90,d))
+
 	close += smoothstep(1.5,10,d-half)*0.5*sin(float(p.s)*0.03+float(p.lateral)*0.2)
 	var far: float = p.point.y-6+terrain_noise.get_noise_2d(x,z)*58+signf(p.lateral)*minf(d*0.14,27)
 	if generator.definition.environment_id=="coast" and float(p.lateral)<0:
@@ -229,6 +238,7 @@ func _apply_materials() -> void:
 	var ground := ShaderMaterial.new()
 	ground.shader = preload("res://assets/shaders/stage_ground.gdshader")
 	ground.set_shader_parameter("road_mesh",true)
+	ground.set_shader_parameter("desert",generator.definition.environment_id=="desert")
 	ground.set_shader_parameter("wear_strength",.48)
 	ground.set_shader_parameter("wear_atlas",preload("res://assets/brushline/road-wear.png"))
 	if not generator.definition.mountain_cliff_sections.is_empty():
@@ -272,6 +282,7 @@ func _build_terrain() -> void:
 	var material := ShaderMaterial.new()
 	material.shader = preload("res://assets/shaders/stage_ground.gdshader")
 	material.set_shader_parameter("alpine_terrain",generator.definition.environment_id=="highland")
+	material.set_shader_parameter("desert",generator.definition.environment_id=="desert")
 	_theme_ground(material)
 	mesh.material_override = material
 	dressing.add_child(mesh)

@@ -1,0 +1,46 @@
+[gd_resource type="Resource" script_class="RallyVehicleDefinition" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/game/vehicle_definition.gd" id="1"]
+[resource]
+script = ExtResource("1")
+vehicle_id = "DELTA"
+revision = "exp1"
+title = "Lancia Delta HF Integrale"
+description = "轻巧活跃 · 经典宽体四驱"
+drive_layout = "AWD"
+power_ps = 210
+mass_kg = 1300
+wheelbase = 2.48
+track_width = 1.5
+body_size = Vector3(1.77, 0.46, 3.9)
+paint = Color(0.09411764705882353, 0.2235294117647059, 0.4235294117647059, 1)
+accent = Color(0.9058823529411765, 0.8470588235294118, 0.7098039215686275, 1)
+number = 4
+model_path = "res://assets/screenprint/vehicles/DELTA-lod0.glb"
+physics_overrides = {
+"center_of_mass": Vector3(0, -0.1, -0.14880000000000013),
+"compression_damping": 2350,
+"rebound_damping": 3250,
+"max_steer_radians": 0.55,
+"total_brake_torque": 6800,
+"wheel_radius": 0.34,
+"suspension_rest": 0.48,
+"drag_coefficient_area": 0.85
+}
+drivetrain_overrides = {
+"torque_rpms": PackedFloat64Array(900, 1800, 3000, 4000, 5000, 5750, 6500),
+"torque_values": PackedFloat64Array(80, 150, 280, 304, 285, 256, 190),
+"ratios": PackedFloat64Array(2.858, 1.95, 1.407, 1.029, 0.824),
+"final_drive": 3.9,
+"redline_rpm": 6500,
+"upshift_rpm": 5850,
+"downshift_rpm": 2400,
+"idle_rpm": 950,
+"reverse_ratio": -3.1,
+"clutch_capacity": 800,
+"axle_lock_limit": 260,
+"center_lock_limit": 420,
+"regen_torque": 85
+}
+electric = false
+cockpit_offset = Vector3(-0.3, 0.7, -0.55)
+hood_offset = Vector3(0.0, 0.6, -1.59)

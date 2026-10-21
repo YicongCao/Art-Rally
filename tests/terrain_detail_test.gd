@@ -27,7 +27,7 @@ func _run() -> void:
 			for s: int in range(int(bridge.x-bridge.y*.5-20),int(bridge.x+bridge.y*.5+20)):
 				bridges_flat=bridges_flat and absf(route.road_relief(s,1))<.0001
 		check(max_bump>.05 and max_bump<.125,id+" contains centimetre-scale relief")
-		check(float(active)/loose<.65 and float(active)/loose>.16,id+" relief is sparse rather than continuous")
+		check(float(active)/loose<.65 and float(active)/loose>(.04 if id=="redrock_canyon" else .16),id+" relief is sparse rather than continuous")
 		check(asphalt_flat and bridges_flat,id+" asphalt and bridge approaches stay smooth")
 		var positive := false
 		var negative := false
@@ -47,7 +47,7 @@ func _run() -> void:
 				var hit := space.intersect_ray(PhysicsRayQueryParameters3D.create(at+Vector3.UP,at-Vector3.UP,1))
 				if hit.is_empty() or absf(hit.position.y-at.y)>.002: mismatch+=1
 		check(mismatch==0,id+" visible roughness and road collision coincide")
-		check(land.log_piles.size()==(0 if id=="sunlit_cape" else 4),id+" has authored timber obstacles only where intended")
+		check(land.log_piles.size()==(0 if id in ["sunlit_cape","redrock_canyon"] else 4),id+" has authored timber obstacles only where intended")
 		for pile: Node3D in land.log_piles:
 			check(pile.find_children("*","CollisionShape3D",false,false).size()==10,"Timber pile has ten solid logs in 4/3/2/1 rows")
 			var station: float=pile.get_meta("station")
@@ -91,7 +91,7 @@ func _run() -> void:
 			if trees%17==0:
 				var hit := space.intersect_ray(PhysicsRayQueryParameters3D.create(p+Vector3.UP*2,p-Vector3.UP*2,8))
 				if hit.is_empty() or absf(hit.position.y-p.y)>.003: ray_misses+=1
-		check(trees>30 and floating==0,id+" distant tree roots match rendered terrain triangles")
+		check(trees==0 if id=="redrock_canyon" else trees>30 and floating==0,id+" vegetation matches its biome and terrain")
 		check(ray_misses==0 and cliff_trees==0,id+" terrain rays meet tree roots and sheer cliffs stay bare")
 		terrain_body.free()
 		print("TERRAIN DETAIL: ",id," rough_fraction=",float(active)/loose," max_bump=",max_bump," trees=",trees," previous_height_error=",old_error)

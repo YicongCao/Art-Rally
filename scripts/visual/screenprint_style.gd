@@ -14,6 +14,7 @@ extends Resource
 @export var biome_palettes: Dictionary = {
  "autumn":[Color("c18e26"),Color("ffcb52"),Color("aeb2c4"),Color("efc59b")],
  "coast":[Color("758c68"),Color("e4cd8c"),Color("b6d1ce"),Color("eee2c5")],
+ "desert":[Color("b77b43"),Color("e8bc70"),Color("86afb8"),Color("f0d7a5")],
  "highland":[Color("627968"),Color("c8c48a"),Color("a8bdc8"),Color("e3dac2")]
 }
 static func current() -> RallyScreenprintStyle:

@@ -72,7 +72,7 @@ func set_scene(environment_id: String = "") -> void:
 	music.stream_paused = false
 	ambience.stop()
 	if driving:
-		ambience.stream = asset({"autumn":"forest","coast":"coast","highland":"highland"}.get(environment_id,"forest"),true)
+		ambience.stream = asset({"autumn":"forest","coast":"coast","highland":"highland","desert":"highland"}.get(environment_id,"forest"),true)
 		ambience.volume_db = -14
 		if DisplayServer.get_name()!="headless": ambience.play()
 
@@ -116,6 +116,7 @@ func stop_all() -> void:
 
 
 static func music_asset(kind: String) -> AudioStreamWAV:
+	if kind=="desert": kind="highland"
 	var audio: AudioStreamWAV = load("res://assets/audio/music/theme_"+kind+".wav").duplicate()
 	audio.loop_mode = AudioStreamWAV.LOOP_FORWARD
 	audio.loop_begin = 0

@@ -21,7 +21,7 @@ func _run() -> void:
 				var next := generator._surface_at_coordinates(station,side*(half+.01))
 				var middle := generator._surface_at_coordinates(station,side*(half+.6))
 				var grass := generator._surface_at_coordinates(station,side*(half+1.2))
-				continuous = continuous and absf(next.friction_scale-edge.friction_scale)<.001 and is_equal_approx(middle.friction_scale,(edge.friction_scale+grass.friction_scale)*.5) and grass.surface_id==3
+				continuous = continuous and absf(next.friction_scale-edge.friction_scale)<.001 and is_equal_approx(middle.friction_scale,(edge.friction_scale+grass.friction_scale)*.5) and grass.surface_id==generator.definition.shoulder_surface
 		for station: float in generator.definition.spectators:
 			for s: float in [station-4,station,station+6,station+14]:
 				var pose := generator.route.pose_at(s)
@@ -30,7 +30,7 @@ func _run() -> void:
 					var projection := generator.route.project(point)
 					safe = safe and absf(float(projection.lateral))>generator.route.width_at(projection.s)*.5+.8
 		check(continuous,id+" has continuous 1.2m shoulders on both sides, across width/surface changes")
-		check(safe and generator.definition.spectators.size()==10,id+" has ten crowd groups safely outside all nearby driving corridors")
+		check(safe and generator.definition.spectators.size()==(5 if id=="redrock_canyon" else 10),id+" has crowd groups safely outside all nearby driving corridors")
 	check(is_equal_approx(RallySampleDressing.default_visibility("pine0"),234) and is_equal_approx(RallySampleDressing.default_visibility("far_pine0"),468),"Near and distant tree visibility grows exactly 30%")
 	check(is_equal_approx(RallySampleDressing.default_visibility("grass0"),136.5) and is_equal_approx(RallySampleDressing.default_visibility("rock0"),286),"Roadside detail visibility grows 30% too")
 	world = Node3D.new()

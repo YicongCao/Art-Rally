@@ -89,10 +89,10 @@ func _update_pressure_weights(tire: RallyTireConfig) -> void:
 func refresh_surface() -> void:
 	surface.reset()
 	var total := 0.0
-	var id0 := 0.0
-	var id1 := 0.0
-	var id2 := 0.0
-	var id3 := 0.0
+	var ids := PackedFloat64Array()
+	ids.resize(RallySurfaceQuery.PROFILES.size())
+	var blend := PackedFloat64Array()
+	blend.resize(ids.size())
 	var friction := 0.0
 	var longitudinal := 0.0
 	var lateral := 0.0
@@ -104,11 +104,11 @@ func refresh_surface() -> void:
 		if not sample.supported: continue
 		var weight := sample.pressure_weight
 		total += weight
-		match sample.surface.surface_id:
-			0: id0 += weight
-			1: id1 += weight
-			2: id2 += weight
-			3: id3 += weight
+		ids[clampi(sample.surface.surface_id,0,ids.size()-1)] += weight
+		if sample.surface.blend_weights.is_empty():
+			blend[clampi(sample.surface.surface_id,0,ids.size()-1)] += weight
+		else:
+			for j: int in range(ids.size()): blend[j] += sample.surface.blend_weights[j]*weight
 		friction += sample.surface.friction_scale*weight
 		longitudinal += sample.surface.longitudinal_scale*weight
 		lateral += sample.surface.lateral_scale*weight
@@ -117,11 +117,12 @@ func refresh_surface() -> void:
 		wet_grip_sum += sample.surface.wet_grip*weight
 		depth += sample.surface.water_depth*weight
 	if total<=0.0: return
-	var ids := Vector4(id0,id1,id2,id3)
 	var dominant := 0
-	for i: int in range(1,4):
+	for i: int in range(1,ids.size()):
 		if ids[i]>ids[dominant]: dominant = i
 	surface.surface_id = dominant
+	for j: int in range(blend.size()): blend[j] /= total
+	surface.blend_weights=blend
 	surface.friction_scale = friction/total
 	surface.longitudinal_scale = longitudinal/total
 	surface.lateral_scale = lateral/total

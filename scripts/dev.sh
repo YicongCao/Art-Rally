@@ -107,7 +107,11 @@ case "$MODE" in
     grep -q '^SMOKE TEST PASSED$' "$ROOT/logs/smoke.log"
     for test in "$ROOT"/tests/*_test.gd; do
       [[ "$(basename "$test")" == "smoke_test.gd" ]] && continue
-      run_logged "$ROOT/logs/$(basename "$test" .gd).log" --headless --path "$ROOT" --fixed-fps 120 --script "$test"
+      if [[ "$(basename "$test")" == "flag_render_test.gd" ]]; then
+        run_logged "$ROOT/logs/$(basename "$test" .gd).log" --path "$ROOT" --max-fps 60 --script "$test"
+      else
+        run_logged "$ROOT/logs/$(basename "$test" .gd).log" --headless --path "$ROOT" --fixed-fps 120 --script "$test"
+      fi
       grep -q '^TEST RESULT: .* 0 failures$' "$ROOT/logs/$(basename "$test" .gd).log"
     done
     python3 "$ROOT/tests/calibrate_medals_test.py"

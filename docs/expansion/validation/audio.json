@@ -1,0 +1,202 @@
+[
+  {
+    "file": "assets/audio/first_playable/I20_idle.wav",
+    "seconds": 2.0,
+    "peak": 0.233123779296875,
+    "seam": 0.01715087890625,
+    "max_adjacent_step": 0.02105712890625,
+    "passed": true
+  },
+  {
+    "file": "assets/audio/first_playable/WRX_lift.wav",
+    "seconds": 2.0,
+    "peak": 0.277984619140625,
+    "seam": 0.010040283203125,
+    "max_adjacent_step": 0.0145263671875,
+    "passed": true
+  },
+  {
+    "file": "assets/audio/first_playable/P7_idle.wav",
+    "seconds": 2.0,
+    "peak": 0.0,
+    "seam": 0.0,
+    "max_adjacent_step": 0.0,
+    "passed": true
+  },
+  {
+    "file": "assets/audio/first_playable/DELTA_high.wav",
+    "seconds": 2.0,
+    "peak": 0.363311767578125,
+    "seam": 0.034698486328125,
+    "max_adjacent_step": 0.048797607421875,
+    "passed": true
+  },
+  {
+    "file": "assets/audio/first_playable/P7_lift.wav",
+    "seconds": 2.0,
+    "peak": 0.04119873046875,
+    "seam": 0.005615234375,
+    "max_adjacent_step": 0.00567626953125,
+    "passed": true
+  },
+  {
+    "file": "assets/audio/first_playable/WRX_idle.wav",
+    "seconds": 2.0,
+    "peak": 0.288177490234375,
+    "seam": 0.012969970703125,
+    "max_adjacent_step": 0.016143798828125,
+    "passed": true
+  },
+  {
+    "file": "assets/audio/first_playable/I20_lift.wav",
+    "seconds": 2.0,
+    "peak": 0.22674560546875,
+    "seam": 0.01611328125,
+    "max_adjacent_step": 0.0191650390625,
+    "passed": true
+  },
+  {
+    "file": "assets/audio/first_playable/EVO6_idle.wav",
+    "seconds": 2.0,
+    "peak": 0.2508544921875,
+    "seam": 0.020843505859375,
+    "max_adjacent_step": 0.02301025390625,
+    "passed": true
+  },
+  {
+    "file": "assets/audio/first_playable/DELTA_mid.wav",
+    "seconds": 2.0,
+    "peak": 0.32977294921875,
+    "seam": 0.032196044921875,
+    "max_adjacent_step": 0.0400390625,
+    "passed": true
+  },
+  {
+    "file": "assets/audio/first_playable/I20_mid.wav",
+    "seconds": 2.0,
+    "peak": 0.2969970703125,
+    "seam": 0.019561767578125,
+    "max_adjacent_step": 0.037384033203125,
+    "passed": true
+  },
+  {
+    "file": "assets/audio/first_playable/P7_mid.wav",
+    "seconds": 2.0,
+    "peak": 0.154571533203125,
+    "seam": 0.0211181640625,
+    "max_adjacent_step": 0.02130126953125,
+    "passed": true
+  },
+  {
+    "file": "assets/audio/first_playable/I20_low.wav",
+    "seconds": 2.0,
+    "peak": 0.26678466796875,
+    "seam": 0.018218994140625,
+    "max_adjacent_step": 0.0303955078125,
+    "passed": true
+  },
+  {
+    "file": "assets/audio/first_playable/P7_low.wav",
+    "seconds": 2.0,
+    "peak": 0.103057861328125,
+    "seam": 0.014068603515625,
+    "max_adjacent_step": 0.01416015625,
+    "passed": true
+  },
+  {
+    "file": "assets/audio/first_playable/DELTA_low.wav",
+    "seconds": 2.0,
+    "peak": 0.3038330078125,
+    "seam": 0.027313232421875,
+    "max_adjacent_step": 0.032623291015625,
+    "passed": true
+  },
+  {
+    "file": "assets/audio/first_playable/EVO6_lift.wav",
+    "seconds": 2.0,
+    "peak": 0.2420654296875,
+    "seam": 0.0196533203125,
+    "max_adjacent_step": 0.021148681640625,
+    "passed": true
+  },
+  {
+    "file": "assets/audio/first_playable/WRX_high.wav",
+    "seconds": 2.0,
+    "peak": 0.412261962890625,
+    "seam": 0.031219482421875,
+    "max_adjacent_step": 0.040924072265625,
+    "passed": true
+  },
+  {
+    "file": "assets/audio/first_playable/DELTA_lift.wav",
+    "seconds": 2.0,
+    "peak": 0.254669189453125,
+    "seam": 0.018646240234375,
+    "max_adjacent_step": 0.02154541015625,
+    "passed": true
+  },
+  {
+    "file": "assets/audio/first_playable/WRX_mid.wav",
+    "seconds": 2.0,
+    "peak": 0.377166748046875,
+    "seam": 0.027374267578125,
+    "max_adjacent_step": 0.03277587890625,
+    "passed": true
+  },
+  {
+    "file": "assets/audio/first_playable/WRX_low.wav",
+    "seconds": 2.0,
+    "peak": 0.336090087890625,
+    "seam": 0.014129638671875,
+    "max_adjacent_step": 0.02496337890625,
+    "passed": true
+  },
+  {
+    "file": "assets/audio/first_playable/P7_high.wav",
+    "seconds": 2.0,
+    "peak": 0.20611572265625,
+    "seam": 0.028167724609375,
+    "max_adjacent_step": 0.02838134765625,
+    "passed": true
+  },
+  {
+    "file": "assets/audio/first_playable/DELTA_idle.wav",
+    "seconds": 2.0,
+    "peak": 0.262542724609375,
+    "seam": 0.022552490234375,
+    "max_adjacent_step": 0.023162841796875,
+    "passed": true
+  },
+  {
+    "file": "assets/audio/first_playable/I20_high.wav",
+    "seconds": 2.0,
+    "peak": 0.33184814453125,
+    "seam": 0.029449462890625,
+    "max_adjacent_step": 0.044708251953125,
+    "passed": true
+  },
+  {
+    "file": "assets/audio/first_playable/EVO6_mid.wav",
+    "seconds": 2.0,
+    "peak": 0.32574462890625,
+    "seam": 0.0343017578125,
+    "max_adjacent_step": 0.040679931640625,
+    "passed": true
+  },
+  {
+    "file": "assets/audio/first_playable/EVO6_low.wav",
+    "seconds": 2.0,
+    "peak": 0.292449951171875,
+    "seam": 0.02252197265625,
+    "max_adjacent_step": 0.03179931640625,
+    "passed": true
+  },
+  {
+    "file": "assets/audio/first_playable/EVO6_high.wav",
+    "seconds": 2.0,
+    "peak": 0.354248046875,
+    "seam": 0.0372314453125,
+    "max_adjacent_step": 0.04864501953125,
+    "passed": true
+  }
+]

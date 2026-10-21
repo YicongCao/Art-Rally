@@ -1,0 +1,607 @@
+[
+  {
+    "test": "action_hierarchy_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 30,
+    "log": "all-action_hierarchy_test.log"
+  },
+  {
+    "test": "atmosphere_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 8,
+    "log": "all-atmosphere_test.log"
+  },
+  {
+    "test": "autopilot_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 15,
+    "log": "all-autopilot_test.log"
+  },
+  {
+    "test": "brake_entry_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 40,
+    "log": "all-brake_entry_test.log"
+  },
+  {
+    "test": "bridge_hop_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 6,
+    "log": "all-bridge_hop_test.log"
+  },
+  {
+    "test": "brushline_assets_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 45,
+    "log": "all-brushline_assets_test.log"
+  },
+  {
+    "test": "brushline_cliff_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 37,
+    "log": "all-brushline_cliff_test.log"
+  },
+  {
+    "test": "brushline_demo_test",
+    "passed": true,
+    "log": "final-brushline_demo.log",
+    "checks": 5
+  },
+  {
+    "test": "brushline_menu_test",
+    "passed": true,
+    "exit": 0,
+    "log": "retry-brushline_menu.log",
+    "checks": 4
+  },
+  {
+    "test": "brushline_profile_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 26,
+    "log": "all-brushline_profile_test.log"
+  },
+  {
+    "test": "camera_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 5,
+    "log": "all-camera_test.log"
+  },
+  {
+    "test": "checkpoint_body_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 7,
+    "log": "all-checkpoint_body_test.log"
+  },
+  {
+    "test": "cinematic_polish_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 26,
+    "log": "all-cinematic_polish_test.log"
+  },
+  {
+    "test": "cinematic_transition_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 8,
+    "log": "all-cinematic_transition_test.log"
+  },
+  {
+    "test": "comic_presentation_test",
+    "passed": true,
+    "exit": 0,
+    "log": "retry-comic_presentation.log",
+    "checks": 36
+  },
+  {
+    "test": "compliant_vehicle_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 8,
+    "log": "all-compliant_vehicle_test.log"
+  },
+  {
+    "test": "contact_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 3,
+    "log": "all-contact_test.log"
+  },
+  {
+    "test": "content_catalog_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 320,
+    "log": "all-content_catalog_test.log"
+  },
+  {
+    "test": "debug_panel_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 43,
+    "log": "all-debug_panel_test.log"
+  },
+  {
+    "test": "drive_modes_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 33,
+    "log": "all-drive_modes_test.log"
+  },
+  {
+    "test": "driver_aids_test",
+    "passed": true,
+    "log": "final-driver_aids.log",
+    "checks": 241
+  },
+  {
+    "test": "drivetrain_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 13,
+    "log": "all-drivetrain_test.log"
+  },
+  {
+    "test": "driving_polish_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 23,
+    "log": "all-driving_polish_test.log"
+  },
+  {
+    "test": "dynamics_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 15,
+    "log": "all-dynamics_test.log"
+  },
+  {
+    "test": "electric_drive_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 11,
+    "log": "all-electric_drive_test.log"
+  },
+  {
+    "test": "expansion_foundation_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 143,
+    "log": "final-expansion_foundation.log"
+  },
+  {
+    "test": "experience_update_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 46,
+    "log": "all-experience_update_test.log"
+  },
+  {
+    "test": "feedback_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 12,
+    "log": "all-feedback_test.log"
+  },
+  {
+    "test": "first_playable_entry_test",
+    "passed": true,
+    "exit": 0,
+    "log": "retry-first_playable_entry.log",
+    "checks": 12
+  },
+  {
+    "test": "first_playable_flow_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 30,
+    "log": "all-first_playable_flow_test.log"
+  },
+  {
+    "test": "first_playable_rules_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 10,
+    "log": "all-first_playable_rules_test.log"
+  },
+  {
+    "test": "flag_render_test",
+    "passed": true,
+    "log": "native-flag.log",
+    "checks": 27
+  },
+  {
+    "test": "flare_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 6,
+    "log": "all-flare_test.log"
+  },
+  {
+    "test": "fp5_profile_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 31,
+    "log": "all-fp5_profile_test.log"
+  },
+  {
+    "test": "garage_camera_test",
+    "passed": true,
+    "exit": 0,
+    "log": "retry-garage_camera.log",
+    "checks": 21
+  },
+  {
+    "test": "garage_flow_test",
+    "passed": true,
+    "exit": 0,
+    "log": "final-garage_flow.log",
+    "checks": 10
+  },
+  {
+    "test": "garage_physics_test",
+    "passed": true,
+    "log": "final-garage_physics.log",
+    "checks": 48,
+    "exit": 0
+  },
+  {
+    "test": "garage_records_test",
+    "passed": true,
+    "exit": 0,
+    "log": "final-garage_records.log",
+    "checks": 10
+  },
+  {
+    "test": "garage_store_test",
+    "passed": true,
+    "exit": 0,
+    "log": "final-garage_store.log",
+    "checks": 21
+  },
+  {
+    "test": "garage_ui_test",
+    "passed": true,
+    "log": "final-garage_ui.log",
+    "checks": 21,
+    "exit": 0
+  },
+  {
+    "test": "gravel_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 6,
+    "log": "all-gravel_test.log"
+  },
+  {
+    "test": "highland_rockfall_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 66,
+    "log": "all-highland_rockfall_test.log"
+  },
+  {
+    "test": "hud_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 27,
+    "log": "all-hud_test.log"
+  },
+  {
+    "test": "input_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 11,
+    "log": "all-input_test.log"
+  },
+  {
+    "test": "light_checkpoint_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 69,
+    "log": "all-light_checkpoint_test.log"
+  },
+  {
+    "test": "loose_climb_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 39,
+    "log": "all-loose_climb_test.log"
+  },
+  {
+    "test": "menu_controller_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 35,
+    "log": "all-menu_controller_test.log"
+  },
+  {
+    "test": "menu_polish_layout_test",
+    "passed": true,
+    "exit": 0,
+    "log": "retry-menu_polish_layout.log",
+    "checks": 150
+  },
+  {
+    "test": "patch_contact_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 7,
+    "log": "all-patch_contact_test.log"
+  },
+  {
+    "test": "patch_substep_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 2,
+    "log": "all-patch_substep_test.log"
+  },
+  {
+    "test": "patch_tire_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 8,
+    "log": "all-patch_tire_test.log"
+  },
+  {
+    "test": "plate_identity_test",
+    "passed": true,
+    "exit": 0,
+    "log": "retry-plate_identity.log",
+    "checks": 77
+  },
+  {
+    "test": "power_gearing_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 49,
+    "log": "all-power_gearing_test.log"
+  },
+  {
+    "test": "power_progression_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 304,
+    "log": "all-power_progression_test.log"
+  },
+  {
+    "test": "presentation_expansion_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 53,
+    "log": "all-presentation_expansion_test.log"
+  },
+  {
+    "test": "presentation_theme_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 25,
+    "log": "all-presentation_theme_test.log"
+  },
+  {
+    "test": "profile_ghost_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 31,
+    "log": "all-profile_ghost_test.log"
+  },
+  {
+    "test": "redrock_sample_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 4,
+    "log": "all-redrock_sample_test.log"
+  },
+  {
+    "test": "replay_album_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 27,
+    "log": "all-replay_album_test.log"
+  },
+  {
+    "test": "route_jumps_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 10,
+    "log": "all-route_jumps_test.log"
+  },
+  {
+    "test": "route_revision_test",
+    "passed": true,
+    "exit": 0,
+    "log": "retry-route_revision.log",
+    "checks": 49
+  },
+  {
+    "test": "sand_physics_test",
+    "passed": true,
+    "exit": 0,
+    "log": "retry-sand_physics.log",
+    "checks": 5
+  },
+  {
+    "test": "scene_refresh_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 44,
+    "log": "all-scene_refresh_test.log"
+  },
+  {
+    "test": "screenprint_test",
+    "passed": true,
+    "exit": 0,
+    "log": "final-screenprint.log",
+    "checks": 195
+  },
+  {
+    "test": "settings_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 12,
+    "log": "all-settings_test.log"
+  },
+  {
+    "test": "shoulder_lod_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 12,
+    "log": "all-shoulder_lod_test.log"
+  },
+  {
+    "test": "showcase_telemetry_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 13,
+    "log": "all-showcase_telemetry_test.log"
+  },
+  {
+    "test": "showcase_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 95,
+    "log": "all-showcase_test.log"
+  },
+  {
+    "test": "smoke_test",
+    "passed": true,
+    "exit": 0,
+    "checks": null,
+    "log": "all-smoke_test.log"
+  },
+  {
+    "test": "stage_art_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 12,
+    "log": "all-stage_art_test.log"
+  },
+  {
+    "test": "stage_geometry_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 16,
+    "log": "all-stage_geometry_test.log"
+  },
+  {
+    "test": "stage_play_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 13,
+    "log": "all-stage_play_test.log"
+  },
+  {
+    "test": "stage_result_store_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 11,
+    "log": "all-stage_result_store_test.log"
+  },
+  {
+    "test": "stage_session_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 20,
+    "log": "all-stage_session_test.log"
+  },
+  {
+    "test": "surface_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 17,
+    "log": "all-surface_test.log"
+  },
+  {
+    "test": "tail_streaks_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 5,
+    "log": "all-tail_streaks_test.log"
+  },
+  {
+    "test": "terrain_detail_test",
+    "passed": true,
+    "log": "retry-terrain_detail.log",
+    "checks": 64
+  },
+  {
+    "test": "tire_feedback_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 7,
+    "log": "all-tire_feedback_test.log"
+  },
+  {
+    "test": "tire_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 12,
+    "log": "all-tire_test.log"
+  },
+  {
+    "test": "tire_vertical_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 11,
+    "log": "all-tire_vertical_test.log"
+  },
+  {
+    "test": "utility_line_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 15,
+    "log": "all-utility_line_test.log"
+  },
+  {
+    "test": "v030_polish_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 35,
+    "log": "all-v030_polish_test.log"
+  },
+  {
+    "test": "v050_ui_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 108,
+    "log": "all-v050_ui_test.log"
+  },
+  {
+    "test": "vehicle_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 11,
+    "log": "all-vehicle_test.log"
+  },
+  {
+    "test": "visual_sample_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 17,
+    "log": "all-visual_sample_test.log"
+  },
+  {
+    "test": "world_details_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 27,
+    "log": "all-world_details_test.log"
+  },
+  {
+    "test": "world_test",
+    "passed": true,
+    "exit": 0,
+    "checks": 13,
+    "log": "all-world_test.log"
+  }
+]

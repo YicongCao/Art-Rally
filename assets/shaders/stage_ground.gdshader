@@ -5,6 +5,7 @@ render_mode diffuse_burley;
 varying vec3 world;
 varying vec4 zone;
 uniform bool road_mesh = false;
+uniform bool desert = false;
 uniform float wear_strength = .48;
 uniform sampler2D wear_atlas : source_color, filter_linear_mipmap_anisotropic;
 uniform bool alpine_terrain = false;
@@ -129,4 +130,12 @@ void fragment() {
 	vec2 bumps = vec2(dFdx(road_bump),dFdy(road_bump));
 	NORMAL_MAP = vec3(vec2(0.5)+clamp(-bumps*0.55,vec2(-0.20),vec2(0.20)) + vec2(grit-0.5)*0.025,1.0);
 	NORMAL_MAP_DEPTH = 0.4;
+ if(desert){
+  float ripple=sin(world.x*7.0+world.z*1.8+sin(world.z*.15)*2.0)*.018;
+  float packed=road_mesh ? 1.0-smoothstep(UV2.x,UV2.x+1.2,abs(UV.x)) : 0.0;
+  vec3 sand=mix(vec3(.66,.40,.18),vec3(.86,.64,.34),noise(world.xz*.035));
+  ALBEDO=mix(sand+ripple,vec3(.39,.25,.14)+noise(world.xz*2.0)*.065,packed*.87);
+  ROUGHNESS=.98;
+ }
+
 }

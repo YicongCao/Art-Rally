@@ -33,7 +33,9 @@ static func stations(length: float) -> Array[float]:
 			s+=STEP
 	return result
 
-func build(scenery: RallyStageScenery, vehicle: RallyVehicle) -> void:
+# Keep this geometry consumer independent of the scenery script: scenery's
+# generator also uses our corridor queries, so typing it creates a load cycle.
+func build(scenery: Node3D, vehicle: RallyVehicle) -> void:
 	name="BreakableRoadPosts"
 	car=vehicle
 	previous=car.global_transform
@@ -45,10 +47,10 @@ func build(scenery: RallyStageScenery, vehicle: RallyVehicle) -> void:
 	batch=MultiMesh.new()
 	batch.transform_format=MultiMesh.TRANSFORM_3D
 	batch.mesh=geometry.finish()
-	var route := scenery.route
+	var route: RallyStageRoute = scenery.route
 	for s: float in stations(route.length):
 		for side: float in [-1,1]:
-			var at := scenery.ground_at(s,side*(route.width_at(s)*.5+.8))
+			var at: Vector3 = scenery.ground_at(s,side*(route.width_at(s)*.5+.8))
 			var pose := Transform3D(Basis.IDENTITY,at)
 			var key := _cell(at)
 			if not grid.has(key): grid[key]=[]

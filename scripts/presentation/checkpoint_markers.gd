@@ -1,7 +1,7 @@
 class_name RallyCheckpointMarkers
 extends RefCounted
 
-const PALETTE := {"autumn": Color("61e8ff"), "coast": Color("d69aff"), "highland": Color("ffc46b")}
+const PALETTE := {"desert": Color("5dffd5"), "autumn": Color("61e8ff"), "coast": Color("d69aff"), "highland": Color("ffc46b")}
 const COLUMN_HEIGHT := 5.2
 const SHOULDER_OFFSET := .85
 var materials: Array[ShaderMaterial] = []

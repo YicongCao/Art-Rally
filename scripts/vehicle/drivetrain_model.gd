@@ -68,10 +68,13 @@ func begin_tick(command: DriverCommand, speed: float, wheel_radius: float = 0.34
 	loose_contact = false
 	for i: int in range(wheels.size()):
 		if (config.drive_layout=="FWD" and i>=2) or (config.drive_layout=="RWD" and i<2): continue
-		loose_contact = loose_contact or (wheels[i].grounded and wheels[i].load>50 and wheels[i].surface.surface_id in [1,2,3])
+		loose_contact = loose_contact or (wheels[i].grounded and wheels[i].load>50 and wheels[i].surface.surface_id in [1,2,3,4,5])
 	var travel := maxf(forward_speed if is_finite(forward_speed) else speed, 0)
 	rolling_rpm = road_rpm(travel, gear, wheel_radius)
 	wheelspin = absf(driven_omega(wheels) * wheel_radius - travel) / maxf(travel, 3) if not wheels.is_empty() else 0.0
+	if config.electric:
+		if command.shift!=0: request_shift(command.shift+gear,speed)
+		return
 	if command.shift != 0:
 		request_shift(gear + command.shift, speed)
 		return
@@ -99,12 +102,12 @@ func begin_tick(command: DriverCommand, speed: float, wheel_radius: float = 0.34
 	# Shorter power-band shifts on loose ground, only after real road speed recovers.
 	var shift_rpm := 6200.0 if config.loose_surface_assist and loose_contact else config.upshift_rpm
 	var road_fraction := .82 if config.loose_surface_assist and loose_contact else config.upshift_road_fraction
-	if gear < 6 and command.brake < 0.1 and rpm() > shift_rpm and rolling_rpm > shift_rpm * road_fraction and wheelspin < config.max_upshift_slip and coupling_slip < 0.28:
+	if gear < config.ratios.size() and command.brake < 0.1 and rpm() > shift_rpm and rolling_rpm > shift_rpm * road_fraction and wheelspin < config.max_upshift_slip and coupling_slip < 0.28:
 		request_shift(gear + 1, speed)
 
 
 func request_shift(target: int, speed: float, synchronized_rpm: float = NAN) -> bool:
-	if shift_remaining > 0 or target < -1 or target > 6 or target == gear: return false
+	if shift_remaining > 0 or target < -1 or target > config.ratios.size() or target == gear: return false
 	if (target <= 0 or gear <= 0) and absf(speed) > 1.0: return false
 	if target > 0 and gear > 0:
 		var predicted := synchronized_rpm if is_finite(synchronized_rpm) else rpm() * config.ratios[target - 1] / config.ratios[gear - 1]
@@ -126,14 +129,15 @@ static func distribute(total: float, omega: PackedFloat64Array, handbrake: bool,
 	var front := (omega[0] + omega[1]) * 0.5
 	var rear := (omega[2] + omega[3]) * 0.5
 	var central := 0.0 if handbrake else clampf((rear - front) * settings.diff_lock_gain, -settings.center_lock_limit, settings.center_lock_limit)
-	var front_total := total if handbrake else total * 0.5 + central
-	var rear_total := 0.0 if handbrake else total * 0.5 - central
+	var front_total := total if handbrake else total * (settings.electric_front_share if settings.electric else 0.5) + central
+	var rear_total := 0.0 if handbrake else total * (1.0-settings.electric_front_share if settings.electric else 0.5) - central
 	var fl := clampf((omega[1] - omega[0]) * settings.diff_lock_gain, -settings.axle_lock_limit, settings.axle_lock_limit)
 	var rl := clampf((omega[3] - omega[2]) * settings.diff_lock_gain, -settings.axle_lock_limit, settings.axle_lock_limit)
 	return PackedFloat64Array([front_total * 0.5 + fl, front_total * 0.5 - fl, rear_total * 0.5 + rl, rear_total * 0.5 - rl])
 
 
 func step(command: DriverCommand, wheels: Array[RallyWheelState], dt: float) -> PackedFloat64Array:
+	if config.electric: return _electric_step(command,wheels,dt)
 	shift_remaining = maxf(0, shift_remaining - dt)
 	cooldown = maxf(0, cooldown - dt)
 	var omega := PackedFloat64Array([wheels[0].omega, wheels[1].omega, wheels[2].omega, wheels[3].omega])
@@ -191,3 +195,22 @@ func _update_traction(command: DriverCommand,wheels: Array[RallyWheelState],dt: 
 	if error>.025: traction_scale=maxf(launch_reserve,traction_scale-dt*minf(4,error*4))
 	elif error<-.025: traction_scale=minf(1,traction_scale+dt*.75)
 	tc_active=traction_scale<.95
+
+
+func _electric_step(command: DriverCommand,wheels: Array[RallyWheelState],dt: float) -> PackedFloat64Array:
+	var shaft := driven_omega(wheels,command.handbrake>.1)
+	var gearing := ratio()
+	engine_omega = absf(shaft*gearing)
+	clutch = 1.0 if gear!=0 else 0.0
+	shift_remaining = 0
+	_update_traction(command,wheels,dt)
+	effective_throttle=command.throttle*traction_scale*esp_scale if gear!=0 and rpm()<config.redline_rpm else 0.0
+	output_torque=config.torque_at(rpm())*effective_throttle
+	var safety := 1.0
+	for wheel: RallyWheelState in wheels:
+		if wheel.grounded: safety=minf(safety,clampf(1.0-absf(wheel.slip)*5,0,1))
+	var recovery := config.regen_torque*(1-command.throttle)*smoothstep(2,12,absf(shaft))*safety
+	if command.handbrake>.1 or gear==0: recovery=0
+	clutch_torque=output_torque
+	var wheel_torque := output_torque*gearing-signf(shaft)*recovery*absf(gearing)
+	return distribute(wheel_torque,PackedFloat64Array([wheels[0].omega,wheels[1].omega,wheels[2].omega,wheels[3].omega]),command.handbrake>.1,config)

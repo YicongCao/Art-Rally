@@ -73,16 +73,22 @@ func prepare() -> bool:
 			failed_message="演示驾驶素材不完整"
 			return false
 		clips[id]=data
-	for index: int in range(3):
-		var id: String=RallyContentCatalog.STAGES[index]
+	var stage_ids: Array[String]=[]
+	var first_shots: Dictionary={}
+	for shot: Dictionary in shots:
+		var clip: Dictionary=clips[shot.clip]
+		if str(clip.stage) not in stage_ids:
+			stage_ids.append(str(clip.stage))
+			first_shots[clip.stage]=shot
+	for index: int in range(stage_ids.size()):
+		var id: String=stage_ids[index]
+		var shot: Dictionary=first_shots[id]
 		var world := RallyShowcaseWorld.new()
 		worlds[id]=world
-		await world.prepare(self,id,["R200","F160","A240"][index],func(value: float,_message: String): preparation_progress.emit((index+value)/3.0))
+		await world.prepare(self,id,str(clips[shot.clip].vehicle),func(value: float,_message: String): preparation_progress.emit((index+value)/float(stage_ids.size())))
 		world.viewport.size=Vector2i(size)
 		for clip_id: String in clips:
 			if clips[clip_id].stage==id: world.add_clip(clip_id,clips[clip_id])
-		# Warm each renderer before the editorial clock starts.
-		var shot: Dictionary=shots[0 if index==0 else (5 if index==1 else 9)]
 		world.render(shot,float(shot.start),0)
 		world.viewport.render_target_update_mode=SubViewport.UPDATE_ONCE
 		if DisplayServer.get_name()!="headless": await RenderingServer.frame_post_draw

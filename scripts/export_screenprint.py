@@ -9,7 +9,7 @@ args=sys.argv[sys.argv.index('--')+1:] if '--' in sys.argv else []
 only=next((a.split('=',1)[1] for a in args if a.startswith('--only=')),None)
 manifest={}
 for src in sorted((ROOT/'art_source/screenprint').glob('*/*.blend')):
- if only and src.stem!=only:continue
+ if only and src.stem not in only.split(","):continue
  vehicle=src.parent.name=='vehicles'
  for lod in range(3 if vehicle else 1):
   bpy.ops.wm.open_mainfile(filepath=str(src))
@@ -54,7 +54,9 @@ for src in sorted((ROOT/'art_source/screenprint').glob('*/*.blend')):
   dest.parent.mkdir(parents=True,exist_ok=True)
   bpy.ops.export_scene.gltf(filepath=str(dest),export_format='GLB',export_apply=True,export_yup=True,export_extras=True)
   manifest[str(dest.relative_to(ROOT))]={'source':str(src.relative_to(ROOT)),'triangles':triangles,'lod':lod,'mounts':mounts}
+if only and not manifest: raise RuntimeError('No source matched --only='+only)
+exported=len(manifest)
 path=ROOT/'assets/screenprint/manifest.json'
 if only and path.exists():manifest={**json.loads(path.read_text()),**manifest}
 path.write_text(json.dumps(manifest,indent=2)+'\n')
-print('SCREENPRINT EXPORT PASSED',len(manifest),'assets')
+print('SCREENPRINT EXPORT PASSED',exported,'assets')

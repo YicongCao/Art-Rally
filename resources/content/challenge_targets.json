@@ -162,6 +162,420 @@
       "human_calibrated": false,
       "stage_version": "9",
       "vehicle_revision": "fp5-p200"
+    },
+    "sunset_ridge/I20": {
+      "reference_seconds": 240.0,
+      "human_calibrated": false,
+      "stage_version": "7",
+      "vehicle_revision": "exp1"
+    },
+    "sunset_ridge/I20/p150": {
+      "reference_seconds": 225.6,
+      "human_calibrated": false,
+      "stage_version": "7",
+      "vehicle_revision": "exp1-p150"
+    },
+    "sunset_ridge/I20/p200": {
+      "reference_seconds": 216.0,
+      "human_calibrated": false,
+      "stage_version": "7",
+      "vehicle_revision": "exp1-p200"
+    },
+    "sunset_ridge/DELTA": {
+      "reference_seconds": 240.0,
+      "human_calibrated": false,
+      "stage_version": "7",
+      "vehicle_revision": "exp1"
+    },
+    "sunset_ridge/DELTA/p150": {
+      "reference_seconds": 225.6,
+      "human_calibrated": false,
+      "stage_version": "7",
+      "vehicle_revision": "exp1-p150"
+    },
+    "sunset_ridge/DELTA/p200": {
+      "reference_seconds": 216.0,
+      "human_calibrated": false,
+      "stage_version": "7",
+      "vehicle_revision": "exp1-p200"
+    },
+    "sunset_ridge/EVO6": {
+      "reference_seconds": 240.0,
+      "human_calibrated": false,
+      "stage_version": "7",
+      "vehicle_revision": "exp1"
+    },
+    "sunset_ridge/EVO6/p150": {
+      "reference_seconds": 225.6,
+      "human_calibrated": false,
+      "stage_version": "7",
+      "vehicle_revision": "exp1-p150"
+    },
+    "sunset_ridge/EVO6/p200": {
+      "reference_seconds": 216.0,
+      "human_calibrated": false,
+      "stage_version": "7",
+      "vehicle_revision": "exp1-p200"
+    },
+    "sunset_ridge/WRX": {
+      "reference_seconds": 240.0,
+      "human_calibrated": false,
+      "stage_version": "7",
+      "vehicle_revision": "exp1"
+    },
+    "sunset_ridge/WRX/p150": {
+      "reference_seconds": 225.6,
+      "human_calibrated": false,
+      "stage_version": "7",
+      "vehicle_revision": "exp1-p150"
+    },
+    "sunset_ridge/WRX/p200": {
+      "reference_seconds": 216.0,
+      "human_calibrated": false,
+      "stage_version": "7",
+      "vehicle_revision": "exp1-p200"
+    },
+    "sunset_ridge/P7": {
+      "reference_seconds": 240.0,
+      "human_calibrated": false,
+      "stage_version": "7",
+      "vehicle_revision": "exp1"
+    },
+    "sunset_ridge/P7/p150": {
+      "reference_seconds": 225.6,
+      "human_calibrated": false,
+      "stage_version": "7",
+      "vehicle_revision": "exp1-p150"
+    },
+    "sunset_ridge/P7/p200": {
+      "reference_seconds": 216.0,
+      "human_calibrated": false,
+      "stage_version": "7",
+      "vehicle_revision": "exp1-p200"
+    },
+    "sunlit_cape/I20": {
+      "reference_seconds": 205.0,
+      "human_calibrated": false,
+      "stage_version": "7",
+      "vehicle_revision": "exp1"
+    },
+    "sunlit_cape/I20/p150": {
+      "reference_seconds": 192.7,
+      "human_calibrated": false,
+      "stage_version": "7",
+      "vehicle_revision": "exp1-p150"
+    },
+    "sunlit_cape/I20/p200": {
+      "reference_seconds": 184.5,
+      "human_calibrated": false,
+      "stage_version": "7",
+      "vehicle_revision": "exp1-p200"
+    },
+    "sunlit_cape/DELTA": {
+      "reference_seconds": 205.0,
+      "human_calibrated": false,
+      "stage_version": "7",
+      "vehicle_revision": "exp1"
+    },
+    "sunlit_cape/DELTA/p150": {
+      "reference_seconds": 192.7,
+      "human_calibrated": false,
+      "stage_version": "7",
+      "vehicle_revision": "exp1-p150"
+    },
+    "sunlit_cape/DELTA/p200": {
+      "reference_seconds": 184.5,
+      "human_calibrated": false,
+      "stage_version": "7",
+      "vehicle_revision": "exp1-p200"
+    },
+    "sunlit_cape/EVO6": {
+      "reference_seconds": 205.0,
+      "human_calibrated": false,
+      "stage_version": "7",
+      "vehicle_revision": "exp1"
+    },
+    "sunlit_cape/EVO6/p150": {
+      "reference_seconds": 192.7,
+      "human_calibrated": false,
+      "stage_version": "7",
+      "vehicle_revision": "exp1-p150"
+    },
+    "sunlit_cape/EVO6/p200": {
+      "reference_seconds": 184.5,
+      "human_calibrated": false,
+      "stage_version": "7",
+      "vehicle_revision": "exp1-p200"
+    },
+    "sunlit_cape/WRX": {
+      "reference_seconds": 205.0,
+      "human_calibrated": false,
+      "stage_version": "7",
+      "vehicle_revision": "exp1"
+    },
+    "sunlit_cape/WRX/p150": {
+      "reference_seconds": 192.7,
+      "human_calibrated": false,
+      "stage_version": "7",
+      "vehicle_revision": "exp1-p150"
+    },
+    "sunlit_cape/WRX/p200": {
+      "reference_seconds": 184.5,
+      "human_calibrated": false,
+      "stage_version": "7",
+      "vehicle_revision": "exp1-p200"
+    },
+    "sunlit_cape/P7": {
+      "reference_seconds": 205.0,
+      "human_calibrated": false,
+      "stage_version": "7",
+      "vehicle_revision": "exp1"
+    },
+    "sunlit_cape/P7/p150": {
+      "reference_seconds": 192.7,
+      "human_calibrated": false,
+      "stage_version": "7",
+      "vehicle_revision": "exp1-p150"
+    },
+    "sunlit_cape/P7/p200": {
+      "reference_seconds": 184.5,
+      "human_calibrated": false,
+      "stage_version": "7",
+      "vehicle_revision": "exp1-p200"
+    },
+    "misty_highlands/I20": {
+      "reference_seconds": 265.0,
+      "human_calibrated": false,
+      "stage_version": "9",
+      "vehicle_revision": "exp1"
+    },
+    "misty_highlands/I20/p150": {
+      "reference_seconds": 249.1,
+      "human_calibrated": false,
+      "stage_version": "9",
+      "vehicle_revision": "exp1-p150"
+    },
+    "misty_highlands/I20/p200": {
+      "reference_seconds": 238.5,
+      "human_calibrated": false,
+      "stage_version": "9",
+      "vehicle_revision": "exp1-p200"
+    },
+    "misty_highlands/DELTA": {
+      "reference_seconds": 265.0,
+      "human_calibrated": false,
+      "stage_version": "9",
+      "vehicle_revision": "exp1"
+    },
+    "misty_highlands/DELTA/p150": {
+      "reference_seconds": 249.1,
+      "human_calibrated": false,
+      "stage_version": "9",
+      "vehicle_revision": "exp1-p150"
+    },
+    "misty_highlands/DELTA/p200": {
+      "reference_seconds": 238.5,
+      "human_calibrated": false,
+      "stage_version": "9",
+      "vehicle_revision": "exp1-p200"
+    },
+    "misty_highlands/EVO6": {
+      "reference_seconds": 265.0,
+      "human_calibrated": false,
+      "stage_version": "9",
+      "vehicle_revision": "exp1"
+    },
+    "misty_highlands/EVO6/p150": {
+      "reference_seconds": 249.1,
+      "human_calibrated": false,
+      "stage_version": "9",
+      "vehicle_revision": "exp1-p150"
+    },
+    "misty_highlands/EVO6/p200": {
+      "reference_seconds": 238.5,
+      "human_calibrated": false,
+      "stage_version": "9",
+      "vehicle_revision": "exp1-p200"
+    },
+    "misty_highlands/WRX": {
+      "reference_seconds": 265.0,
+      "human_calibrated": false,
+      "stage_version": "9",
+      "vehicle_revision": "exp1"
+    },
+    "misty_highlands/WRX/p150": {
+      "reference_seconds": 249.1,
+      "human_calibrated": false,
+      "stage_version": "9",
+      "vehicle_revision": "exp1-p150"
+    },
+    "misty_highlands/WRX/p200": {
+      "reference_seconds": 238.5,
+      "human_calibrated": false,
+      "stage_version": "9",
+      "vehicle_revision": "exp1-p200"
+    },
+    "misty_highlands/P7": {
+      "reference_seconds": 265.0,
+      "human_calibrated": false,
+      "stage_version": "9",
+      "vehicle_revision": "exp1"
+    },
+    "misty_highlands/P7/p150": {
+      "reference_seconds": 249.1,
+      "human_calibrated": false,
+      "stage_version": "9",
+      "vehicle_revision": "exp1-p150"
+    },
+    "misty_highlands/P7/p200": {
+      "reference_seconds": 238.5,
+      "human_calibrated": false,
+      "stage_version": "9",
+      "vehicle_revision": "exp1-p200"
+    },
+    "redrock_canyon/F160": {
+      "reference_seconds": 312.0,
+      "human_calibrated": false,
+      "stage_version": "1",
+      "vehicle_revision": "fp5"
+    },
+    "redrock_canyon/F160/p150": {
+      "reference_seconds": 293.28,
+      "human_calibrated": false,
+      "stage_version": "1",
+      "vehicle_revision": "fp5-p150"
+    },
+    "redrock_canyon/F160/p200": {
+      "reference_seconds": 280.8,
+      "human_calibrated": false,
+      "stage_version": "1",
+      "vehicle_revision": "fp5-p200"
+    },
+    "redrock_canyon/R200": {
+      "reference_seconds": 312.0,
+      "human_calibrated": false,
+      "stage_version": "1",
+      "vehicle_revision": "fp5"
+    },
+    "redrock_canyon/R200/p150": {
+      "reference_seconds": 293.28,
+      "human_calibrated": false,
+      "stage_version": "1",
+      "vehicle_revision": "fp5-p150"
+    },
+    "redrock_canyon/R200/p200": {
+      "reference_seconds": 280.8,
+      "human_calibrated": false,
+      "stage_version": "1",
+      "vehicle_revision": "fp5-p200"
+    },
+    "redrock_canyon/A240": {
+      "reference_seconds": 312.0,
+      "human_calibrated": false,
+      "stage_version": "1",
+      "vehicle_revision": "fp5"
+    },
+    "redrock_canyon/A240/p150": {
+      "reference_seconds": 293.28,
+      "human_calibrated": false,
+      "stage_version": "1",
+      "vehicle_revision": "fp5-p150"
+    },
+    "redrock_canyon/A240/p200": {
+      "reference_seconds": 280.8,
+      "human_calibrated": false,
+      "stage_version": "1",
+      "vehicle_revision": "fp5-p200"
+    },
+    "redrock_canyon/I20": {
+      "reference_seconds": 312.0,
+      "human_calibrated": false,
+      "stage_version": "1",
+      "vehicle_revision": "exp1"
+    },
+    "redrock_canyon/I20/p150": {
+      "reference_seconds": 293.28,
+      "human_calibrated": false,
+      "stage_version": "1",
+      "vehicle_revision": "exp1-p150"
+    },
+    "redrock_canyon/I20/p200": {
+      "reference_seconds": 280.8,
+      "human_calibrated": false,
+      "stage_version": "1",
+      "vehicle_revision": "exp1-p200"
+    },
+    "redrock_canyon/DELTA": {
+      "reference_seconds": 312.0,
+      "human_calibrated": false,
+      "stage_version": "1",
+      "vehicle_revision": "exp1"
+    },
+    "redrock_canyon/DELTA/p150": {
+      "reference_seconds": 293.28,
+      "human_calibrated": false,
+      "stage_version": "1",
+      "vehicle_revision": "exp1-p150"
+    },
+    "redrock_canyon/DELTA/p200": {
+      "reference_seconds": 280.8,
+      "human_calibrated": false,
+      "stage_version": "1",
+      "vehicle_revision": "exp1-p200"
+    },
+    "redrock_canyon/EVO6": {
+      "reference_seconds": 312.0,
+      "human_calibrated": false,
+      "stage_version": "1",
+      "vehicle_revision": "exp1"
+    },
+    "redrock_canyon/EVO6/p150": {
+      "reference_seconds": 293.28,
+      "human_calibrated": false,
+      "stage_version": "1",
+      "vehicle_revision": "exp1-p150"
+    },
+    "redrock_canyon/EVO6/p200": {
+      "reference_seconds": 280.8,
+      "human_calibrated": false,
+      "stage_version": "1",
+      "vehicle_revision": "exp1-p200"
+    },
+    "redrock_canyon/WRX": {
+      "reference_seconds": 312.0,
+      "human_calibrated": false,
+      "stage_version": "1",
+      "vehicle_revision": "exp1"
+    },
+    "redrock_canyon/WRX/p150": {
+      "reference_seconds": 293.28,
+      "human_calibrated": false,
+      "stage_version": "1",
+      "vehicle_revision": "exp1-p150"
+    },
+    "redrock_canyon/WRX/p200": {
+      "reference_seconds": 280.8,
+      "human_calibrated": false,
+      "stage_version": "1",
+      "vehicle_revision": "exp1-p200"
+    },
+    "redrock_canyon/P7": {
+      "reference_seconds": 312.0,
+      "human_calibrated": false,
+      "stage_version": "1",
+      "vehicle_revision": "exp1"
+    },
+    "redrock_canyon/P7/p150": {
+      "reference_seconds": 293.28,
+      "human_calibrated": false,
+      "stage_version": "1",
+      "vehicle_revision": "exp1-p150"
+    },
+    "redrock_canyon/P7/p200": {
+      "reference_seconds": 280.8,
+      "human_calibrated": false,
+      "stage_version": "1",
+      "vehicle_revision": "exp1-p200"
     }
   }
 }

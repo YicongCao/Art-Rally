@@ -43,12 +43,12 @@ func update(sample: Dictionary,velocity: Vector3,spins_per_second: Array,dt: flo
 		wheel.longitudinal_speed = velocity.dot(wheel.forward)
 		wheel.lateral_speed = velocity.dot(wheel.right)
 		wheel.slip_angle = atan2(wheel.lateral_speed,maxf(absf(wheel.longitudinal_speed),1))
-		wheel.slip = (float(spins_per_second[i])*.32-wheel.longitudinal_speed)/maxf(absf(wheel.longitudinal_speed),1)
+		wheel.slip = (float(spins_per_second[i])*definition.physics_config().wheel_radius-wheel.longitudinal_speed)/maxf(absf(wheel.longitudinal_speed),1)
 	for entry: Dictionary in particles:
 		var wheel := wheels[entry.wheel]
 		var emitter: GPUParticles3D = entry.emitter
 		emitter.speed_scale = 1 if dt>0 else 0
-		emitter.emitting = dt>0 and wheel.grounded and absf(wheel.longitudinal_speed)>3 and ((entry.kind=="dust" and wheel.surface.surface_id in [1,3] and wheel.surface.water_depth<.005) or (entry.kind=="mud" and wheel.surface.surface_id==2 and wheel.surface.water_depth<.015) or (entry.kind=="water" and wheel.surface.water_depth>.005))
+		emitter.emitting = dt>0 and wheel.grounded and absf(wheel.longitudinal_speed)>3 and ((entry.kind=="dust" and wheel.surface.surface_id in [1,3,4,5] and wheel.surface.water_depth<.005) or (entry.kind=="mud" and wheel.surface.surface_id==2 and wheel.surface.water_depth<.015) or (entry.kind=="water" and wheel.surface.water_depth>.005))
 		emitter.global_position = wheel.point+Vector3.UP*.1
 		emitter.global_basis = pose.basis
 	if dt>0: marks.update_wheels(wheels,dt)

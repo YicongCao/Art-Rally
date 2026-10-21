@@ -19,7 +19,7 @@ func _run() -> void:
 			await ticks(180)
 			car.linear_velocity = Vector3(0,0,-24)
 			for wheel: RallyWheelState in car.wheels: wheel.omega=24/car.config.wheel_radius
-			car.drivetrain.gear = 3
+			car.drivetrain.gear = mini(3,car.drivetrain.config.ratios.size())
 			car.drivetrain.engine_omega = 24/car.config.wheel_radius*car.drivetrain.ratio()
 			car.command.brake = .95
 			car.command.steer = .18

@@ -1,8 +1,8 @@
 class_name RallyContentCatalog
 extends RefCounted
 
-const STAGES := ["sunset_ridge","sunlit_cape","misty_highlands"]
-const VEHICLES := ["F160","R200","A240"]
+const STAGES := ["sunset_ridge","sunlit_cape","misty_highlands","redrock_canyon"]
+const VEHICLES := ["F160","R200","A240","I20","DELTA","EVO6","WRX","P7"]
 const POWER_MULTIPLIERS := [1.0,1.5,2.0]
 const POWER_LABELS := ["原厂组","进阶组","极限组"]
 
@@ -16,8 +16,8 @@ static func vehicle(id: String,tier: int = 0) -> RallyVehicleDefinition:
 	if id not in VEHICLES or tier<0 or tier>=POWER_MULTIPLIERS.size(): return null
 	var result := load("res://resources/content/"+id+".tres").duplicate(true) as RallyVehicleDefinition
 	# Livery belongs to the visual revision; mechanical resources and keys stay stable.
-	result.paint={"F160":Color("246263"),"R200":Color("ae4e36"),"A240":Color("493e5c")}[id]
-	result.accent=Color("eee2c5") if id!="A240" else Color("d6a83c")
+	if id in ["F160","R200","A240"]: result.paint={"F160":Color("246263"),"R200":Color("ae4e36"),"A240":Color("493e5c")}[id]
+	if id in ["F160","R200","A240"]: result.accent=Color("eee2c5") if id!="A240" else Color("d6a83c")
 	result.power_tier = tier
 	result.power_ps *= POWER_MULTIPLIERS[tier]
 	if tier>0: result.revision += "-p%d"%int(POWER_MULTIPLIERS[tier]*100)

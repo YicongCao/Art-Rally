@@ -4,7 +4,12 @@
 
 ## 简介
 
-采用漫画套色画风、完全离线的计时拉力游戏。当前版本为 **[Brushline Rally 0.5.0](https://github.com/YicongCao/Brushline-Rally/releases/tag/v0.5.0)**：三条主题赛道、大众 GTI／宝马 M3 E30／奥迪 quattro S1 三辆赛车、三档动力的 27 个独立挑战、奖牌与分段计时、个人幽灵、本地档案、赛后回放、航拍相册及声音。底层仍采用原有 120 Hz 车辆与轮胎系统。
+采用漫画套色画风、完全离线的计时拉力游戏。最近发行版本为 **[Brushline Rally 0.5.0](https://github.com/YicongCao/Brushline-Rally/releases/tag/v0.5.0)**：三条主题赛道、大众 GTI／宝马 M3 E30／奥迪 quattro S1 三辆赛车、三档动力的 27 个独立挑战、奖牌与分段计时、个人幽灵、本地档案、赛后回放、航拍相册及声音。底层仍采用原有 120 Hz 车辆与轮胎系统。
+
+
+**当前源码扩展：** 新增赤岩峡谷（3.6 km 红岩与沙漠）、i20 N Rally2、Delta Integrale、EVO VI、WRX STI 2015 和新 P7 四驱，共 4 赛道 × 8 车 × 3 动力档、96 个固定挑战。自由改装车库提供四类免费配件、七项调校、每车三个方案槽、600 m 试车与独立改装计时。该扩展尚未打包发布；0.5.0 下载内容仍为原三赛道、三车。
+
+[车型与场景实机画廊](docs/expansion/index.html) · [车库操作](docs/expansion/GARAGE.md) · [扩展验证](docs/expansion/VALIDATION.md)
 
 [0.5.0 发布记录](docs/validation/v050-release.zh-CN.md) · [本轮改造与验收](docs/brushline/VALIDATION.zh-CN.md) · [品牌与资产](docs/brushline/ASSETS.zh-CN.md) · [历史 0.4.0 发布验证](docs/validation/v040-release.zh-CN.md) · [0.3.0 候选版变化](docs/V0_3_0_RC.zh-CN.md) · [实施计划](docs/FIRST_PLAYABLE_PLAN.zh-CN.md) · [实施状态与未通过项](docs/FIRST_PLAYABLE_STATUS.zh-CN.md) · [实测验收报告](docs/FIRST_PLAYABLE_VALIDATION.zh-CN.md) · [操作说明](docs/PLAY_GUIDE.zh-CN.md) · [素材名单](docs/ASSET_CREDITS.md)
 
@@ -16,7 +21,7 @@
 ./scripts/dev.sh run
 ```
 
-启动后进入标题菜单，主行提供计时挑战、玩法演示和设置；自由练习位于次行。玩法演示为 75 秒三赛道精选，带精简遥测仪表和结束帧率报告。松岭任一合法正式金牌解锁海岸及高地挑战；自由练习始终开放，已有有效成绩的老玩家保留赛道入口。脚本会先导入资源、更新脚本缓存，首次启动会稍慢；终端会打印项目绝对路径。请确认进入的是最新版本所在的目录。
+启动后进入标题菜单，主行提供计时挑战、玩法演示和设置；自由练习位于次行，并可直接进入自由改装车库。玩法演示为 75 秒三赛道精选，带精简遥测仪表和结束帧率报告。松岭任一合法正式金牌解锁海岸、高地及赤岩峡谷挑战；自由练习始终开放，已有有效成绩的老玩家保留赛道入口。脚本会先导入资源、更新脚本缓存，首次启动会稍慢；终端会打印项目绝对路径。请确认进入的是最新版本所在的目录。
 
 **发行包下载：** 从 [最新发行版](https://github.com/YicongCao/Brushline-Rally/releases/latest) 下载对应系统的 ZIP，解压后打开 macOS 的 `Brushline Rally.app` 或 Windows 的 `Brushline Rally.exe`。0.5.0 macOS 包通过自动启动、驾驶及演示素材检查；Windows 包完成交叉导出与结构校验，未进行真实 Windows 运行验收。奖牌阈值仍待熟练真人基准跑标定。
 
@@ -341,3 +346,14 @@ v0.2 轮胎模型已按 [技术方案](docs/V0.2_TIRE_CONTACT_DEFORMATION.zh-CN.
   <a href="docs/brushline/showcase/previews/11-night_chase.jpg"><img src="docs/brushline/showcase/previews/11-night_chase.jpg" width="49%" alt="11：A240 的车灯照亮路面，穿越琥珀金光柱"></a>
   <a href="docs/brushline/showcase/previews/12-outro.jpg"><img src="docs/brushline/showcase/previews/12-outro.jpg" width="49%" alt="12：镜头抬升拉远，A240 驶向暮色远山"></a>
 </p>
+
+
+### 赤岩峡谷与自由改装车库（源码扩展）
+
+[查看全部五车三视角、概念图及实机场景](docs/expansion/index.html)。以下为 Godot 实际渲染，概念稿单独收录。
+
+![新 P7 四驱拉力版](docs/expansion/models/P7-front.png)
+
+![赤岩峡谷巨岩拱](docs/expansion/runtime/arch.png)
+
+![自由改装车库](docs/expansion/runtime/garage-tuning.png)

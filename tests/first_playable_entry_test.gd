@@ -27,7 +27,7 @@ func _run() -> void:
 	await capture("home")
 	click_button(visible_button("开始计时挑战"))
 	await settled()
-	check(app.screen == "stages" and app.ui.find_children("*", "Button", true, false).size() == 5, "Challenge button opens three stage choices with separate confirmation")
+	check(app.screen == "stages" and app.ui.find_children("*", "Button", true, false).size() == RallyContentCatalog.STAGES.size()+2, "Challenge button opens all stage choices with separate confirmation")
 	await capture("stages")
 	click_button(visible_button("确认赛道 →"))
 	await settled()

@@ -43,3 +43,12 @@
 - 领航语音：合成语音（既有 Kokoro 离线素材与对应许可保留）。
 - 代码生成：Codex。
 - 操作指南：透明 SVG 手柄轮廓、Godot 原生矢量键盘与动态标注；由本项目代码绘制，无新增外部图片依赖。
+
+
+## 赤岩峡谷与自由车库扩展（2026-10-21）
+
+- 五辆新车均为项目自主制作的 Blender 网格，未导入第三方整车模型。车型与商标参考来自厂商资料，车厂、车型及赞助名称属于各自权利人；参考与工程假设见 [车型卡](expansion/VEHICLES.md)。
+- `art_source/screenprint/vehicles/{I20,DELTA,EVO6,WRX,P7}.blend` 为权威源，独立文字和色块网格可编辑；运行时每车三档 GLB。生成/导出脚本及挂点清单随项目保存。
+- 地图、车库、五车概念由内置 imagegen 生成，保存于 `docs/expansion/concepts/`，只作设计参考。实际环境、车库货架、安装动画和 UI 由项目网格与代码实现。
+- 五车声音由 `scripts/generate_expansion_audio.py` 原创合成，不包含实车录音或第三方音频采样。赤岩峡谷目前复用已有高地配乐与风声。
+- 沙地中文提示使用既有 Kokoro 声线与许可生成，逐句记录已追加到 `assets/audio/voice/lines.json`。

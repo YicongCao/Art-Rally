@@ -66,17 +66,17 @@ func _surface_at_coordinates(s: float, lateral: float) -> RallySurfaceSample:
 	var half := route.width_at(s)*.5
 	var lane_lateral := clampf(lateral,-half,half)
 	var depth := definition.water_depth(s,lane_lateral)
-	var weights := definition.surface_weights(s,lane_lateral)
+	var weights := definition.surface_distribution(s,lane_lateral)
 	var samples: Array[RallySurfaceSample] = []
 	var amounts := PackedFloat64Array()
-	for surface: int in range(3):
+	for surface: int in range(weights.size()):
 		if weights[surface]>.0001:
 			samples.append(RallySurfaceQuery.road_sample(surface,depth))
 			amounts.append(weights[surface])
 	var road := samples[0] if samples.size()==1 else RallySurfaceSample.weighted_average(samples,amounts)
 	var outside := absf(lateral)-half
 	if outside<=0: return road
-	var grass := RallySurfaceSample.from_profile(RallySurfaceQuery.PROFILES[3])
+	var grass := RallySurfaceSample.from_profile(RallySurfaceQuery.PROFILES[definition.shoulder_surface])
 	# Compacted shoulder occupies the same 1.2m strip as the visible earth edge.
 	# No discontinuity at either edge, including narrow and muddy sections.
 	var blend := smoothstep(0,SHOULDER_WIDTH,outside)

@@ -42,6 +42,18 @@ var focus_memory: Dictionary = {}
 var page_back: Callable
 var benchmark_requested: bool=false
 var showcase: RallyShowcaseDirector
+var garage_store:=RallyGarageStore.new()
+var garage_vehicle: String="R200"
+var garage_slot: int=-1
+var garage_draft: Dictionary={}
+var garage_dirty: bool=false
+var garage_category: String="tires"
+var garage_view: RallyGarageView
+var garage_panel: VBoxContainer
+var modified_mode: bool=false
+var garage_test: bool=false
+var vehicle_page: int=0
+
 
 
 func _ready() -> void:
@@ -52,12 +64,15 @@ func _ready() -> void:
 	var migration := OK
 	if not test_mode and profile.path=="user://player/profile.json": migration=RallyBrandMigration.migrate()
 	profile.load_file()
+	garage_store.path=profile.path.get_base_dir()+"/garage.json"
+	garage_store.load_file()
 	if migration!=OK:
 		profile.read_only=true
 		profile.message="旧存档迁移失败，原进度已保留；本次不会覆盖进度。"
 	for key: String in profile.data.settings: prefs.set_value(key,profile.data.settings[key])
 	chosen_stage = profile.data.last_stage
 	chosen_vehicle = profile.data.last_vehicle
+	vehicle_page = int(RallyContentCatalog.VEHICLES.find(chosen_vehicle)/3)
 	chosen_power_tier = mini(int(profile.data.get("last_power_tier",0)),profile.unlocked_power_tier())
 	audio.settings = prefs
 	var output := str(profile.data.get("output_device","Default"))
@@ -154,7 +169,7 @@ func _page(title: String, subtitle: String, name_id: String) -> void:
 	for side: String in ["top","bottom"]: margins.add_theme_constant_override("margin_"+side,28)
 	ui.add_child(margins)
 	# Selection cards share the available screen height instead of scrolling.
-	var fitted := name_id in ["stages","vehicles","loading","records","guide","credits"]
+	var fitted := name_id in ["stages","vehicles","loading","records","guide","credits","garage","garage_results"]
 	column = VBoxContainer.new()
 	column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	column.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -238,6 +253,8 @@ func _card(parent: Node) -> VBoxContainer:
 
 
 func show_home() -> void:
+	modified_mode=false
+	garage_test=false
 	audio.set_scene()
 	_page("","", "home")
 	column.add_theme_constant_override("separation",0)
@@ -247,7 +264,7 @@ func show_home() -> void:
 	column.add_child(logo)
 	var main := _row(column)
 	main.add_theme_constant_override("separation",12)
-	var challenge := _menu_tile(main,"开始计时挑战","","challenge",Color("f05a28"),func(): practice=false; tutorial=false; show_stages(),true)
+	var challenge := _menu_tile(main,"开始计时挑战","","challenge",Color("f05a28"),func(): modified_mode=false; garage_test=false; practice=false; tutorial=false; show_stages(),true)
 	challenge.size_flags_stretch_ratio = 1.4
 	challenge.grab_focus()
 	_menu_tile(main,"玩法演示","","play",Color("20252b"),start_benchmark,true)
@@ -255,8 +272,9 @@ func show_home() -> void:
 	var gap := Control.new()
 	gap.custom_minimum_size.y = 18
 	column.add_child(gap)
+	_button(column,"进入自由改装车库",show_garage)
 	var secondary := _row(column)
-	_menu_tile(secondary,"自由练习","","practice",Color("303644"),func(): practice=true; tutorial=false; show_stages(),false)
+	_menu_tile(secondary,"自由练习","","practice",Color("303644"),func(): modified_mode=false; garage_test=false; practice=true; tutorial=false; show_stages(),false)
 	secondary.add_theme_constant_override("separation",10)
 	_menu_tile(secondary,"相册","","gallery",Color("20252b"),show_gallery,false)
 	_menu_tile(secondary,"操作指南","","guide",Color("20252b"),show_guide,false)
@@ -346,43 +364,45 @@ func _menu_tile(parent: Node,title: String,caption: String,icon: String,color: C
 
 
 func show_stages() -> void:
-	if not profile.stage_unlocked(chosen_stage,practice): chosen_stage="sunset_ridge"
-	_page("选择一段旅途", "自由练习 · 不记录奖牌和个人最佳" if practice else "计时挑战", "stages")
-	var row := _row(column)
-	row.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	if not profile.stage_unlocked(chosen_stage,practice or modified_mode): chosen_stage="sunset_ridge"
+	_page("选择一段旅途", "改装计时 · 当前车库方案" if modified_mode else ("自由练习 · 不记录奖牌和个人最佳" if practice else "计时挑战"), "stages")
+	var grid:=GridContainer.new()
+	grid.columns=2
+	grid.size_flags_vertical=Control.SIZE_EXPAND_FILL
+	grid.add_theme_constant_override("h_separation",14)
+	grid.add_theme_constant_override("v_separation",12)
+	column.add_child(grid)
 	for id: String in RallyContentCatalog.STAGES:
-		var definition := RallyContentCatalog.stage(id)
-		var card := _card(row)
-		card.add_theme_constant_override("separation",10)
-		_selected_card(card,id == chosen_stage)
-		var preview := RallyArtbookPanel.new()
-		preview.texture=load("res://assets/ui/menu_models/"+id+".png")
+		var definition:=RallyContentCatalog.stage(id)
+		var card:=_card(grid)
+		card.get_parent().size_flags_vertical=Control.SIZE_EXPAND_FILL
+		card.add_theme_constant_override("separation",5)
+		_selected_card(card,id==chosen_stage)
+		var content:=_row(card)
+		content.size_flags_vertical=Control.SIZE_EXPAND_FILL
+		var preview:=RallyArtbookPanel.new()
+		var file: String="res://assets/ui/menu_models/"+id+".png"
+		if ResourceLoader.exists(file): preview.texture=load(file)
 		preview.panel_index=RallyContentCatalog.STAGES.find(id)
-		preview.custom_minimum_size=Vector2(260,120)
-		preview.size_flags_vertical=Control.SIZE_EXPAND_FILL
-		card.add_child(preview)
-		_label(card,definition.title,26)
-		_label(card,definition.subtitle,16)
-		_label(card,"%.2f km · %s"%[definition.target_length/1000.0,definition.surface_summary()],16)
-		var awards := _row(card)
-		for vehicle_id: String in RallyContentCatalog.VEHICLES:
-			var challenge := RallyContentCatalog.challenge(id,vehicle_id,chosen_power_tier)
-			var earned := int(profile.result_for(challenge.key()).get("medal",0))
-			var badge := TextureRect.new()
-			badge.texture=load("res://assets/ui/icons/medal_"+["bronze","bronze","silver","gold"][earned]+".svg")
-			badge.custom_minimum_size=Vector2(24,24)
-			badge.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
-			badge.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-			badge.modulate.a=1.0 if earned>0 else .25
-			awards.add_child(badge)
-			_label(awards,vehicle_id,14)
-		var available := profile.stage_unlocked(id,practice)
-		var select := _button(card,"选择赛段" if available else "松岭金牌解锁",func(): chosen_stage=id; show_stages())
+		preview.custom_minimum_size=Vector2(170,100)
+		preview.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+		content.add_child(preview)
+		var info:=VBoxContainer.new()
+		info.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+		content.add_child(info)
+		_label(info,definition.title,24)
+		_label(info,definition.subtitle,15)
+		_label(info,"%.2f km"%(definition.target_length/1000),18)
+		_label(info,definition.surface_summary(),14)
+		var available:=profile.stage_unlocked(id,practice or modified_mode)
+		var select:=_button(card,"选择赛段" if available else "松岭金牌解锁",func(): chosen_stage=id; show_stages())
+		select.custom_minimum_size.y=36
 		select.disabled=not available
-		if not available: select.icon=load("res://assets/ui/icons/lock.svg")
 		select.set_meta("focus_key","stage:"+id)
+		if not available: select.icon=load("res://assets/ui/icons/lock.svg")
 		RallySelectionStyle.apply(select,id==chosen_stage)
-	_actions("← 主菜单",show_home,"确认赛道 →",show_vehicles).primary_button.grab_focus()
+	if modified_mode: _actions("返回车库",show_garage,"驾驶 "+RallyContentCatalog.vehicle(garage_vehicle).short_title(),start_race)
+	else: _actions("← 主菜单",show_home,"确认赛道 →",show_vehicles).primary_button.grab_focus()
 
 
 func show_vehicles() -> void:
@@ -391,7 +411,7 @@ func show_vehicles() -> void:
 	vehicle_power_choices[chosen_vehicle] = chosen_power_tier
 	var row := _row(column)
 	row.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	for id: String in RallyContentCatalog.VEHICLES:
+	for id: String in RallyContentCatalog.VEHICLES.slice(vehicle_page*3,mini(vehicle_page*3+3,RallyContentCatalog.VEHICLES.size())):
 		var selected_tier := mini(int(vehicle_power_choices.get(id,0)),profile.unlocked_power_tier())
 		var vehicle := RallyContentCatalog.vehicle(id,selected_tier)
 		var card := _card(row)
@@ -399,12 +419,12 @@ func show_vehicles() -> void:
 		card.add_theme_constant_override("separation",8)
 		_selected_card(card,id == chosen_vehicle)
 		var art := RallyArtbookPanel.new()
-		art.texture=load("res://assets/ui/menu_models/"+id+".png")
+		if ResourceLoader.exists("res://assets/ui/menu_models/"+id+".png"): art.texture=load("res://assets/ui/menu_models/"+id+".png")
 		art.panel_index=RallyContentCatalog.VEHICLES.find(id)
 		art.custom_minimum_size=Vector2(270,120)
 		art.size_flags_vertical=Control.SIZE_EXPAND_FILL
 		card.add_child(art)
-		_label(card,vehicle.title,24,vehicle.accent.lightened(.3))
+		_label(card,vehicle.title,20,vehicle.accent.lightened(.3))
 		_label(card,"%s · %d PS · %d kg"%[vehicle.drive_layout,vehicle.power_ps,vehicle.mass_kg],17)
 		_label(card,vehicle.description,16)
 		var tiers := _row(card)
@@ -426,6 +446,10 @@ func show_vehicles() -> void:
 		var select := _button(card,"选择 "+vehicle.short_title(),_select_vehicle_variant.bind(id,selected_tier))
 		select.set_meta("focus_key","vehicle:"+id)
 		RallySelectionStyle.apply(select,id==chosen_vehicle)
+	var pager:=_row(column)
+	_button(pager,"← 上一页",func(): vehicle_page=posmod(vehicle_page-1,3); show_vehicles()).custom_minimum_size.y=36
+	_label(pager,"%d / 3"%(vehicle_page+1),18)
+	_button(pager,"下一页 →",func(): vehicle_page=posmod(vehicle_page+1,3); show_vehicles()).custom_minimum_size.y=36
 	_actions("← 选择赛道",show_stages,"驾驶 %s · %s →"%[RallyContentCatalog.vehicle(chosen_vehicle).short_title(),RallyContentCatalog.power_label(chosen_vehicle,chosen_power_tier)],start_race).primary_button.grab_focus()
 
 
@@ -439,7 +463,10 @@ func _select_vehicle_variant(id: String,tier: int) -> void:
 
 func _loading_page() -> void:
 	var challenge := RallyContentCatalog.challenge(chosen_stage,chosen_vehicle,chosen_power_tier)
-	_page(challenge.stage.title,("自由练习" if practice else "计时挑战")+" / "+RallyContentCatalog.power_label(chosen_vehicle,chosen_power_tier),"loading")
+	if modified_mode:
+		challenge.vehicle=RallyGarageCatalog.resolve(RallyContentCatalog.vehicle(garage_vehicle),garage_draft)
+		if garage_test: challenge.stage=load("res://resources/stages/garage_test.tres")
+	_page(challenge.stage.title,("车库试车" if garage_test else ("改装计时" if modified_mode else ("自由练习" if practice else "计时挑战")))+" / "+RallyContentCatalog.power_label(chosen_vehicle,chosen_power_tier),"loading")
 	status_label = _label(column,"正在加载",18)
 	progress_bar = RallyLoadingProgress.new()
 	progress_bar.custom_minimum_size.y = 26
@@ -468,6 +495,9 @@ func _loading_page() -> void:
 		art.caption=[challenge.stage.title,challenge.vehicle.short_title()][index]
 		card.add_child(art)
 		_label(card,["%.2f km"%(challenge.stage.target_length/1000),"%d PS · %s"%[challenge.vehicle.power_ps,challenge.vehicle.drive_layout]][index],22)
+	if modified_mode:
+		_label(column,"当前草稿 · 不授予奖牌或解锁",18)
+		return
 	var targets := challenge.thresholds()
 	var medals := _row(column)
 	medals.name="LoadingMedals"
@@ -486,7 +516,8 @@ func _loading_page() -> void:
 
 func start_race() -> void:
 	if loading: return
-	if not profile.stage_unlocked(chosen_stage,practice) and not test_mode:
+	if modified_mode: chosen_power_tier=0
+	if not profile.stage_unlocked(chosen_stage,practice or modified_mode) and not test_mode:
 		profile.message="松岭金牌解锁此挑战；也可先自由练习。"
 		show_stages()
 		return
@@ -502,8 +533,14 @@ func start_race() -> void:
 	race = STAGE_SCENE.instantiate()
 	race.managed_flow = true
 	race.challenge = RallyContentCatalog.challenge(chosen_stage,chosen_vehicle,chosen_power_tier)
+	if modified_mode:
+		race.challenge.vehicle=RallyGarageCatalog.resolve(RallyContentCatalog.vehicle(garage_vehicle),garage_draft)
+		if garage_test: race.challenge.stage=load("res://resources/stages/garage_test.tres").duplicate(true)
+		race.garage_store=garage_store
+		race.garage_test=garage_test
+		race.modified_mode=true
 	race.profile = profile
-	race.free_practice = practice
+	race.free_practice = practice and not modified_mode
 	race.demonstration=benchmark_requested
 	race.tutorial = tutorial
 	race.audio_director = audio
@@ -522,7 +559,7 @@ func start_race() -> void:
 	race.controls.suspend()
 	_loading_progress(.94,"检查起点、声音与个人幽灵")
 	race.completed.connect(show_results)
-	race.return_requested.connect(leave_race)
+	race.return_requested.connect(func(): leave_race("garage" if modified_mode else "stages"))
 	race.tutorial_finished.connect(leave_race)
 	audio.set_scene(generator.definition.environment_id)
 	await get_tree().physics_frame
@@ -571,7 +608,8 @@ func _clear_race(destination: String) -> void:
 	get_tree().paused = false
 	tutorial = false
 	audio.set_scene()
-	if destination=="vehicles": show_vehicles()
+	if destination=="garage": show_garage()
+	elif destination=="vehicles": show_vehicles()
 	else: show_stages()
 
 
@@ -586,6 +624,9 @@ func retry() -> void:
 
 
 func show_results(result: Dictionary) -> void:
+	if modified_mode:
+		show_garage_result(result)
+		return
 	race.controls.suspend()
 	get_tree().paused = true
 	race.pause_menu.visible = false
@@ -822,29 +863,37 @@ func show_photo(index: int) -> void:
 	actions.move_child(previous,1)
 
 
+var records_stage: String="sunset_ridge"
+var records_modified: bool=false
 func show_records() -> void:
-	_page("你的山野足迹","每个赛道、车型与动力版本分别保存成绩。","records")
-	var tiers := _row(column)
-	for tier: int in range(profile.unlocked_power_tier()+1):
-		var option := _button(tiers,RallyContentCatalog.POWER_LABELS[tier],func(): chosen_power_tier=tier; show_records())
-		RallySelectionStyle.apply(option,tier==chosen_power_tier)
-	var bronze := 0
-	var gold := 0
-	var stages := _row(column)
-	stages.size_flags_vertical=Control.SIZE_EXPAND_FILL
+	_page("你的山野足迹","固定挑战与改装计时分别记录。","records")
+	var modes:=_row(column)
+	for mode: bool in [false,true]:
+		var button:=_button(modes,"改装计时" if mode else "固定挑战",func(): records_modified=mode; show_records())
+		button.custom_minimum_size.y=36
+		RallySelectionStyle.apply(button,mode==records_modified)
+	if not records_modified:
+		for tier: int in range(profile.unlocked_power_tier()+1):
+			var option:=_button(modes,RallyContentCatalog.POWER_LABELS[tier],func(): chosen_power_tier=tier; show_records())
+			option.custom_minimum_size=Vector2(110,36)
+			RallySelectionStyle.apply(option,tier==chosen_power_tier)
+	var tabs:=_row(column)
 	for id: String in RallyContentCatalog.STAGES:
-		var card := _card(stages)
-		_label(card,RallyContentCatalog.stage(id).title,25)
-		for car: String in RallyContentCatalog.VEHICLES:
-			var challenge := RallyContentCatalog.challenge(id,car,chosen_power_tier)
-			var result := profile.result_for(challenge.key())
-			var medal := int(result.get("medal",0))
-			if medal>0: bronze+=1
-			if medal==3: gold+=1
-			card.add_child(HSeparator.new())
-			_label(card,car+" · "+RallyContentCatalog.power_label(car,chosen_power_tier),20)
-			_label(card,(_time(result.best.total_time) if result.has("best") else "暂无成绩")+"  /  "+MEDALS[medal],17)
-	_label(column,"全金达成 · 每一段旅途都留下了金色轨迹！" if gold==9 else "已获奖牌 %d / 9    金牌 %d / 9"%[bronze,gold],18,Color("efbf6e"))
+		var button:=_button(tabs,RallyContentCatalog.stage(id).title,func(): records_stage=id; show_records())
+		button.custom_minimum_size=Vector2(150,36)
+		RallySelectionStyle.apply(button,records_stage==id)
+	var list:=VBoxContainer.new()
+	list.size_flags_vertical=Control.SIZE_EXPAND_FILL
+	list.add_theme_constant_override("separation",3)
+	column.add_child(list)
+	for id: String in RallyContentCatalog.VEHICLES:
+		var row:=_row(list)
+		row.size_flags_vertical=Control.SIZE_EXPAND_FILL
+		var challenge:=RallyContentCatalog.challenge(records_stage,id,0 if records_modified else chosen_power_tier)
+		var bucket: Dictionary=garage_store.bucket(challenge,false) if records_modified else profile.result_for(challenge.key())
+		_label(row,challenge.vehicle.short_title(),17).custom_minimum_size.x=380
+		_label(row,_time(bucket.best.total_time) if bucket.has("best") else "暂无成绩",17)
+		_label(row,("配置 "+str(bucket.best.fingerprint).substr(0,8) if bucket.has("best") else "—") if records_modified else MEDALS[int(bucket.get("medal",0))],16)
 	_actions("返回主菜单",show_home)
 
 
@@ -1156,3 +1205,88 @@ func show_benchmark_result(report: Dictionary) -> void:
 	_label(column,"侧滑峰值 %.1f° · %s"%[report.peak_sideslip_deg,"已恢复抓地" if report.recovered else "本次未完成有效救车演示"],20)
 	_label(column,"固定演示场景，非全赛道性能报告。"+(" 已保存遥测。" if saved==OK else " 报告保存失败。"),16)
 	_actions("← 主菜单",show_home,"再看一次 →",start_benchmark)
+
+
+func show_garage() -> void:
+	if garage_draft.is_empty(): garage_draft=RallyGarageCatalog.stock(RallyContentCatalog.vehicle(garage_vehicle))
+	RallyGaragePage.build(self)
+
+func garage_change_vehicle(id: String) -> void:
+	garage_confirm(func(): garage_vehicle=id; garage_slot=-1; garage_draft=RallyGarageCatalog.stock(RallyContentCatalog.vehicle(id)); show_garage())
+
+func garage_load_slot(index: int) -> void:
+	garage_confirm(func():
+		garage_slot=index
+		var saved: Variant=garage_store.slots(garage_vehicle)[index] if index>=0 else null
+		garage_draft=saved.duplicate(true) if saved!=null else RallyGarageCatalog.stock(RallyContentCatalog.vehicle(garage_vehicle))
+		garage_dirty=false
+		show_garage())
+
+func garage_save() -> void:
+	if garage_slot<0:
+		var choose:=AcceptDialog.new()
+		choose.title="保存到自定义方案"
+		choose.dialog_text="选择要保存的槽位"
+		ui.add_child(choose)
+		for i: int in range(3): choose.add_button("方案 %d"%(i+1),false,str(i))
+		choose.custom_action.connect(func(action: String):
+			garage_slot=int(action)
+			garage_save()
+			choose.queue_free())
+		choose.popup_centered(Vector2i(460,140))
+		return
+	if garage_store.save_slot(garage_vehicle,garage_slot,garage_draft)==OK:
+		garage_dirty=false
+		show_garage.call_deferred()
+	else: RallyGaragePage.refresh_panel(self)
+
+func garage_confirm(action: Callable) -> void:
+	if not garage_dirty:
+		action.call()
+		return
+	var dialog:=ConfirmationDialog.new()
+	dialog.title="当前方案尚未保存"
+	dialog.dialog_text="离开前保存草稿，或放弃本次改动。"
+	dialog.ok_button_text="放弃改动"
+	dialog.cancel_button_text="继续调整"
+	dialog.add_button("保存并继续",true,"save")
+	ui.add_child(dialog)
+	dialog.confirmed.connect(func():
+		var saved: Variant=garage_store.slots(garage_vehicle)[garage_slot] if garage_slot>=0 else null
+		garage_draft=saved.duplicate(true) if saved!=null else RallyGarageCatalog.stock(RallyContentCatalog.vehicle(garage_vehicle))
+		garage_dirty=false
+		action.call())
+	dialog.custom_action.connect(func(_id: String):
+		if garage_slot<0:
+			var slots:=garage_store.slots(garage_vehicle)
+			garage_slot=slots.find(null)
+			if garage_slot<0:
+				dialog.dialog_text="三个槽位已使用，请返回车库选择保存位置。"
+				return
+		if garage_store.save_slot(garage_vehicle,garage_slot,garage_draft)==OK:
+			garage_dirty=false
+			dialog.hide()
+			action.call()
+		else: dialog.dialog_text=garage_store.message)
+	dialog.canceled.connect(func(): show_garage.call_deferred())
+	dialog.popup_centered(Vector2i(520,170))
+
+func show_garage_result(result: Dictionary) -> void:
+	race.controls.suspend()
+	get_tree().paused=true
+	race.pause_menu.hide()
+	ui.show()
+	_page("试车完成" if garage_test else "改装计时完成",race.challenge.stage.title+" / "+race.challenge.vehicle.short_title(),"garage_results")
+	_label(column,_time(result.total_time),52)
+	_label(column,str(result.outcome.get("reason","")),18)
+	_label(column,"本次："+RallyGarageCatalog.describe(garage_draft),17)
+	_label(column,"无奖牌与解锁",15)
+	var previous: Dictionary=result.outcome.get("previous",{})
+	if not previous.is_empty(): _label(column,"上次 %s · %s"%[_time(previous.total_time),RallyGarageCatalog.describe(previous.setup)],17)
+	if garage_test:
+		var metrics: Dictionary=result.get("test_metrics",{})
+		for row: Array in [["straight_speed","直道末速","km/h"],["braking_distance","制动距离","m"],["bottom_outs","触底次数","次"]]:
+			var v: Variant=metrics.get(row[0])
+			var old: Variant=previous.get("test_metrics",{}).get(row[0])
+			_label(column,"%s：%s  /  上次 %s"%[row[1],"未完成" if v==null else "%.1f %s"%[v,row[2]],"未完成" if old==null else "%.1f %s"%[old,row[2]]],21)
+	_actions("返回车库",func(): leave_race("garage"),"再次试跑",retry)
