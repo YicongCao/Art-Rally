@@ -1133,7 +1133,10 @@ func _showcase_finished() -> void:
 	Input.mouse_mode=Input.MOUSE_MODE_VISIBLE
 	audio.theme=""
 	audio.set_scene()
-	_page("沿途风景","Brushline Rally","showcase_result")
+	_page("沿途风景","本次演示 · 播放性能","showcase_result")
+	var results := RallyShowcaseResults.new()
+	results.report=showcase.performance.report()
+	column.add_child(results)
 	var actions := _actions("返回主菜单",_showcase_exit,"再看一次",_showcase_replay)
 	for entry: Array in [[actions.back_button,"exit"],[actions.primary_button,"replay"]]:
 		entry[0].icon=load("res://assets/ui/icons/%s.svg"%entry[1])

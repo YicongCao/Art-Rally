@@ -1,0 +1,25 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Metal 4.0 - Forward+ - Using Device #0: Apple - Apple M5 (Apple9)
+
+Movie Maker mode enabled, recording movie in 1280×720 @ 60 FPS...
+MOVIE_FIRST_FRAME 23
+MOVIE_SECOND 16.0
+MOVIE_SECOND 17.0
+MOVIE_SECOND 18.0
+MOVIE_SECOND 19.0
+MOVIE_SECOND 20.0
+MOVIE_SECOND 21.0
+MOVIE_SECOND 22.0
+MOVIE_SECOND 23.0
+MOVIE_SECOND 24.0
+MOVIE_SECOND 25.0
+MOVIE_SECOND 26.0
+MOVIE_SECOND 27.0
+MOVIE_COMPLETE {"duration":12.0,"first_frame":23,"fps":60,"frames":720,"last_drawn":742,"start":16.0}
+--------------------------------------------------------------------------------
+Done recording movie at path: /Users/cong/.codex/worktrees/d325/Art-Rally/logs/showcase/telemetry-native.avi
+744 frames at 60 FPS (movie length: 00:00:12:24), recorded in 00:00:51 (23% of real-time speed).
+CPU render time: 0.18 seconds (average: 0.24 ms/frame)
+GPU render time: 0.00 seconds (average: 0.00 ms/frame)
+Encoding time: 5.08 seconds (average: 6.83 ms/frame)
+--------------------------------------------------------------------------------

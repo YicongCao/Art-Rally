@@ -22,6 +22,8 @@ var soundtrack := RallyShowcaseAudio.new()
 var previous_image: ImageTexture
 var sample: Array = []
 var failed_message := ""
+var telemetry_hud := RallyShowcaseHUD.new()
+var performance := RallyShowcaseMetrics.new()
 
 func _ready() -> void:
 	process_mode=Node.PROCESS_MODE_ALWAYS
@@ -36,6 +38,7 @@ func _ready() -> void:
 	curtain.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	curtain.color=Color.BLACK
 	curtain.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	add_child(telemetry_hud)
 	add_child(curtain)
 	titles.add_theme_font_override("font",RallyFonts.bold())
 	titles.add_theme_font_size_override("font_size",32)
@@ -45,6 +48,9 @@ func _ready() -> void:
 	titles.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	add_child(titles)
 	add_child(soundtrack)
+	performance.enabled=DisplayServer.get_name()!="headless"
+	for argument: String in OS.get_cmdline_args():
+		if argument.begins_with("--fixed-fps") or argument.begins_with("--write-movie"): performance.enabled=false
 	_build_pause()
 	resized.connect(_resize)
 	_resize()
@@ -87,11 +93,12 @@ func prepare() -> bool:
 
 func _resize() -> void:
 	for world: RallyShowcaseWorld in worlds.values(): world.viewport.size=Vector2i(size)
-	titles.position=Vector2(40,size.y-85)
+	titles.position=Vector2(40,40)
 	pause_panel.position=(size-Vector2(300,240))*.5
 	pause_panel.size=Vector2(300,240)
 
 func restart() -> void:
+	performance.reset()
 	clock=0
 	active_shot=-1
 	active_world=""
@@ -108,6 +115,7 @@ func restart() -> void:
 
 func _process(dt: float) -> void:
 	if not ready_to_play or not playing: return
+	performance.tick(Time.get_ticks_usec(),clock)
 	clock=minf(DURATION,clock+dt)
 	_render(dt)
 	if clock>=DURATION:
@@ -116,6 +124,7 @@ func _process(dt: float) -> void:
 		finished.emit()
 
 func seek(seconds: float) -> void:
+	performance.break_interval()
 	clock=clampf(seconds,0,DURATION)
 	_render(0)
 
@@ -137,6 +146,8 @@ func _render(dt: float) -> void:
 		world.surface_fx.clear()
 		active_shot=index
 	sample=world.render(shot,clock,dt)
+	telemetry_hud.model=RallyShowcaseInstruments.model(world,shot,clock,sample)
+	telemetry_hud.queue_redraw()
 	var chapter_start := 0.0 if index<5 else (34.0 if index<9 else 60.0)
 	var chapter_time := clock-chapter_start
 	titles.text=world.scene.challenge.stage.title
@@ -152,6 +163,7 @@ func shot_at(seconds: float) -> int:
 
 func set_playing(value: bool) -> void:
 	if not ready_to_play: return
+	performance.break_interval()
 	playing=value
 	Input.mouse_mode=Input.MOUSE_MODE_HIDDEN if playing else Input.MOUSE_MODE_VISIBLE
 	pause_panel.visible=not playing

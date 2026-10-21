@@ -1,0 +1,16 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Average uses frame count / wall time, not mean of instantaneous FPS
+PASS: Single-frame minimum and maximum
+PASS: Pause/loading interval excluded
+PASS: Resumed frames recorded
+PASS: Duplicate timestamp cannot divide by zero
+PASS: Offline rendering can disable statistics
+PASS: Replay clears previous performance
+PASS: Long frame stalls are retained
+PASS: Known acceleration returns one lateral G, no longitudinal G
+PASS: Seek sampling is deterministic
+PASS: Original torque curve: R200
+PASS: Original torque curve: F160
+PASS: Original torque curve: A240
+TEST RESULT: 13 checks, 0 failures

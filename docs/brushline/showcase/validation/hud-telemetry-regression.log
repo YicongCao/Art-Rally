@@ -1,0 +1,30 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Timer and speedometer panels share both side edges
+PASS: Long race timer fits the narrower panel in the speedometer font
+PASS: Speed uses two digits below 100, three above: 0
+PASS: Speed uses two digits below 100, three above: 7
+PASS: Speed uses two digits below 100, three above: 99
+PASS: Speed uses two digits below 100, three above: 100
+PASS: Speed uses two digits below 100, three above: 236
+PASS: Dashboard reads actual speed gear and engine RPM
+PASS: Pacenote card uses actual route distance
+PASS: Dashboard reports actual driven-wheel spin and safe downshift synchronization
+PASS: Cockpit clears synchronization warning when grip returns
+PASS: Timer includes penalty without losing milliseconds
+PASS: Dashboard renders reverse and pause state
+PASS: HUD remains inside viewport (960.0, 540.0)
+PASS: HUD remains inside viewport (1280.0, 720.0)
+PASS: HUD remains inside viewport (1920.0, 1080.0)
+PASS: HUD remains inside viewport (1024.0, 768.0)
+PASS: HUD remains inside viewport (2560.0, 1080.0)
+PASS: LEFT_MEDIUM arrow tip follows the turn rather than its back edge
+PASS: LEFT_MEDIUM distinguishes a right-angle bend from an upward diagonal
+PASS: RIGHT_MEDIUM arrow tip follows the turn rather than its back edge
+PASS: RIGHT_MEDIUM distinguishes a right-angle bend from an upward diagonal
+PASS: LEFT_TIGHT arrow tip follows the turn rather than its back edge
+PASS: LEFT_TIGHT distinguishes a right-angle bend from an upward diagonal
+PASS: RIGHT_TIGHT arrow tip follows the turn rather than its back edge
+PASS: RIGHT_TIGHT distinguishes a right-angle bend from an upward diagonal
+PASS: Left and right pacenote tips are exact horizontal mirrors
+TEST RESULT: 27 checks, 0 failures

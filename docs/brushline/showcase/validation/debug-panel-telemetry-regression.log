@@ -1,0 +1,46 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Torque history records measured signed torque without duplicating RPM
+PASS: Torque plot contains one curve with its newest sample at the right edge
+PASS: New driving samples move earlier data left at a fixed seconds-per-pixel scale
+PASS: Torque and chassis histories retain the same time scale
+PASS: Chassis history still retains RPM and speed for the lower-right chart
+PASS: Torque axis preserves engine braking below zero Nm
+PASS: Torque plot clipping does not change torque or chassis RPM readings
+PASS: All time series are trimmed together to bounded six-second histories
+PASS: Scrolling retains the newest samples in chronological order
+PASS: Reset clears torque, RPM and speed histories together
+PASS: G-G acceleration ball uses the red debug color
+PASS: Debug engine output measures actual net torque after internal drag
+PASS: Synchronization cut reports zero effective gas and engine braking, not requested pedal torque
+PASS: Reset clears torque instrumentation
+PASS: Independent wheel snapshots preserve surface and water depth
+PASS: Suspension display uses actual load, length, and configured travel limits
+PASS: Readouts preserve signed slip and degree units without clipping data
+PASS: Friction circle uses Fy / -Fx with the physical wet-grip force capacity
+PASS: Friction-circle reference includes actual load sensitivity and wet surface grip
+PASS: Airborne wheel has no friction-circle capacity or division by zero
+PASS: Load balance and local G values use raw vehicle data
+PASS: Degenerate debug travel range cannot inject NaN into visualization
+PASS: FWD debug badges reflect actual driven axles
+PASS: AWD debug badges reflect actual driven axles
+PASS: RWD debug badges reflect actual driven axles
+PASS: Visual debugger is hidden on launch
+PASS: T opens graphical diagnostics, replaces HUD, and enables force vectors
+PASS: Debug shortcut does not steal gamepad focus or clear held axes
+PASS: Held T repeat cannot flicker the debug panel
+PASS: Six-second history has a bounded sample count
+PASS: Pause freezes both engine and chassis histories while leaving diagnostics visible
+PASS: T can hide frozen diagnostics while paused
+PASS: T closes the single diagnostics view
+PASS: Both entry points share one diagnostics panel
+PASS: Vehicle reset clears history and acceleration discontinuities
+PASS: Vehicle selection hides diagnostics and blocks its toggle
+PASS: Debug layout stays inside viewport (960.0, 540.0)
+PASS: Debug layout stays inside viewport (1280.0, 720.0)
+PASS: Debug layout stays inside viewport (1024.0, 768.0)
+PASS: Debug layout stays inside viewport (2560.0, 1080.0)
+PASS: Enabling diagnostics does not change physical acceleration or gearing
+PASS: Debug instrumentation leaves engine dynamics unchanged
+PASS: Hidden debugger stops sampling and releases its trace data
+TEST RESULT: 43 checks, 0 failures

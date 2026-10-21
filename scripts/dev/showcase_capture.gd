@@ -20,12 +20,20 @@ func _run() -> void:
 	for i: int in range(demo.shots.size()):
 		if requested>=0 and requested!=i: continue
 		var shot: Dictionary=demo.shots[i]
-		var time: float=shot.start+({"animals":1.1,"recovery":3.82}.get(shot.id,shot.duration*.5))
+		var time: float=shot.start+({"animals":1.5,"recovery":3.82}.get(shot.id,shot.duration*.5))
 		demo.seek(time)
 		for frame: int in range(5): await process_frame
 		await RenderingServer.frame_post_draw
 		root.get_texture().get_image().save_jpg("res://docs/brushline/showcase/previews/%02d-%s.jpg"%[i+1,shot.id],.93)
 		print("SHOT ",i+1," ",shot.id," ",time)
+
+	if "--telemetry-layout" in OS.get_cmdline_user_args():
+		root.size=Vector2i(1920,1080)
+		DisplayServer.window_set_size(root.size)
+		demo.seek(19.82)
+		for frame: int in range(10): await process_frame
+		await RenderingServer.frame_post_draw
+		root.get_texture().get_image().save_jpg("res://docs/brushline/showcase/validation/telemetry-1920.jpg",.93)
 
 	if "--hood-probe" in OS.get_cmdline_user_args():
 		demo.seek(43)

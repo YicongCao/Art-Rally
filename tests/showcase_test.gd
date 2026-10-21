@@ -87,6 +87,10 @@ func _run() -> void:
 			check(max_angle<4 and max_step<2 and min_clearance>.15,"Stable camera at %d FPS: %s"%[fps,shot.id])
 	# Director ownership: no stage/vehicle/input tick may overwrite a held pose.
 	demo.seek(13)
+	check(is_equal_approx(demo.telemetry_hud.model.rpm,demo.sample[8]) and is_equal_approx(demo.telemetry_hud.model.slip,demo.sample[3]) and is_equal_approx(demo.telemetry_hud.model.steer,-RallyGhostRecording.sample(demo.worlds.sunset_ridge.clips.ridge.recording,17).steer),"HUD reads current replay telemetry and recorded wheel steering")
+	var held_g: Vector3=demo.telemetry_hud.model.g
+	demo.seek(13)
+	check(held_g.is_equal_approx(demo.telemetry_hud.model.g),"HUD G value reproduces on seek")
 	var fixed: Transform3D=demo.worlds.sunset_ridge.scene.camera.transform
 	for i: int in range(5): await process_frame
 	check(fixed.is_equal_approx(demo.worlds.sunset_ridge.scene.camera.transform),"Normal camera cannot overwrite director")
@@ -100,9 +104,11 @@ func _run() -> void:
 	key.pressed=true
 	root.push_input(key)
 	check(not demo.playing and demo.pause_panel.visible,"Space pauses film through Viewport input")
+	var held_model := demo.telemetry_hud.model.duplicate()
 	var paused_clock := demo.clock
 	demo._process(1)
 	check(demo.clock==paused_clock,"Paused editorial clock does not advance")
+	check(demo.telemetry_hud.model==held_model,"Paused telemetry remains frozen")
 	var joy := InputEventJoypadButton.new()
 	joy.button_index=JOY_BUTTON_START
 	joy.pressed=true
@@ -144,6 +150,7 @@ func _run() -> void:
 	demo.seek(74.99)
 	demo._process(.02)
 	check(app.showcase==demo and not demo.visible and app.screen=="showcase_result","75 seconds ends on replay/home page")
+	check(app.column.get_child(app.column.get_child_count()-2) is RallyShowcaseResults,"Result page contains FPS graph panel")
 	app._showcase_replay()
 	check(app.showcase==demo and demo.clock==0 and demo.playing and app.screen=="showcase","Replay reuses prepared worlds with no loading page")
 	demo.seek(74.99)

@@ -73,6 +73,8 @@ PASS: Stable camera at 60 FPS: hood
 PASS: Stable camera at 120 FPS: side
 PASS: Stable camera at 120 FPS: recovery
 PASS: Stable camera at 120 FPS: hood
+PASS: HUD reads current replay telemetry and recorded wheel steering
+PASS: HUD G value reproduces on seek
 PASS: Normal camera cannot overwrite director
 PASS: Runtime and controls disabled in Showcase_sunset_ridge
 PASS: Runtime and controls disabled in Showcase_sunlit_cape
@@ -80,6 +82,7 @@ PASS: Runtime and controls disabled in Showcase_misty_highlands
 PASS: Dormant driving controllers cannot pause the shared SceneTree
 PASS: Space pauses film through Viewport input
 PASS: Paused editorial clock does not advance
+PASS: Paused telemetry remains frozen
 PASS: Controller Start resumes through Viewport input
 PASS: At least 2 seconds continuously framed: animals
 PASS: At least 2 seconds continuously framed: helicopter
@@ -89,6 +92,7 @@ PASS: Restart reproduces wildlife event
 PASS: Player profile, settings, scores and unlocks unchanged
 PASS: No profile written by demo
 PASS: 75 seconds ends on replay/home page
+PASS: Result page contains FPS graph panel
 PASS: Replay reuses prepared worlds with no loading page
 PASS: Escape on result page exits; hidden director cannot capture menu input
-TEST RESULT: 91 checks, 0 failures
+TEST RESULT: 95 checks, 0 failures
