@@ -73,7 +73,7 @@ func _run() -> void:
 	Input.parse_input_event(axis)
 	await process_frame
 	axis=axis.duplicate();axis.axis_value=0;Input.parse_input_event(axis)
-	check(RallyMenuInput.token(root.gui_get_focus_owner())=="自由练习","Left stick moves title focus")
+	check(RallyMenuInput.token(root.gui_get_focus_owner())=="玩法演示","Left stick moves title focus to promoted demo")
 	for page: Callable in [app.show_guide,app.show_records,app.show_credits,app.show_gallery]:
 		page.call()
 		await settle()

@@ -1,0 +1,14 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Keyboard high-speed steering limit does not affect low-speed lock
+PASS: Throttle reaches full input
+PASS: Countersteer crosses zero promptly
+PASS: Input ramps depend on elapsed time, not frame count
+PASS: Stick deadzone and full range
+PASS: Shift edge is consumed only once
+PASS: Keyboard events feed command interface
+PASS: Device switch clears held keyboard throttle, supports nonzero device ID
+PASS: Pause/resume does not retain held input
+PASS: Invalid commands cannot inject NaN or out-of-range control
+PASS: Active controller disconnect blocks and clears commands
+TEST RESULT: 11 checks, 0 failures

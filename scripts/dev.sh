@@ -2,6 +2,7 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+VERSION="$(sed -n 's/^config\/version="\([^"]*\)"/\1/p' "$ROOT/project.godot")"
 EXPECTED="$(tr -d '\r\n' < "$ROOT/.godot-version")"
 
 if [[ -n "${GODOT_BIN:-}" ]]; then
@@ -210,13 +211,13 @@ case "$MODE" in
       exit 1
     fi
     mkdir -p "$ROOT/logs" "$ROOT/builds/macos"
-    rm -rf "$ROOT/builds/macos/Brushline Rally.app" "$ROOT/builds/macos/Brushline-Rally-macos-universal.zip"
+    rm -rf "$ROOT/builds/macos/Brushline Rally.app" "$ROOT/builds/macos/Brushline-Rally-${VERSION}-macos-universal.zip"
     run_logged "$ROOT/logs/export_macos.log" --headless --path "$ROOT" --export-release "macOS" "$ROOT/builds/macos/Brushline Rally.app"
     test -x "$ROOT/builds/macos/Brushline Rally.app/Contents/MacOS/Brushline Rally"
     cp "$ROOT/docs/PLAY_GUIDE.zh-CN.md" "$ROOT/docs/ASSET_CREDITS.md" "$ROOT/assets/licenses/Godot-LICENSE.txt" "$ROOT/assets/licenses/Godot-THIRD-PARTY.json" "$ROOT/builds/macos/"
-    ditto -c -k --sequesterRsrc --keepParent "$ROOT/builds/macos/Brushline Rally.app" "$ROOT/builds/macos/Brushline-Rally-macos-universal.zip"
-    (cd "$ROOT/builds/macos" && /usr/bin/zip -q "Brushline-Rally-macos-universal.zip" PLAY_GUIDE.zh-CN.md ASSET_CREDITS.md Godot-LICENSE.txt Godot-THIRD-PARTY.json)
-    (cd "$ROOT/builds/macos" && shasum -a 256 "Brushline-Rally-macos-universal.zip" > "Brushline-Rally-macos-universal.zip.sha256")
+    ditto -c -k --sequesterRsrc --keepParent "$ROOT/builds/macos/Brushline Rally.app" "$ROOT/builds/macos/Brushline-Rally-${VERSION}-macos-universal.zip"
+    (cd "$ROOT/builds/macos" && /usr/bin/zip -q "Brushline-Rally-${VERSION}-macos-universal.zip" PLAY_GUIDE.zh-CN.md ASSET_CREDITS.md Godot-LICENSE.txt Godot-THIRD-PARTY.json)
+    (cd "$ROOT/builds/macos" && shasum -a 256 "Brushline-Rally-${VERSION}-macos-universal.zip" > "Brushline-Rally-${VERSION}-macos-universal.zip.sha256")
     ;;
   macos-app-check)
     APP="$ROOT/builds/macos/Brushline Rally.app"
@@ -235,17 +236,17 @@ case "$MODE" in
       exit 1
     fi
     mkdir -p "$ROOT/logs" "$ROOT/builds/windows"
-    rm -rf "$ROOT/builds/windows/Brushline Rally" "$ROOT/builds/windows/Brushline-Rally-windows-x86_64.zip" "$ROOT/builds/windows/Brushline-Rally-windows-x86_64.zip.sha256"
+    rm -rf "$ROOT/builds/windows/Brushline Rally" "$ROOT/builds/windows/Brushline-Rally-${VERSION}-windows-x86_64.zip" "$ROOT/builds/windows/Brushline-Rally-${VERSION}-windows-x86_64.zip.sha256"
     mkdir -p "$ROOT/builds/windows/Brushline Rally"
     run_logged "$ROOT/logs/export_windows.log" --headless --path "$ROOT" --export-release "Windows Desktop" "$ROOT/builds/windows/Brushline Rally/Brushline Rally.exe"
     test -f "$ROOT/builds/windows/Brushline Rally/Brushline Rally.exe"
     cp "$ROOT/docs/PLAY_GUIDE.zh-CN.md" "$ROOT/docs/ASSET_CREDITS.md" "$ROOT/assets/licenses/Godot-LICENSE.txt" "$ROOT/assets/licenses/Godot-THIRD-PARTY.json" "$ROOT/builds/windows/Brushline Rally/"
-    (cd "$ROOT/builds/windows" && /usr/bin/zip -r -9 -X "Brushline-Rally-windows-x86_64.zip" "Brushline Rally")
-    (cd "$ROOT/builds/windows" && shasum -a 256 "Brushline-Rally-windows-x86_64.zip" > "Brushline-Rally-windows-x86_64.zip.sha256")
+    (cd "$ROOT/builds/windows" && /usr/bin/zip -r -9 -X "Brushline-Rally-${VERSION}-windows-x86_64.zip" "Brushline Rally")
+    (cd "$ROOT/builds/windows" && shasum -a 256 "Brushline-Rally-${VERSION}-windows-x86_64.zip" > "Brushline-Rally-${VERSION}-windows-x86_64.zip.sha256")
     ;;
   windows-package-check)
     EXE="$ROOT/builds/windows/Brushline Rally/Brushline Rally.exe"
-    ZIP="$ROOT/builds/windows/Brushline-Rally-windows-x86_64.zip"
+    ZIP="$ROOT/builds/windows/Brushline-Rally-${VERSION}-windows-x86_64.zip"
     test -f "$EXE" -a -f "$ZIP"
     file "$EXE" | grep -Eq 'PE32\+ executable.*x86-64'
     python3 - "$EXE" <<'PY'

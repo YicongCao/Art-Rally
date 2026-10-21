@@ -4,9 +4,9 @@
 
 ## 简介
 
-采用漫画套色画风、完全离线的计时拉力游戏。当前分支为 **Brushline Rally 开发验证版**（应用版本暂沿用 0.4.0，尚未发布新 Release）；上一正式发行版为 [Art Rally 0.4.0](https://github.com/YicongCao/Art-Rally/releases/tag/v0.4.0)：三条主题赛道、大众 GTI／宝马 M3 E30／奥迪 quattro S1 三辆赛车、三档动力的 27 个独立挑战、奖牌与分段计时、个人幽灵、本地档案、赛后回放、航拍相册及声音。底层仍采用原有 120 Hz 车辆与轮胎系统。
+采用漫画套色画风、完全离线的计时拉力游戏。当前版本为 **[Brushline Rally 0.5.0](https://github.com/YicongCao/Brushline-Rally/releases/tag/v0.5.0)**：三条主题赛道、大众 GTI／宝马 M3 E30／奥迪 quattro S1 三辆赛车、三档动力的 27 个独立挑战、奖牌与分段计时、个人幽灵、本地档案、赛后回放、航拍相册及声音。底层仍采用原有 120 Hz 车辆与轮胎系统。
 
-[本轮改造与验收](docs/brushline/VALIDATION.zh-CN.md) · [品牌与资产](docs/brushline/ASSETS.zh-CN.md) · [历史 0.4.0 发布验证](docs/validation/v040-release.zh-CN.md) · [0.3.0 候选版变化](docs/V0_3_0_RC.zh-CN.md) · [实施计划](docs/FIRST_PLAYABLE_PLAN.zh-CN.md) · [实施状态与未通过项](docs/FIRST_PLAYABLE_STATUS.zh-CN.md) · [实测验收报告](docs/FIRST_PLAYABLE_VALIDATION.zh-CN.md) · [操作说明](docs/PLAY_GUIDE.zh-CN.md) · [素材名单](docs/ASSET_CREDITS.md)
+[0.5.0 发布记录](docs/validation/v050-release.zh-CN.md) · [本轮改造与验收](docs/brushline/VALIDATION.zh-CN.md) · [品牌与资产](docs/brushline/ASSETS.zh-CN.md) · [历史 0.4.0 发布验证](docs/validation/v040-release.zh-CN.md) · [0.3.0 候选版变化](docs/V0_3_0_RC.zh-CN.md) · [实施计划](docs/FIRST_PLAYABLE_PLAN.zh-CN.md) · [实施状态与未通过项](docs/FIRST_PLAYABLE_STATUS.zh-CN.md) · [实测验收报告](docs/FIRST_PLAYABLE_VALIDATION.zh-CN.md) · [操作说明](docs/PLAY_GUIDE.zh-CN.md) · [素材名单](docs/ASSET_CREDITS.md)
 
 ## 直接玩游戏
 
@@ -16,9 +16,9 @@
 ./scripts/dev.sh run
 ```
 
-启动后进入标题菜单，可选择计时挑战、自由练习、玩法演示和设置。松岭任一合法正式金牌解锁海岸及高地挑战；自由练习始终开放，已有有效成绩的老玩家保留赛道入口。脚本会先导入资源、更新脚本缓存，首次启动会稍慢；终端会打印项目绝对路径。请确认进入的是最新版本所在的目录。
+启动后进入标题菜单，主行提供计时挑战、玩法演示和设置；自由练习位于次行。玩法演示为 75 秒三赛道精选，带精简遥测仪表和结束帧率报告。松岭任一合法正式金牌解锁海岸及高地挑战；自由练习始终开放，已有有效成绩的老玩家保留赛道入口。脚本会先导入资源、更新脚本缓存，首次启动会稍慢；终端会打印项目绝对路径。请确认进入的是最新版本所在的目录。
 
-**已发布旧版下载：** 从 [最新发行版](https://github.com/YicongCao/Art-Rally/releases/latest) 下载对应系统的 ZIP，解压后打开 macOS 的 `Art Rally.app` 或 Windows 的 `Art Rally.exe`。0.4.0 macOS 包通过自动启动与驾驶检查；Windows 包完成交叉导出与结构校验，该旧版发布未做人工试玩或真实 Windows 验收。奖牌阈值仍待熟练真人基准跑标定。
+**发行包下载：** 从 [最新发行版](https://github.com/YicongCao/Brushline-Rally/releases/latest) 下载对应系统的 ZIP，解压后打开 macOS 的 `Brushline Rally.app` 或 Windows 的 `Brushline Rally.exe`。0.5.0 macOS 包通过自动启动、驾驶及演示素材检查；Windows 包完成交叉导出与结构校验，未进行真实 Windows 运行验收。奖牌阈值仍待熟练真人基准跑标定。
 
 <table>
   <tr>
@@ -132,7 +132,7 @@ godot --path . --max-fps 60 --script res://scripts/dev/readme_showcase.gd -- --t
 
 `m6-perf` 需要真实 Metal 窗口并耗时约 12 分钟；它以生产自动驾驶连续跑三次，分别覆盖默认跟车、驾驶舱和 T 调试面板，输出原始帧间隔、60 帧节奏 P95/P99、Godot 总物理、车辆回调、draw call、三角元及内存趋势到 `logs/m6_performance.json`。性能报告与测量限制见 [M6 验收记录](docs/M6_VALIDATION.zh-CN.md)。
 
-macOS 导出要求安装与 `.godot-version` 完全一致的 4.7.2 模板；`doctor` 会显示模板状态。产物位于忽略版本控制的 `builds/macos/Brushline Rally.app` 和 `Brushline-Rally-macos-universal.zip`。当前包使用本机可验证的 ad-hoc 签名，不是 Developer ID 正式签名，也没有 Apple 公证；从网络下载或传到其他 Mac 后仍可能触发 Gatekeeper 提示。
+macOS 导出要求安装与 `.godot-version` 完全一致的 4.7.2 模板；`doctor` 会显示模板状态。产物位于忽略版本控制的 `builds/macos/Brushline Rally.app` 和 `Brushline-Rally-0.5.0-macos-universal.zip`。当前包使用本机可验证的 ad-hoc 签名，不是 Developer ID 正式签名，也没有 Apple 公证；从网络下载或传到其他 Mac 后仍可能触发 Gatekeeper 提示。
 
 Windows x86_64 包可由同一台 Mac 使用官方 4.7.2 模板交叉导出，不需要 Windows SDK。产物位于 `builds/windows/Brushline Rally/Brushline Rally.exe` 和 `Brushline-Rally-windows-x86_64.zip`，PCK 嵌入 EXE；目前没有 Authenticode 签名，可能触发 SmartScreen。macOS 只能校验 PE 结构和导出资源，不能运行 `.exe`；复制到 Windows 后执行 `powershell -ExecutionPolicy Bypass -File scripts/windows_smoke.ps1`，并重新完成 D3D12/Vulkan、镜头光斑、真实性能和手柄验收。
 
@@ -140,7 +140,7 @@ Windows x86_64 包可由同一台 Mac 使用官方 4.7.2 模板交叉导出，�
 
 ## 输入预设
 
-进入比赛前选择 F160 前驱掀背、R200 后驱轿跑或 A240 四驱宽体车，基础动力分别为 192 / 240 / 288 PS，每辆车另有 1.5 倍和 2 倍动力版本，并采用独立质量、尺寸、模型和音色。正式挑战固定机械调校；练习模式可调整制动比例和弹簧。暂停菜单更换车辆会返回选关。旧开发入口仍保留共用基线车的 FWD/AWD/RWD 对比。
+进入比赛前选择 F160 前驱掀背、R200 后驱轿跑或 A240 四驱宽体车，基础动力分别为 220 / 240 / 288 PS，每辆车另有 1.5 倍和 2 倍动力版本，并采用独立质量、尺寸、模型和音色。正式挑战固定机械调校；练习模式可调整制动比例和弹簧。暂停菜单更换车辆会返回选关。旧开发入口仍保留共用基线车的 FWD/AWD/RWD 对比。
 
 键盘默认标准辅助；F2 切换轻辅助。默认自动换挡和自动离合，M 切换手动换挡。默认启用倒车辅助：停稳后持续按 S/↓（手柄 LT）0.6 秒，缩短的横条结束后自动挂 R；R 挡时同一按键变为倒车油门。按 W/↑（RT）切回前进；若车还在后退，会先制动停稳再挂一挡。松开制动、暂停、复位或手动换挡会取消倒计时，空中或仍在移动时不计时。
 
@@ -259,15 +259,15 @@ v0.2 轮胎模型已按 [技术方案](docs/V0.2_TIRE_CONTACT_DEFORMATION.zh-CN.
 
 执行顺序与验收标准见 [开发计划](docs/DEVELOPMENT_PLAN.zh-CN.md)。手柄优先标定，键盘通过输入平滑与车速相关转向辅助降低难度，两者共享相同车辆物理。
 
-最新赛道与选车改动见 [赛道第二版更新](docs/ROUTE_V2_UPDATE.zh-CN.md)。当前运行版本为 `0.4.0`；路线版本 7，前驱车标定 fp4（220／330／440 PS），后驱与四驱仍为 fp3。旧前驱成绩保留，按标定版本隔离。页面动效、回放与音乐调整见 [体验打磨更新](docs/CINEMATIC_POLISH.zh-CN.md)。
+最新赛道与选车改动见 [赛道第二版更新](docs/ROUTE_V2_UPDATE.zh-CN.md)。当前运行版本为 `0.5.0`；路线版本 7，前驱车标定 fp4（220／330／440 PS），后驱与四驱仍为 fp3。旧前驱成绩保留，按标定版本隔离。页面动效、回放与音乐调整见 [体验打磨更新](docs/CINEMATIC_POLISH.zh-CN.md)。
 
 本轮界面、混合路面与窄桥、回放、航拍相册和四主题 MIDI 配乐见 [玩家体验更新](docs/PLAYER_EXPERIENCE_UPDATE.zh-CN.md)。
 
 最新驾驶与回放更新：固定回放观察侧、实时扬尘胎痕、检查点秒差、分类设置、中文男女领航及三种独立曲风，见 [更新与验证说明](docs/DRIVING_EXPERIENCE_2026-10-18.zh-CN.md)。
 
-[0.3.0 公开试玩版下载](https://github.com/YicongCao/Art-Rally/releases/tag/v0.3.0) · [本轮发布验证](docs/validation/v030-release.zh-CN.md)。
+[0.3.0 公开试玩版下载](https://github.com/YicongCao/Brushline-Rally/releases/tag/v0.3.0) · [本轮发布验证](docs/validation/v030-release.zh-CN.md)。
 
-[0.3.1 HUD 修订包下载](https://github.com/YicongCao/Art-Rally/releases/tag/v0.3.1) · [HUD 修订验证](docs/validation/v031-hud.zh-CN.md)。
+[0.3.1 HUD 修订包下载](https://github.com/YicongCao/Brushline-Rally/releases/tag/v0.3.1) · [HUD 修订验证](docs/validation/v031-hud.zh-CN.md)。
 
 ### 套色拉力美术管线
 

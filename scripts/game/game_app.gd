@@ -154,7 +154,7 @@ func _page(title: String, subtitle: String, name_id: String) -> void:
 	for side: String in ["top","bottom"]: margins.add_theme_constant_override("margin_"+side,28)
 	ui.add_child(margins)
 	# Selection cards share the available screen height instead of scrolling.
-	var fitted := name_id in ["stages","vehicles","loading"]
+	var fitted := name_id in ["stages","vehicles","loading","records","guide","credits"]
 	column = VBoxContainer.new()
 	column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	column.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -250,13 +250,13 @@ func show_home() -> void:
 	var challenge := _menu_tile(main,"开始计时挑战","","challenge",Color("f05a28"),func(): practice=false; tutorial=false; show_stages(),true)
 	challenge.size_flags_stretch_ratio = 1.4
 	challenge.grab_focus()
-	_menu_tile(main,"自由练习","","practice",Color("20252b"),func(): practice=true; tutorial=false; show_stages(),true)
+	_menu_tile(main,"玩法演示","","play",Color("20252b"),start_benchmark,true)
 	_menu_tile(main,"设置","","settings",Color("303644"),show_settings,true)
 	var gap := Control.new()
 	gap.custom_minimum_size.y = 18
 	column.add_child(gap)
 	var secondary := _row(column)
-	_menu_tile(secondary,"玩法演示","","practice",Color("303644"),start_benchmark,false)
+	_menu_tile(secondary,"自由练习","","practice",Color("303644"),func(): practice=true; tutorial=false; show_stages(),false)
 	secondary.add_theme_constant_override("separation",10)
 	_menu_tile(secondary,"相册","","gallery",Color("20252b"),show_gallery,false)
 	_menu_tile(secondary,"操作指南","","guide",Color("20252b"),show_guide,false)
@@ -266,44 +266,18 @@ func show_home() -> void:
 
 
 func show_guide() -> void:
-	_page("操作指南","", "guide")
+	_page("操作指南","驾驶 · 菜单 · 回放", "guide")
 	var row := _row(column)
-	for entry: Array in [["键盘","W / ↑　加速
-S / ↓　制动，停稳按住 0.6 秒倒车
-A D / ← →　转向
-空格　手刹　　R　恢复
-C　镜头　　Q E　换挡
-T　遥测与调试
-Esc　暂停"],["手柄","十字键 / 左摇杆　菜单导航
-A / ×　确认　　B / ○　返回
-右 / 左扳机　加速 / 制动
-左摇杆　转向
-右摇杆　环视　　R3　回正
-A　手刹　　Y　恢复
-X　镜头　　肩键　换挡
-Start　暂停"],["回放","空格　播放 / 暂停
-C　切换镜头
-← →　前后 5 秒
-Esc　退出沉浸模式"]]:
+	row.size_flags_vertical=Control.SIZE_EXPAND_FILL
+	for gamepad: bool in [false,true]:
 		var card := _card(row)
-		_label(card,entry[0],26)
-		_label(card,entry[1],19)
-		if entry[0]=="回放":
-			var legend := VBoxContainer.new()
-			legend.add_theme_constant_override("separation",6)
-			card.add_child(legend)
-			for item: Array in [["handbrake","手刹"],["shift","换挡"]]:
-				var pair := _row(legend)
-				pair.add_theme_constant_override("separation",4)
-				var icon := TextureRect.new()
-				icon.texture = load("res://assets/ui/icons/"+item[0]+".svg")
-				icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-				icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-				icon.custom_minimum_size = Vector2(20,20)
-				pair.add_child(icon)
-				var label := _label(pair,item[1],16)
-				label.autowrap_mode = TextServer.AUTOWRAP_OFF
-	_actions("← 主菜单",show_home)
+		_label(card,"手柄" if gamepad else "键盘与鼠标",24)
+		var diagram := RallyControlGuide.new()
+		diagram.gamepad=gamepad
+		diagram.bindings=profile.data.bindings
+		card.add_child(diagram)
+	_label(column,"回放：空格 播放 / 暂停 · C 镜头 · 方向键 前后 5 秒 · Esc 退出    演示：空格 / Esc / Start 暂停",15)
+	_actions("返回主菜单",show_home)
 
 
 func _menu_tile(parent: Node,title: String,caption: String,icon: String,color: Color,action: Callable,large: bool) -> Button:
@@ -849,27 +823,29 @@ func show_photo(index: int) -> void:
 
 
 func show_records() -> void:
-	_page("你的山野足迹",RallyContentCatalog.POWER_LABELS[chosen_power_tier]+" · 每个赛道、车型和动力版本分别保存纪录与幽灵。","records")
+	_page("你的山野足迹","每个赛道、车型与动力版本分别保存成绩。","records")
 	var tiers := _row(column)
 	for tier: int in range(profile.unlocked_power_tier()+1):
 		var option := _button(tiers,RallyContentCatalog.POWER_LABELS[tier],func(): chosen_power_tier=tier; show_records())
 		RallySelectionStyle.apply(option,tier==chosen_power_tier)
 	var bronze := 0
 	var gold := 0
+	var stages := _row(column)
+	stages.size_flags_vertical=Control.SIZE_EXPAND_FILL
 	for id: String in RallyContentCatalog.STAGES:
-		_label(column,RallyContentCatalog.stage(id).title,25)
-		var row := _row(column)
+		var card := _card(stages)
+		_label(card,RallyContentCatalog.stage(id).title,25)
 		for car: String in RallyContentCatalog.VEHICLES:
 			var challenge := RallyContentCatalog.challenge(id,car,chosen_power_tier)
 			var result := profile.result_for(challenge.key())
 			var medal := int(result.get("medal",0))
 			if medal>0: bronze+=1
 			if medal==3: gold+=1
-			var card := _card(row)
-			_label(card,car+" / "+RallyContentCatalog.power_label(car,chosen_power_tier)+" · "+MEDALS[medal],20)
-			_label(card,_time(result.best.total_time) if result.has("best") else "等待你的第一条轨迹",18)
-	_label(column,"全金达成 · 每一段旅途都留下了金色轨迹！" if gold==9 else ("基础挑战完成 · 九枚奖牌，九段旅途。" if bronze==9 else "基础挑战 %d / 9    金牌 %d / 9"%[bronze,gold]),21,Color("efbf6e"))
-	_actions("← 主菜单",show_home)
+			card.add_child(HSeparator.new())
+			_label(card,car+" · "+RallyContentCatalog.power_label(car,chosen_power_tier),20)
+			_label(card,(_time(result.best.total_time) if result.has("best") else "暂无成绩")+"  /  "+MEDALS[medal],17)
+	_label(column,"全金达成 · 每一段旅途都留下了金色轨迹！" if gold==9 else "已获奖牌 %d / 9    金牌 %d / 9"%[bronze,gold],18,Color("efbf6e"))
+	_actions("返回主菜单",show_home)
 
 
 func show_tutorial() -> void:
@@ -1045,11 +1021,18 @@ func _input(event: InputEvent) -> void:
 
 
 func show_credits() -> void:
-	_page("沿途的创作者","Brushline Rally / 原创复古计时拉力","credits")
-	_label(column,"引擎：Godot Engine / Jolt Physics\n车辆、风景、涂装：Brushline Rally 原创低多边形设计\n音效与音乐：项目原创合成
-中文领航：Kokoro 合成语音，全部离线打包\n字体与依赖许可：见随包 ASSET_CREDITS.md\n\n感谢每一位试驾并留下反馈的玩家。",24)
-	_label(column,"0.3.0 · 离线计时拉力 · 本地成绩与个人幽灵",16)
-	_actions("← 主菜单",show_home)
+	_page("沿途的创作者","Brushline Rally", "credits")
+	for entry: Array in [["引擎","Godot Engine"],["物理","Jolt Physics"],["创意设计","Pixelcao"],["领航语音","合成语音"],["代码生成","Codex"],["制作人","Pixelcao"]]:
+		var row := _row(column)
+		var label := _label(row,entry[0],21,Color("b5c4c0"))
+		label.custom_minimum_size.x=170
+		label.size_flags_horizontal=Control.SIZE_SHRINK_BEGIN
+		_label(row,entry[1],25)
+	_label(column,"%s · 字体与依赖许可见随包 ASSET_CREDITS.md"%ProjectSettings.get_setting("application/config/version"),16)
+	var space := Control.new()
+	space.size_flags_vertical=Control.SIZE_EXPAND_FILL
+	column.add_child(space)
+	_actions("返回主菜单",show_home)
 
 
 func _save() -> void:

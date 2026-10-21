@@ -4,7 +4,7 @@ extends RefCounted
 
 static func run(scene: Node3D) -> void:
 	var failures := PackedStringArray()
-	if ProjectSettings.get_setting("application/config/version","")!="0.4.0":
+	if ProjectSettings.get_setting("application/config/version","")!="0.5.0":
 		failures.append("application version")
 	if scene.generator.route.length<3000 or scene.vehicle.wheels.size()!=4:
 		failures.append("main stage resources")
@@ -57,7 +57,7 @@ static func run_app(app: Node) -> void:
 	app.prefs=RallyGameSettings.new()
 	app.audio.apply_settings(app.prefs)
 	if app.profile.set_plate("PACK-160") != OK: failures.append("player plate save")
-	if ProjectSettings.get_setting("application/config/version","")!="0.4.0": failures.append("application version")
+	if ProjectSettings.get_setting("application/config/version","")!="0.5.0": failures.append("application version")
 	if app.screen!="home": failures.append("main menu")
 	for stage: String in RallyContentCatalog.STAGES:
 		for vehicle: String in RallyContentCatalog.VEHICLES:
@@ -108,6 +108,20 @@ static func run_app(app: Node) -> void:
 	await app.leave_race()
 	await app.get_tree().process_frame
 	if app.screen!="stages": failures.append("return flow")
+	# Exercise shipped guide vectors and all seven replay recordings in the real .app.
+	app.show_guide()
+	if app.ui.find_children("*","RallyControlGuide",true,false).size()!=2: failures.append("packaged control diagrams")
+	await app.start_benchmark()
+	if not is_instance_valid(app.showcase) or not app.showcase.ready_to_play:
+		failures.append("packaged showcase preparation")
+	else:
+		app.showcase.set_process(false)
+		app.showcase.seek(19.82)
+		if app.showcase.telemetry_hud.model.rpm<=0: failures.append("packaged showcase HUD")
+		app.showcase.seek(74.99)
+		app.showcase._process(.02)
+		if app.screen!="showcase_result": failures.append("packaged showcase finish")
+		app._showcase_exit()
 	app.audio.set_process(false)
 	app.audio.stop_all()
 	await app.get_tree().create_timer(.12).timeout

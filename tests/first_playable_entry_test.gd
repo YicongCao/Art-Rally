@@ -23,7 +23,7 @@ func _run() -> void:
 	icons = icons.filter(func(icon: TextureRect): return icon.texture != null and icon.texture.resource_path.begins_with("res://assets/ui/icons/"))
 	check(icons.size() == 9, "All nine menu actions have loaded vector icons")
 	check(not visible_button("开始计时挑战").get_global_rect().intersects(visible_button("设置").get_global_rect()), "Primary tiles have separate hit targets")
-	check(visible_button("开始计时挑战").position.x < visible_button("自由练习").position.x and visible_button("自由练习").position.x < visible_button("设置").position.x,"Primary menu order is challenge, practice, settings")
+	check(visible_button("开始计时挑战").position.x < visible_button("玩法演示").position.x and visible_button("玩法演示").position.x < visible_button("设置").position.x,"Primary menu order is challenge, demo, settings")
 	await capture("home")
 	click_button(visible_button("开始计时挑战"))
 	await settled()

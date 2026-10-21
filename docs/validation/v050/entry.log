@@ -1,0 +1,15 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Default player entry is the full game
+PASS: Configured main scene creates the game front end
+PASS: Player sees the title menu on normal startup
+PASS: Challenge and settings buttons occupy the visible viewport
+PASS: Frequent actions have larger tiles than secondary actions
+PASS: All nine menu actions have loaded vector icons
+PASS: Primary tiles have separate hit targets
+PASS: Primary menu order is challenge, demo, settings
+PASS: Challenge button opens three stage choices with separate confirmation
+PASS: Stage confirmation opens three vehicles with a separate confirmation
+PASS: Settings opens through the title menu
+PASS: Returning to title restores usable controls
+TEST RESULT: 12 checks, 0 failures

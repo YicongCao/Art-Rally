@@ -1,0 +1,36 @@
+{
+  "version": "0.5.0",
+  "tag": "v0.5.0",
+  "repository": "YicongCao/Brushline-Rally",
+  "engine": "4.7.2",
+  "checks": 323,
+  "native_ui_resolutions": [
+    [
+      1280,
+      720
+    ],
+    [
+      1920,
+      1080
+    ],
+    [
+      2560,
+      1080
+    ]
+  ],
+  "macos_packaged_smoke": "passed, native driving and three-world showcase",
+  "macos_signature": "ad-hoc verified, not notarized",
+  "windows": "cross-exported x86_64, PE and ZIP verified; no native Windows run",
+  "assets": [
+    {
+      "name": "Brushline-Rally-0.5.0-macos-universal.zip",
+      "bytes": 108645838,
+      "sha256": "4209d26f4989b6da0890e65942ea53f4caf46c4aef97b209840bb00be599a990"
+    },
+    {
+      "name": "Brushline-Rally-0.5.0-windows-x86_64.zip",
+      "bytes": 85924755,
+      "sha256": "a36df35c5433be1fa5bf3293fc777b8a269b6cdaff67e974c7cbdcbea8014808"
+    }
+  ]
+}

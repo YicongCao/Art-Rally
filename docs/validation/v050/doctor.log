@@ -1,0 +1,6 @@
+Engine: /opt/homebrew/bin/godot
+Version: 4.7.2.stable.official.ed1daf0bf
+Project: /Users/cong/.codex/worktrees/d325/Art-Rally
+Architecture: arm64
+macOS template: /Users/cong/Library/Application Support/Godot/export_templates/4.7.2.stable/macos.zip
+Windows x86_64 template: /Users/cong/Library/Application Support/Godot/export_templates/4.7.2.stable/windows_release_x86_64.exe

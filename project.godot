@@ -12,7 +12,7 @@ config_version=5
 
 config/name="Brushline Rally"
 config/icon="res://assets/brushline/icon.svg"
-config/version="0.4.0"
+config/version="0.5.0"
 run/main_scene="res://scenes/game/game.tscn"
 config/features=PackedStringArray("4.7", "Forward Plus")
 
