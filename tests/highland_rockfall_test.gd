@@ -98,47 +98,46 @@ func _run() -> void:
 			if not baseline.vertex_at(i,column).is_equal_approx(scene.generator.vertex_at(i,column)): same_geometry=false
 	check(same_geometry,"Alpine scenery preserves the road vertex layout; outer collision apron is separately removed")
 	baseline.free()
-	var safe:=true
-	for event: Dictionary in scene.rockfall.events:
-		var station:=float(event.s)
-		var lateral_side:=float(event.side)
-		var flight_is_clear := true
-		for stone: MeshInstance3D in event.items:
-			var projection: Dictionary=scene.generator.route.project(stone.get_meta("finish"))
-			var radius: float=maxf(stone.scale.x,stone.scale.z)
-			var clearance: float=absf(float(projection.lateral))-scene.generator.route.width_at(station)*.5-radius
-			if clearance<1.5: safe=false
-			if stone.find_children("*","CollisionShape3D",true,false).size()>0: safe=false
-			for sample: int in range(33):
-				var at: Vector3=scene.rockfall.position_at_weight(stone,float(sample)/32)
-				var nearest: Dictionary=scene.presentation.scenery.nearest(at)
-				if absf(float(nearest.lateral))<scene.generator.route.width_at(nearest.s)*.5+radius+1.5:
-					flight_is_clear=false
-					print("FLIGHT GAP ",station," sample=",sample," actual=",absf(float(nearest.lateral))-scene.generator.route.width_at(nearest.s)*.5-radius)
-				if at.y<scene.presentation.scenery.rendered_height_at(at.x,at.z)+stone.scale.y*.8: flight_is_clear=false
-		check(safe,"Rockfall stones have no collisions and remain outside the road and vehicle clearance")
-		check(flight_is_clear,"Every sampled fall stays above the visible mountainside and outside the road")
-		check(lateral_side==signf(definition.mountain_side_at(station)),"Rocks descend from the adjacent mountainside")
-	# Drive state is controlled explicitly to prove approach activation and reset behavior.
 	scene.session.phase=RallyStageSession.Phase.RUNNING
-	scene.vehicle.linear_velocity=Vector3.ZERO
+	scene.vehicle.freeze=true
 	for event: Dictionary in scene.rockfall.events:
-		scene.session.progress=float(event.s)-7
-		scene.rockfall.advance(.1)
-		check(float(event.elapsed)>0 and event.items.any(func(stone: MeshInstance3D)->bool:return stone.visible),"Approaching each marked point starts its non-colliding fall")
-		for frame: int in range(50): scene.rockfall.advance(.1)
-		check(event.items.any(func(stone: MeshInstance3D)->bool:return stone.visible),"Rocks keep rolling instead of disappearing at five seconds")
 		var hero: MeshInstance3D=event.items[0]
-		var landing: Vector3=hero.get_meta("landed")
-		for frame: int in range(45): scene.rockfall.advance(.1)
-		var final_point: Vector3=hero.global_position
-		var frame: Transform3D=scene.generator.route.pose_at(float(event.s),0)
-		var travel: float=(final_point-landing).dot(frame.basis.x)*-float(event.side)
-		check(travel>12 and final_point.y<landing.y-5,"Rock %dm rolls to the cliff and descends before fade (%.1fm sideways / %.1fm down)"%[event.s,travel,landing.y-final_point.y])
-		for tail: int in range(20): scene.rockfall.advance(.1)
-		check(event.items.all(func(stone: MeshInstance3D)->bool:return not stone.visible),"Rocks clear only after the extended cliff descent")
-		scene.rockfall.reset()
-		check(float(event.elapsed)<0,"Restart resets one-shot fall events")
+		var pose: Transform3D=scene.generator.route.pose_at(float(hero.get_meta("station")),0)
+		var previous: Vector3=scene.rockfall.position_at_time(hero,0)
+		var continuous := true
+		var downhill := true
+		for i: int in range(1,1081):
+			var at: Vector3=scene.rockfall.position_at_time(hero,i*.01)
+			if (at-previous).dot(pose.basis.x)*float(event.side)>=0: continuous=false
+			var offset := at-pose.origin
+			offset.y=0
+			var forward := -pose.basis.z
+			forward.y=0
+			if absf(offset.dot(forward))>.01: continuous=false
+			if at.distance_to(previous)>2:
+				continuous=false
+				print("JUMP ",event.s," t=",i*.01," from=",previous," to=",at)
+			previous=at
+		var start: Vector3=scene.rockfall.position_at_time(hero,0)
+		var finish: Vector3=scene.rockfall.position_at_time(hero,10.8)
+		downhill=finish.y<pose.origin.y-8 and (finish-pose.origin).dot(pose.basis.x)*float(event.side)<-80
+		check(continuous,"Fixed transverse path moves continuously with no endpoint parking at %s"%event.s)
+		check(downhill,"Rock reaches the valley below the road before cleanup at %s"%event.s)
+		check(hero.find_children("*","CollisionShape3D",true,false).is_empty(),"Scenic stones remain non-colliding")
+		for fps: int in [30,60,120]:
+			scene.rockfall.reset()
+			scene.session.progress=float(event.s)-30
+			scene.vehicle.linear_velocity=Vector3.ZERO
+			for i: int in range(fps*6): scene.rockfall.advance(1.0/fps)
+			check(hero.visible and hero.global_position.distance_to(scene.rockfall.position_at_time(hero,6))<.01 and hero.transparency==0,"Six-second descent is visible and identical at %d FPS"%fps)
+			var fixed: Vector3=hero.global_position
+			scene.vehicle.global_position+=Vector3(20,0,15)
+			scene.rockfall.advance(0)
+			check(hero.global_position.is_equal_approx(fixed),"Car movement cannot pull rocks toward its bumper")
+			for i: int in range(fps*5): scene.rockfall.advance(1.0/fps)
+			check(not hero.visible,"Cleanup follows continuous remote descent")
+			scene.rockfall.reset()
+		check(event.elapsed<0 and not hero.visible,"Reset rearms and hides the event")
 	await app.leave_race()
 	app.free()
 	await process_frame

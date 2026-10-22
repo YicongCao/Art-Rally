@@ -72,13 +72,13 @@ func _run() -> void:
 			push_error("Highland capture did not reach %dm under production driving"%station)
 			quit(1)
 			return
-		# Inspect the near-miss itself, not only the road before activation.
+		# Inspect the fixed crossing, not only the road before activation.
 		var fall: Dictionary=scene.rockfall.events[index]
 		var deadline := Time.get_ticks_msec()+6000
 		while float(fall.elapsed)<2.7 and Time.get_ticks_msec()<deadline:
 			await process_frame
 		await RenderingServer.frame_post_draw
-		print("NEAR MISS ",index," elapsed=",fall.elapsed," clearance=",scene.rockfall.closest_clearance)
+		print("ROCK CROSSING ",index," elapsed=",fall.elapsed," clearance=",scene.rockfall.closest_clearance)
 		var path: String="res://docs/brushline/rockfall-%02d.jpg"%index
 		root.get_texture().get_image().save_jpg(path,.94)
 		print("SAVED ",path," progress=",scene.session.progress," recoveries=",scene.session.reset_count," average_fps=",rendered_frames*1000.0/maxi(1,Time.get_ticks_msec()-wall_start))

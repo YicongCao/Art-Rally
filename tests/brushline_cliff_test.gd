@@ -36,7 +36,7 @@ func _run() -> void:
 	await ticks(360)
 	check(race.session.reset_count==resets+1,"Cliff recovery applies exactly one reset after the visible fall")
 	race.session.phase=RallyStageSession.Phase.RUNNING
-	# All body envelopes and tiers, including stationary, reverse and close shoulder cases.
+	# All vehicles and tiers must leave the world-space trajectory unchanged.
 	race.vehicle.freeze=true
 	for car_id: String in RallyContentCatalog.VEHICLES:
 		for tier: int in range(3):
@@ -49,12 +49,12 @@ func _run() -> void:
 				race.vehicle.global_transform=pose
 				race.vehicle.global_position+=pose.basis.x*float(race.rockfall.events[0].side)*4.5
 				race.vehicle.linear_velocity=-pose.basis.z*speed
-				race.session.progress=450
+				race.session.progress=420
 				for i: int in range(600): race.rockfall.advance(1.0/60)
-				if race.rockfall.closest_clearance<1.49: safe=false
-				if speed>0 and race.rockfall.closest_clearance>3.0: safe=false
+				var hero: MeshInstance3D=race.rockfall.events[0].items[0]
+				if hero.global_position.distance_to(race.rockfall.position_at_time(hero,10))>.01: safe=false
 				if not race.rockfall.events[0].items[0].visible: safe=false
-			check(safe,car_id+" tier %d stays visibly separated by 1.5 m at every speed"%tier)
+			check(safe,car_id+" tier %d does not change the authored rock trajectory at any speed"%tier)
 	await app.leave_race()
 	app.free()
 	await process_frame

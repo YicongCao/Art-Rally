@@ -1,0 +1,40 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Road stays supported at 450 m
+PASS: Cliff has no invisible road-height platform at 450 m
+PASS: Road stays supported at 900 m
+PASS: Cliff has no invisible road-height platform at 900 m
+PASS: Road stays supported at 1480 m
+PASS: Cliff has no invisible road-height platform at 1480 m
+PASS: Road stays supported at 1930 m
+PASS: Cliff has no invisible road-height platform at 1930 m
+PASS: Road stays supported at 2490 m
+PASS: Cliff has no invisible road-height platform at 2490 m
+PASS: A car beyond the cliff actually falls under gravity
+PASS: The fall is visible before one eventual recovery
+PASS: Cliff recovery applies exactly one reset after the visible fall
+PASS: F160 tier 0 does not change the authored rock trajectory at any speed
+PASS: F160 tier 1 does not change the authored rock trajectory at any speed
+PASS: F160 tier 2 does not change the authored rock trajectory at any speed
+PASS: R200 tier 0 does not change the authored rock trajectory at any speed
+PASS: R200 tier 1 does not change the authored rock trajectory at any speed
+PASS: R200 tier 2 does not change the authored rock trajectory at any speed
+PASS: A240 tier 0 does not change the authored rock trajectory at any speed
+PASS: A240 tier 1 does not change the authored rock trajectory at any speed
+PASS: A240 tier 2 does not change the authored rock trajectory at any speed
+PASS: I20 tier 0 does not change the authored rock trajectory at any speed
+PASS: I20 tier 1 does not change the authored rock trajectory at any speed
+PASS: I20 tier 2 does not change the authored rock trajectory at any speed
+PASS: DELTA tier 0 does not change the authored rock trajectory at any speed
+PASS: DELTA tier 1 does not change the authored rock trajectory at any speed
+PASS: DELTA tier 2 does not change the authored rock trajectory at any speed
+PASS: EVO6 tier 0 does not change the authored rock trajectory at any speed
+PASS: EVO6 tier 1 does not change the authored rock trajectory at any speed
+PASS: EVO6 tier 2 does not change the authored rock trajectory at any speed
+PASS: WRX tier 0 does not change the authored rock trajectory at any speed
+PASS: WRX tier 1 does not change the authored rock trajectory at any speed
+PASS: WRX tier 2 does not change the authored rock trajectory at any speed
+PASS: P7 tier 0 does not change the authored rock trajectory at any speed
+PASS: P7 tier 1 does not change the authored rock trajectory at any speed
+PASS: P7 tier 2 does not change the authored rock trajectory at any speed
+TEST RESULT: 37 checks, 0 failures
