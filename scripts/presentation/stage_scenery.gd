@@ -317,6 +317,37 @@ func _build_terrain() -> void:
 		body.add_child(collider)
 		dressing.add_child(body)
 		_build_mountain_shoulders()
+	else:
+		_build_runoff_collision(vertices,count)
+
+
+func _build_runoff_collision(vertices: PackedVector3Array,count: Vector2i) -> void:
+	# The road mesh only collides out to 22 m. Beyond that the visible terrain had
+	# no collider, so a car that ran wide fell through, lost ground contact and
+	# slid away unbraked. Collide with the same visible triangles out to the
+	# recovery boundary, starting slightly inside the road apron edge so there
+	# is no gap. The road chunks stay on top inside 22 m and keep their surface.
+	var faces := PackedVector3Array()
+	for z: int in range(count.y):
+		for x: int in range(count.x):
+			var a := z*(count.x+1)+x
+			var b := a+count.x+1
+			var center_at: Vector3=(vertices[a]+vertices[b+1])*.5
+			var near := nearest(center_at)
+			if float(near.distance)<16 or float(near.distance)>70: continue
+			for index: int in [a,a+1,b+1,a,b+1,b]: faces.append(vertices[index])
+	if faces.is_empty(): return
+	var body := StaticBody3D.new()
+	body.name="RunoffTerrainCollision"
+	body.collision_layer=1
+	body.collision_mask=2
+	body.set_meta("surface_id",generator.definition.shoulder_surface)
+	var shape := ConcavePolygonShape3D.new()
+	shape.set_faces(faces)
+	var collider := CollisionShape3D.new()
+	collider.shape=shape
+	body.add_child(collider)
+	dressing.add_child(body)
 
 
 func _build_mountain_shoulders() -> void:
