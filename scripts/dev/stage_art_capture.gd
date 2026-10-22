@@ -4,6 +4,7 @@ extends SceneTree
 var app: RallyGameApp
 var directory := "res://logs/art"
 var stage_id := "redrock_canyon"
+var vehicle_id := "R200"
 
 func _initialize() -> void: _run.call_deferred()
 
@@ -23,6 +24,7 @@ func _run() -> void:
  for argument: String in OS.get_cmdline_user_args():
   if argument.begins_with("--stage="): stage_id=argument.trim_prefix("--stage=")
   if argument.begins_with("--out="): directory=argument.trim_prefix("--out=")
+  if argument.begins_with("--car="): vehicle_id=argument.trim_prefix("--car=")
  root.size=Vector2i(1280,720)
  DirAccess.make_dir_recursive_absolute(directory)
  app=load("res://scenes/game/game.tscn").instantiate()
@@ -32,7 +34,7 @@ func _run() -> void:
  AudioServer.set_bus_mute(0,true)
  app.prefs.values.reduced_motion=true
  app.practice=true
- app.chosen_vehicle="R200"
+ app.chosen_vehicle=vehicle_id
  app.chosen_stage=stage_id
  await app.start_race()
  paused=false

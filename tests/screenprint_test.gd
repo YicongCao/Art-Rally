@@ -36,7 +36,8 @@ func _run() -> void:
  for path: String in manifest:
   var item: Dictionary=manifest[path]
   check(ResourceLoader.exists("res://"+path),"Authored asset imports: "+path)
-  if "/vehicles/" in path: check(int(item.triangles)<=40000,"Vehicle triangle budget: "+path)
+  # The P7 is the single high-fidelity exception with a larger budget.
+  if "/vehicles/" in path: check(int(item.triangles)<=(90000 if "/P7-" in path else 40000),"Vehicle triangle budget: "+path)
  for id: String in RallyContentCatalog.VEHICLES:
   var definition := RallyContentCatalog.vehicle(id)
   var expected_names := {"F160":"大众 GTI", "R200":"宝马 M3 E30", "A240":"奥迪 quattro S1", "I20":"Hyundai i20 N Rally2", "DELTA":"Lancia Delta HF Integrale", "EVO6":"Mitsubishi Lancer Evolution VI", "WRX":"Subaru WRX STI 2015", "P7":"XPENG 新 P7 AWD"}
@@ -51,9 +52,18 @@ func _run() -> void:
   var left := RallyVehicleAppearance.mount(body,"TailLeft",Vector3.ZERO)
   var right := RallyVehicleAppearance.mount(body,"TailRight",Vector3.ZERO)
   check(left.x<0 and right.x>0 and is_equal_approx(left.z,right.z),"Paired lamp edge mounts: "+id)
-  for part: Node in body.find_children("*","MeshInstance3D",true,false):
+  var hifi: bool = id in RallyVehicleAppearance.HIFI_VEHICLES
+  var outlines := 0
+  var hifi_surfaces := 0
+  for part: MeshInstance3D in body.find_children("*","MeshInstance3D",true,false):
    if str(part.name).begins_with("Outline_"):
+    outlines+=1
     check(part.material_override is ShaderMaterial,"Car outline uses dedicated shader")
+   for index: int in range(part.mesh.get_surface_count()):
+    var material := part.get_surface_override_material(index) as ShaderMaterial
+    if material!=null and material.shader==preload("res://assets/shaders/hifi_vehicle.gdshader"): hifi_surfaces+=1
+  if hifi: check(outlines==0 and hifi_surfaces>5,"High-fidelity car uses smooth paint without ink outlines: "+id)
+  else: check(hifi_surfaces==0,"Screenprint car keeps the screenprint shader: "+id)
   for tier: int in range(3):
    var challenge := RallyContentCatalog.challenge("sunset_ridge",id,tier)
    check(not "screenprint" in challenge.key(),"Art revision does not invalidate ghosts: "+id+str(tier))

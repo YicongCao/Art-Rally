@@ -62,11 +62,36 @@ def asset(name,kind='props',at=(0,0,0),scale=1,rotation=0):
  bpy.context.view_layer.update()
  return root,objects
 
+def aero_rim():
+ # High-fidelity P7 twin-spoke aero wheel for the menu render (mirrors RallyWheelMeshes.aero_rim).
+ silver=material('aero silver','c9cfd2',.25,.8);dark=material('aero barrel','2c3134',.5,.2);red=material('caliper red','d0412f',.4)
+ root=bpy.data.objects.new('AeroRim',None);bpy.context.collection.objects.link(root)
+ bpy.ops.mesh.primitive_torus_add(major_radius=.215,minor_radius=.012,major_segments=64,minor_segments=8);lip=bpy.context.object;lip.data.materials.append(silver);lip.parent=root
+ bpy.ops.mesh.primitive_cylinder_add(vertices=48,radius=.19,depth=.01,location=(0,0,-.03));disc=bpy.context.object;disc.data.materials.append(dark);disc.parent=root
+ bpy.ops.mesh.primitive_cylinder_add(vertices=32,radius=.055,depth=.05,location=(0,0,.02));cap=bpy.context.object;cap.data.materials.append(silver);cap.parent=root
+ for spoke in range(10):
+  base=math.tau*(spoke//2)/5;pts=[]
+  for r in range(9):
+   t=r/8;radius=.055+.15*t;ang=base+(.022 if spoke%2 else -.022)/radius+t*.18
+   pts.append((math.cos(ang)*radius,math.sin(ang)*radius,.03-t*.012))
+  o=line('Aero spoke',pts,.011,silver);o.parent=root
+ bpy.ops.mesh.primitive_cube_add(size=1,location=(.15,0,-.04));c=bpy.context.object;c.dimensions=(.09,.13,.03);c.data.materials.append(red);c.parent=root
+ for o in root.children:
+  if o.type=='MESH':
+   for p in o.data.polygons:p.use_smooth=True
+ return root
+
 def car(ident,at=(0,0,0),scale=1,rotation=0):
  root,objects=asset(ident,'vehicles')
  mounts=[o for o in objects if o.name.startswith('WheelMount')]
  for mount in mounts:
   for part in ['wheel_tire','wheel_rim']:
+   if part=='wheel_rim' and ident=='P7':
+    wheel=aero_rim();wheel.parent=root
+    side=1 if mount.location.x>0 else -1
+    wheel.location=mount.location.copy();wheel.location.x+=side*.13
+    wheel.rotation_euler.y=math.pi/2*side
+    continue
    wheel,_=asset(part)
    wheel.parent=root
    side=1 if mount.location.x>0 else -1

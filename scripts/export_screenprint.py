@@ -8,6 +8,8 @@ ROOT=Path(__file__).resolve().parents[1]
 args=sys.argv[sys.argv.index('--')+1:] if '--' in sys.argv else []
 only=next((a.split('=',1)[1] for a in args if a.startswith('--only=')),None)
 manifest={}
+# Vehicles rendered with the smooth high-fidelity shader; no ink outline shell.
+HIFI={'P7'}
 for src in sorted((ROOT/'art_source/screenprint').glob('*/*.blend')):
  if only and src.stem not in only.split(","):continue
  vehicle=src.parent.name=='vehicles'
@@ -21,8 +23,9 @@ for src in sorted((ROOT/'art_source/screenprint').glob('*/*.blend')):
     try:bpy.ops.object.modifier_apply(modifier=m.name)
     except RuntimeError: pass
    if lod and len(o.data.polygons)>40:
-    m=o.modifiers.new('Export LOD','DECIMATE');m.ratio=[1,.52,.22][lod];bpy.ops.object.modifier_apply(modifier=m.name)
-   if vehicle and (o.get('outline',False) or o.name.startswith(('Bumper','Spoiler','FrontValance','RearValance'))):
+    ratios=[1,.40,.14] if src.stem in HIFI else [1,.52,.22]
+    m=o.modifiers.new('Export LOD','DECIMATE');m.ratio=ratios[lod];bpy.ops.object.modifier_apply(modifier=m.name)
+   if vehicle and src.stem not in HIFI and (o.get('outline',False) or o.name.startswith(('Bumper','Spoiler','FrontValance','RearValance'))):
     proxy=o.copy();proxy.data=o.data.copy();proxy.name='Outline_'+o.name;bpy.context.collection.objects.link(proxy)
     for p in proxy.data.polygons:p.use_smooth=True
     proxy.data.materials.clear()
@@ -42,7 +45,9 @@ for src in sorted((ROOT/'art_source/screenprint').glob('*/*.blend')):
    bpy.context.object.name='Outline_Body' if key=='OutlineInk' else key
   meshes=[o for o in bpy.context.scene.objects if o.type=='MESH']
   triangles=sum(sum(len(p.vertices)-2 for p in o.data.polygons) for o in meshes if not o.name.startswith('Outline_'))
-  if vehicle and triangles>40000:raise RuntimeError(f'{src}: {triangles} exceeds budget')
+  # High-fidelity exception: the P7 is authored with subdivision surfaces.
+  budget=90000 if src.stem in HIFI else 40000
+  if vehicle and triangles>budget:raise RuntimeError(f'{src}: {triangles} exceeds budget')
   for o in meshes:
    if any(not math.isfinite(v) for vert in o.data.vertices for v in vert.co):raise RuntimeError('Nonfinite vertex '+o.name)
    if not o.data.materials:raise RuntimeError('Missing material '+o.name)

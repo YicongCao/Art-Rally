@@ -63,6 +63,87 @@ static func five_spoke() -> ArrayMesh:
 	rim=b.finish()
 	return rim
 
+# High-fidelity five-twin-spoke aero rim for the P7, smooth shaded; local Y is the axle.
+static var hifi_rim: ArrayMesh
+static func aero_rim() -> ArrayMesh:
+	if hifi_rim!=null: return hifi_rim
+	var tool := SurfaceTool.new()
+	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var silver := Color("c9cfd2").srgb_to_linear()
+	var dark := Color("2c3134").srgb_to_linear()
+	var caliper := Color("d0412f").srgb_to_linear()
+	var segments := 96
+	# Outer lip and barrel: a lathe profile (radius, axial offset).
+	var lathe := [Vector2(.215,.010),Vector2(.222,.018),Vector2(.226,.030),Vector2(.222,.040),Vector2(.205,.044),Vector2(.200,-.06)]
+	for i: int in range(segments):
+		var a0 := TAU*i/segments
+		var a1 := TAU*(i+1)/segments
+		for k: int in range(lathe.size()-1):
+			var p0: Vector2=lathe[k]
+			var p1: Vector2=lathe[k+1]
+			var color := silver if k<4 else dark
+			var quad := [Vector3(cos(a0)*p0.x,p0.y,sin(a0)*p0.x),Vector3(cos(a1)*p0.x,p0.y,sin(a1)*p0.x),Vector3(cos(a1)*p1.x,p1.y,sin(a1)*p1.x),Vector3(cos(a0)*p1.x,p1.y,sin(a0)*p1.x)]
+			for index: int in [0,2,1,0,3,2]:
+				tool.set_color(color)
+				tool.add_vertex(quad[index])
+	# Ten twisted spokes in five pairs, each a tapered swept blade with a raised ridge.
+	for spoke: int in range(10):
+		var base := TAU*(spoke/2)/5
+		var rows: Array=[]
+		for r: int in range(9):
+			var t := r/8.0
+			var radius := lerpf(.055,.205,t)
+			# Twin spokes stay a constant ~34 mm apart (not converging), with a gentle sweep.
+			var offset := (.022 if spoke%2 else -.022)/radius
+			var twist := base+offset+t*.18
+			var half := lerpf(.012,.010,t)
+			var ridge := lerpf(.040,.026,t)
+			var row: Array=[]
+			for c: int in range(5):
+				var u := (c/4.0)*2-1
+				var angle := twist+u*half/radius
+				var height := ridge*(1-u*u*.65)+.004
+				row.append(Vector3(cos(angle)*radius,height,sin(angle)*radius))
+			rows.append(row)
+		for r: int in range(8):
+			for c: int in range(4):
+				var q := [rows[r][c],rows[r][c+1],rows[r+1][c+1],rows[r+1][c]]
+				for index: int in [0,2,1,0,3,2]:
+					tool.set_color(silver)
+					tool.add_vertex(q[index])
+	# Centre cap, dark brake disc and red caliper behind the spokes.
+	for i: int in range(segments):
+		var a0 := TAU*i/segments
+		var a1 := TAU*(i+1)/segments
+		for ring: Array in [[0.0,.058,.046,.040,silver],[.06,.19,-.03,-.03,dark]]:
+			var r0: float=ring[0]
+			var r1: float=ring[1]
+			var y0: float=ring[2]
+			var y1: float=ring[3]
+			var q := [Vector3(cos(a0)*r0,y0,sin(a0)*r0),Vector3(cos(a1)*r0,y0,sin(a1)*r0),Vector3(cos(a1)*r1,y1,sin(a1)*r1),Vector3(cos(a0)*r1,y1,sin(a0)*r1)]
+			for index: int in [0,2,1,0,3,2]:
+				tool.set_color(ring[4])
+				tool.add_vertex(q[index])
+	# Caliper block sits behind the spokes at the rear of the disc.
+	var caliper_box := BoxMesh.new()
+	caliper_box.size=Vector3(.09,.03,.13)
+	var data := caliper_box.get_mesh_arrays()
+	var vertices: PackedVector3Array=data[Mesh.ARRAY_VERTEX]
+	var indices: PackedInt32Array=data[Mesh.ARRAY_INDEX]
+	for index: int in indices:
+		tool.set_color(caliper)
+		tool.add_vertex(vertices[index]+Vector3(.15,-.02,0))
+	tool.generate_normals()
+	hifi_rim=tool.commit()
+	var material := StandardMaterial3D.new()
+	material.vertex_color_use_as_albedo=true
+	material.metallic=.75
+	material.roughness=.3
+	material.cull_mode=BaseMaterial3D.CULL_DISABLED
+	hifi_rim.surface_set_material(0,material)
+	return hifi_rim
+
+
 static func install_hubs(pivot: Node3D) -> void:
 	for index: int in [1,2]:
 		var hub: Node3D=pivot.get_child(index)

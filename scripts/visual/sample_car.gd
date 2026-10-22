@@ -105,6 +105,9 @@ func _build_model(car: RallyVehicle, definition: RallyVehicleDefinition) -> void
 	brake_material.emission_enabled = true
 	brake_material.emission = Color("f45a36")
 	_bind_lamps(body)
+	if definition.vehicle_id in RallyVehicleAppearance.HIFI_VEHICLES:
+		for wheel: Node3D in car.wheel_visuals:
+			for node: Node in wheel.find_children("WhiteFiveSpoke","MeshInstance3D",true,false): (node as MeshInstance3D).mesh=RallyWheelMeshes.aero_rim()
 	if definition.vehicle_id=="WRX":
 		var gold:=StandardMaterial3D.new()
 		gold.albedo_color=Color("d6b046")

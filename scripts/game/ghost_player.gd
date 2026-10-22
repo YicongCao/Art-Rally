@@ -44,7 +44,7 @@ func build(vehicle: RallyVehicleDefinition, data: Dictionary,translucent: bool =
 		pivot.add_child(tire)
 		for side: float in [-1,1]:
 			var hub := MeshInstance3D.new()
-			hub.mesh=RallyWheelMeshes.five_spoke()
+			hub.mesh=RallyWheelMeshes.aero_rim() if vehicle.vehicle_id in RallyVehicleAppearance.HIFI_VEHICLES else RallyWheelMeshes.five_spoke()
 			hub.position.y=side*.125
 			hub.rotation.x=PI if side<0 else 0
 			tire.add_child(hub)

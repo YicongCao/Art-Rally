@@ -92,7 +92,7 @@
   "redrock_canyon": {
     "source": "art_source/menu_models/redrock_canyon.blend",
     "render": "assets/ui/menu_models/redrock_canyon.png",
-    "sha256": "8d54cd58aaf2e7b5a4af0ddd597d895f605e9eec65b800dd8e40ab1ade3e0c7d",
+    "sha256": "6d802603106d074f02354fcfc32e721611a79888391368cd104e805b438b0bdb",
     "resolution": [
       1024,
       768
@@ -107,13 +107,13 @@
   "P7": {
     "source": "art_source/menu_models/P7.blend",
     "render": "assets/ui/menu_models/P7.png",
-    "sha256": "241a9e4d55c294a9f25ec9716dfe6e4717ed1d2a08e40cd389df0d20f0fbf23b",
+    "sha256": "67b48a2fafb9e2839e8c947588ae9d5ff54dc220ce393429de31bd00ebf4cb46",
     "resolution": [
       1024,
       768
     ],
-    "transparent_fraction": 0.695,
-    "opaque_fraction": 0.2994,
+    "transparent_fraction": 0.6967,
+    "opaque_fraction": 0.2975,
     "engine": "Blender Cycles",
     "samples": 40,
     "alpha": "straight RGBA",

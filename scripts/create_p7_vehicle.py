@@ -1,4 +1,7 @@
-"""Author the XPENG new P7 (2025) rally source as a lofted body.
+"""Author the XPENG new P7 (2025) rally source as a high-fidelity body.
+
+Unlike the other cars (screenprint low-poly), the P7 is a smooth subdivided
+surface rendered with assets/shaders/hifi_vehicle.gdshader in game.
 
 Blender --background --python scripts/create_p7_vehicle.py [-- --rebuild]
 Godot coordinates (metres, +Y up, -Z forward); the body origin sits at the
@@ -27,13 +30,14 @@ WHEEL_Y=-.34;ARCH_R=.455
 # Key stations front (-z) to rear (+z), interpolated with Catmull-Rom:
 # z, half width, sill y, belt (shoulder crease) y, greenhouse base ratio, top y, crown exponent
 KEYS=[
- (-2.508,.42,-.30,-.13,.97,-.12,2.0),
- (-2.485,.64,-.36,-.075,.97,-.065,2.0),
- (-2.42,.79,-.41,-.02,.97,.0,2.0),
- (-2.32,.875,-.43,.02,.97,.05,2.1),
- (-2.18,.932,-.43,.055,.97,.09,2.2),
- (-2.00,.962,-.43,.085,.97,.12,2.3),
- (-1.60,.984,-.43,.13,.955,.17,2.5),
+ (-2.508,.30,-.30,-.15,.97,-.16,1.6),
+ (-2.50,.52,-.34,-.11,.97,-.115,1.7),
+ (-2.47,.70,-.385,-.065,.97,-.06,1.8),
+ (-2.41,.83,-.42,-.02,.97,-.005,1.9),
+ (-2.30,.905,-.43,.025,.97,.05,2.0),
+ (-2.14,.950,-.43,.065,.97,.10,2.1),
+ (-1.92,.974,-.43,.10,.965,.14,2.3),
+ (-1.55,.984,-.43,.138,.955,.18,2.5),
  (-1.25,.985,-.43,.158,.92,.205,2.6),
  (-1.08,.985,-.43,.168,.82,.235,2.6),
  (-.75,.985,-.43,.176,.75,.50,2.6),
@@ -83,7 +87,7 @@ def loft():
  zs=[]
  z=-END
  while z<END:
-  zs.append(z);step=.03 if abs(z)>2.3 else (.06 if abs(z)>1.9 else .09);z+=step
+  zs.append(z);step=.02 if abs(z)>2.35 else (.035 if abs(z)>1.9 else .055);z+=step
  zs.append(END)
  rings=[]
  for z in zs:
@@ -120,18 +124,47 @@ def loft():
  o['outline']=True
  return o
 
+def subdivide(body):
+ # One Catmull-Clark level on the dense loft gives continuous highlights;
+ # applied before the wheel booleans so the arch edges stay crisp.
+ bpy.context.view_layer.objects.active=body;body.select_set(True)
+ sub=body.modifiers.new('Smooth body','SUBSURF');sub.levels=1;sub.render_levels=1;sub.quality=3
+ bpy.ops.object.modifier_apply(modifier=sub.name)
+ body.select_set(False)
+
+def door_lines():
+ # Shut lines and the bonnet edge, inset dark grooves sampled on the body skin.
+ for side in [-1,1]:
+  for z in [-1.02,.20,1.24]:
+   verts=[];faces=[]
+   ys=[-.40+i*.05 for i in range(13)]
+   for y in ys:
+    if y>catmull(z)[2]+.02:break
+    x=side*(side_x(z,y)+.0015)
+    verts+= [(x,y,z-.004),(x,y,z+.004)]
+   for i in range(len(verts)//2-1):faces.append((i*2,i*2+1,i*2+3,i*2+2))
+   if faces:mesh('ShutLine',verts,faces,'ink')
+ pts=[]
+ for i in range(25):
+  x=-HALF*.70+i/24*HALF*1.40
+  z=-1.08-.25*(1-(x/(HALF*.7))**2)
+  hw,sill,belt,ratio,top,n=catmull(z)
+  pts.append((x,top+.004+.01*(1-(x/HALF)**2),z))
+ strip('BonnetShutLine',pts,.006,.006,'ink',1)
+
 def cut_arches(body):
  # Boolean wheel openings so tyres sit inside real wells.
  for z in [-WB/2,WB/2]:
   for side in [-1,1]:
-   bpy.ops.mesh.primitive_cylinder_add(vertices=48,radius=ARCH_R,depth=.75,location=xyz((side*(HALF-.12),WHEEL_Y+.03,z)))
+   bpy.ops.mesh.primitive_cylinder_add(vertices=72,radius=ARCH_R,depth=.75,location=xyz((side*(HALF-.12),WHEEL_Y+.03,z)))
    cut=bpy.context.object;cut.name='ArchCutter';cut.rotation_euler=(0,math.pi/2,0)
+   bpy.ops.object.transform_apply(location=False,rotation=True,scale=False)
    bpy.context.view_layer.objects.active=body
    mod=body.modifiers.new('Wheel opening','BOOLEAN');mod.object=cut;mod.operation='DIFFERENCE';mod.solver='EXACT'
    bpy.ops.object.modifier_apply(modifier=mod.name)
    bpy.data.objects.remove(cut,do_unlink=True)
  bpy.context.view_layer.objects.active=body;body.select_set(True)
- bpy.ops.object.shade_smooth_by_angle(angle=math.radians(38))
+ bpy.ops.object.shade_smooth_by_angle(angle=math.radians(50))
  body.select_set(False)
 
 def glass():
@@ -191,18 +224,18 @@ def lights_and_trim():
  bar=[]
  for i in range(29):
   x=-HALF*.80+i/28*HALF*1.60
-  y=-.005
-  bar.append((x,y,nose_z(y,x)+.004))
- # Gloss-black band directly under the LED line, as on the real car, gives the bar contrast on silver.
- strip('FrontLampBand',[(x,-.075,nose_z(-.075,x)+.004) for x,y,z in bar],.10,.03,'trim',-1)
- strip('FrontLightBar',bar,.04,.04,'led',-1)
+  y=-.045+.035*(x/HALF)**2
+  bar.append((x,y,nose_z(y,x)+.003))
+ # Slim gloss-black band under the LED line, as on the real car.
+ strip('FrontLampBand',[(x,y-.035,nose_z(y-.035,x)+.003) for x,y,z in bar],.035,.025,'trim',-1)
+ strip('FrontLightBar',bar,.024,.03,'led',-1)
  for side in [-1,1]:
   top=bar[-1 if side>0 else 0]
-  lx=side*HALF*.80;low=(lx,-.25,nose_z(-.25,lx)-.004)
-  beam('CornerBlade',top,low,.036,'led')
- box('FrontLogo',(0,.10,nose_z(.10)-.004),(.12,.014,.012),'ivory',.003)
+  lx=side*HALF*.83;low=(lx,-.22,nose_z(-.22,lx)+.002)
+  beam('CornerBlade',top,low,.026,'led')
+ box('FrontLogo',(0,.0,nose_z(.0)+.002),(.11,.012,.01),'ivory',.003)
  # Lower nose: dark grille band, rally skid plate and tow hooks.
- box('LowerGrille',(0,-.25,nose_z(-.25)+.03),(1.24,.11,.07),'trim',.02)
+ strip('LowerGrille',[(x,-.27,nose_z(-.27,x)+.01) for x in [-.62+i*.062 for i in range(21)]],.07,.04,'trim',-1)
  box('FrontSkid',(0,-.43,-END+.30),(1.20,.04,.55),'metal',.012)
  for side in [-1,1]:box('FrontTowHook',(side*.45,-.36,nose_z(-.36)-.01),(.07,.05,.06),'red',.01)
  # Rear: thin full-width lamp just under the ducktail lip and a diffuser band.
@@ -217,13 +250,12 @@ def lights_and_trim():
  box('RearDiffuser',(0,-.29,tail_z(-.29)-.02),(1.50,.12,.08),'trim',.02)
  box('RearSkid',(0,-.43,END-.30),(1.10,.035,.45),'metal',.01)
  text('RearXPENG','X P E N G',(0,.12,tail_z(.12)+.008),.075,'ink')
- box('Ducktail',(0,.305,tail_z(.30)-.02),(1.55,.02,.10),'trim',.008)
  # Side: flush handles, door mirrors, satin sill cladding, rally arch flares and mud flaps.
  for side in [-1,1]:
   for z in [-.32,.58]:box('FlushHandle',(side*(HALF+.003),.12,z),(.012,.026,.20),'trim',.004)
   mx=side_x(-.66,.22)
-  box('Mirror',(side*(mx+.075),.25,-.66),(.15,.075,.19),'paint',.03)
-  box('MirrorStalk',(side*(mx+.015),.235,-.66),(.07,.03,.05),'trim',.008)
+  ellipsoid('Mirror',(side*(mx+.085),.25,-.66),(.085,.042,.11),'paint')
+  ellipsoid('MirrorStalk',(side*(mx+.03),.23,-.64),(.04,.016,.03),'trim')
   box('SideCladding',(side*(HALF-.002),-.37,0),(.03,.09,WB-ARCH_R*2-.10),'satin',.012)
   for axle in [-WB/2,WB/2]:
    verts=[]
@@ -264,8 +296,17 @@ def author():
  if PATH.exists() and '--rebuild' not in sys.argv:
   print('Preserving',PATH);return
  reset()
- body=loft();cut_arches(body)
- glass();lights_and_trim();cabin()
+ body=loft();subdivide(body);cut_arches(body)
+ glass();door_lines();lights_and_trim();cabin()
+ # Gloss paint and clear glass for the Cycles menu render; Godot overrides with its shader.
+ for name,metal,rough in [('paint',.55,.22),('accent',.3,.25),('glass',0,.04),('metal',.8,.3),('led',0,.2)]:
+  m=bpy.data.materials.get(name)
+  if m is None:continue
+  bs=m.node_tree.nodes.get('Principled BSDF');bs.inputs['Metallic'].default_value=metal;bs.inputs['Roughness'].default_value=rough
+  if name=='led':bs.inputs['Emission Color'].default_value=(1,1,1,1);bs.inputs['Emission Strength'].default_value=3
+ for ob in bpy.context.scene.objects:
+  if ob.type=='MESH' and ob.name.startswith(('Mirror','WideArch','SideCladding')):
+   for p in ob.data.polygons:p.use_smooth=True
  # Mount contract shared with the runtime; positions match the prior P7 so cameras,
  # plates, lamps and wheel physics are unchanged.
  for side in [-1,1]:marker('TailLeft' if side<0 else 'TailRight',(side*(HALF-.13),.23,END+.04))

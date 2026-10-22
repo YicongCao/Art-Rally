@@ -9,6 +9,7 @@
 - 参考：[新 P7 官网](https://www.xiaopeng.com/p7n.html)、[配置表](https://www.xiaopeng.com/p7n/configuration.html)。在线检索与核对日期：2026-10-21。
 - 官方照片用于观察前后与侧面比例，不是工程三视图；参考照片临时缓存未作为最终贴花进入运行时。
 - 2026-10-22 重建：车身由 `scripts/create_p7_vehicle.py` 在 Blender 中按 21 个测量截面放样，保留官方长宽高与轴距。对照官网侧面照片校正：低而钝的车头与贯穿式白色灯带（下衬黑色饰带、两端竖向灯刀）、长平发动机盖、大倾角前挡、单弧溜背车顶落到短鸭尾、鸭尾下方贯穿红色尾灯、车身色 C 柱、半隐藏门把手。布尔切出真实轮拱，拉力化保留哑光轮拱护板、底护板和泥挡。挂点与原版一致，相机、车牌、尾灯和车轮物理不变。
+- 高保真例外（同日）：P7 是唯一不使用屏印低多边形风格的车。车身截面加密后做一级 Catmull-Clark 细分，导出时不生成描边壳，三档 LOD 为 52.6k / 21.1k / 7.5k 三角形（P7 单独预算 90k，其余车仍为 40k）。游戏内由 `assets/shaders/hifi_vehicle.gdshader` 渲染：平滑包裹漫反射、清漆高光与天空反射，暗部沿用 Brushline 紫色阴影墨。配专用双辐条空气动力轮毂（`RallyWheelMeshes.aero_rim`）和红色卡钳。名单在 `RallyVehicleAppearance.HIFI_VEHICLES`。
 
 ## Hyundai i20 N Rally2
 

@@ -134,7 +134,7 @@ func set_car(car: RallyVehicleDefinition) -> void:
   wheel.scale.y=width_scale
   display.add_child(wheel)
   var rim:=MeshInstance3D.new()
-  rim.mesh=RallyWheelMeshes.five_spoke()
+  rim.mesh=RallyWheelMeshes.aero_rim() if car.vehicle_id in RallyVehicleAppearance.HIFI_VEHICLES else RallyWheelMeshes.five_spoke()
   rim.rotation.z=-signf(wheel.position.x)*PI*.5
   rim.position=wheel.position+Vector3(signf(wheel.position.x)*.115*width_scale,0,0)
   if car.vehicle_id=="WRX":
