@@ -1,0 +1,31 @@
+{
+  "old": {
+    "render": [
+      1280,
+      720
+    ],
+    "average_fps": [
+      146.4,
+      128.4,
+      134.5
+    ],
+    "median_fps": 134.5,
+    "median_p95_ms": 18.11,
+    "median_p99_ms": 24.41
+  },
+  "new": {
+    "render": [
+      2560,
+      1440
+    ],
+    "average_fps": [
+      101.2,
+      110.8,
+      106.0
+    ],
+    "median_fps": 106.0,
+    "median_p95_ms": 18.8,
+    "median_p99_ms": 24.82
+  },
+  "method": "Full 75 s showcase, 2560x1440 window (2x logical scale), vsync off, uncapped, old/new alternated three times on Apple M4 Pro (Apple9)"
+}
