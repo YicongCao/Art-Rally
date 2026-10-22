@@ -24,6 +24,8 @@ func build(owner_scene: Node3D) -> void:
 	rng.randomize()
 	var count := rng.randi_range(2,3)
 	var kinds: Array = RallyWildlifeModel.KINDS.duplicate()
+	# Only arid-country animals cross the red desert.
+	if scene.challenge.stage.environment_id=="desert": kinds = ["kangaroo","ostrich","kangaroo"]
 	kinds.shuffle()
 	for i: int in range(count):
 		var distance: float = scene.generator.route.length*((i+1.0)/(count+1.0)+rng.randf_range(-.035,.035))

@@ -42,23 +42,27 @@ func build(stage: RallyStageGenerator) -> void:
 		river_frames.append({"origin":pose.origin,"right":pose.basis.x,"forward":-pose.basis.z,"span":river.y})
 	_apply_materials()
 	_build_terrain()
-	if generator.definition.environment_id=="desert":
+	var desert := generator.definition.environment_id=="desert"
+	if desert and route.length<1000:
+		# Short desert samples (garage test track, R200 sample) keep their light dressing.
 		RallyRedrockScenery.build(self)
 		_build_guardrails()
 		return
-	_build_mountains()
-	_build_highland_edges()
-	utility_line.plan(self)
+	if not desert:
+		_build_mountains()
+		_build_highland_edges()
+		utility_line.plan(self)
 	foliage.biome = generator.definition.environment_id
 	foliage.spectator_stations.assign(generator.definition.spectators)
 	foliage.build_range(self,12,route.length-35,0.58)
 	for station: float in foliage.spectator_stations:
 		spectator_zones.append(ground_at(station+5,8))
 		spectator_regions.append({"a":ground_at(station-1,8),"b":ground_at(station+13,8)})
+	if desert: RallyRedrockScenery.build(self)
 	_build_landmarks()
 	RallyStageLandmarks.build(self)
 	RallyRiverBridges.build(self)
-	utility_line.build(self)
+	if not desert: utility_line.build(self)
 	RallyLogPiles.build(self)
 	_build_obstacles()
 	_build_guardrails()

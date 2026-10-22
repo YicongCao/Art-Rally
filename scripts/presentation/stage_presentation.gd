@@ -140,14 +140,22 @@ func _apply_biome(sky: ShaderMaterial) -> void:
 		cloud_light = Color("ffe6ac")
 		cloud_shadow = Color("a18abd")
 	elif biome=="desert":
-		palette = [Color("f6bf78"),Color("8bcbd4"),Color("347aa6")]
-		sun.light_color=Color("ffdcaa")
-		sun.light_energy=1.65
-		atmosphere.sun_direction=Vector3(-.6,.33,-.55).normalized()
-		environment.ambient_light_color=Color("8caabb")
-		environment.ambient_light_energy=.42
-		environment.fog_light_color=Color("c6a084")
-		environment.fog_density=.00038
+		# Late-afternoon gold: apricot horizon, deep cerulean zenith, long side light
+		# and cool blue fill so sandstone shadows read violet, not brown.
+		palette = [Color("ffb36b"),Color("8fd0dc"),Color("2c7cc9")]
+		var forward: Vector3 = scene.generator.route.tangent_at(minf(600,scene.generator.route.length*.5))
+		forward.y = 0
+		var horizontal: Vector3 = forward.normalized().rotated(Vector3.UP,deg_to_rad(115))
+		atmosphere.sun_direction=horizontal*cos(deg_to_rad(17))+Vector3.UP*sin(deg_to_rad(17))
+		sun.light_color=Color("ffd29a")
+		sun.light_energy=1.85
+		# Warm lavender fill keeps shaded sand and rock violet instead of grey.
+		environment.ambient_light_color=Color("b49ac4")
+		environment.ambient_light_energy=.50
+		environment.fog_light_color=Color("e2a888")
+		environment.fog_density=.00042
+		cloud_light=Color("ffe2b4")
+		cloud_shadow=Color("c99a8c")
 	elif biome=="coast":
 		palette = [Color("ffe8b0"),Color("8ddadf"),Color("278dca")]
 		sun.light_color = Color("fff3d9")
@@ -197,7 +205,7 @@ func _apply_biome(sky: ShaderMaterial) -> void:
 				painted.set_shader_parameter("lit_color",Color("ede1bf"))
 			backdrop.material_override = painted
 	sun.basis = Basis.looking_at(-atmosphere.sun_direction,Vector3.UP)
-	sky.set_shader_parameter("cloud_atlas_warmth",1.0 if biome=="autumn" else .10)
+	sky.set_shader_parameter("cloud_atlas_warmth",{"autumn":1.0,"desert":.55}.get(biome,.10))
 	sky.set_shader_parameter("cloud_light",cloud_light)
 	sky.set_shader_parameter("cloud_shadow",cloud_shadow)
 	sky.set_shader_parameter("cloud_mid",cloud_light.lerp(cloud_shadow,.45))

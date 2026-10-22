@@ -131,10 +131,39 @@ void fragment() {
 	NORMAL_MAP = vec3(vec2(0.5)+clamp(-bumps*0.55,vec2(-0.20),vec2(0.20)) + vec2(grit-0.5)*0.025,1.0);
 	NORMAL_MAP_DEPTH = 0.4;
  if(desert){
-  float ripple=sin(world.x*7.0+world.z*1.8+sin(world.z*.15)*2.0)*.018;
-  float packed=road_mesh ? 1.0-smoothstep(UV2.x,UV2.x+1.2,abs(UV.x)) : 0.0;
-  vec3 sand=mix(vec3(.66,.40,.18),vec3(.86,.64,.34),noise(world.xz*.035));
-  ALBEDO=mix(sand+ripple,vec3(.39,.25,.14)+noise(world.xz*2.0)*.065,packed*.87);
+  // Two flat sand inks with red drift patches, wind ripples and dark pebble crust.
+  float ripple=sin(world.x*.9+world.z*.35+sin(world.z*.05)*3.0);
+  float fine=sin(world.x*7.0+world.z*1.8+sin(world.z*.15)*2.0);
+  vec3 sand=mix(vec3(.80,.52,.28),vec3(.91,.67,.39),smoothstep(.38,.62,noise(world.xz*.035)));
+  sand=mix(sand,vec3(.72,.37,.20),smoothstep(.55,.75,noise(world.xz*.018))*.75);
+  sand*=1.0+ripple*.04+fine*.018;
+  float crust=smoothstep(.62,.68,noise(world.xz*1.3))*smoothstep(.45,.7,noise(world.xz*.05));
+  sand=mix(sand,vec3(.40,.21,.13),crust*.55);
+  vec3 desert_color=sand;
+  if(!road_mesh){
+   float slope=1.0-abs((INV_VIEW_MATRIX*vec4(NORMAL,0.0)).y);
+   // Steep dune breaks and the finish escarpment read as layered sandstone.
+   float strata=fract((world.y+sin(world.x*.02)*1.5)/5.5);
+   vec3 cliff=mix(vec3(.62,.27,.16),vec3(.80,.47,.28),step(.5,fract(floor((world.y+sin(world.x*.02)*1.5)/5.5)*.618)));
+   cliff=mix(cliff,vec3(.90,.72,.52),(1.0-smoothstep(.0,.08,strata))*.6);
+   float steep=smoothstep(.14,.34,slope);
+   desert_color=mix(desert_color,cliff,steep);
+   // Sunlit sand bounces warm light into shaded escarpments.
+   EMISSION=cliff*vec3(.30,.16,.11)*steep;
+  } else {
+   float half_width=UV2.x;
+   float on_road=1.0-smoothstep(half_width-.15,half_width+.1,abs(UV.x));
+   float tracks=exp(-pow((abs(UV.x)-.8)*3.0,2.0));
+   vec3 packed=mix(vec3(.50,.29,.17),vec3(.58,.36,.21),noise(world.xz*.4));
+   packed*=1.0-tracks*.30;
+   packed*=1.0+sin(UV.y*1.7+noise(world.xz*.3)*4.0)*.03;
+   // Gravel stretches keep the shared aggregate shading, warmed by red dust.
+   vec3 lane=mix(ALBEDO*vec3(1.16,.96,.80),packed,step(3.5,UV2.y));
+   float berm=smoothstep(half_width-.1,half_width+.5,abs(UV.x))*(1.0-smoothstep(half_width+.8,half_width+1.9,abs(UV.x)));
+   desert_color=mix(sand,lane,on_road);
+   desert_color=mix(desert_color,vec3(.95,.72,.44),berm*.5);
+  }
+  ALBEDO=desert_color;
   ROUGHNESS=.98;
  }
 

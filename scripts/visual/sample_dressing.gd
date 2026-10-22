@@ -40,7 +40,9 @@ func build_range(landscape: Node3D, start: float, end: float, density: float = 1
 	if biome!="autumn":
 		for key: String in meshes:
 			if not key.begins_with("shadow"): meshes[key] = _biome_mesh(meshes[key],key.trim_prefix("far_"))
-	for i: int in range(int(240*multiplier*(0.25 if biome=="coast" else 1.0))):
+	# Desert plants no conifers; its yucca and ocotillo are placed by RallyRedrockScenery.
+	var tree_share := 0.0 if biome=="desert" else (0.25 if biome=="coast" else 1.0)
+	for i: int in range(int(240*multiplier*tree_share)):
 		var s := rng.randf_range(range_start,range_end)
 		var side := -1.0 if rng.randf() < 0.5 else 1.0
 		var lateral := side*rng.randf_range(7.0,95.0)
@@ -58,7 +60,7 @@ func build_range(landscape: Node3D, start: float, end: float, density: float = 1
 		place("rock",s,lateral,rng.randf_range(0.18,0.65))
 	for i: int in range(int(60*multiplier)):
 		place("rock",rng.randf_range(range_start,range_end),rng.randf_range(8,24)*(-1 if i%2 else 1),rng.randf_range(0.7,2.7))
-	for i: int in range(int(6400*multiplier)):
+	for i: int in range(int(6400*multiplier*(.38 if biome=="desert" else 1.0))):
 		var s := rng.randf_range(range_start,range_end)
 		var lateral := rng.randf_range(4.05,22)*(-1 if i%2 else 1)
 		place("grass",s,lateral,rng.randf_range(0.65,1.4))
@@ -221,6 +223,7 @@ func _biome_mesh(source: ArrayMesh,kind: String) -> ArrayMesh:
 	var colors: PackedColorArray = arrays[Mesh.ARRAY_COLOR]
 	var palette := {"pine":Color("2e5148"),"umbrella":Color("68825a"),"rock":Color("7f94a5"),"shrub":Color("737c50"),"grass":Color("c5c083")}
 	if biome=="coast": palette = {"pine":Color("315f4a"),"umbrella":Color("4e7250"),"rock":Color("dfdbc4"),"shrub":Color("7b8a5a"),"grass":Color("cbc486")}
+	if biome=="desert": palette = {"pine":Color("4f6a4c"),"umbrella":Color("6d7f55"),"rock":Color("b85a35"),"shrub":Color("5f8f4e"),"grass":Color("ddb260")}
 	var base := Color.WHITE
 	for key: String in palette:
 		if kind.begins_with(key): base = palette[key].srgb_to_linear()

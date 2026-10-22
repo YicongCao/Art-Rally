@@ -9,6 +9,7 @@ static func build(land: RallyStageScenery) -> void:
 		"autumn": _arch(land,land.route.length*.53)
 		"coast": _coast(land)
 		"highland": _summit(land)
+		"desert": _mesa_overlook(land)
 
 
 static func _root(land: RallyStageScenery,title: String,s: float,lateral: float) -> Node3D:
@@ -172,6 +173,25 @@ static func _summit(land: RallyStageScenery) -> void:
 	land.spectator_regions.append({"a":node.to_global(Vector3(-1,0,-10)),"b":node.to_global(Vector3(-1,0,10))})
 
 
+static func _mesa_overlook(land: RallyStageScenery) -> void:
+	var node := _root(land,"MesaOverlook",land.route.length-30,-15)
+	node.position.y += 1.6
+	var b := RallySampleMeshes.new()
+	b.box(Vector3(17,1,28),Vector3(-3,-.6,0),Color("c98a5a"))
+	_fence(b,Vector3(-11,0,-14),Vector3(-11,0,14))
+	_fence(b,Vector3(5,0,-14),Vector3(5,0,14))
+	# Striped shade sails on timber posts, the desert's equivalent of beach umbrellas.
+	for i: int in range(3):
+		var z := -9.0+i*9
+		for corner: Vector2 in [Vector2(-8,-3),Vector2(-1,-3),Vector2(-8,3),Vector2(-1,3)]:
+			b.beam(Vector3(corner.x,0,z+corner.y),Vector3(corner.x,3.2,z+corner.y),.08,Color("6b5541"))
+		for stripe: int in range(4):
+			b.box(Vector3(7.4,.08,1.6),Vector3(-4.5,3.25,z-2.4+stripe*1.6),Color("e7dcc2") if stripe%2 else Color("d2553a"),Vector3(.06,0,0))
+	for i: int in range(10): _person(b,Vector3(-2.5+(i%2)*1.3,0,-12+(i/2)*5.5),[Color("e6b650"),Color("3f7a7c"),Color("d96b54")][i%3])
+	_mesh(node,b,true)
+	land.spectator_regions.append({"a":node.to_global(Vector3(-2,0,-12)),"b":node.to_global(Vector3(-2,0,12))})
+
+
 static func _corner_markers(land: RallyStageScenery) -> void:
 	for note: Dictionary in land.generator.definition.hazard_notes:
 		if note.code!="CAUTION_NARROW": continue
@@ -182,5 +202,6 @@ static func _corner_markers(land: RallyStageScenery) -> void:
 		var lateral := inside*(land.route.width_at(s)*.5+1.4)
 		var node := _root(land,"CautionRockShoulder",s,lateral)
 		var b := RallySampleMeshes.new()
-		for i: int in range(3): b.ellipsoid(Vector3(.6,.7,.8),Vector3(0,.25,(i-1)*2.4),Color("7b888a"))
+		var stone := Color("a8553a") if land.generator.definition.environment_id=="desert" else Color("7b888a")
+		for i: int in range(3): b.ellipsoid(Vector3(.6,.7,.8),Vector3(0,.25,(i-1)*2.4),stone)
 		_mesh(node,b,true)
