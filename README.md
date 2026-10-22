@@ -351,6 +351,7 @@ v0.2 轮胎模型已按 [技术方案](docs/V0.2_TIRE_CONTACT_DEFORMATION.zh-CN.
 ### 赤岩峡谷与自由改装车库（源码扩展）
 
 [查看全部五车三视角、概念图及实机场景](docs/expansion/index.html)。以下为 Godot 实际渲染，概念稿单独收录。
+赤岩峡谷已按 [审美与可玩性验收标准](docs/expansion/REDROCK_ART_STANDARD.md) 重做场景：台阶式峡谷岩壁、风蚀石拱、地平线台地、沙漠植被、观众与观景台。
 
 ![新 P7 四驱拉力版](docs/expansion/models/P7-front.png)
 
