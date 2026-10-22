@@ -405,16 +405,16 @@ static func control_hints(bindings: Dictionary,gamepad: bool) -> Dictionary:
 	return result
 
 
-func _draw_key(caption: String,rect: Rect2,opacity: float) -> void:
+func _draw_key(caption: String,rect: Rect2,opacity: float,highlight: bool=false) -> void:
 	var frame := StyleBoxFlat.new()
-	frame.bg_color=Color(PAPER,.08*opacity)
-	frame.border_color=Color(PAPER,.65*opacity)
+	frame.bg_color=Color(AMBER,opacity) if highlight else Color(PAPER,.08*opacity)
+	frame.border_color=Color(PAPER,opacity) if highlight else Color(PAPER,.65*opacity)
 	frame.set_border_width_all(1)
 	frame.set_corner_radius_all(4)
 	draw_style_box(frame,rect)
 	var px := 16
 	while px>8 and text_font.get_string_size(caption,HORIZONTAL_ALIGNMENT_LEFT,-1,px).x>rect.size.x-10: px-=1
-	center_text(caption,rect.get_center()+Vector2(0,px*.36),px,Color(PAPER,opacity))
+	center_text(caption,rect.get_center()+Vector2(0,px*.36),px,Color(INK if highlight else PAPER,opacity))
 
 
 func _draw_recovery() -> void:
@@ -424,7 +424,7 @@ func _draw_recovery() -> void:
 	draw_texture_rect(preload("res://assets/ui/icons/reset.svg"),Rect2(437,625,28,28),false,Color(AMBER,opacity))
 	text(recovery_caption,Vector2(480,633),20,Color(PAPER,opacity),title_font)
 	text("恢复至安全位置 / 罚时 5 秒" if model.get("recovery_penalty",0)>0 else "恢复至安全位置",Vector2(480,660),13,Color(MUTED,opacity))
-	_draw_key(hints.reset,Rect2(704,619,90,36),opacity)
+	_draw_key(hints.reset,Rect2(704,619,90,36),opacity,true)
 	text("复位",Vector2(806,644),16,Color(AMBER,opacity))
 
 
@@ -436,6 +436,6 @@ func _draw_control_hints() -> void:
 	var x := 640-width*.5
 	panel(Rect2(x,648,width,46),Color(.035,.09,.075,.90*hint_alpha))
 	for entry: Array in entries:
-		_draw_key(hints[entry[0]],Rect2(x+12,656,60,30),hint_alpha)
-		text(entry[1],Vector2(x+80,677),13,Color(PAPER,hint_alpha))
+		_draw_key(hints[entry[0]],Rect2(x+12,656,60,30),hint_alpha,entry[0]=="reset")
+		text(entry[1],Vector2(x+80,677),13,Color(AMBER if entry[0]=="reset" else PAPER,hint_alpha))
 		x+=130
