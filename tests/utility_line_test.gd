@@ -6,6 +6,7 @@ func _run() -> void:
 		app.profile.path="user://utility-test-%s/profile.json"%Time.get_ticks_usec()
 		root.add_child(app)
 		app.chosen_stage=stage_id
+		app.practice=true # Every stage, independent of campaign unlocks.
 		await app.start_race()
 		var land: RallyStageScenery=app.race.presentation.scenery
 		var line: RallyUtilityLine=land.utility_line

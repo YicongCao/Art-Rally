@@ -11,6 +11,10 @@ func _run() -> void:
 	root.add_child(app)
 	app.profile.path = "user://flow-test/profile.json"
 	app.profile.data = RallyProfileStore.fresh()
+	# The app reads the previous run's saved profile in _ready; start from the
+	# default first-page selection so the three-card checks are deterministic.
+	app.chosen_vehicle = "F160"
+	app.vehicle_page = 0
 	app.show_home()
 	check(app.screen=="home","Game opens at main menu")
 	app.show_stages()

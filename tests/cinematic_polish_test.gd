@@ -28,6 +28,7 @@ func _run() -> void:
 		root.add_child(app)
 		app.profile.data = RallyProfileStore.fresh()
 		app.chosen_stage = id
+		app.practice = true # Every stage, independent of campaign unlocks.
 		await app.start_race()
 		var scene: Node3D = app.race
 		var route: RallyStageRoute = scene.generator.route
