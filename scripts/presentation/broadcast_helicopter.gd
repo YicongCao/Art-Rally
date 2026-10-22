@@ -84,7 +84,8 @@ func build(owner_scene: Node3D,photo_album: RallyPhotoAlbum) -> void:
 	airframe.visible = false
 	camera_viewport = SubViewport.new()
 	camera_viewport.name = "AerialPhotoViewport"
-	camera_viewport.size = Vector2i(960,540)
+	# Full HD aerial photos so album images stay sharp when viewed full screen.
+	camera_viewport.size = Vector2i(1920,1080)
 	camera_viewport.world_3d = scene.get_world_3d()
 	camera_viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
 	add_child(camera_viewport)

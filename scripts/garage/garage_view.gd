@@ -1,5 +1,5 @@
 class_name RallyGarageView
-extends SubViewportContainer
+extends Control
 signal shelf_selected(category: String)
 var viewport:=SubViewport.new()
 var world:=Node3D.new()
@@ -16,7 +16,11 @@ var door:=Node3D.new()
 var door_progress:=0.0
 
 func _ready() -> void:
- stretch=true
+ # The 3D view renders in real window pixels and is drawn back into this
+ # control's logical rect. A stretched SubViewportContainer would allocate
+ # logical 1280x720 units and magnify a half-resolution image on Retina.
+ mouse_filter=Control.MOUSE_FILTER_STOP
+ clip_contents=true
  size_flags_horizontal=Control.SIZE_EXPAND_FILL
  size_flags_vertical=Control.SIZE_EXPAND_FILL
  custom_minimum_size=Vector2(420,240)
@@ -114,6 +118,17 @@ func _ready() -> void:
   area.add_child(shape)
   shelf.add_child(area)
  gui_input.connect(_input_view)
+ resized.connect(_fit_viewport)
+ get_viewport().size_changed.connect(_fit_viewport)
+ _fit_viewport()
+
+func _fit_viewport() -> void:
+ viewport.size=RallyNativeResolution.pixel_size(self)
+ queue_redraw()
+
+func _draw() -> void:
+ # Logical rect x window scale == viewport pixels, so this maps 1:1 to the screen.
+ draw_texture_rect(viewport.get_texture(),Rect2(Vector2.ZERO,size),false)
 
 func _box(parent: Node3D,label: String,dimensions: Vector3,at: Vector3,color: String) -> void:
  GrayboxGeometry.box(parent,label,dimensions,at,Color(color))
@@ -171,7 +186,8 @@ func _input_view(event: InputEvent) -> void:
  if event is InputEventMouseMotion and event.button_mask&MOUSE_BUTTON_MASK_LEFT:
   display.rotation.y+=event.relative.x*.008
  if event is InputEventMouseButton and event.button_index==MOUSE_BUTTON_LEFT and event.pressed:
-  var point: Vector2=event.position
+  # Mouse arrives in logical units; the camera projects in viewport pixels.
+  var point: Vector2=event.position*Vector2(viewport.size)/size.max(Vector2.ONE)
   var origin:=camera.project_ray_origin(point)
   var ray:=PhysicsRayQueryParameters3D.create(origin,origin+camera.project_ray_normal(point)*100)
   ray.collide_with_areas=true

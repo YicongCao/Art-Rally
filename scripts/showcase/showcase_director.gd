@@ -53,6 +53,7 @@ func _ready() -> void:
 		if argument.begins_with("--fixed-fps") or argument.begins_with("--write-movie"): performance.enabled=false
 	_build_pause()
 	resized.connect(_resize)
+	get_viewport().size_changed.connect(_resize)
 	_resize()
 
 func prepare() -> bool:
@@ -86,7 +87,7 @@ func prepare() -> bool:
 		var world := RallyShowcaseWorld.new()
 		worlds[id]=world
 		await world.prepare(self,id,str(clips[shot.clip].vehicle),func(value: float,_message: String): preparation_progress.emit((index+value)/float(stage_ids.size())))
-		world.viewport.size=Vector2i(size)
+		world.viewport.size=RallyNativeResolution.pixel_size(self)
 		for clip_id: String in clips:
 			if clips[clip_id].stage==id: world.add_clip(clip_id,clips[clip_id])
 		world.render(shot,float(shot.start),0)
@@ -98,7 +99,9 @@ func prepare() -> bool:
 	return true
 
 func _resize() -> void:
-	for world: RallyShowcaseWorld in worlds.values(): world.viewport.size=Vector2i(size)
+	# Render the film at the window's real pixel size, not the 1280x720 UI canvas.
+	var pixels := RallyNativeResolution.pixel_size(self)
+	for world: RallyShowcaseWorld in worlds.values(): world.viewport.size=pixels
 	titles.position=Vector2(40,40)
 	pause_panel.position=(size-Vector2(300,240))*.5
 	pause_panel.size=Vector2(300,240)

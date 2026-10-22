@@ -19,6 +19,9 @@ func prepare(parent: Node,stage_id: String,vehicle_id: String,progress: Callable
 	viewport.render_target_update_mode=SubViewport.UPDATE_DISABLED
 	viewport.physics_object_picking=false
 	viewport.audio_listener_enable_3d=false
+	# Same anti-aliasing as live driving (RallyStagePresentation): FXAA, no MSAA.
+	viewport.msaa_3d=Viewport.MSAA_DISABLED
+	viewport.screen_space_aa=Viewport.SCREEN_SPACE_AA_FXAA
 	parent.add_child(viewport)
 	scene=RallyGameApp.STAGE_SCENE.instantiate()
 	scene.managed_flow=true
