@@ -7,8 +7,10 @@ class Scores(unittest.TestCase):
         reports={x['theme']:x for x in json.loads((ROOT/'scores.json').read_text())}
         stages=[reports[k] for k in ['autumn','coast','highland']]
         self.assertEqual(len({s['genre'] for s in stages}),3)
-        self.assertGreater(stages[0]['notes'],stages[2]['notes']*2)
-        self.assertGreater(stages[0]['bpm']-stages[2]['bpm'],25)
+        self.assertEqual(len({s['notes'] for s in stages}),3)
+        self.assertTrue(all(130<=s['bpm']<=160 for s in stages))
+        self.assertGreater(stages[0]['bpm'],stages[1]['bpm'])
+        self.assertGreater(stages[1]['bpm'],stages[2]['bpm'])
 
     def test_four_editable_scores_match_rendered_loop_grid(self):
         reports=json.loads((ROOT/'scores.json').read_text())

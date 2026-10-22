@@ -1,0 +1,34 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Metal 4.0 - Forward+ - Using Device #0: Apple - Apple M5 (Apple9)
+
+PASS: Real audio driver selected
+PASS: Menu music and cue reach the output bus without clipping
+AUDIO OUTPUT: 驱动：CoreAudio · 输出：Default · 主音量：65% peak=0.37274175882339
+PASS: F160 has a packaged engine loop
+PASS: R200 has a packaged engine loop
+PASS: A240 has a packaged engine loop
+PASS: I20 has a packaged engine loop
+PASS: DELTA has a packaged engine loop
+PASS: EVO6 has a packaged engine loop
+PASS: WRX has a packaged engine loop
+PASS: P7 has a packaged engine loop
+PASS: Three cars use different combustion waveforms
+PASS: Theme menu reaches the real output bus without clipping
+PASS: Compressed music uses its full decoded loop length
+PASS: Theme autumn reaches the real output bus without clipping
+PASS: Compressed music uses its full decoded loop length
+PASS: Theme coast reaches the real output bus without clipping
+PASS: Compressed music uses its full decoded loop length
+PASS: Theme highland reaches the real output bus without clipping
+PASS: Compressed music uses its full decoded loop length
+PASS: Theme desert reaches the real output bus without clipping
+PASS: Compressed music uses its full decoded loop length
+PASS: female co-driver reaches the real audio mixer without clipping
+PASS: male co-driver reaches the real audio mixer without clipping
+PASS: helicopter spatial loop plays through CoreAudio
+PASS: river spatial loop plays through CoreAudio
+PASS: hooves spatial loop plays through CoreAudio
+PASS: Driving music freezes with pause
+PASS: Playback music continues while vehicle physics remains paused
+PASS: Saved mute remains effective
+TEST RESULT: 29 checks, 0 failures

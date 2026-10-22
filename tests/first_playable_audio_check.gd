@@ -23,7 +23,7 @@ func _run() -> void:
 		check(stream.data.size()>1000 and stream.loop_mode==AudioStreamWAV.LOOP_FORWARD,id+" has a packaged engine loop")
 		profiles.append(stream.data)
 	check(profiles[0]!=profiles[1] and profiles[1]!=profiles[2] and profiles[0]!=profiles[2],"Three cars use different combustion waveforms")
-	for environment_id: String in ["","autumn","coast","highland"]:
+	for environment_id: String in ["","autumn","coast","highland","desert"]:
 		audio.set_scene(environment_id)
 		capture.clear_buffer()
 		await create_timer(.65).timeout

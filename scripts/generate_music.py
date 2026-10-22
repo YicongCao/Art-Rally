@@ -11,11 +11,11 @@ SR, PPQ = 22050, 480
 SCORES = {
     'menu': dict(title='Ignition / Grid Lights', bpm=126, roots=[45,45,41,43,45,48,41,43],
                  melody=[12,15,19,22,19,15,10,7,12,19,24,22,19,15,10,7], pattern=[0,7,12,15,7,12,19,10], program=81, lead=30),
-    'autumn': dict(title='Amber Gravel / Garage Rock', genre='garage-rock', bpm=144, roots=[40,40,43,45,40,47,43,38],
+    'autumn': dict(title='Amber Gravel / Garage Rock', genre='garage-rock', bpm=156, roots=[40,40,43,45,40,47,43,38],
                    melody=[12,15,19,24,22,19,15,10,12,19,22,24,19,15,10,7], pattern=[0,12,7,15,0,7,12,19], program=30, lead=81),
-    'coast': dict(title='Golden Wake / Electro House', genre='electro-house', bpm=128, roots=[45,48,41,43,45,52,48,43],
+    'coast': dict(title='Golden Wake / Electro House', genre='electro-house', bpm=140, roots=[45,48,41,43,45,52,48,43],
                   melody=[12,19,24,27,24,22,19,15,12,15,19,22,24,19,15,10], pattern=[0,7,12,19,15,7,10,12], program=81, lead=80),
-    'highland': dict(title='Stone and Thunder / Mountain Drums', genre='cinematic-percussion', bpm=110, roots=[38,38,41,36,38,45,41,36],
+    'highland': dict(title='Stone and Thunder / Mountain Drums', genre='cinematic-percussion', bpm=132, roots=[38,38,41,36,38,45,41,36],
                      melody=[12,19,22,24,19,15,12,10,7,12,15,19,22,19,15,10], pattern=[0,12,7,10,0,12,15,7], program=80, lead=30),
 }
 
@@ -106,17 +106,19 @@ def compose(config):
         if genre=='garage-rock':
             for beat in [0,.75,1.5,2,2.75,3.5]:
                 for interval in [0,7,12]: pulse.append((bar*4+beat,.18,root+interval,72))
-                bass.append((bar*4+beat,.28,root-12,90))
+            for i in range(8): bass.append((bar*4+i*.5,.32,root-12+(12 if i==7 and bar%2 else 0),100 if i%2==0 else 88))
             if bar%4>=2:
                 for i in range(4): lead.append((bar*4+i*.75,.42,root+24+[0,3,7,10][i],82))
-            for beat in [0,2,2.5]: drums.append((bar*4+beat,.23,36,108))
+            for beat in [0,1.5,2,2.75]: drums.append((bar*4+beat,.23,36,108))
             for beat in [1,3]: drums.append((bar*4+beat,.2,38,104))
-            for i in range(8): drums.append((bar*4+i*.5+(0.08 if i%2 else 0),.09,42,60))
+            for i in range(8): drums.append((bar*4+i*.5,.08,42,72 if i%2==0 else 57))
+            if bar%4==3:
+                for beat in [3.25,3.75]: drums.append((bar*4+beat,.08,38,72))
         elif genre=='electro-house':
             root=[48,55,53,50][(bar//2)%4]
             for beat in [.5,1.5,2.5,3.5]:
                 for interval in [0,4,7,11]: pulse.append((bar*4+beat,.28,root+12+interval,65))
-                bass.append((bar*4+beat,.36,root-12,90))
+            for i in range(8): bass.append((bar*4+i*.5,.30,root-12+(7 if i==7 else 0),102 if i%2 else 78))
             for i,interval in enumerate([12,19,24,23,19,16,14,19]):
                 if bar%4!=3 or i<4: lead.append((bar*4+i*.5,.17,root+interval,65))
             for beat in range(4): drums.append((bar*4+beat,.24,36,105))
@@ -125,7 +127,10 @@ def compose(config):
         else:
             root=[38,36,41,38][(bar//4)%4]
             for interval in [0,7]: pulse.append((bar*4,3.8,root+12+interval,65))
-            for beat in [0,1.5,3]: bass.append((bar*4+beat,.55,root-12,85))
+            for i in range(8): bass.append((bar*4+i*.5,.34,root-12+(12 if i in [3,7] else 0),100 if i%2==0 else 83))
+            for beat in range(4): drums.append((bar*4+beat,.24,36,108))
+            for beat in [1,3]: drums.append((bar*4+beat,.16,38,80))
+            for i in range(8): drums.append((bar*4+i*.5,.07,42,56 if i%2 else 64))
             if bar%4 in [1,3]:
                 for i,interval in enumerate([12,19,15]): lead.append((bar*4+i*1.25,.95,root+interval,78))
             for beat,pitch in [(0,41),(.75,45),(1.5,41),(2.5,47),(3,45),(3.5,41)]: drums.append((bar*4+beat,.34,pitch,100 if beat in [0,1.5] else 70))
@@ -139,14 +144,32 @@ def generate():
     report=[]
     for key,config in SCORES.items():
         tracks=compose(config); beat_seconds=60/config['bpm']; duration=64*beat_seconds; count=round(duration*SR)
-        audio=np.zeros(count)
+        stems={}
+        racing=key!='menu'
+        gains={'Pulse':.14,'Bass':.40,'Lead':.11,'Drums':.48} if racing else {'Pulse':.18,'Bass':.26,'Lead':.13,'Drums':.38}
         for name,program,notes in tracks:
+            stem=np.zeros(count)
             for beat,length,pitch,velocity in notes:
-                data=voice(program,pitch,length*beat_seconds)*(velocity/127)*({'Pulse':.18,'Bass':.26,'Lead':.13,'Drums':.38}[name])
+                data=voice(program,pitch,length*beat_seconds)*(velocity/127)*gains[name]
                 start=round(beat*beat_seconds*SR)
-                np.add.at(audio,(np.arange(len(data))+start)%count,data)
-        # Circular delays preserve the score's exact loop and keep the reverb tail at the start.
-        dry=audio.copy()
+                np.add.at(stem,(np.arange(len(data))+start)%count,data)
+            stems[name]=stem
+        if racing:
+            # Make room for each kick transient rather than simply turning up
+            # the whole mix. Circular envelopes also cover the loop boundary.
+            duck=np.ones(count)
+            for beat,length,pitch,velocity in tracks[-1][2]:
+                if pitch!=36: continue
+                start=round(beat*beat_seconds*SR)
+                tail=np.arange(round(.13*SR))/SR
+                envelope=1-.48*np.exp(-tail/.045)
+                indices=(start+np.arange(len(tail)))%count
+                duck[indices]=np.minimum(duck[indices],envelope)
+            stems['Bass']*=duck
+            stems['Pulse']*=duck
+        audio=sum(stems.values())
+        # Keep the racing rhythm dry and defined; echo only melodic layers.
+        dry=(stems['Pulse']+stems['Lead']) if racing else audio.copy()
         for delay,gain in [(beat_seconds*.75,.10),(beat_seconds*1.5,.055)]: audio+=np.roll(dry,round(delay*SR))*gain
         audio=np.tanh(audio*1.4)
         audio*=.70/max(.7,np.max(np.abs(audio)))

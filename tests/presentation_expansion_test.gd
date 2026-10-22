@@ -5,7 +5,7 @@ func _run() -> void:
 	var themes: Array = []
 	for key: String in ["menu","autumn","coast","highland"]:
 		var music := RallyAudioDirector.music_asset(key)
-		check(music.get_length()>25 and music.loop_end==roundi(music.get_length()*music.mix_rate),key+" contains a full offline music loop")
+		check(music.get_length()>24 and music.loop_end==roundi(music.get_length()*music.mix_rate),key+" contains a full offline music loop")
 		themes.append(hash(music.data))
 	check(themes.size()==4 and themes[0]!=themes[1] and themes[1]!=themes[2] and themes[2]!=themes[3],"Four scenes use distinct compositions")
 	for id: String in RallyContentCatalog.STAGES:

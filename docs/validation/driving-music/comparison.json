@@ -1,0 +1,62 @@
+[
+  {
+    "theme": "menu",
+    "before": {
+      "seconds": 30.476190476190474,
+      "rms": 0.14984409784634056,
+      "peak": 0.699951171875,
+      "low_band_energy_fraction": 0.7927851320809642
+    },
+    "after": {
+      "seconds": 30.476190476190474,
+      "rms": 0.14984409784634056,
+      "peak": 0.699951171875,
+      "low_band_energy_fraction": 0.7927851320809642
+    }
+  },
+  {
+    "theme": "autumn",
+    "before": {
+      "seconds": 26.666666666666668,
+      "rms": 0.16788095991928953,
+      "peak": 0.699951171875,
+      "low_band_energy_fraction": 0.7350411938584626
+    },
+    "after": {
+      "seconds": 24.615374149659864,
+      "rms": 0.21954309751791867,
+      "peak": 0.699951171875,
+      "low_band_energy_fraction": 0.8284793893945049
+    }
+  },
+  {
+    "theme": "coast",
+    "before": {
+      "seconds": 30.0,
+      "rms": 0.16196744397686558,
+      "peak": 0.619171142578125,
+      "low_band_energy_fraction": 0.6288415061015639
+    },
+    "after": {
+      "seconds": 27.428571428571427,
+      "rms": 0.2459325608648697,
+      "peak": 0.6885986328125,
+      "low_band_energy_fraction": 0.8543987849228042
+    }
+  },
+  {
+    "theme": "highland",
+    "before": {
+      "seconds": 34.90907029478458,
+      "rms": 0.15678735286554638,
+      "peak": 0.699951171875,
+      "low_band_energy_fraction": 0.6285841128262895
+    },
+    "after": {
+      "seconds": 29.09092970521542,
+      "rms": 0.21553016872024036,
+      "peak": 0.699951171875,
+      "low_band_energy_fraction": 0.6366691919371752
+    }
+  }
+]
