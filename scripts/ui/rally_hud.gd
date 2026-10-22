@@ -32,7 +32,9 @@ var ui_scale: float = 1
 var ui_offset := Vector2.ZERO
 var acrylic := RallyAcrylicPanels.new()
 var skins := RallyComicHUDSkins.new()
-var hint_alpha: float = 1
+var hint_alpha: float = 0
+var recovery_alpha: float = 0
+var recovery_caption: String = ""
 var sector_clock: float = 99
 var seen_sectors: int = 0
 var sector: Dictionary = {}
@@ -124,7 +126,12 @@ func _process(dt: float) -> void:
 	for key: String in aid_hold:
 		aid_hold[key]=.16 if model.get(key+"_active",false) else maxf(0,float(aid_hold[key])-dt)
 	sector_clock += dt
-	hint_alpha = move_toward(hint_alpha,1.0 if float(model.get("speed",0))<.8 else 0.0,dt/.14)
+	var driving := int(model.get("phase",0))!=RallyStageSession.Phase.FINISHED
+	hint_alpha = move_toward(hint_alpha,1.0 if driving and float(model.get("speed",0))<.8 else 0.0,dt/.14)
+	var recovering: bool = model.get("recovery_hint",false) and driving
+	if recovering: recovery_caption=str(model.get("recovery_reason","车辆受困"))
+	recovery_alpha=move_toward(recovery_alpha,1.0 if recovering else 0.0,dt/.2)
+	if model.get("reduced_motion",false): recovery_alpha=1.0 if recovering else 0.0
 	queue_redraw()
 
 
@@ -177,16 +184,20 @@ func _draw() -> void:
 	elif model.get("returning_forward",false):
 		center_text("切回前进挡：正在制动至停稳",Vector2(640,578),17,AMBER)
 	elif model.gear=="R" and model.get("reverse_assist",false):
-		center_text("倒挡 · S/↓ 倒车 · W/↑ 前进",Vector2(640,578),17,AMBER)
-	if not str(model.warning).is_empty():
-		panel(Rect2(422,625,435,44),Color(0.15,0.08,0.05,0.94))
-		if model.get("recovery_hint",false):
-			draw_arc(Vector2(599,647),9,-PI*.8,PI*.75,24,AMBER,2,true)
-			draw_colored_polygon(PackedVector2Array([Vector2(590,650),Vector2(594,656),Vector2(599,649)]),AMBER)
-			center_text(model.warning,Vector2(651,653),15,AMBER)
-		else: center_text(model.warning,Vector2(640,653),15,AMBER)
-	elif int(model.get("camera_mode",0))!=2 and hint_alpha>0:
-		center_text("Esc 设置    C 视角    T 遥测 / 调试    F10 自动驾驶",Vector2(640,697),12,Color(PAPER,hint_alpha))
+		var hints: Dictionary = model.get("control_hints",control_hints({},false))
+		_draw_key(hints.brake,Rect2(462,550,70,32),1)
+		text("倒车",Vector2(544,573),16,PAPER)
+		_draw_key(hints.forward,Rect2(660,550,70,32),1)
+		text("前进",Vector2(742,573),16,PAPER)
+	if not model.paused:
+		if recovery_alpha>0 and model.phase!=RallyStageSession.Phase.FINISHED:
+			_draw_recovery()
+		elif not str(model.warning).is_empty():
+			panel(Rect2(422,625,435,44),Color(0.15,0.08,0.05,0.94))
+			center_text(model.warning,Vector2(640,653),15,AMBER)
+		elif hint_alpha>0 and model.phase!=RallyStageSession.Phase.FINISHED:
+			_draw_control_hints()
+
 	if model.paused:
 		center_text("已暂停",Vector2(640,137),20,AMBER)
 	elif model.phase == RallyStageSession.Phase.COUNTDOWN and remaining<=0:
@@ -206,7 +217,11 @@ func _draw() -> void:
 		if model.get("new_record",false): result_line = "新纪录  ·  "+result_line
 		center_text(result_line,Vector2(640,405),14,AMBER)
 		if not auto_label.is_empty(): center_text(auto_label+" 参考驾驶",Vector2(640,429),12,MUTED)
-		center_text("F5 / 手柄 Back 重跑    Esc 设置",Vector2(640,458),15,AMBER)
+		var hints: Dictionary = model.get("control_hints",control_hints({},false))
+		_draw_key(hints.restart,Rect2(464,435,74,30),1)
+		text("重跑",Vector2(548,457),15,PAPER)
+		_draw_key(hints.pause,Rect2(641,435,74,30),1)
+		text("设置",Vector2(725,457),15,PAPER)
 
 
 static func pacenote_arrow(code: String,at: Vector2 = Vector2.ZERO) -> Dictionary:
@@ -379,3 +394,49 @@ func _aid_frame(ink: Color,active: bool) -> StyleBoxFlat:
 	frame.set_border_width_all(1)
 	frame.set_corner_radius_all(3)
 	return frame
+
+
+static func control_hints(bindings: Dictionary,gamepad: bool) -> Dictionary:
+	var result := {"gamepad":gamepad}
+	for entry: Array in [["reset",KEY_R],["pause",KEY_ESCAPE],["camera",KEY_C],["debug",KEY_T],["auto",KEY_F10],["restart",KEY_F5],["forward",KEY_W],["brake",KEY_S]]:
+		var code := int(bindings.get(str(entry[1]),entry[1]))
+		result[entry[0]]=OS.get_keycode_string(code).replace("Escape","Esc")
+	if gamepad:
+		result.merge({"reset":"Y","pause":"Start","camera":"X","restart":"Back","forward":"RT","brake":"LT"},true)
+	return result
+
+
+func _draw_key(caption: String,rect: Rect2,opacity: float) -> void:
+	var frame := StyleBoxFlat.new()
+	frame.bg_color=Color(PAPER,.08*opacity)
+	frame.border_color=Color(PAPER,.65*opacity)
+	frame.set_border_width_all(1)
+	frame.set_corner_radius_all(4)
+	draw_style_box(frame,rect)
+	var px := 16
+	while px>8 and text_font.get_string_size(caption,HORIZONTAL_ALIGNMENT_LEFT,-1,px).x>rect.size.x-10: px-=1
+	center_text(caption,rect.get_center()+Vector2(0,px*.36),px,Color(PAPER,opacity))
+
+
+func _draw_recovery() -> void:
+	var opacity := recovery_alpha
+	var hints: Dictionary = model.get("control_hints",control_hints({},false))
+	panel(Rect2(416,604,448,78),Color(.15,.08,.05,.90*opacity))
+	draw_texture_rect(preload("res://assets/ui/icons/reset.svg"),Rect2(437,625,28,28),false,Color(AMBER,opacity))
+	text(recovery_caption,Vector2(480,633),20,Color(PAPER,opacity),title_font)
+	text("恢复至安全位置 / 罚时 5 秒" if model.get("recovery_penalty",0)>0 else "恢复至安全位置",Vector2(480,660),13,Color(MUTED,opacity))
+	_draw_key(hints.reset,Rect2(704,619,90,36),opacity)
+	text("复位",Vector2(806,644),16,Color(AMBER,opacity))
+
+
+func _draw_control_hints() -> void:
+	var hints: Dictionary = model.get("control_hints",control_hints({},false))
+	var entries: Array = [["pause","设置"],["camera","视角"],["reset","复位"]]
+	if not hints.gamepad: entries.append_array([["debug","遥测"],["auto","自动驾驶"]])
+	var width := entries.size()*130.0+24
+	var x := 640-width*.5
+	panel(Rect2(x,648,width,46),Color(.035,.09,.075,.90*hint_alpha))
+	for entry: Array in entries:
+		_draw_key(hints[entry[0]],Rect2(x+12,656,60,30),hint_alpha)
+		text(entry[1],Vector2(x+80,677),13,Color(PAPER,hint_alpha))
+		x+=130

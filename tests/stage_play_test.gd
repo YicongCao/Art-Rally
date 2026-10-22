@@ -8,6 +8,16 @@ func _run() -> void:
 	check(scene.session.phase == RallyStageSession.Phase.ARMED, "Playable stage completes countdown")
 	check(scene.vehicle.wheels[0].surface.surface_id == 1 and scene.vehicle.config.contact_envelope, "Stage starts on gravel with envelope contact enabled")
 	check(scene.vehicle.position.distance_to(scene.generator.route.pose_at(8).origin) < 0.3, "Brake hold keeps starting car stationary on generated slope")
+	scene.vehicle.command.throttle=1
+	scene.vehicle.command.brake=0
+	for i: int in range(510): scene._physics_process(1.0/120)
+	scene.controls.bindings={str(KEY_R):KEY_BACKSPACE}
+	scene._process(.1)
+	check(scene.recovery_advice.visible and scene.game_hud.model.recovery_hint,"Blocked car before start gate gets a recovery card")
+	check(scene.game_hud.model.control_hints.reset==OS.get_keycode_string(KEY_BACKSPACE),"Race passes rebound key into HUD")
+	scene._reset()
+	check(not scene.recovery_advice.visible,"Recovery clears advice immediately")
+	await ticks(120)
 	scene.session.phase = RallyStageSession.Phase.RUNNING
 	scene.session.next_gate = 2
 	scene._reset()

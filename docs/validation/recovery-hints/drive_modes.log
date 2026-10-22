@@ -1,0 +1,37 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: FWD preserves total drive torque
+PASS: FWD rear wheels receive no drive or limited-slip coupling
+PASS: AWD preserves total drive torque
+PASS: RWD preserves total drive torque
+PASS: RWD front wheels receive no drive or limited-slip coupling
+PASS: FWD engine couples only to driven axle speed
+PASS: RWD engine couples only to driven axle speed
+PASS: RWD handbrake releases clutch instead of driving locked rear wheels
+PASS: Braking while moving does not advance reverse countdown
+PASS: Stationary reverse hold lasts full 600 milliseconds
+PASS: Raw pedal release cancels hold despite filtered brake residue
+PASS: Completed 600 ms hold requests reverse through gearbox
+PASS: Reverse maps brake pedal to reverse acceleration
+PASS: Forward pedal first brakes a moving reverse car
+PASS: Forward pedal selects first gear after stopping
+PASS: Brake pedal resumes its braking role in forward gear
+PASS: Airborne car cannot arm automatic reverse
+PASS: Pause/recovery can clear countdown state
+PASS: Automatic downshift interruption does not restart the stationary hold timer
+PASS: Pre-race selection freezes session and driver input
+PASS: Pause/restart shortcuts cannot bypass initial vehicle choice
+PASS: FWD choice starts a fresh drive session
+PASS: FWD accelerates through actual tire forces
+PASS: AWD choice starts a fresh drive session
+PASS: AWD accelerates through actual tire forces
+PASS: RWD choice starts a fresh drive session
+PASS: RWD accelerates through actual tire forces
+PASS: Vehicle choice does not mutate shared AWD resource
+PASS: Cancelling reselection preserves previous layout and paused session
+PASS: Real S input performs hold-to-reverse without manual shifting
+PASS: Reverse assist actually drives the vehicle backward
+DIRECTION METRIC: gear=1 velocity=(2.125158, 0.255202, -3.043563) resets=0 phase=1 blocked=false
+PASS: Forward input safely stops reverse motion then drives forward
+PASS: Focus-loss pause cancels assisted direction timer
+TEST RESULT: 33 checks, 0 failures

@@ -1,0 +1,98 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: All three stages prepared before film clock starts
+PASS: Contiguous shot: establish
+PASS: Recording covers establish
+PASS: Stock physical recording: establish
+PASS: Full scene body sweep clear: establish []
+PASS: Pose displacement agrees with speed telemetry: establish
+PASS: Contiguous shot: chase
+PASS: Recording covers chase
+PASS: Stock physical recording: chase
+PASS: Full scene body sweep clear: chase []
+PASS: Pose displacement agrees with speed telemetry: chase
+PASS: Contiguous shot: side
+PASS: Recording covers side
+PASS: Stock physical recording: side
+PASS: Full scene body sweep clear: side []
+PASS: Pose displacement agrees with speed telemetry: side
+PASS: Contiguous shot: recovery
+PASS: Recording covers recovery
+PASS: Stock physical recording: recovery
+PASS: Full scene body sweep clear: recovery []
+PASS: Pose displacement agrees with speed telemetry: recovery
+PASS: Contiguous shot: animals
+PASS: Recording covers animals
+PASS: Stock physical recording: animals
+PASS: Full scene body sweep clear: animals []
+PASS: Pose displacement agrees with speed telemetry: animals
+PASS: Contiguous shot: coast_wide
+PASS: Recording covers coast_wide
+PASS: Stock physical recording: coast_wide
+PASS: Full scene body sweep clear: coast_wide []
+PASS: Pose displacement agrees with speed telemetry: coast_wide
+PASS: Contiguous shot: hood
+PASS: Recording covers hood
+PASS: Stock physical recording: hood
+PASS: Full scene body sweep clear: hood []
+PASS: Pose displacement agrees with speed telemetry: hood
+PASS: Contiguous shot: bridge
+PASS: Recording covers bridge
+PASS: Stock physical recording: bridge
+PASS: Full scene body sweep clear: bridge []
+PASS: Pose displacement agrees with speed telemetry: bridge
+PASS: Contiguous shot: helicopter
+PASS: Recording covers helicopter
+PASS: Stock physical recording: helicopter
+PASS: Full scene body sweep clear: helicopter []
+PASS: Pose displacement agrees with speed telemetry: helicopter
+PASS: Contiguous shot: cliff
+PASS: Recording covers cliff
+PASS: Stock physical recording: cliff
+PASS: Full scene body sweep clear: cliff []
+PASS: Pose displacement agrees with speed telemetry: cliff
+PASS: Contiguous shot: night_chase
+PASS: Recording covers night_chase
+PASS: Stock physical recording: night_chase
+PASS: Full scene body sweep clear: night_chase []
+PASS: Pose displacement agrees with speed telemetry: night_chase
+PASS: Contiguous shot: outro
+PASS: Recording covers outro
+PASS: Stock physical recording: outro
+PASS: Full scene body sweep clear: outro []
+PASS: Pose displacement agrees with speed telemetry: outro
+PASS: Exactly 75 seconds at 1x playback
+PASS: Continuous real oversteer, opposite lock and recovery
+PASS: Recording-only ABS on, ESP/TC off
+PASS: Stable camera at 30 FPS: side
+PASS: Stable camera at 30 FPS: recovery
+PASS: Stable camera at 30 FPS: hood
+PASS: Stable camera at 60 FPS: side
+PASS: Stable camera at 60 FPS: recovery
+PASS: Stable camera at 60 FPS: hood
+PASS: Stable camera at 120 FPS: side
+PASS: Stable camera at 120 FPS: recovery
+PASS: Stable camera at 120 FPS: hood
+PASS: HUD reads current replay telemetry and recorded wheel steering
+PASS: HUD G value reproduces on seek
+PASS: Normal camera cannot overwrite director
+PASS: Runtime and controls disabled in Showcase_sunset_ridge
+PASS: Runtime and controls disabled in Showcase_sunlit_cape
+PASS: Runtime and controls disabled in Showcase_misty_highlands
+PASS: Dormant driving controllers cannot pause the shared SceneTree
+PASS: Space pauses film through Viewport input
+PASS: Paused editorial clock does not advance
+PASS: Paused telemetry remains frozen
+PASS: Controller Start resumes through Viewport input
+PASS: At least 2 seconds continuously framed: animals
+PASS: At least 2 seconds continuously framed: helicopter
+PASS: At least 2 seconds continuously framed: bridge
+PASS: Deer body clears carriageway at least 3 seconds before car nose
+PASS: Restart reproduces wildlife event
+PASS: Player profile, settings, scores and unlocks unchanged
+PASS: No profile written by demo
+PASS: 75 seconds ends on replay/home page
+PASS: Result page contains FPS graph panel
+PASS: Replay reuses prepared worlds with no loading page
+PASS: Escape on result page exits; hidden director cannot capture menu input
+TEST RESULT: 95 checks, 0 failures

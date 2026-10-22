@@ -153,12 +153,18 @@ func _physics_process(dt: float) -> void:
 			vehicle.request_reset(generator.route.pose_at(session.gates[-1]+8))
 		else: _recover(10,"越界复位")
 		return
-	recovery_advice.update(dt,vehicle.linear_velocity.length(),vehicle.global_basis.y.dot(Vector3.UP),(-vehicle.global_basis.z).dot(generator.route.tangent_at(session.progress)),vehicle.command.throttle,vehicle.command.brake,session.phase==RallyStageSession.Phase.RUNNING and auto_driver.mode==RallyAutoDriver.Mode.OFF)
+	recovery_advice.update(
+		dt,vehicle.linear_velocity.length(),vehicle.global_basis.y.dot(Vector3.UP),
+		(-vehicle.global_basis.z).dot(generator.route.tangent_at(session.progress)),
+		vehicle.command.throttle,vehicle.command.brake,
+		session.phase in [RallyStageSession.Phase.ARMED,RallyStageSession.Phase.RUNNING] and auto_driver.mode==RallyAutoDriver.Mode.OFF,
+		vehicle.command.handbrake,vehicle.global_position,vehicle.drivetrain.gear!=0)
 	var previous_phase := session.phase
 	session.step(vehicle.position, vehicle.linear_velocity.length(), dt,vehicle.global_basis,vehicle.config.body_size)
 	if previous_phase!=RallyStageSession.Phase.FINISHED and session.phase==RallyStageSession.Phase.FINISHED:
 		_record_finish()
 	if session.phase == RallyStageSession.Phase.FINISHED:
+		recovery_advice.reset()
 		if vehicle.position.y < generator.route.position_at(generator.route.length).y - 12 and not result_safety_reset:
 			result_safety_reset = true
 			vehicle.request_reset(generator.route.pose_at(session.gates[-1] + 8))
@@ -185,15 +191,18 @@ func _process(dt: float) -> void:
 		data["show_fps"] = preferences.values.show_fps
 		data["vehicle_title"] = vehicle_definition.vehicle_id if vehicle_definition!=null else vehicle.drivetrain.config.drive_layout
 		data["camera_mode"] = camera_mode
+		data["control_hints"] = RallyHUD.control_hints(controls.bindings,controls.active_device>=0)
+		data["reduced_motion"] = preferences.values.reduced_motion
 		data["reverse_remaining"] = reverse_assist.remaining()
 		data["returning_forward"] = reverse_assist.returning_forward
 		data["reverse_assist"] = preferences.values.reverse_assist
 		data.merge(auto_driver.telemetry(controls.active_device),true)
 		data.merge(_result_hud_data(),true)
 		if recovery_notice_time>0: data["warning"] = recovery_notice
-		elif recovery_advice.visible:
-			data["warning"] = "Y 复位" if controls.active_device>=0 else "R 复位"
+		elif recovery_advice.visible and not get_tree().paused and auto_driver.mode==RallyAutoDriver.Mode.OFF:
 			data["recovery_hint"] = true
+			data["recovery_reason"] = recovery_advice.reason
+			data["recovery_penalty"] = 5 if session.phase==RallyStageSession.Phase.RUNNING and not session.practice else 0
 		game_hud.refresh(data)
 		debug_panel.set_driver_state(auto_driver.telemetry(controls.active_device))
 	presentation.update(dt)
@@ -269,6 +278,7 @@ func _reset() -> void:
 func _recover(seconds: float,reason: String) -> void:
 	if selecting_vehicle or respawn_wait or session.phase == RallyStageSession.Phase.FINISHED: return
 	reverse_assist.reset()
+	recovery_advice.reset()
 	controls.clear()
 	respawn_wait = true
 	recovery_hold = true
@@ -284,6 +294,7 @@ func _recover(seconds: float,reason: String) -> void:
 func _restart() -> void:
 	if selecting_vehicle: return
 	reverse_assist.reset()
+	recovery_advice.reset()
 	get_tree().paused = false
 	controls.resume()
 	respawn_wait = true

@@ -7,6 +7,12 @@ func _run() -> void:
 	check(font.get_string_size("12:34.567",HORIZONTAL_ALIGNMENT_LEFT,-1,34).x<RallyHUD.TIMER_RECT.size.x-36,"Long race timer fits the narrower panel in the speedometer font")
 	for pair: Array in [[0,"00"],[7,"07"],[99,"99"],[100,"100"],[236,"236"]]:
 		check(RallyHUD.speed_text(pair[0])==pair[1],"Speed uses two digits below 100, three above: "+str(pair[0]))
+	var hints := RallyHUD.control_hints({},false)
+	check(hints.reset=="R" and hints.camera=="C" and hints.pause=="Esc","HUD keycaps match default controls")
+	hints=RallyHUD.control_hints({str(KEY_R):KEY_BACKSPACE,str(KEY_C):KEY_V},false)
+	check(hints.reset==OS.get_keycode_string(KEY_BACKSPACE) and hints.camera=="V","HUD keycaps follow physical key rebinding")
+	hints=RallyHUD.control_hints({str(KEY_R):KEY_BACKSPACE},true)
+	check(hints.reset=="Y" and hints.camera=="X" and hints.pause=="Start" and hints.restart=="Back","Gamepad hints use existing controller bindings")
 	var car := RallyVehicle.new()
 	root.add_child(car)
 	var route := RallyStageRoute.new()
@@ -58,6 +64,18 @@ func _run() -> void:
 	var left: PackedVector2Array = RallyHUD.pacenote_arrow("LEFT_MEDIUM").head
 	var right: PackedVector2Array = RallyHUD.pacenote_arrow("RIGHT_MEDIUM").head
 	check(left[0].is_equal_approx(Vector2(-right[0].x,right[0].y)),"Left and right pacenote tips are exact horizontal mirrors")
+	var hud := RallyHUD.new()
+	root.add_child(hud)
+	hud.model={"phase":RallyStageSession.Phase.RUNNING,"speed":0,"recovery_hint":true,"recovery_reason":"车辆受困"}
+	hud._process(.25)
+	check(hud.recovery_alpha==1 and hud.hint_alpha==1,"Stopped hint and recovery card fade into view")
+	hud.model={"phase":RallyStageSession.Phase.RUNNING,"speed":50}
+	hud._process(.25)
+	check(hud.recovery_alpha==0 and hud.hint_alpha==0,"Moving away fades out recovery and keyboard hints")
+	hud.model={"phase":RallyStageSession.Phase.RUNNING,"speed":0,"recovery_hint":true,"reduced_motion":true}
+	hud._process(.01)
+	check(hud.recovery_alpha==1,"Reduced motion makes recovery card immediate")
+	hud.free()
 	car.queue_free()
 	await process_frame
 	finish()

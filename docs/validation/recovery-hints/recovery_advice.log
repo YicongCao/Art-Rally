@@ -1,0 +1,41 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: 30 Hz: intentional parking stays quiet
+PASS: 30 Hz: brake and throttle do not trigger
+PASS: 30 Hz: handbrake start does not trigger
+PASS: 30 Hz: neutral revving does not trigger
+PASS: 30 Hz: short obstruction stays quiet
+PASS: 30 Hz: rocking in place is detected despite velocity
+PASS: 30 Hz: releasing throttle leaves time to read
+PASS: 30 Hz: driving out, including reverse, clears hint
+PASS: 30 Hz: continuous slow progress is not stuck
+PASS: 30 Hz: overturned car does not require throttle
+PASS: 30 Hz: self-righting clears overturned hint
+PASS: 30 Hz: leaving manual driving clears all history
+PASS: 60 Hz: intentional parking stays quiet
+PASS: 60 Hz: brake and throttle do not trigger
+PASS: 60 Hz: handbrake start does not trigger
+PASS: 60 Hz: neutral revving does not trigger
+PASS: 60 Hz: short obstruction stays quiet
+PASS: 60 Hz: rocking in place is detected despite velocity
+PASS: 60 Hz: releasing throttle leaves time to read
+PASS: 60 Hz: driving out, including reverse, clears hint
+PASS: 60 Hz: continuous slow progress is not stuck
+PASS: 60 Hz: overturned car does not require throttle
+PASS: 60 Hz: self-righting clears overturned hint
+PASS: 60 Hz: leaving manual driving clears all history
+PASS: 120 Hz: intentional parking stays quiet
+PASS: 120 Hz: brake and throttle do not trigger
+PASS: 120 Hz: handbrake start does not trigger
+PASS: 120 Hz: neutral revving does not trigger
+PASS: 120 Hz: short obstruction stays quiet
+PASS: 120 Hz: rocking in place is detected despite velocity
+PASS: 120 Hz: releasing throttle leaves time to read
+PASS: 120 Hz: driving out, including reverse, clears hint
+PASS: 120 Hz: continuous slow progress is not stuck
+PASS: 120 Hz: overturned car does not require throttle
+PASS: 120 Hz: self-righting clears overturned hint
+PASS: 120 Hz: leaving manual driving clears all history
+PASS: Legacy callers without world positions still detect and clear blocked cars
+PASS: Existing stationary wrong-way advice is retained
+TEST RESULT: 38 checks, 0 failures

@@ -52,6 +52,22 @@ func _run() -> void:
 	controller._unhandled_input(axis)
 	controller._joy_connection_changed(7, false)
 	check(controller.blocked and controller.active_device == -1 and controller.sample(0, 0.01).steer == 0, "Active controller disconnect blocks and clears commands")
+	controller.resume()
+	controller.bindings={str(KEY_R):KEY_BACKSPACE}
+	var recoveries := [0]
+	controller.reset_requested.connect(func(): recoveries[0]+=1)
+	key.physical_keycode=KEY_R
+	root.push_input(key)
+	check(recoveries[0]==0,"Old reset key is inactive after rebinding")
+	key.physical_keycode=KEY_BACKSPACE
+	root.push_input(key)
+	check(recoveries[0]==1,"Displayed rebound reset key works through viewport input")
+	var button := InputEventJoypadButton.new()
+	button.device=7
+	button.button_index=JOY_BUTTON_Y
+	button.pressed=true
+	root.push_input(button)
+	check(recoveries[0]==2 and controller.active_device==7,"Displayed gamepad Y recovers through viewport input")
 	controller.queue_free()
 	await process_frame
 	finish()
