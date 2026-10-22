@@ -53,6 +53,37 @@ func _run() -> void:
 			var at := route.position_at(station)+route.rights[route.index_at(station)]*offset
 			if not space.intersect_ray(PhysicsRayQueryParameters3D.create(at+Vector3.UP*2.4,at+Vector3.UP*.15,4)).is_empty(): blocked+=1
 	check(blocked==0,"Walls, arch and props leave the full corridor clear (%d hits)"%blocked)
+	# A10: rock solids are closed; no boundary edge is exposed above the terrain.
+	for mesh: MeshInstance3D in dressing.find_children("*","MeshInstance3D",true,false):
+		var path := str(dressing.get_path_to(mesh))
+		if not path.begins_with("Canyon") and not path.begins_with("DryRiver") and not path.begins_with("Dune") and not path.begins_with("Distant") and not path.begins_with("RedBoulders") and not path.begins_with("BalancedRocks"): continue
+		var faces: PackedVector3Array=mesh.mesh.get_faces()
+		var edges := {}
+		var xf := mesh.global_transform
+		for i: int in range(0,faces.size(),3):
+			for e: int in range(3):
+				var a: Vector3=(xf*faces[i+e]).snapped(Vector3.ONE*.01)
+				var b: Vector3=(xf*faces[i+(e+1)%3]).snapped(Vector3.ONE*.01)
+				var key: Array=[a,b] if str(a)<str(b) else [b,a]
+				edges[key]=int(edges.get(key,0))+1
+		var exposed := 0
+		for key: Array in edges:
+			if int(edges[key])!=1: continue
+			var mid: Vector3=(key[0]+key[1])*.5
+			if mid.y>land.rendered_height_at(mid.x,mid.z)+.3: exposed+=1
+		check(exposed==0,"Rock solid is closed above ground: %s (%d open edges)"%[path,exposed])
+	# A11: mid-stage desert set pieces exist between canyon and riverbed.
+	for title: String in ["SaltPan","DesertTradingPost","NomadCamp","GhostTownWaterTower","BalancedRocks","RouteCairns"]:
+		var node: Node3D=dressing.get_node_or_null(title)
+		check(node!=null,"Mid-stage landmark "+title)
+		if node!=null and title!="RouteCairns":
+			var at := land.nearest(node.global_position)
+			check(float(at.s)>900 and float(at.s)<2250,title+" sits in the dune section (s=%d)"%int(at.s))
+	var saguaros := 0
+	for node: Node in dressing.get_children():
+		if node is MultiMeshInstance3D and (str(node.name).begins_with("Saguaros") or str(node.name).begins_with("JoshuaTrees")): saguaros+=(node as MultiMeshInstance3D).multimesh.instance_count
+	check(saguaros>60,"Dune section has saguaros and Joshua trees (%d)"%saguaros)
+	check(land.dust_devils.size()==3,"Three animated dust devils")
 	# B4: canyon walls never crowd the road edge.
 	var closest := INF
 	for side: String in ["Side-1","Side1"]:

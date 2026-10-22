@@ -37,14 +37,14 @@ static func build(scene: RallyStageScenery) -> void:
 		var taper := smoothstep(CANYON.x,CANYON.x+80,s)*(1-smoothstep(CANYON.y-110,CANYON.y,s))
 		var h1 := (7+6*n)*taper+1.5
 		var h2 := h1+(9+16*m)*taper
-		return PackedVector2Array([Vector2(-4,-1.5),Vector2(0,2.2),Vector2(.8,h1),Vector2(4.6,h1+.5),Vector2(5.6,h2),Vector2(26,h2+1.2),Vector2(52,-5)]),10.0)
+		return PackedVector2Array([Vector2(-4,-3),Vector2(0,2.2),Vector2(.8,h1),Vector2(4.6,h1+.5),Vector2(5.6,h2),Vector2(26,h2+1.2),Vector2(52,-12)]),10.0)
 	# Dry-river banks: low two-step ledges so the gravel reads as a channel.
 	_walls(scene,"DryRiverbedBanks",RIVERBED,rock,noise,func(s: float,n: float,m: float) -> PackedVector2Array:
 		var taper := smoothstep(RIVERBED.x,RIVERBED.x+60,s)*(1-smoothstep(RIVERBED.y-60,RIVERBED.y,s))*(smoothstep(30,70,absf(s-ARCH_S)))
 		if taper<.05: return PackedVector2Array()
 		var h1 := (2.5+2.5*n)*taper+.4
 		var h2 := h1+(1.5+3.5*m)*taper
-		return PackedVector2Array([Vector2(-3,-1.2),Vector2(0,1.0),Vector2(.6,h1),Vector2(3.4,h1+.3),Vector2(4.2,h2),Vector2(10,h2+.2),Vector2(17,-2)]),8.0)
+		return PackedVector2Array([Vector2(-3,-3),Vector2(0,1.0),Vector2(.6,h1),Vector2(3.4,h1+.3),Vector2(4.2,h2),Vector2(10,h2+.2),Vector2(17,-6)]),8.0)
 	_arch(scene,rock,rng)
 	# Mid-distance hoodoos and buttes along the dune section.
 	var hoodoos := Node3D.new()
@@ -57,7 +57,7 @@ static func build(scene: RallyStageScenery) -> void:
 		var at := scene.ground_at(s,side*rng.randf_range(40,150))
 		if float(scene.nearest(at).distance)<34: continue
 		var width := rng.randf_range(9,26)
-		hoodoo_batch.add(at-Vector3.UP*2,Vector3(width,rng.randf_range(14,42),width*rng.randf_range(.7,1.3)),rng.randf_range(-PI,PI),rng.randi_range(2,3),rng.randi())
+		hoodoo_batch.add(at-Vector3.UP*(2+width*.12),Vector3(width,rng.randf_range(14,42),width*rng.randf_range(.7,1.3)),rng.randf_range(-PI,PI),rng.randi_range(2,3),rng.randi())
 	hoodoo_batch.finish(hoodoos,"Hoodoos",rock,true)
 	# Distant flat-top buttes framing every section, then two horizon rings.
 	var buttes := Node3D.new()
@@ -70,7 +70,11 @@ static func build(scene: RallyStageScenery) -> void:
 		var at := scene.ground_at(s,side*rng.randf_range(190,420))
 		var nearest:=scene.nearest(at)
 		if float(nearest.distance)<95: continue
-		butte_batch.add(at-Vector3.UP*6,Vector3(rng.randf_range(90,200),rng.randf_range(32,70),rng.randf_range(70,170)),rng.randf_range(-PI,PI),2,rng.randi())
+		var span := Vector3(rng.randf_range(90,200),rng.randf_range(32,70),rng.randf_range(70,170))
+		var sink := 6.0
+		for corner: Vector2 in [Vector2(-.5,-.5),Vector2(.5,-.5),Vector2(-.5,.5),Vector2(.5,.5)]:
+			sink=maxf(sink,at.y-scene.rendered_height_at(at.x+corner.x*span.x,at.z+corner.y*span.z)+4)
+		butte_batch.add(at-Vector3.UP*sink,span+Vector3.UP*sink,rng.randf_range(-PI,PI),2,rng.randi())
 	# Distant buttes sit beyond the 170 m shadow range; skip the shadow pass.
 	butte_batch.finish(buttes,"Buttes",rock,false)
 	_horizon(scene)
@@ -78,6 +82,7 @@ static func build(scene: RallyStageScenery) -> void:
 	_boulders(scene,rock,rng)
 	_mining_station(scene)
 	_windpump(scene,route.length*.40)
+	RallyDesertLandmarks.build(scene,rock)
 	for node: Node in scene.generator.get_children():
 		if node.get_meta("prototype_marker",false): node.visible=false
 
@@ -109,6 +114,11 @@ static func _rock_into(tool: SurfaceTool,transform: Transform3D,tiers: int,seed_
 	var offset := Vector2.ZERO
 	var previous_top: Array[Vector3] = []
 	var taper := rng.randf_range(.78,.95)
+	# Closed underside: tilted placements must never reveal a hollow interior.
+	for j: int in range(sides):
+		var a0 := j*TAU/sides
+		var a1 := ((j+1)%sides)*TAU/sides
+		_add_t(tool,transform,[Vector3(0,-.5,0),Vector3(cos(a1)*radius*jitter[(j+1)%sides],-.5,sin(a1)*radius*jitter[(j+1)%sides]),Vector3(cos(a0)*radius*jitter[j],-.5,sin(a0)*radius*jitter[j])])
 	for tier: int in range(tiers):
 		var height := 1.0/tiers*(1.15 if tier==0 else .925)
 		var bottom: Array[Vector3] = []
@@ -193,6 +203,9 @@ static func _walls(scene: RallyStageScenery,title: String,span: Vector2,material
 		var s := span.x
 		while s<=span.y:
 			var row := _wall_row(scene,s,side,noise,profile_at,clearance)
+			# Close every run of rows with a fan so ends and gaps never show a hollow shell.
+			if previous.is_empty() and not row.is_empty(): _cap(tool,row,-route.tangent_at(s))
+			if not previous.is_empty() and row.is_empty(): _cap(tool,previous,route.tangent_at(s))
 			if not previous.is_empty() and not row.is_empty():
 				var right: Vector3=route.rights[route.index_at(s)]*side
 				for k: int in range(row.size()-1):
@@ -207,6 +220,7 @@ static func _walls(scene: RallyStageScenery,title: String,span: Vector2,material
 					for vertex: Vector3 in [a,c,b,b,c,d]: faces.append(vertex)
 			previous=row
 			s+=5.0
+		if not previous.is_empty(): _cap(tool,previous,route.tangent_at(span.y))
 		tool.generate_normals()
 		var mesh := MeshInstance3D.new()
 		mesh.name="Side%d"%int(side)
@@ -227,6 +241,15 @@ static func _walls(scene: RallyStageScenery,title: String,span: Vector2,material
 	body.add_child(collider)
 	node.add_child(body)
 	scene.obstacles.append(body)
+
+
+static func _cap(tool: SurfaceTool,row: Array,facing: Vector3) -> void:
+	var low_a: Vector3=row[0]
+	var low_b: Vector3=row[-1]
+	var floor_y := minf(low_a.y,low_b.y)
+	var anchor: Vector3=(low_a+low_b)*.5
+	anchor.y=floor_y
+	for k: int in range(row.size()-1): _tri(tool,anchor,row[k],row[k+1],facing)
 
 
 static func _wall_row(scene: RallyStageScenery,s: float,side: float,noise: FastNoiseLite,profile_at: Callable,clearance: float) -> Array:
@@ -255,7 +278,8 @@ static func _wall_row(scene: RallyStageScenery,s: float,side: float,noise: FastN
 			if k<5: return []
 			# Rim and back slope fold back instead of reaching another road branch.
 			at=row[k-1]+right*.5
-			at.y=row[k-1].y
+			# The last fold point still drops below ground so the back slope stays closed.
+			at.y=row[k-1].y if k<profile.size()-1 else scene.rendered_height_at(at.x,at.z)+profile[k].y
 			row.append(at)
 			continue
 		if k==0 or k==profile.size()-1: at.y=scene.rendered_height_at(at.x,at.z)+profile[k].y

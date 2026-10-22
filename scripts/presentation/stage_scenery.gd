@@ -23,6 +23,7 @@ var terrain_count := Vector2i.ZERO
 var terrain_vertices := PackedVector3Array()
 var terrain_cell_size := 8.0
 var log_piles: Array[Node3D] = []
+var dust_devils: Array[MeshInstance3D] = []
 
 
 func build(stage: RallyStageGenerator) -> void:

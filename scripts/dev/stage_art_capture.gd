@@ -52,14 +52,16 @@ func _run() -> void:
  for i: int in range(8):
   shots.append(["chase-%d"%i,route.length*(.04+.12*i),Vector3(0,2.7,7.8),35.0])
  if stage_id=="redrock_canyon":
-  shots.append_array([["canyon-reveal",900.0,Vector3(8,5,17),65.0],["arch",2740.0,Vector3(0,28,75),20.0],["mesa",3430.0,Vector3(6,30,15),-1450.0],["driver",1130.0,Vector3(0,3.5,7),60.0],["start",40.0,Vector3(-6,4,14),40.0],["finish",route.length-20,Vector3(5,3,16),15.0]])
+  shots.append_array([["canyon-reveal",900.0,Vector3(8,5,17),65.0],["arch",2740.0,Vector3(0,28,75),20.0],["mesa",3430.0,Vector3(6,30,15),-1450.0],["driver",1130.0,Vector3(0,3.5,7),60.0],["start",40.0,Vector3(-6,4,14),40.0],["finish",route.length-20,Vector3(5,3,16),15.0],["salt-pan",1150.0,Vector3(-6,6,8),30.0,Vector3(-40,0,0)],["trading-post",1295.0,Vector3(2,3.2,8),34.0,Vector3(21,4,0)],["nomad-camp",1525.0,Vector3(-2,3.2,8),35.0,Vector3(-24,3,0)],["ghost-town",1810.0,Vector3(4,3.5,8),31.0,Vector3(20,6,0)],["balanced-rocks",2015.0,Vector3(-4,3.5,8),34.0,Vector3(-26,6,0)],["saguaro-dunes",1420.0,Vector3(0,2.7,7.8),35.0]])
  for shot: Array in shots:
   var s: float=shot[1]
   var pose:=route.pose_at(s,0)
   app.race.vehicle.global_transform=pose
   app.race.vehicle.global_position.y+=.70
   camera.global_position=pose*shot[2]
-  camera.look_at(route.position_at(clampf(s+float(shot[3]),0,route.length))+Vector3.UP*1)
+  var aim:=route.position_at(clampf(s+float(shot[3]),0,route.length))+Vector3.UP*1
+  if shot.size()>4: aim=route.pose_at(s+float(shot[3]),0)*shot[4]
+  camera.look_at(aim)
   await capture(shot[0])
  await app.leave_race()
  app.queue_free()

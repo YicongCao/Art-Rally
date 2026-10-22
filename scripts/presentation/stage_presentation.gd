@@ -107,6 +107,8 @@ func update(dt: float,drive_camera: bool = true) -> void:
 	if drive_camera: camera_rig.update(scene.camera,scene.vehicle,scene.camera_mode,scene.preferences.values.camera_motion,scene.get_tree().paused,dt,scene.controls.look_vector())
 	for i: int in range(scenery.foliage.animated_arms.size()):
 		scenery.foliage.animated_arms[i].rotation.z = sin(elapsed*2.4+i)*0.2
+	for devil: MeshInstance3D in scenery.dust_devils:
+		devil.rotation.y += dt*float(devil.get_meta("spin"))
 	for boat: Dictionary in scenery.sailboats:
 		boat.node.position = boat.origin+boat.direction*fmod(elapsed*.65,600.0)+Vector3.UP*sin(elapsed*1.2)*.12
 	car_style.brake_material.emission_energy_multiplier = 1.5 if scene.vehicle.command.brake>0.1 else 0.15
