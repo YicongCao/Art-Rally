@@ -136,6 +136,84 @@ def path_samples(points):
    t=j/12;v=.5*((2*b)+(-a+c)*t+(2*a-5*b+4*c-d)*t*t+(-a+3*b-3*c+d)*t*t*t);out.append(v)
  out.append(Vector(points[-1]));return out
 
+def yucca(x,y,z,h):
+ trunk=material('yucca trunk','6b5541');leaf=material('yucca leaf','5f9a50')
+ cylinder('Yucca trunk',(x,y,z+h*.25),h*.05,h*.5,trunk,6)
+ for j in range(9):
+  a=j*math.tau/9;line('Yucca blade',[(x,y,z+h*.5),(x+math.cos(a)*h*.45,y+math.sin(a)*h*.45,z+h*(.85+.15*math.sin(j)))],h*.035,leaf)
+
+def ocotillo(x,y,z,h):
+ stem=material('ocotillo','6a6a48');bloom=material('ocotillo bloom','d8513a')
+ for j in range(6):
+  a=j*math.tau/6+rng.random()*.4;tip=(x+math.cos(a)*h*.28,y+math.sin(a)*h*.28,z+h)
+  line('Ocotillo stem',[(x,y,z),tip],h*.025,stem);cylinder('Ocotillo bloom',(tip[0],tip[1],tip[2]+h*.06),h*.035,h*.14,bloom,5)
+
+def butte(x,y,z,w,d,h,mats,tiers=2,name='Butte'):
+ """Stacked faceted sandstone tiers with alternating strata colours."""
+ zz=z
+ for t in range(tiers):
+  th=h/tiers
+  for band in range(3):
+   bh=th/3;sc=1-.04*t-.015*band
+   verts=[];sides=8
+   for k,(r,hz) in enumerate([(1,zz),(.96,zz+bh)]):
+    for j in range(sides):
+     a=j*math.tau/sides+.2;jit=.80+.20*abs(math.sin(j*2.7+x*1.3+y))
+     verts.append((x+math.cos(a)*w*.5*sc*r*jit,y+math.sin(a)*d*.5*sc*r*jit,hz))
+   faces=[(j,(j+1)%sides,sides+(j+1)%sides,sides+j) for j in range(sides)]+[tuple(range(sides,2*sides)),tuple(range(sides-1,-1,-1))]
+   mesh(name,verts,faces,mats[(t*3+band)%len(mats)])
+   zz+=bh
+  w*=.86;d*=.86
+
+def mesa(x0,x1,y0,y1,z,h,mats,seed=0,name='Mesa wall'):
+ """Broad flat-topped sandstone wall: stepped strata slabs with a jagged eroded face."""
+ r=random.Random(seed);bands=5;steps=14
+ front=[(x0+(x1-x0)*i/steps,y0+r.uniform(-.25,.25)) for i in range(steps+1)]
+ for b in range(bands):
+  inset=.10*b+(.35 if b==bands-1 else 0);zb=z+h*b/bands;zt=z+h*(b+1)/bands
+  shrink=.12*b
+  ring=[(x+(shrink if i==0 else (-shrink if i==steps else 0)),y+inset) for i,(x,y) in enumerate(front)]
+  ring+=[(x1-shrink,y1),(x0+shrink,y1)]
+  k=len(ring)
+  verts=[(x,y,zb) for x,y in ring]+[(x,y,zt) for x,y in ring]
+  faces=[(i,(i+1)%k,k+(i+1)%k,k+i) for i in range(k)]+[tuple(range(k,2*k)),tuple(range(k-1,-1,-1))]
+  o=mesh(name,verts,faces,mats[[0,2,1,3,1][b]])
+  bpy.context.view_layer.objects.active=o
+  for poly in o.data.polygons:poly.use_smooth=False
+
+def redrock_landmarks(path,height,stone,ivory,red,teal):
+ strata=[material('deep red rock','8f3a22'),material('terracotta rock','b9532f'),material('orange rock','d4834e'),material('pale band','e8bf8a')]
+ # Canyon walls along the back edge and left, like the stage's first kilometre.
+ for x0,x1,y0,h,seed in [(-9.9,-4.2,4.7,3.4,1),(-3.6,1.6,5.4,4.2,2),(2.2,9.9,4.9,3.0,3)]:
+  mesa(x0,x1,y0,6.95,min(height(x0,y0),height(x1,y0))-.4,h,strata,seed)
+ mesa(-9.95,-8.2,-2.2,4.9,height(-9,-2)-.4,2.4,strata,4,'Canyon side wall')
+ # A free-standing hoodoo and low boulders.
+ butte(6.4,-4.6,height(6.4,-4.6)-.2,1.4,1.2,3.0,strata,3,'Hoodoo')
+ for x,y in [(-3.5,-5.2),(3.0,-5.8),(8.5,-1.5),(-6.5,-1.5)]:rock((x,y,height(x,y)+.15),(.55,.45,.40),stone)
+ # The weathered stone arch spanning the road.
+ i=int(len(path)*.72);p=path[i];t=(path[i+1]-path[i-1]).normalized();n=Vector((-t.y,t.x))
+ z0=height(p.x,p.y);pts=[]
+ for j in range(21):
+  a=math.pi*j/20;q=p+n*math.cos(a)*1.9;pts.append((q.x,q.y,z0+math.sin(a)*2.7))
+ line('Stone arch',pts,.42,strata[1])
+ for side in [-1,1]:
+  q=p+n*1.9*side;butte(q.x,q.y,height(q.x,q.y)-.2,1.2,1.0,1.4,strata,1,'Arch foot')
+ # Desert life: windpump, water tank, mining headframe.
+ wood=material('weathered timber','6b5541');steel=material('windpump steel','8b9290')
+ x,y=-6.8,-4.6;z=height(x,y)
+ for dx,dy in [(-.3,-.3),(.3,-.3),(-.3,.3),(.3,.3)]:line('Windpump leg',[(x+dx,y+dy,z),(x,y,z+3.0)],.035,steel)
+ for j in range(10):
+  a=j*math.tau/10;line('Windpump blade',[(x,y-.05,z+3.1),(x+math.cos(a)*.6,y-.05,z+3.1+math.sin(a)*.6)],.05,ivory if j%2 else red)
+ cylinder('Water tank',(x+1.1,y+.2,z+.25),.55,.5,steel,16)
+ x,y=-3.2,3.8;z=height(x,y)
+ for dx in [-.4,.4]:line('Headframe',[(x+dx,y-.4,z),(x,y,z+2.6)],.06,wood);line('Headframe',[(x+dx,y+.4,z),(x,y,z+2.6)],.06,wood)
+ cylinder('Sheave',(x,y,z+2.7),.3,.06,material('iron','3f4a4c'),16)
+ box('Ore hopper',(x+.9,y,z+.6),(.8,.8,1.0),material('rust hopper','b34d2d'),.03)
+ # Teal shade sail with spectators near the finish.
+ q=path[-6];z=height(q.x,q.y+1.4)
+ for dx,dy in [(-.6,-.4),(.6,-.4),(-.6,.4),(.6,.4)]:cylinder('Shade post',(q.x+dx,q.y+1.6+dy,z+.4),.03,.8,wood,6)
+ box('Shade sail',(q.x,q.y+1.6,z+.82),(1.5,1.0,.04),teal,.01)
+
 def stage(kind):
  reset();rng.seed(73421)
  ivory=material('ivory','eee2c5');red=material('orange','e66a39');teal=material('pine','245b52');yellow=material('larch','c6ab4e')
@@ -147,6 +225,10 @@ def stage(kind):
   ground=material('coast turf','8d9b70');edge=material('chalk cliff','e2dac7');road=material('coastal asphalt','58666b');stone=material('coastal chalk','e3dac1')
   points=[(-9,-2),(-4,-1),(0,2),(4,3),(7,1),(9,0)]
   def base(x,y):return 1.1+.10*(x+10)+.05*y+.7*math.exp(-((x+5)**2+(y-4)**2)/15)
+ elif kind=='redrock_canyon':
+  ground=material('desert sand','e0ac6a');edge=material('red strata','a5472c');road=material('packed red earth','9c6143');stone=material('sandstone','c0583a')
+  points=[(-9,-3.5),(-5,-3),(-1,-1),(2,1.5),(5,1.0),(9,3)]
+  def base(x,y):return .45+.05*y+.55*math.sin(x*.55+y*.35)*math.exp(-((y+1)**2)/30)
  else:
   ground=material('dusk meadow','798b83');edge=material('purple cliff','525a75');road=material('highland gravel','90908b');stone=material('mountain blue','586c86')
   points=[(-9,-4),(-5,-2),(0,-.5),(4,0),(7,2),(9,4)]
@@ -176,7 +258,7 @@ def stage(kind):
    a=j*(n+1)+i;faces.extend([(a,a+1,a+n+2),(a,a+n+2,a+n+1)])
  obj=mesh('Contoured landscape',verts,faces,ground)
  # Broad color regions, no noisy image textures.
- alt=material('grass highlight',{'sunset_ridge':'e2b653','sunlit_cape':'aeb98b','misty_highlands':'939e88'}[kind]);obj.data.materials.append(alt)
+ alt=material('grass highlight',{'sunset_ridge':'e2b653','sunlit_cape':'aeb98b','misty_highlands':'939e88','redrock_canyon':'eec383'}[kind]);obj.data.materials.append(alt)
  for face in obj.data.polygons:
   p=face.center
   if math.sin(p.x*.42+p.y*.63)+math.cos(p.y*.71-p.x*.22)>.85:face.material_index=1
@@ -206,9 +288,15 @@ def stage(kind):
   if kind=='sunlit_cape' and x>4 and y>3:continue
   if kind=='sunset_ridge' and (x+5)**2+(y-3)**2<8:continue
   if kind=='misty_highlands' and y<min(path,key=lambda p:abs(p.x-x)).y-1.2:continue
+  if kind=='redrock_canyon' and (y>4.4 or (x<-7.9 and y>-2.4)):continue
   z=height(x,y)
   if rng.random()<.2:
    rock((x,y,z+.12),(rng.uniform(.3,.65),.35,.42),stone);continue
+  if kind=='redrock_canyon':
+   if rng.random()<.45:continue
+   if rng.random()<.6:yucca(x,y,z,rng.uniform(.45,.8))
+   else:ocotillo(x,y,z,rng.uniform(.8,1.3))
+   continue
   if kind=='sunlit_cape':
    if rng.random()<.60:continue
    leaf_tree(x,y,z,rng.uniform(.7,1.3),teal)
@@ -217,6 +305,7 @@ def stage(kind):
   elif rng.random()<.48:
    leaf_tree(x,y,z,rng.uniform(1.5,2.7),red if rng.random()<.6 else yellow)
   else:pine(x,y,z,rng.uniform(1.4,3.0),teal)
+ if kind=='redrock_canyon':redrock_landmarks(path,height,stone,ivory,red,teal)
  if kind=='sunset_ridge':
   x,y=-5,3;asset('cabin',at=(x,y,height(x,y)),scale=.45,rotation=.05)
   for j in range(5):rock((-8+j*.6,5.9,height(-8+j*.6,5.9)+.4),(.8,.65,.9),stone)
@@ -228,7 +317,7 @@ def stage(kind):
   foam=material('sea glints','bad9cd')
   for j in range(16):
    x=rng.uniform(-9,9);y=rng.uniform(-7.5,-4.9);line('Wave glint',[(x,y,-.826),(x+rng.uniform(.2,.7),y,-.826)],.025,foam)
- else:
+ elif kind=='misty_highlands':
   for j in range(7):
    x=-8+j*2.5;y=5.5;rock((x,y,height(x,y)-.4),(1.5,1.7,1.2+rng.random()*1.5),stone)
   # Warm reflectors make the dusk concept clear without a painted sky rectangle.
@@ -237,7 +326,7 @@ def stage(kind):
    p=path[i];cylinder('Reflector lantern',(p.x,p.y-1,height(p.x,p.y-1)+.5),.08,.22,lamp)
  # Tiny real model provides a scale cue and makes this a rally diorama.
  p=path[len(path)//2];t=(path[len(path)//2+1]-path[len(path)//2-1]).normalized()
- car({'sunset_ridge':'F160','sunlit_cape':'R200','misty_highlands':'A240'}[kind],(p.x,p.y,height(*p)+.26),.35,math.atan2(-t.x,t.y))
+ car({'sunset_ridge':'F160','sunlit_cape':'R200','misty_highlands':'A240','redrock_canyon':'P7'}[kind],(p.x,p.y,height(*p)+.26),.35,math.atan2(-t.x,t.y))
  if kind=='misty_highlands':
   light('Blue dusk fill',(4,-10,16),1500,12,(.45,.58,1));light('Last orange rim',(-10,12,14),2400,8,(1,.43,.20))
   light('Soft road readability',(1,-6,10),500,9,(.7,.8,1))
@@ -255,7 +344,7 @@ def vehicle(ident):
  bpy.context.scene.world.node_tree.nodes.get('Background').inputs[1].default_value=.55
  bpy.context.scene['vehicle_id']=ident
 
-for ident in ['sunset_ridge','sunlit_cape','misty_highlands','F160','R200','A240']:
+for ident in ['sunset_ridge','sunlit_cape','misty_highlands','redrock_canyon','F160','R200','A240','I20','DELTA','EVO6','WRX','P7']:
  if ONLY and ident!=ONLY:continue
  source=SOURCES/(ident+'.blend')
  if '--rebuild' in ARGS or (not source.exists() and '--build' in ARGS):

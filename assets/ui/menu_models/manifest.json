@@ -88,5 +88,95 @@
     "samples": 40,
     "alpha": "straight RGBA",
     "purpose": "vehicle display"
+  },
+  "redrock_canyon": {
+    "source": "art_source/menu_models/redrock_canyon.blend",
+    "render": "assets/ui/menu_models/redrock_canyon.png",
+    "sha256": "8d54cd58aaf2e7b5a4af0ddd597d895f605e9eec65b800dd8e40ab1ade3e0c7d",
+    "resolution": [
+      1024,
+      768
+    ],
+    "transparent_fraction": 0.6496,
+    "opaque_fraction": 0.3448,
+    "engine": "Blender Cycles",
+    "samples": 40,
+    "alpha": "straight RGBA",
+    "purpose": "representative diorama, not a navigation map"
+  },
+  "P7": {
+    "source": "art_source/menu_models/P7.blend",
+    "render": "assets/ui/menu_models/P7.png",
+    "sha256": "241a9e4d55c294a9f25ec9716dfe6e4717ed1d2a08e40cd389df0d20f0fbf23b",
+    "resolution": [
+      1024,
+      768
+    ],
+    "transparent_fraction": 0.695,
+    "opaque_fraction": 0.2994,
+    "engine": "Blender Cycles",
+    "samples": 40,
+    "alpha": "straight RGBA",
+    "purpose": "vehicle display"
+  },
+  "I20": {
+    "source": "art_source/menu_models/I20.blend",
+    "render": "assets/ui/menu_models/I20.png",
+    "sha256": "887b449bc32e3dc1e6e80a0e6fb36247a03cfbc6dc072859b52f335166fff9fb",
+    "resolution": [
+      1024,
+      768
+    ],
+    "transparent_fraction": 0.6827,
+    "opaque_fraction": 0.3091,
+    "engine": "Blender Cycles",
+    "samples": 40,
+    "alpha": "straight RGBA",
+    "purpose": "vehicle display"
+  },
+  "DELTA": {
+    "source": "art_source/menu_models/DELTA.blend",
+    "render": "assets/ui/menu_models/DELTA.png",
+    "sha256": "6e781fc827c85a81b68f4cc341622a4b09a5bc926bd68fcaae3b25f958341592",
+    "resolution": [
+      1024,
+      768
+    ],
+    "transparent_fraction": 0.6932,
+    "opaque_fraction": 0.2988,
+    "engine": "Blender Cycles",
+    "samples": 40,
+    "alpha": "straight RGBA",
+    "purpose": "vehicle display"
+  },
+  "EVO6": {
+    "source": "art_source/menu_models/EVO6.blend",
+    "render": "assets/ui/menu_models/EVO6.png",
+    "sha256": "806baadfdcaf7b8bc29e4a7c5998bd6825af99b512920452847f7b44deec6d8d",
+    "resolution": [
+      1024,
+      768
+    ],
+    "transparent_fraction": 0.6752,
+    "opaque_fraction": 0.3154,
+    "engine": "Blender Cycles",
+    "samples": 40,
+    "alpha": "straight RGBA",
+    "purpose": "vehicle display"
+  },
+  "WRX": {
+    "source": "art_source/menu_models/WRX.blend",
+    "render": "assets/ui/menu_models/WRX.png",
+    "sha256": "73b3cb1a0e4916cebd12f6005e20ba0011dba93d2f558093f64b371c6dedb433",
+    "resolution": [
+      1024,
+      768
+    ],
+    "transparent_fraction": 0.6671,
+    "opaque_fraction": 0.3237,
+    "engine": "Blender Cycles",
+    "samples": 40,
+    "alpha": "straight RGBA",
+    "purpose": "vehicle display"
   }
 }
