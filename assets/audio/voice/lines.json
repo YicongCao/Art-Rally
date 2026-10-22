@@ -222,5 +222,173 @@
     "code": "SAND",
     "text": "进入沙地。",
     "seconds": 1.0462083333333334
+  },
+  {
+    "voice": "female",
+    "speaker": "zf_001",
+    "code": "LEFT_1",
+    "text": "左一。",
+    "seconds": 0.5097083333333333
+  },
+  {
+    "voice": "female",
+    "speaker": "zf_001",
+    "code": "LEFT_2",
+    "text": "左二。",
+    "seconds": 0.5065
+  },
+  {
+    "voice": "female",
+    "speaker": "zf_001",
+    "code": "LEFT_3",
+    "text": "左三。",
+    "seconds": 0.5375833333333333
+  },
+  {
+    "voice": "female",
+    "speaker": "zf_001",
+    "code": "LEFT_4",
+    "text": "左四。",
+    "seconds": 0.5084583333333333
+  },
+  {
+    "voice": "female",
+    "speaker": "zf_001",
+    "code": "LEFT_5",
+    "text": "左五。",
+    "seconds": 0.5669583333333333
+  },
+  {
+    "voice": "female",
+    "speaker": "zf_001",
+    "code": "LEFT_6",
+    "text": "左六。",
+    "seconds": 0.55775
+  },
+  {
+    "voice": "female",
+    "speaker": "zf_001",
+    "code": "RIGHT_1",
+    "text": "右一。",
+    "seconds": 0.543625
+  },
+  {
+    "voice": "female",
+    "speaker": "zf_001",
+    "code": "RIGHT_2",
+    "text": "右二。",
+    "seconds": 0.5005
+  },
+  {
+    "voice": "female",
+    "speaker": "zf_001",
+    "code": "RIGHT_3",
+    "text": "右三。",
+    "seconds": 0.568375
+  },
+  {
+    "voice": "female",
+    "speaker": "zf_001",
+    "code": "RIGHT_4",
+    "text": "右四。",
+    "seconds": 0.556375
+  },
+  {
+    "voice": "female",
+    "speaker": "zf_001",
+    "code": "RIGHT_5",
+    "text": "右五。",
+    "seconds": 0.54275
+  },
+  {
+    "voice": "female",
+    "speaker": "zf_001",
+    "code": "RIGHT_6",
+    "text": "右六。",
+    "seconds": 0.5465416666666667
+  },
+  {
+    "voice": "male",
+    "speaker": "zm_010",
+    "code": "LEFT_1",
+    "text": "左一。",
+    "seconds": 0.5732083333333333
+  },
+  {
+    "voice": "male",
+    "speaker": "zm_010",
+    "code": "LEFT_2",
+    "text": "左二。",
+    "seconds": 0.5665416666666667
+  },
+  {
+    "voice": "male",
+    "speaker": "zm_010",
+    "code": "LEFT_3",
+    "text": "左三。",
+    "seconds": 0.6241666666666666
+  },
+  {
+    "voice": "male",
+    "speaker": "zm_010",
+    "code": "LEFT_4",
+    "text": "左四。",
+    "seconds": 0.6378333333333334
+  },
+  {
+    "voice": "male",
+    "speaker": "zm_010",
+    "code": "LEFT_5",
+    "text": "左五。",
+    "seconds": 0.571125
+  },
+  {
+    "voice": "male",
+    "speaker": "zm_010",
+    "code": "LEFT_6",
+    "text": "左六。",
+    "seconds": 0.5591666666666667
+  },
+  {
+    "voice": "male",
+    "speaker": "zm_010",
+    "code": "RIGHT_1",
+    "text": "右一。",
+    "seconds": 0.5721666666666667
+  },
+  {
+    "voice": "male",
+    "speaker": "zm_010",
+    "code": "RIGHT_2",
+    "text": "右二。",
+    "seconds": 0.562375
+  },
+  {
+    "voice": "male",
+    "speaker": "zm_010",
+    "code": "RIGHT_3",
+    "text": "右三。",
+    "seconds": 0.582875
+  },
+  {
+    "voice": "male",
+    "speaker": "zm_010",
+    "code": "RIGHT_4",
+    "text": "右四。",
+    "seconds": 0.5734166666666667
+  },
+  {
+    "voice": "male",
+    "speaker": "zm_010",
+    "code": "RIGHT_5",
+    "text": "右五。",
+    "seconds": 0.5759583333333333
+  },
+  {
+    "voice": "male",
+    "speaker": "zm_010",
+    "code": "RIGHT_6",
+    "text": "右六。",
+    "seconds": 0.5662916666666666
   }
 ]

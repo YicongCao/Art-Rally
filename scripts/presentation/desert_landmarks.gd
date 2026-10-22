@@ -38,6 +38,18 @@ static func _clear(scene: RallyStageScenery,point: Vector3,margin: float) -> boo
 
 
 static func _batch(scene: RallyStageScenery,title: String,mesh: Mesh,transforms: Array,visibility: float) -> void:
+	# Distance visibility is measured from each batch centre, not each cactus.
+	# Keep nearby plants visible and avoid drawing a kilometre-long batch.
+	var cells: Dictionary={}
+	for transform: Transform3D in transforms:
+		var cell := Vector2i(floori(transform.origin.x/120),floori(transform.origin.z/120))
+		if not cells.has(cell): cells[cell]=[]
+		cells[cell].append(transform)
+	for cell: Vector2i in cells:
+		_batch_cell(scene,title+"_%d_%d"%[cell.x,cell.y],mesh,cells[cell],visibility)
+
+
+static func _batch_cell(scene: RallyStageScenery,title: String,mesh: Mesh,transforms: Array,visibility: float) -> void:
 	if transforms.is_empty(): return
 	var center := Vector3.ZERO
 	for transform: Transform3D in transforms: center+=transform.origin

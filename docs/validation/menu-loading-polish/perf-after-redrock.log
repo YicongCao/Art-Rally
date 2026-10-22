@@ -1,0 +1,5 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Metal 4.0 - Forward+ - Using Device #0: Apple - Apple M5 (Apple9)
+
+LOAD_RENDER_PROBE {"draw_calls":292.12,"fps":59.9953203650116,"load_ms":5779.936,"p95_ms":21.304,"p99_ms":22.741,"pixels":[1920,1080],"primitives":849294.116666667,"progress":615.833282556258,"repeat":0,"stage":"redrock_canyon","start_station":600.0}
+LOAD_RENDER_PROBE {"draw_calls":292.12,"fps":59.7792114603922,"load_ms":4336.609,"p95_ms":18.342,"p99_ms":20.976,"pixels":[1920,1080],"primitives":849294.116666667,"progress":615.833282556258,"repeat":1,"stage":"redrock_canyon","start_station":600.0}

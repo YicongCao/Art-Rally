@@ -95,6 +95,42 @@ func project(point: Vector3, hint: int = -1, radius: int = 35) -> Dictionary:
 	return result
 
 
+# Grades describe bend tightness, never a suggested gearbox gear. A 20 m
+# horizontal heading window smooths spline noise; use the tightest radius in
+# the contiguous bend so a tightening exit is announced conservatively.
+static func grade_for_radius(radius: float) -> int:
+	for i: int in range(5):
+		if radius < [25.0,40.0,65.0,100.0,160.0][i]: return i+1
+	return 6
+
+func bend_profile(station: float, left: bool) -> Dictionary:
+	var sign_value := 1.0 if left else -1.0
+	var total := 0.0
+	var curvature := 0.0
+	for direction: float in [-1,1]:
+		var flat := 0
+		for offset: int in range(0,96,4):
+			var s := station+direction*(offset+2)
+			var a := tangent_at(clampf(s-2,0,length))
+			var b := tangent_at(clampf(s+2,0,length))
+			a.y=0
+			b.y=0
+			var angle := a.signed_angle_to(b,Vector3.UP)*sign_value
+			if angle<-.002: break
+			flat=flat+1 if angle<.001 else 0
+			if flat>=3: break
+			total+=maxf(angle,0)
+			var start := clampf(s-10,0,length)
+			var end := clampf(s+10,0,length)
+			a=tangent_at(start)
+			b=tangent_at(end)
+			a.y=0
+			b.y=0
+			curvature=maxf(curvature,a.signed_angle_to(b,Vector3.UP)*sign_value/maxf(end-start,.01))
+	var radius := 1.0/maxf(curvature,.000001)
+	return {"degrees":clampf(rad_to_deg(total),20,180),"radius":radius,"grade":grade_for_radius(radius)}
+
+
 func _build_notes() -> void:
 	turn_count=0
 	notes.clear()
@@ -103,8 +139,8 @@ func _build_notes() -> void:
 		var angle := tangents[i - 10].signed_angle_to(tangents[i + 10], Vector3.UP)
 		if absf(angle) > 0.24 and distances[i] - last_turn > 85:
 			var direction := "LEFT" if angle > 0 else "RIGHT"
-			var severity := "TIGHT" if absf(angle) > 0.75 else "MEDIUM"
-			notes.append({"s": distances[i], "code": direction + "_" + severity})
+			var bend := bend_profile(distances[i],angle>0)
+			notes.append({"s": distances[i], "code": direction + "_" + str(bend.grade), "grade":bend.grade, "degrees":bend.degrees, "radius":bend.radius})
 			turn_count+=1
 			last_turn = distances[i]
 	var hazards := definition.hazard_notes.duplicate(true)

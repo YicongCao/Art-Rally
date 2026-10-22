@@ -71,7 +71,12 @@ func _run() -> void:
 		var terrain_body := StaticBody3D.new()
 		terrain_body.collision_layer=8
 		var terrain_shape := CollisionShape3D.new()
-		terrain_shape.shape=land.dressing.get_node("StageTerrain").mesh.create_trimesh_shape()
+		var terrain: MeshInstance3D=land.dressing.get_node("StageTerrain")
+		var faces := terrain.mesh.get_faces()
+		for chunk: MeshInstance3D in terrain.get_children(): faces.append_array(chunk.mesh.get_faces())
+		var triangle_shape := ConcavePolygonShape3D.new()
+		triangle_shape.set_faces(faces)
+		terrain_shape.shape=triangle_shape
 		terrain_body.add_child(terrain_shape)
 		root.add_child(terrain_body)
 		await ticks(2)

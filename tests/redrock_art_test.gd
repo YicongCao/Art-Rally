@@ -82,6 +82,12 @@ func _run() -> void:
 	var saguaros := 0
 	for node: Node in dressing.get_children():
 		if node is MultiMeshInstance3D and (str(node.name).begins_with("Saguaros") or str(node.name).begins_with("JoshuaTrees")): saguaros+=(node as MultiMeshInstance3D).multimesh.instance_count
+	var bounded := true
+	for node: Node in dressing.get_children():
+		if node is MultiMeshInstance3D and (str(node.name).begins_with("Saguaros") or str(node.name).begins_with("JoshuaTrees")):
+			var extent: Vector3=node.multimesh.get_aabb().size
+			bounded=bounded and extent.x<140 and extent.z<140
+	check(bounded,"Desert plant batches have local culling bounds, not kilometre-long boxes")
 	check(saguaros>60,"Dune section has saguaros and Joshua trees (%d)"%saguaros)
 	check(land.dust_devils.size()==3,"Three animated dust devils")
 	# B4: canyon walls never crowd the road edge.

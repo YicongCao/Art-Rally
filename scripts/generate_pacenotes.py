@@ -11,19 +11,24 @@ import torch
 from kokoro import KModel, KPipeline
 ROOT=Path(__file__).resolve().parents[1]/'assets/audio/voice'
 LINES={'SAND':'进入沙地。','LOGS':'圆木障碍，不要切弯。','ROCKFALL':'注意落石。','LEFT_MEDIUM':'左三。','RIGHT_MEDIUM':'右三。','LEFT_TIGHT':'左急弯。','RIGHT_TIGHT':'右急弯。','CAUTION_NARROW':'注意收窄，不要切弯。','CUT':'可以小切。','MUD_NARROW':'泥地收窄。','WATER':'前方积水。','ASPHALT':'进入柏油。','GRAVEL':'进入砂石。','CREST_JUMP':'坡顶，准备跳跃。','FINISH':'前方终点。','preview':'准备好了吗？左三，接右三。'}
+GRADE_LINES={f'{side}_{grade}':f'{word}{"一二三四五六"[grade-1]}。' for side,word in [('LEFT','左'),('RIGHT','右')] for grade in range(1,7)}
+LINES.update(GRADE_LINES)
 def main():
     parser=argparse.ArgumentParser()
-    parser.add_argument("--only", choices=list(LINES))
+    selection=parser.add_mutually_exclusive_group()
+    selection.add_argument("--only", choices=list(LINES))
+    selection.add_argument("--grades", action="store_true")
     args=parser.parse_args()
     torch.set_num_threads(4)
     model=KModel(repo_id='hexgrad/Kokoro-82M-v1.1-zh').to('cpu').eval()
     pipeline=KPipeline(lang_code='z',repo_id='hexgrad/Kokoro-82M-v1.1-zh',model=model)
-    report=json.loads((ROOT/"lines.json").read_text()) if args.only else []
-    if args.only: report=[entry for entry in report if entry["code"]!=args.only]
+    selected=set(GRADE_LINES) if args.grades else ({args.only} if args.only else set(LINES))
+    report=json.loads((ROOT/"lines.json").read_text()) if args.only or args.grades else []
+    report=[entry for entry in report if entry["code"] not in selected]
     for kind,voice,speed in [('female','zf_001',1.12),('male','zm_010',1.03)]:
         folder=ROOT/kind; folder.mkdir(parents=True,exist_ok=True)
         for code,line in LINES.items():
-            if args.only and code!=args.only: continue
+            if code not in selected: continue
             audio=np.concatenate([r.audio.numpy() for r in pipeline(line,voice=voice,speed=speed)])
             active=np.where(np.abs(audio)>.008)[0]
             if len(active): audio=audio[max(0,active[0]-480):min(len(audio),active[-1]+1440)]

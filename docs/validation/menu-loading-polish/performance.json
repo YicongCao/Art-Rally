@@ -1,0 +1,151 @@
+{
+  "baseline_commit": "4b8473c",
+  "engine": "Godot 4.7.2",
+  "renderer": "Metal Forward+ / Apple M5",
+  "render_pixels": [
+    1920,
+    1080
+  ],
+  "simulation_fps": 60,
+  "warmup_frames": 120,
+  "sample_frames": 300,
+  "station_m": 600,
+  "runs": {
+    "before_sunset": [
+      {
+        "draw_calls": 581.46,
+        "fps": 57.8913984381286,
+        "load_ms": 8869.454,
+        "p95_ms": 21.268,
+        "p99_ms": 24.202,
+        "pixels": [
+          1920,
+          1080
+        ],
+        "primitives": 2506499.17,
+        "progress": 620.349926851418,
+        "repeat": 0,
+        "stage": "sunset_ridge",
+        "start_station": 600.0
+      },
+      {
+        "draw_calls": 582.44,
+        "fps": 57.3328637134764,
+        "load_ms": 8720.066,
+        "p95_ms": 21.98,
+        "p99_ms": 24.7,
+        "pixels": [
+          1920,
+          1080
+        ],
+        "primitives": 2506874.37,
+        "progress": 620.349926851418,
+        "repeat": 1,
+        "stage": "sunset_ridge",
+        "start_station": 600.0
+      }
+    ],
+    "before_redrock": [
+      {
+        "draw_calls": 268.913333333333,
+        "fps": 56.8884304102794,
+        "load_ms": 6162.891,
+        "p95_ms": 22.756,
+        "p99_ms": 26.481,
+        "pixels": [
+          1920,
+          1080
+        ],
+        "primitives": 1003157.79666667,
+        "progress": 615.833282556258,
+        "repeat": 0,
+        "stage": "redrock_canyon",
+        "start_station": 600.0
+      },
+      {
+        "draw_calls": 268.913333333333,
+        "fps": 55.9237513204995,
+        "load_ms": 5986.29,
+        "p95_ms": 24.706,
+        "p99_ms": 28.24,
+        "pixels": [
+          1920,
+          1080
+        ],
+        "primitives": 1003157.79666667,
+        "progress": 615.833282556258,
+        "repeat": 1,
+        "stage": "redrock_canyon",
+        "start_station": 600.0
+      }
+    ],
+    "after_sunset": [
+      {
+        "draw_calls": 601.736666666667,
+        "fps": 59.0300071170512,
+        "load_ms": 8372.546,
+        "p95_ms": 19.328,
+        "p99_ms": 21.874,
+        "pixels": [
+          1920,
+          1080
+        ],
+        "primitives": 2252990.05,
+        "progress": 620.349926851418,
+        "repeat": 0,
+        "stage": "sunset_ridge",
+        "start_station": 600.0
+      },
+      {
+        "draw_calls": 601.736666666667,
+        "fps": 58.4525163905727,
+        "load_ms": 5451.621,
+        "p95_ms": 20.465,
+        "p99_ms": 22.993,
+        "pixels": [
+          1920,
+          1080
+        ],
+        "primitives": 2252990.05,
+        "progress": 620.349926851418,
+        "repeat": 1,
+        "stage": "sunset_ridge",
+        "start_station": 600.0
+      }
+    ],
+    "after_redrock": [
+      {
+        "draw_calls": 292.12,
+        "fps": 59.9953203650116,
+        "load_ms": 5779.936,
+        "p95_ms": 21.304,
+        "p99_ms": 22.741,
+        "pixels": [
+          1920,
+          1080
+        ],
+        "primitives": 849294.116666667,
+        "progress": 615.833282556258,
+        "repeat": 0,
+        "stage": "redrock_canyon",
+        "start_station": 600.0
+      },
+      {
+        "draw_calls": 292.12,
+        "fps": 59.7792114603922,
+        "load_ms": 4336.609,
+        "p95_ms": 18.342,
+        "p99_ms": 20.976,
+        "pixels": [
+          1920,
+          1080
+        ],
+        "primitives": 849294.116666667,
+        "progress": 615.833282556258,
+        "repeat": 1,
+        "stage": "redrock_canyon",
+        "start_station": 600.0
+      }
+    ]
+  }
+}

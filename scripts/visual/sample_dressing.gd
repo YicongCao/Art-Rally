@@ -13,6 +13,9 @@ var spectator_stations: Array[float] = [503.0]
 var rng := RandomNumberGenerator.new()
 var batches: Dictionary = {}
 var meshes: Dictionary = {}
+static var mesh_library: Dictionary = {}
+# Retain only the last stage's immutable placement plan, not its scene nodes.
+static var placement_cache: Dictionary = {}
 var placements: Array[Dictionary] = []
 var animated_arms: Array[Node3D] = []
 
@@ -27,19 +30,34 @@ func build_range(landscape: Node3D, start: float, end: float, density: float = 1
 	range_end = end
 	var multiplier := (end-start)/200.0*density
 	rng.seed = 84903
-	meshes["shadow_pine"] = RallySampleMeshes.tree_shadow(false)
-	meshes["shadow_umbrella"] = RallySampleMeshes.tree_shadow(true)
-	for variant: int in range(3):
-		meshes["pine%d"%variant] = RallySampleMeshes.pine(variant*39+1,false)
-		meshes["umbrella%d"%variant] = RallySampleMeshes.pine(variant*19+2,true)
-		meshes["rock%d"%variant] = RallySampleMeshes.rock(variant+30)
-		meshes["shrub%d"%variant] = RallySampleMeshes.shrub(variant+50)
-		meshes["grass%d"%variant] = RallySampleMeshes.grass(variant+70)
-		meshes["far_pine%d"%variant] = _distant_tree(variant,false)
-		meshes["far_umbrella%d"%variant] = _distant_tree(variant,true)
-	if biome!="autumn":
-		for key: String in meshes:
-			if not key.begins_with("shadow"): meshes[key] = _biome_mesh(meshes[key],key.trim_prefix("far_"))
+	if mesh_library.has(biome):
+		meshes=mesh_library[biome].duplicate()
+	else:
+		meshes["shadow_pine"] = RallySampleMeshes.tree_shadow(false)
+		meshes["shadow_umbrella"] = RallySampleMeshes.tree_shadow(true)
+		for variant: int in range(3):
+			meshes["pine%d"%variant] = RallySampleMeshes.pine(variant*39+1,false)
+			meshes["umbrella%d"%variant] = RallySampleMeshes.pine(variant*19+2,true)
+			meshes["rock%d"%variant] = RallySampleMeshes.rock(variant+30)
+			meshes["shrub%d"%variant] = RallySampleMeshes.shrub(variant+50)
+			meshes["grass%d"%variant] = RallySampleMeshes.grass(variant+70)
+			meshes["far_pine%d"%variant] = _distant_tree(variant,false)
+			meshes["far_umbrella%d"%variant] = _distant_tree(variant,true)
+		if biome!="autumn":
+			for key: String in meshes:
+				if not key.begins_with("shadow"): meshes[key] = _biome_mesh(meshes[key],key.trim_prefix("far_"))
+		mesh_library[biome]=meshes.duplicate()
+	var plan_key := ""
+	if landscape is RallyStageScenery:
+		plan_key=RallyTerrainGeometryCache.key_for(landscape.generator.definition,landscape.route.points)+str([start,end,density,biome,spectator_stations])
+	if not plan_key.is_empty() and placement_cache.get("key","")==plan_key:
+		batches=placement_cache.batches.duplicate()
+		placements.assign(placement_cache.placements)
+		rng.state=placement_cache.rng_state
+		_flush()
+		for station: float in spectator_stations: _spectators(station)
+		if end-start<250: _road_signs()
+		return
 	# Desert plants no conifers; its yucca and ocotillo are placed by RallyRedrockScenery.
 	var tree_share := 0.0 if biome=="desert" else (0.25 if biome=="coast" else 1.0)
 	for i: int in range(int(240*multiplier*tree_share)):
@@ -64,6 +82,8 @@ func build_range(landscape: Node3D, start: float, end: float, density: float = 1
 		var s := rng.randf_range(range_start,range_end)
 		var lateral := rng.randf_range(4.05,22)*(-1 if i%2 else 1)
 		place("grass",s,lateral,rng.randf_range(0.65,1.4))
+	if not plan_key.is_empty():
+		placement_cache={"key":plan_key,"batches":batches.duplicate(),"placements":placements.duplicate(),"rng_state":rng.state}
 	_flush()
 	for station: float in spectator_stations: _spectators(station)
 	if end-start < 250: _road_signs()
@@ -71,7 +91,7 @@ func build_range(landscape: Node3D, start: float, end: float, density: float = 1
 
 func place(kind: String, s: float, lateral: float, scale_factor: float) -> void:
 	var key := kind+str(rng.randi_range(0,2))
-	var chunk := int((s-range_start)/BATCH_LENGTH)
+	var chunk := int((s-range_start)/(40.0 if kind=="grass" else BATCH_LENGTH))
 	var batch_key := "%s_%d" % [key,chunk]
 	if not batches.has(batch_key): batches[batch_key] = {"mesh":key,"transforms":[],"colors":[]}
 	var point: Vector3 = land.ground_at(s,lateral)

@@ -1,0 +1,5 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Metal 4.0 - Forward+ - Using Device #0: Apple - Apple M5 (Apple9)
+
+LOAD_RENDER_PROBE {"draw_calls":581.46,"fps":57.8913984381286,"load_ms":8869.454,"p95_ms":21.268,"p99_ms":24.202,"pixels":[1920,1080],"primitives":2506499.17,"progress":620.349926851418,"repeat":0,"stage":"sunset_ridge","start_station":600.0}
+LOAD_RENDER_PROBE {"draw_calls":582.44,"fps":57.3328637134764,"load_ms":8720.066,"p95_ms":21.98,"p99_ms":24.7,"pixels":[1920,1080],"primitives":2506874.37,"progress":620.349926851418,"repeat":1,"stage":"sunset_ridge","start_station":600.0}

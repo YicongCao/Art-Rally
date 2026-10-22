@@ -1,0 +1,14 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Stage property edits invalidate cached geometry
+PASS: Changed sampled route invalidates cached geometry
+PASS: Terrain has independent culling bounds
+PASS: Chunking preserves all original terrain triangles
+PASS: Warm loading reuses identical immutable geometry
+PASS: Scene materials remain independent
+PASS: Cached vegetation preserves all deterministic placements
+PASS: Cached plan preserves later spectator random sequence
+PASS: Warm and cold render batching agree
+PASS: Geometry cache obeys entry and memory limits
+PASS: Least recently used terrain entry is evicted
+TEST RESULT: 11 checks, 0 failures

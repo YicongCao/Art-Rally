@@ -14,8 +14,8 @@ func _ready() -> void:
 func _draw() -> void:
 	var face := RallyFonts.plate()
 	var font_size := mini(158,int(size.x/10.4))
-	# The next row is painted over the lower 26 px of the wordmark.
-	var baseline := size.y+24 if crop_bottom else size.y-20
+	# The next row is painted over the lower 7 px of the wordmark.
+	var baseline := size.y+5 if crop_bottom else size.y-20
 	draw_set_transform(Vector2(-font_size*.065,0),0,Vector2.ONE)
 	material.set_shader_parameter("mark_start",face.get_string_size("BRUSHLINE RA",HORIZONTAL_ALIGNMENT_LEFT,-1,font_size).x-font_size*.065)
 	material.set_shader_parameter("baseline",baseline)

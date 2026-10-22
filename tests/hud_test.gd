@@ -2,6 +2,7 @@ extends "res://tests/test_suite.gd"
 
 
 func _run() -> void:
+	check(not Rect2(525,30,70,72).intersects(RallyHUD.NOTE_BADGE_RECT),"Grade corner badge never obscures either arrow tip")
 	check(RallyHUD.GAUGE_RECT.position.x==RallyHUD.TIMER_RECT.position.x and RallyHUD.GAUGE_RECT.size.x==RallyHUD.TIMER_RECT.size.x,"Timer and speedometer panels share both side edges")
 	var font := RallyFonts.plate()
 	check(font.get_string_size("12:34.567",HORIZONTAL_ALIGNMENT_LEFT,-1,34).x<RallyHUD.TIMER_RECT.size.x-36,"Long race timer fits the narrower panel in the speedometer font")

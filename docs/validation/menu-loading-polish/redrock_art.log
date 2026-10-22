@@ -1,0 +1,53 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Redrock has CanyonWalls
+PASS: Redrock has DryRiverbedBanks
+PASS: Redrock has MonumentalStoneArch
+PASS: Redrock has MesaOverlook
+PASS: Redrock has MiningServiceStation
+PASS: Redrock has DesertWindpump
+PASS: Redrock has DuneHoodoos
+PASS: Redrock has DistantButtes
+PASS: Redrock has MesaHorizon0
+PASS: Redrock has MesaHorizon1
+PASS: Canyon wall Side-1 is a continuous faceted surface
+PASS: Canyon wall Side1 is a continuous faceted surface
+PASS: Canyon walls rise above 20 m
+PASS: Stone arch spans the road with monumental height
+PASS: Desert has dense yucca, ocotillo and dry grass (plants=465 grass=24654)
+PASS: Spectator groups line the desert stage
+PASS: Medical support and marshals are present
+PASS: Only arid-country animals cross the desert: ["kangaroo", "ostrich"]
+PASS: Late-afternoon sun angle (0.29)
+PASS: Walls, arch and props leave the full corridor clear (0 hits)
+PASS: Rock solid is closed above ground: CanyonWalls/Side-1 (0 open edges)
+PASS: Rock solid is closed above ground: CanyonWalls/Side1 (0 open edges)
+PASS: Rock solid is closed above ground: DryRiverbedBanks/Side-1 (0 open edges)
+PASS: Rock solid is closed above ground: DryRiverbedBanks/Side1 (0 open edges)
+PASS: Rock solid is closed above ground: DuneHoodoos/Hoodoos (0 open edges)
+PASS: Rock solid is closed above ground: DistantButtes/Buttes (0 open edges)
+PASS: Rock solid is closed above ground: RedBoulders/Boulders0 (0 open edges)
+PASS: Rock solid is closed above ground: RedBoulders/Boulders1 (0 open edges)
+PASS: Rock solid is closed above ground: RedBoulders/Boulders2 (0 open edges)
+PASS: Rock solid is closed above ground: RedBoulders/Boulders3 (0 open edges)
+PASS: Rock solid is closed above ground: RedBoulders/Boulders4 (0 open edges)
+PASS: Rock solid is closed above ground: RedBoulders/Boulders5 (0 open edges)
+PASS: Rock solid is closed above ground: RedBoulders/Boulders6 (0 open edges)
+PASS: Rock solid is closed above ground: RedBoulders/Boulders7 (0 open edges)
+PASS: Rock solid is closed above ground: BalancedRocks/BalancedRockMesh (0 open edges)
+PASS: Mid-stage landmark SaltPan
+PASS: SaltPan sits in the dune section (s=1179)
+PASS: Mid-stage landmark DesertTradingPost
+PASS: DesertTradingPost sits in the dune section (s=1329)
+PASS: Mid-stage landmark NomadCamp
+PASS: NomadCamp sits in the dune section (s=1559)
+PASS: Mid-stage landmark GhostTownWaterTower
+PASS: GhostTownWaterTower sits in the dune section (s=1840)
+PASS: Mid-stage landmark BalancedRocks
+PASS: BalancedRocks sits in the dune section (s=2049)
+PASS: Mid-stage landmark RouteCairns
+PASS: Desert plant batches have local culling bounds, not kilometre-long boxes
+PASS: Dune section has saguaros and Joshua trees (141)
+PASS: Three animated dust devils
+PASS: Canyon wall keeps more than 4 m from the road edge (5.5 m)
+TEST RESULT: 50 checks, 0 failures

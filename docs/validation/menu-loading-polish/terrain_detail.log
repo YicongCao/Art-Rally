@@ -1,0 +1,71 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: sunset_ridge contains centimetre-scale relief
+PASS: sunset_ridge relief is sparse rather than continuous
+PASS: sunset_ridge asphalt and bridge approaches stay smooth
+PASS: sunset_ridge has helpful and adverse physical camber
+PASS: sunset_ridge visible roughness and road collision coincide
+PASS: sunset_ridge has authored timber obstacles only where intended
+PASS: Timber pile has ten solid logs in 4/3/2/1 rows
+PASS: Every pile has an obstacle / no-cut pacenote
+PASS: No contradictory cut instruction near timber
+PASS: Vehicle-layer body cannot pass through log ends
+PASS: Timber pile has ten solid logs in 4/3/2/1 rows
+PASS: Every pile has an obstacle / no-cut pacenote
+PASS: No contradictory cut instruction near timber
+PASS: Vehicle-layer body cannot pass through log ends
+PASS: Timber pile has ten solid logs in 4/3/2/1 rows
+PASS: Every pile has an obstacle / no-cut pacenote
+PASS: No contradictory cut instruction near timber
+PASS: Vehicle-layer body cannot pass through log ends
+PASS: Timber pile has ten solid logs in 4/3/2/1 rows
+PASS: Every pile has an obstacle / no-cut pacenote
+PASS: No contradictory cut instruction near timber
+PASS: Vehicle-layer body cannot pass through log ends
+PASS: sunset_ridge vegetation matches its biome and terrain
+PASS: sunset_ridge terrain rays meet tree roots and sheer cliffs stay bare
+TERRAIN DETAIL: sunset_ridge rough_fraction=0.21037463976945 max_bump=0.08179905329546 trees=1497 previous_height_error=2.8615882809175
+PASS: sunlit_cape contains centimetre-scale relief
+PASS: sunlit_cape relief is sparse rather than continuous
+PASS: sunlit_cape asphalt and bridge approaches stay smooth
+PASS: sunlit_cape has helpful and adverse physical camber
+PASS: sunlit_cape visible roughness and road collision coincide
+PASS: sunlit_cape has authored timber obstacles only where intended
+PASS: sunlit_cape vegetation matches its biome and terrain
+PASS: sunlit_cape terrain rays meet tree roots and sheer cliffs stay bare
+TERRAIN DETAIL: sunlit_cape rough_fraction=0.38752783964365 max_bump=0.11416453471361 trees=157 previous_height_error=1.36978435333039
+PASS: misty_highlands contains centimetre-scale relief
+PASS: misty_highlands relief is sparse rather than continuous
+PASS: misty_highlands asphalt and bridge approaches stay smooth
+PASS: misty_highlands has helpful and adverse physical camber
+PASS: misty_highlands visible roughness and road collision coincide
+PASS: misty_highlands has authored timber obstacles only where intended
+PASS: Timber pile has ten solid logs in 4/3/2/1 rows
+PASS: Every pile has an obstacle / no-cut pacenote
+PASS: No contradictory cut instruction near timber
+PASS: Vehicle-layer body cannot pass through log ends
+PASS: Timber pile has ten solid logs in 4/3/2/1 rows
+PASS: Every pile has an obstacle / no-cut pacenote
+PASS: No contradictory cut instruction near timber
+PASS: Vehicle-layer body cannot pass through log ends
+PASS: Timber pile has ten solid logs in 4/3/2/1 rows
+PASS: Every pile has an obstacle / no-cut pacenote
+PASS: No contradictory cut instruction near timber
+PASS: Vehicle-layer body cannot pass through log ends
+PASS: Timber pile has ten solid logs in 4/3/2/1 rows
+PASS: Every pile has an obstacle / no-cut pacenote
+PASS: No contradictory cut instruction near timber
+PASS: Vehicle-layer body cannot pass through log ends
+PASS: misty_highlands vegetation matches its biome and terrain
+PASS: misty_highlands terrain rays meet tree roots and sheer cliffs stay bare
+TERRAIN DETAIL: misty_highlands rough_fraction=0.20929407591344 max_bump=0.08179905329546 trees=995 previous_height_error=2.29761140875485
+PASS: redrock_canyon contains centimetre-scale relief
+PASS: redrock_canyon relief is sparse rather than continuous
+PASS: redrock_canyon asphalt and bridge approaches stay smooth
+PASS: redrock_canyon has helpful and adverse physical camber
+PASS: redrock_canyon visible roughness and road collision coincide
+PASS: redrock_canyon has authored timber obstacles only where intended
+PASS: redrock_canyon vegetation matches its biome and terrain
+PASS: redrock_canyon terrain rays meet tree roots and sheer cliffs stay bare
+TERRAIN DETAIL: redrock_canyon rough_fraction=0.06511627906977 max_bump=0.0619689825675 trees=0 previous_height_error=0.0
+TEST RESULT: 64 checks, 0 failures

@@ -8,9 +8,10 @@ const MUTED := Color("ccd5ce")
 const RED := Color("f04429")
 const GAUGE_RECT := Rect2(994,454,262,242)
 const TIMER_RECT := Rect2(994,22,262,58)
+const NOTE_BADGE_RECT := Rect2(600,28,30,30)
 const HANDBRAKE_ICON: Texture2D = preload("res://assets/ui/icons/handbrake.svg")
 const SHIFT_ICON: Texture2D = preload("res://assets/ui/icons/shift.svg")
-const NOTE_TEXT := {"LEFT_MEDIUM":"左弯 3", "RIGHT_MEDIUM":"右弯 3", "LEFT_TIGHT":"左急弯", "RIGHT_TIGHT":"右急弯", "LOGS":"圆木障碍 · 勿切", "ROCKFALL":"前方落石", "CAUTION_NARROW":"注意 · 收窄勿切", "CUT":"弯心平整 · 可小切", "MUD_NARROW":"泥地 · 收窄", "WATER":"积水 · 减速", "ASPHALT":"进入柏油", "GRAVEL":"进入砂石", "CREST_JUMP":"坡顶 · 跳跃", "FINISH":"终点"}
+const NOTE_TEXT := {"LEFT_1":"左弯 1", "LEFT_2":"左弯 2", "LEFT_3":"左弯 3", "LEFT_4":"左弯 4", "LEFT_5":"左弯 5", "LEFT_6":"左弯 6", "RIGHT_1":"右弯 1", "RIGHT_2":"右弯 2", "RIGHT_3":"右弯 3", "RIGHT_4":"右弯 4", "RIGHT_5":"右弯 5", "RIGHT_6":"右弯 6", "LEFT_MEDIUM":"左弯 3", "RIGHT_MEDIUM":"右弯 3", "LEFT_TIGHT":"左急弯", "RIGHT_TIGHT":"右急弯", "LOGS":"圆木障碍 · 勿切", "ROCKFALL":"前方落石", "CAUTION_NARROW":"注意 · 收窄勿切", "CUT":"弯心平整 · 可小切", "MUD_NARROW":"泥地 · 收窄", "WATER":"积水 · 减速", "ASPHALT":"进入柏油", "GRAVEL":"进入砂石", "CREST_JUMP":"坡顶 · 跳跃", "FINISH":"终点"}
 var title_font: Font = RallyFonts.bold()
 var number_font: Font = _racing_font()
 var text_font: Font = RallyFonts.regular()
@@ -86,22 +87,10 @@ static func data_for(car: RallyVehicle, session: RallyStageSession, paused: bool
 
 static func note_bend(session: RallyStageSession) -> float:
 	if not (session.current_note.begins_with("LEFT") or session.current_note.begins_with("RIGHT")):return 0
-	# Measure the contiguous bend, not merely the short window used to trigger
-	# a spoken note. Stop at opposite curvature so S bends never cancel out.
-	var sign_value := 1.0 if session.current_note.begins_with("LEFT") else -1.0
-	var total := 0.0
-	for direction: float in [-1,1]:
-		var flat := 0
-		for offset: int in range(0,96,4):
-			var s := session.note_s+direction*(offset+2)
-			var a := session.route.tangent_at(clampf(s-2,0,session.route.length))
-			var b := session.route.tangent_at(clampf(s+2,0,session.route.length))
-			var angle := a.signed_angle_to(b,Vector3.UP)*sign_value
-			if angle<-.002:break
-			flat=flat+1 if angle<.001 else 0
-			if flat>=3:break
-			total+=maxf(angle,0)
-	return clampf(rad_to_deg(total),20,180)
+	for note: Dictionary in session.route.notes:
+		if is_equal_approx(float(note.s),session.note_s) and note.code==session.current_note:
+			if note.has("degrees"): return float(note.degrees)
+	return float(session.route.bend_profile(session.note_s,session.current_note.begins_with("LEFT")).degrees)
 
 
 func refresh(value: Dictionary) -> void:
@@ -252,6 +241,16 @@ func _draw_note() -> void:
 		var rectangle := Rect2(Vector2(560,66)-arrow_size*.5,arrow_size)
 		if turn.right: rectangle=Rect2(rectangle.position,Vector2(-rectangle.size.x,rectangle.size.y))
 		draw_texture_rect(texture,rectangle,false)
+		# Number + colour makes the severity readable without relying on hue.
+		var badge := NOTE_BADGE_RECT
+		var frame := StyleBoxFlat.new()
+		frame.bg_color=turn.color
+		frame.border_color=INK
+		frame.set_border_width_all(2)
+		frame.set_corner_radius_all(5)
+		draw_style_box(frame,badge)
+		center_text(str(turn.grade),Vector2(615,51),23,INK,number_font)
+		center_text(("右" if turn.right else "左")+("急弯" if turn.grade==1 else "弯"),Vector2(665,54),15,turn.color)
 	else:
 		if code == "FINISH":
 			draw_texture_rect(RallyGateSymbols.texture("finish"),Rect2(at-Vector2(25,25),Vector2(50,50)),false)

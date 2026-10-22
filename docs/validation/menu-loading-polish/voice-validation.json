@@ -1,0 +1,170 @@
+[
+  {
+    "voice": "female",
+    "code": "LEFT_1",
+    "seconds": 0.5097083333333333,
+    "peak": 0.800018310546875,
+    "sha256": "0f4dbe168264055d3f3871cf8e6fab4e21c4ef6f72912f1c62cf8fdee8744e1d"
+  },
+  {
+    "voice": "female",
+    "code": "LEFT_2",
+    "seconds": 0.5065,
+    "peak": 0.800018310546875,
+    "sha256": "8aa766a7651d2200da4c137a6be1c367d894bb5421251832f243a4a7428ebfcd"
+  },
+  {
+    "voice": "female",
+    "code": "LEFT_3",
+    "seconds": 0.5375833333333333,
+    "peak": 0.800018310546875,
+    "sha256": "9df0187bf6f987876e099cb94d6bc49234dcd0f4d4f8bb78d34b9cdb8388d32b"
+  },
+  {
+    "voice": "female",
+    "code": "LEFT_4",
+    "seconds": 0.5084583333333333,
+    "peak": 0.800018310546875,
+    "sha256": "00200ea8f2d6d4721d19072a11ca388fa2f7de4d7de014238b783bc5baf76809"
+  },
+  {
+    "voice": "female",
+    "code": "LEFT_5",
+    "seconds": 0.5669583333333333,
+    "peak": 0.800018310546875,
+    "sha256": "9ab07dad6624ea26751464f9bbba4510432b952550b41f9dbc19d0a023f95d57"
+  },
+  {
+    "voice": "female",
+    "code": "LEFT_6",
+    "seconds": 0.55775,
+    "peak": 0.800018310546875,
+    "sha256": "172db677051c34d4f07520a69880a8b4ea771f6fca49cec1c4fb973a61701145"
+  },
+  {
+    "voice": "female",
+    "code": "RIGHT_1",
+    "seconds": 0.543625,
+    "peak": 0.800018310546875,
+    "sha256": "3266c7a0586c45b29afb813f4bccd1c3906f65c7853b7e8100797bb0929690de"
+  },
+  {
+    "voice": "female",
+    "code": "RIGHT_2",
+    "seconds": 0.5005,
+    "peak": 0.800018310546875,
+    "sha256": "052b3e2ab76d8ff9d018d37e76a27b3146a1c208ec260eb36c5a0fcb80e4f8a6"
+  },
+  {
+    "voice": "female",
+    "code": "RIGHT_3",
+    "seconds": 0.568375,
+    "peak": 0.800018310546875,
+    "sha256": "6c3d6c419ba45bee3b625ea888589b274dd3d45c3b493d8066b22475a5a814b2"
+  },
+  {
+    "voice": "female",
+    "code": "RIGHT_4",
+    "seconds": 0.556375,
+    "peak": 0.800018310546875,
+    "sha256": "70a30ed39e66a763205c6c2b631a6b9b158b82b254514582824bbcd378be254e"
+  },
+  {
+    "voice": "female",
+    "code": "RIGHT_5",
+    "seconds": 0.54275,
+    "peak": 0.800018310546875,
+    "sha256": "a451a3a1b34dda52fc40f07e7ca5ef7b41f2ae0ecf7f312fc273d9a7345312e5"
+  },
+  {
+    "voice": "female",
+    "code": "RIGHT_6",
+    "seconds": 0.5465416666666667,
+    "peak": 0.800018310546875,
+    "sha256": "6d91ceab34eb8b61b3b0d3458fa63f6dbadf2b566c819f229baec611d2c25c49"
+  },
+  {
+    "voice": "male",
+    "code": "LEFT_1",
+    "seconds": 0.5732083333333333,
+    "peak": 0.800018310546875,
+    "sha256": "3ecf52404f4b8dcd91036258a5530941733496588b67adfc9a7a1647a5139f8d"
+  },
+  {
+    "voice": "male",
+    "code": "LEFT_2",
+    "seconds": 0.5665416666666667,
+    "peak": 0.800018310546875,
+    "sha256": "a18dff703c0e874db80915dd35b3bbb917ac9bfc13c7afc7e85ec49b2b118c2b"
+  },
+  {
+    "voice": "male",
+    "code": "LEFT_3",
+    "seconds": 0.6241666666666666,
+    "peak": 0.800018310546875,
+    "sha256": "539423b4f36c76118195be595ae56b9b2286de35d9ef8cbab0105a94d5941d9e"
+  },
+  {
+    "voice": "male",
+    "code": "LEFT_4",
+    "seconds": 0.6378333333333334,
+    "peak": 0.800018310546875,
+    "sha256": "98dacc5a04e0d53e4ed4a2feaabeeebfb029f0fcfc2a82f35fc522dafbbc5268"
+  },
+  {
+    "voice": "male",
+    "code": "LEFT_5",
+    "seconds": 0.571125,
+    "peak": 0.800018310546875,
+    "sha256": "a973580e9baf130bd83cd2127cba96815e972a94035d52c0406e7a1698cb8cb1"
+  },
+  {
+    "voice": "male",
+    "code": "LEFT_6",
+    "seconds": 0.5591666666666667,
+    "peak": 0.79998779296875,
+    "sha256": "7c67c5c7ff8bda5a8b7ee18dfb76d07141760aa014c5fc435ffeb388f6e6d84b"
+  },
+  {
+    "voice": "male",
+    "code": "RIGHT_1",
+    "seconds": 0.5721666666666667,
+    "peak": 0.800018310546875,
+    "sha256": "b11be3bbaf312cd5d7976c99836c1cf1a060f0913676d826a5f6f35c486b40ff"
+  },
+  {
+    "voice": "male",
+    "code": "RIGHT_2",
+    "seconds": 0.562375,
+    "peak": 0.800018310546875,
+    "sha256": "eac404521d056d6cd5fe72f1e893178f954b36442b850d1b4b95dbe0ac0d05a8"
+  },
+  {
+    "voice": "male",
+    "code": "RIGHT_3",
+    "seconds": 0.582875,
+    "peak": 0.800018310546875,
+    "sha256": "9a8789628abcc1cc6f6f6338d0bf75403eb40826ce0615f859f3268117c1efb5"
+  },
+  {
+    "voice": "male",
+    "code": "RIGHT_4",
+    "seconds": 0.5734166666666667,
+    "peak": 0.79998779296875,
+    "sha256": "535ed6c87376e355d6342d303c9b32f3e2db791adcc20fe4bbf178eefdd2d60f"
+  },
+  {
+    "voice": "male",
+    "code": "RIGHT_5",
+    "seconds": 0.5759583333333333,
+    "peak": 0.800018310546875,
+    "sha256": "84ac33af30820c8c9f338fe50402ceb131a3f595cbce329631402127a8114d3e"
+  },
+  {
+    "voice": "male",
+    "code": "RIGHT_6",
+    "seconds": 0.5662916666666666,
+    "peak": 0.800018310546875,
+    "sha256": "9796eb7643f50426c7a9973698b332a13baa1e3bdbb7f6b2d7d78477b1841977"
+  }
+]

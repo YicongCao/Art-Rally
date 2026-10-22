@@ -1,0 +1,38 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Title opens with a focused action
+PASS: South button activates the actual GUI button
+PASS: D-pad moves menu focus
+PASS: Choosing a stage preserves focus across page rebuild
+PASS: East button returns to title and restores focus
+PASS: Settings opens with gamepad focus
+PASS: D-pad and confirm switch settings category
+PASS: Confirm toggles a setting through its actual signal
+PASS: Confirm opens a dropdown
+PASS: Cancel closes dropdown without leaving its page
+PASS: Returning restores the title settings tile
+PASS: Left stick moves title focus to promoted demo
+PASS: guide receives initial focus
+PASS: Secondary page returns with the east button
+PASS: records receives initial focus
+PASS: Secondary page returns with the east button
+PASS: credits receives initial focus
+PASS: Secondary page returns with the east button
+PASS: gallery receives initial focus
+PASS: Secondary page returns with the east button
+PASS: Confirm begins keyboard remapping
+PASS: Cancel exits remapping capture without leaving the page
+PASS: Nested page returns to settings
+PASS: Cancel cannot bypass required first-use plate entry
+PASS: Editing a plate can return to settings
+PASS: D-pad navigates power versions within a vehicle
+PASS: Power selection keeps the selected control focused
+PASS: Navigation skips locked power buttons
+PASS: Vehicle page returns to stage selection
+PASS: Start opens the pause menu
+PASS: Confirm resumes driving without triggering the handbrake
+PASS: Menu confirm does not leak into driving input
+PASS: Closing pause dropdown does not resume driving
+PASS: East button closes pause and resumes driving
+PASS: Pause return button leaves the race through the GUI
+TEST RESULT: 35 checks, 0 failures

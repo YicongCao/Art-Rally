@@ -1,0 +1,97 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: Numeric grade and side match the spoken code
+PASS: Every severity has a distinct colour
+PASS: Numeric grade and side match the spoken code
+PASS: Every severity has a distinct colour
+PASS: Numeric grade and side match the spoken code
+PASS: Every severity has a distinct colour
+PASS: Numeric grade and side match the spoken code
+PASS: Every severity has a distinct colour
+PASS: Numeric grade and side match the spoken code
+PASS: Every severity has a distinct colour
+PASS: Numeric grade and side match the spoken code
+PASS: Every severity has a distinct colour
+PASS: Legacy note codes remain compatible
+PASS: Numeric grade and side match the spoken code
+PASS: Every severity has a distinct colour
+PASS: Numeric grade and side match the spoken code
+PASS: Every severity has a distinct colour
+PASS: Numeric grade and side match the spoken code
+PASS: Every severity has a distinct colour
+PASS: Numeric grade and side match the spoken code
+PASS: Every severity has a distinct colour
+PASS: Numeric grade and side match the spoken code
+PASS: Every severity has a distinct colour
+PASS: Numeric grade and side match the spoken code
+PASS: Every severity has a distinct colour
+PASS: Legacy note codes remain compatible
+PASS: Smoothed horizontal curvature recovers radius 20.0
+PASS: Six radius bands produce six grades
+PASS: Smoothed horizontal curvature recovers radius 32.0
+PASS: Six radius bands produce six grades
+PASS: Smoothed horizontal curvature recovers radius 52.0
+PASS: Six radius bands produce six grades
+PASS: Smoothed horizontal curvature recovers radius 80.0
+PASS: Six radius bands produce six grades
+PASS: Smoothed horizontal curvature recovers radius 130.0
+PASS: Six radius bands produce six grades
+PASS: Smoothed horizontal curvature recovers radius 200.0
+PASS: Six radius bands produce six grades
+PASS: Grade boundary has a single deterministic transition
+PASS: Grade boundary has a single deterministic transition
+PASS: Grade boundary has a single deterministic transition
+PASS: Grade boundary has a single deterministic transition
+PASS: Grade boundary has a single deterministic transition
+PASS: sunset_ridge route, HUD and spoken code share the grade
+GRADES sunset_ridge { 4: 3, 3: 2, 1: 2, 5: 1 }
+PASS: sunlit_cape route, HUD and spoken code share the grade
+GRADES sunlit_cape { 4: 5, 3: 2, 1: 4, 2: 6, 5: 1 }
+PASS: misty_highlands route, HUD and spoken code share the grade
+GRADES misty_highlands { 5: 2, 2: 2, 4: 4, 1: 1 }
+PASS: redrock_canyon route, HUD and spoken code share the grade
+GRADES redrock_canyon { 5: 5, 3: 7, 4: 8, 6: 1 }
+PASS: Ten title actions, without a separate full-width garage button
+PASS: Garage is the first tile in the secondary row
+PASS: Garage precedes free practice at (1280, 720)
+PASS: (1280, 720) 开始计时挑战 fits
+PASS: (1280, 720) 玩法演示 fits
+PASS: (1280, 720) 设置 fits
+PASS: (1280, 720) 改装车库 fits
+PASS: (1280, 720) 自由练习 fits
+PASS: (1280, 720) 相册 fits
+PASS: (1280, 720) 操作指南 fits
+PASS: (1280, 720) 成绩册 fits
+PASS: (1280, 720) 制作名单 fits
+PASS: (1280, 720) 退出 fits
+PASS: Every title tile uses directly drawn vector geometry
+PASS: Ten title actions, without a separate full-width garage button
+PASS: Garage is the first tile in the secondary row
+PASS: Garage precedes free practice at (1920, 1080)
+PASS: (1920, 1080) 开始计时挑战 fits
+PASS: (1920, 1080) 玩法演示 fits
+PASS: (1920, 1080) 设置 fits
+PASS: (1920, 1080) 改装车库 fits
+PASS: (1920, 1080) 自由练习 fits
+PASS: (1920, 1080) 相册 fits
+PASS: (1920, 1080) 操作指南 fits
+PASS: (1920, 1080) 成绩册 fits
+PASS: (1920, 1080) 制作名单 fits
+PASS: (1920, 1080) 退出 fits
+PASS: Every title tile uses directly drawn vector geometry
+PASS: Ten title actions, without a separate full-width garage button
+PASS: Garage is the first tile in the secondary row
+PASS: Garage precedes free practice at (2560, 1080)
+PASS: (2560, 1080) 开始计时挑战 fits
+PASS: (2560, 1080) 玩法演示 fits
+PASS: (2560, 1080) 设置 fits
+PASS: (2560, 1080) 改装车库 fits
+PASS: (2560, 1080) 自由练习 fits
+PASS: (2560, 1080) 相册 fits
+PASS: (2560, 1080) 操作指南 fits
+PASS: (2560, 1080) 成绩册 fits
+PASS: (2560, 1080) 制作名单 fits
+PASS: (2560, 1080) 退出 fits
+PASS: Every title tile uses directly drawn vector geometry
+PASS: Gamepad south button activates the new garage tile
+TEST RESULT: 90 checks, 0 failures

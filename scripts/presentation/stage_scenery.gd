@@ -110,6 +110,9 @@ func nearest(point: Vector3,include_neighbor: bool = false) -> Dictionary:
 	var best := INF
 	var result := {"s":0.0,"distance":INF,"lateral":0.0,"point":Vector3.ZERO}
 	var samples: Array[Dictionary] = []
+	var best_i := 0
+	var best_t := 0.0
+	var best_at := Vector3.ZERO
 	for raw: Variant in candidates:
 		var i := int(raw)
 		var end := mini(i+8,route.points.size()-1)
@@ -123,7 +126,9 @@ func nearest(point: Vector3,include_neighbor: bool = false) -> Dictionary:
 			samples.append({"s":lerpf(route.distances[i],route.distances[end],t),"distance":sqrt(distance),"lateral":(point-at).dot(route.rights[i]),"point":at})
 		if distance < best:
 			best = distance
-			result = {"s":lerpf(route.distances[i],route.distances[end],t),"distance":sqrt(distance),"lateral":(point-at).dot(route.rights[i]),"point":at}
+			best_i=i; best_t=t; best_at=at
+	if best<INF:
+		result={"s":lerpf(route.distances[best_i],route.distances[mini(best_i+8,route.points.size()-1)],best_t),"distance":sqrt(best),"lateral":(point-best_at).dot(route.rights[best_i]),"point":best_at}
 	if include_neighbor:
 		var neighbor: Dictionary = {}
 		for sample: Dictionary in samples:
@@ -263,26 +268,40 @@ func _build_terrain() -> void:
 	var start := Vector2(bounds.position.x-400,bounds.position.z-400)
 	var extent := Vector2(bounds.size.x+800,bounds.size.z+800)
 	var count := Vector2i(ceili(extent.x/terrain_cell_size),ceili(extent.y/terrain_cell_size))
+	var cache_key := RallyTerrainGeometryCache.key_for(generator.definition,route.points)
+	var cached := RallyTerrainGeometryCache.fetch(cache_key)
 	var vertices := PackedVector3Array()
-	for z: int in range(count.y+1):
-		for x: int in range(count.x+1):
-			var px := start.x+x*terrain_cell_size
-			var pz := start.y+z*terrain_cell_size
-			vertices.append(Vector3(px,height_at(px,pz),pz))
+	var chunks: Array[ArrayMesh]=[]
+	if not cached.is_empty():
+		vertices=cached.vertices
+		chunks.assign(cached.meshes)
+	else:
+		vertices.resize((count.x+1)*(count.y+1))
+		for z: int in range(count.y+1):
+			for x: int in range(count.x+1):
+				var px := start.x+x*terrain_cell_size
+				var pz := start.y+z*terrain_cell_size
+				vertices[z*(count.x+1)+x]=Vector3(px,height_at(px,pz),pz)
+		# Preserve every original triangle and its flat normal. Splitting only
+		# changes render bounds, letting the renderer reject off-screen terrain.
+		for cz: int in range(0,count.y,48):
+			for cx: int in range(0,count.x,48):
+				var tool := SurfaceTool.new()
+				tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+				for z: int in range(cz,mini(cz+48,count.y)):
+					for x: int in range(cx,mini(cx+48,count.x)):
+						var a := z*(count.x+1)+x
+						var b := a+count.x+1
+						for index: int in [a,a+1,b+1,a,b+1,b]: tool.add_vertex(vertices[index])
+				tool.generate_normals()
+				chunks.append(tool.commit())
+		RallyTerrainGeometryCache.remember(cache_key,{"vertices":vertices,"meshes":chunks})
 	terrain_start = start
 	terrain_count = count
 	terrain_vertices = vertices
-	var tool := SurfaceTool.new()
-	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
-	for z: int in range(count.y):
-		for x: int in range(count.x):
-			var a := z*(count.x+1)+x
-			var b := a+count.x+1
-			for index: int in [a,a+1,b+1,a,b+1,b]: tool.add_vertex(vertices[index])
-	tool.generate_normals()
 	var mesh := MeshInstance3D.new()
 	mesh.name = "StageTerrain"
-	mesh.mesh = tool.commit()
+	mesh.mesh = chunks[0]
 	mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	var material := ShaderMaterial.new()
 	material.shader = preload("res://assets/shaders/stage_ground.gdshader")
@@ -291,6 +310,13 @@ func _build_terrain() -> void:
 	_theme_ground(material)
 	mesh.material_override = material
 	dressing.add_child(mesh)
+	for i: int in range(1,chunks.size()):
+		var chunk := MeshInstance3D.new()
+		chunk.name="TerrainChunk%d"%i
+		chunk.mesh=chunks[i]
+		chunk.material_override=material
+		chunk.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		mesh.add_child(chunk)
 
 	if generator.definition.environment_id=="highland":
 		# Use the very same visible terrain triangles, never a hidden flat apron.

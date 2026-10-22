@@ -144,8 +144,33 @@ func _poster() -> void:
 	_poly([[0,.91],[.17,.73],[.33,.86],[.50,.70],[.69,.81],[.84,.67],[1,.76],[1,1],[0,1]],Color("202b31"))
 	for tree: Array in [[.04,1.03,.30],[.12,.95,.22],[.25,1.1,.34],[.78,1.05,.25],[.92,1.04,.44],[.98,.94,.22]]:
 		_pine(tree[0],tree[1],tree[2],Color("18262c"))
+	_mud_splash()
 	# Static print texture lives on page margins, never across driving scenery.
 	for row: int in range(18):
 		for col: int in range(36):
 			var at := Vector2(size.x*(.62+col*.011),size.y*(.03+row*.013))
 			draw_circle(at,.7+float(row)/18,Color(.08,.11,.13,.15))
+
+
+func _mud_splash() -> void:
+	# Deterministic vector splashes at the paper edge, behind every menu control.
+	var rng := RandomNumberGenerator.new()
+	rng.seed=23517
+	var factor := minf(size.x/1280,size.y/720)
+	var origin := size-Vector2(14,12)*factor
+	for i: int in range(58):
+		var angle := rng.randf_range(-PI,-PI*.52)
+		var distance := rng.randf_range(5,75) if i<9 else rng.randf_range(55,245)
+		var at := origin+Vector2(cos(angle)*1.15,sin(angle)*.65)*distance*factor
+		var radius := rng.randf_range(13,34) if i<9 else rng.randf_range(1.0,4.5)
+		var phase := rng.randf()*TAU
+		var polygon := PackedVector2Array()
+		for j: int in range(32):
+			var theta := j*TAU/32
+			var bulge := 1+.17*sin(theta*3+phase)+.12*sin(theta*5-phase)
+			polygon.append(at+Vector2.from_angle(theta)*Vector2(1.1,.85)*radius*bulge*factor)
+		var mud := Color("806044") if i%3 else Color("a17a52")
+		draw_colored_polygon(polygon,mud)
+		if i>=9 and i%4==0:
+			var trail := Vector2(cos(angle),sin(angle))*(radius*2.8)*factor
+			draw_line(at-trail,at,mud,maxf(1,radius*.65*factor),true)

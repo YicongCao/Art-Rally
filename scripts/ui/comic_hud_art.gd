@@ -16,11 +16,18 @@ static func sprite(index: int) -> AtlasTexture:
  return cache[index]
 
 static func turn(code: String,degrees: float = -1) -> Dictionary:
- var angle := degrees if degrees>=0 else (90.0 if code.ends_with("TIGHT") else 45.0)
+ var number := code.get_slice("_",1).to_int()
+ var fallback: float = [170.0,130.0,90.0,60.0,40.0,20.0][number-1] if number in range(1,7) else (90.0 if code.ends_with("TIGHT") else 45.0)
+ var angle := degrees if degrees>=0 else fallback
  var slot := 4
  for bound: float in [30,50,75,110,150]:
   if angle>bound: slot+=1
  # The fifth generated corner has too similar a tangent to 90 degrees;
  # use the clearly hooked and hairpin silhouettes for the final two bins.
  if slot>=8: slot+=1
- return {"sprite":slot,"right":code.begins_with("RIGHT"),"degrees":angle}
+ # Numeric codes are the shared route/audio contract. Legacy recordings keep
+ # their old three/tight interpretation and bundled voice clips.
+ var suffix := code.get_slice("_",1)
+ var grade := clampi(suffix.to_int(),1,6) if suffix.is_valid_int() else (1 if suffix=="TIGHT" else 3)
+ var colors := [Color("ed6545"),Color("f39850"),Color("e9bc58"),Color("bfd477"),Color("6ed4bb"),Color("79cbe3")]
+ return {"sprite":slot,"right":code.begins_with("RIGHT"),"degrees":angle,"grade":grade,"color":colors[grade-1]}

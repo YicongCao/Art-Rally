@@ -1,0 +1,76 @@
+{
+  "suites": [
+    {
+      "suite": "comic_presentation",
+      "checks": 36,
+      "failures": 0
+    },
+    {
+      "suite": "experience_update",
+      "checks": 70,
+      "failures": 0
+    },
+    {
+      "suite": "hud",
+      "checks": 34,
+      "failures": 0
+    },
+    {
+      "suite": "menu_controller",
+      "checks": 35,
+      "failures": 0
+    },
+    {
+      "suite": "menu_pacenote_polish",
+      "checks": 90,
+      "failures": 0
+    },
+    {
+      "suite": "offroad_runoff",
+      "checks": 15,
+      "failures": 0
+    },
+    {
+      "suite": "redrock_art",
+      "checks": 50,
+      "failures": 0
+    },
+    {
+      "suite": "route_revision",
+      "checks": 49,
+      "failures": 0
+    },
+    {
+      "suite": "showcase",
+      "checks": 95,
+      "failures": 0
+    },
+    {
+      "suite": "stage_geometry",
+      "checks": 16,
+      "failures": 0
+    },
+    {
+      "suite": "stage_play",
+      "checks": 16,
+      "failures": 0
+    },
+    {
+      "suite": "stage_session",
+      "checks": 20,
+      "failures": 0
+    },
+    {
+      "suite": "terrain_cache",
+      "checks": 11,
+      "failures": 0
+    },
+    {
+      "suite": "terrain_detail",
+      "checks": 64,
+      "failures": 0
+    }
+  ],
+  "total_checks": 601,
+  "total_failures": 0
+}

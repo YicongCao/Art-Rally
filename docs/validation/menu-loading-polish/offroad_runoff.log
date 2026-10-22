@@ -1,0 +1,18 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: sunset_ridge runoff terrain collides everywhere inside the recovery boundary (0/1134 misses)
+PASS: sunset_ridge runoff collision follows the visible ground (0 gaps)
+PASS: sunset_ridge runoff uses the stage shoulder surface
+PASS: sunset_ridge a car leaving the road at 90 km/h brakes to a stop (6/6)
+PASS: sunlit_cape runoff terrain collides everywhere inside the recovery boundary (0/1036 misses)
+PASS: sunlit_cape runoff collision follows the visible ground (0 gaps)
+PASS: sunlit_cape runoff uses the stage shoulder surface
+PASS: sunlit_cape a car leaving the road at 90 km/h brakes to a stop (6/6)
+PASS: misty_highlands runoff terrain collides everywhere inside the recovery boundary (0/308 misses)
+PASS: misty_highlands runoff collision follows the visible ground (0 gaps)
+PASS: misty_highlands a car leaving the road at 90 km/h brakes to a stop (0/0)
+PASS: redrock_canyon runoff terrain collides everywhere inside the recovery boundary (0/1344 misses)
+PASS: redrock_canyon runoff collision follows the visible ground (0 gaps)
+PASS: redrock_canyon runoff uses the stage shoulder surface
+PASS: redrock_canyon a car leaving the road at 90 km/h brakes to a stop (6/6)
+TEST RESULT: 15 checks, 0 failures

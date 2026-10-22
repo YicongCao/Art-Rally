@@ -272,8 +272,8 @@ func show_home() -> void:
 	var gap := Control.new()
 	gap.custom_minimum_size.y = 18
 	column.add_child(gap)
-	_button(column,"进入自由改装车库",show_garage)
 	var secondary := _row(column)
+	_menu_tile(secondary,"改装车库","","garage",Color("303644"),show_garage,false)
 	_menu_tile(secondary,"自由练习","","practice",Color("303644"),func(): modified_mode=false; garage_test=false; practice=true; tutorial=false; show_stages(),false)
 	secondary.add_theme_constant_override("separation",10)
 	_menu_tile(secondary,"相册","","gallery",Color("20252b"),show_gallery,false)
@@ -300,8 +300,8 @@ func show_guide() -> void:
 
 func _menu_tile(parent: Node,title: String,caption: String,icon: String,color: Color,action: Callable,large: bool) -> Button:
 	var tile := _button(parent,title,action)
-	tile.custom_minimum_size = Vector2(210,190) if large else Vector2(160,82)
-	tile.size_flags_horizontal = Control.SIZE_EXPAND_FILL if large else Control.SIZE_SHRINK_BEGIN
+	tile.custom_minimum_size = Vector2(210,190) if large else Vector2(0,82)
+	tile.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	tile.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	tile.tooltip_text = title.replace("  →", "") + (" · " + caption if not caption.is_empty() else "")
 	var ink := Color("fff0d3")
@@ -344,13 +344,11 @@ func _menu_tile(parent: Node,title: String,caption: String,icon: String,color: C
 	content.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	content.add_theme_constant_override("separation",5)
 	margins.add_child(content)
-	var glyph := TextureRect.new()
-	glyph.texture = load("res://assets/ui/icons/" + icon + ".svg")
+	var glyph := RallyMenuVectorIcon.new()
+	glyph.symbol = icon
+	glyph.ink = ink
 	glyph.custom_minimum_size = Vector2(54,54) if large else Vector2(26,26)
-	glyph.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	glyph.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	glyph.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	glyph.self_modulate = ink
 	glyph.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	content.add_child(glyph)
 	if large:
@@ -904,7 +902,7 @@ func show_tutorial() -> void:
 	chosen_vehicle = "F160"
 	chosen_power_tier = 0
 	_page("先熟悉你的车","一段可随时跳过的小练习，使用夕照松岭的起点。","tutorial")
-	_label(column,"加速与制动 → 转向 → 路书 → 恢复车辆\n\nW / S，A / D，R；或手柄扳机、左摇杆、Y。\n正式比赛需要完整通过检查点；恢复会增加罚时。",24)
+	_label(column,"加速与制动 → 转向 → 路书 → 恢复车辆\n\nW / S，A / D，R；或手柄扳机、左摇杆、Y。\n路书 1–6 表示弯道等级：1 最急，6 最缓，并非建议挡位。\n正式比赛需要完整通过检查点；恢复会增加罚时。",24)
 	_actions("跳过，直接开始挑战",func(): tutorial=false; practice=false; show_stages(),"开始教学",start_race).primary_button.grab_focus()
 
 
